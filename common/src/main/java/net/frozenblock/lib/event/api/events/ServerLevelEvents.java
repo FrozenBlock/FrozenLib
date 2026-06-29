@@ -19,35 +19,36 @@ package net.frozenblock.lib.event.api.events;
 
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 
-@ClientOnly
-public class ClientConnectionEvents {
+public class ServerLevelEvents {
 
-	public static final Event<Join> JOIN = FrozenEvents.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
-		for (Join callback : callbacks) {
-			callback.onJoin(handler, client);
+	/**
+	 * Called just after a level is loaded by a Minecraft server.
+	 */
+	public static final Event<Load> LOAD = FrozenEvents.createEnvironmentEvent(Load.class, callbacks -> (server, level) -> {
+		for (Load callback : callbacks) {
+			callback.onLevelLoad(server, level);
 		}
 	});
 
-	public static final Event<Disconnect> DISCONNECT = FrozenEvents.createEnvironmentEvent(Disconnect.class, callbacks -> (handler, client) -> {
-		for (Disconnect callback : callbacks) {
-			callback.onDisconnect(handler, client);
+	/**
+	 * Called before a level is unloaded by a Minecraft server.
+	 */
+	public static final Event<Unload> UNLOAD = FrozenEvents.createEnvironmentEvent(Unload.class, callbacks -> (server, level) -> {
+		for (Unload callback : callbacks) {
+			callback.onLevelUnload(server, level);
 		}
 	});
 
-	@ClientOnly
 	@FunctionalInterface
-	public interface Join {
-		void onJoin(ClientPacketListener handler, Minecraft client);
+	public interface Load {
+		void onLevelLoad(MinecraftServer server, ServerLevel level);
 	}
 
-	@ClientOnly
 	@FunctionalInterface
-	public interface Disconnect {
-		void onDisconnect(@Nullable ClientPacketListener handler, Minecraft client);
+	public interface Unload {
+		void onLevelUnload(MinecraftServer server, ServerLevel level);
 	}
 }

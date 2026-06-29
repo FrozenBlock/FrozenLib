@@ -29,6 +29,7 @@ public final class FabricEventBridge {
 	public static void initModStage() {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();
+		FabricServerLevelEventsBridge.init();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(instance -> LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance));
 		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));
@@ -45,5 +46,7 @@ public final class FabricEventBridge {
 
 	public static void initClientModStage() {
 		FabricClientLifecycleEventBridge.init();
+		FabricClientTickEventsBridge.init();
+		FabricClientLevelEventsBridge.init();
 	}
 }

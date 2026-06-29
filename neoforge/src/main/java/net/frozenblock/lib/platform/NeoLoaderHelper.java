@@ -26,13 +26,33 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jspecify.annotations.Nullable;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 public class NeoLoaderHelper implements LoaderHelper {
+	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();
+
+	private static FileSystem openOrGetFileSystem(Path jarPath) {
+		return MOD_JAR_FILESYSTEMS.computeIfAbsent(jarPath, p -> {
+			try {
+				return FileSystems.newFileSystem(p);
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		});
+	}
+
 	@Override
 	public boolean isDevelopmentEnvironment() {
 		return !FMLLoader.getCurrent().isProduction();
@@ -122,6 +142,38 @@ public class NeoLoaderHelper implements LoaderHelper {
 				@Override
 				public Optional<JsonElement> getCustomData(String key) {
 					return Optional.empty();
+				}
+
+				@Override
+				public Optional<Path> findPath(String file) {
+					var contents = modInfo.getOwningFile().getFile().getContents();
+					if (!contents.containsFile(file)) return Optional.empty();
+					Path primary = contents.getPrimaryPath();
+					try {
+						if (Files.isDirectory(primary)) {
+							return Optional.of(primary.resolve(file));
+						}
+						FileSystem fs = openOrGetFileSystem(primary);
+						Path result = fs.getPath("/" + file);
+						return Files.exists(result) ? Optional.of(result) : Optional.empty();
+					} catch (Exception e) {
+						return Optional.empty();
+					}
+				}
+
+				@Override
+				public Collection<Path> getRootPaths() {
+					var contents = modInfo.getOwningFile().getFile().getContents();
+					Path primary = contents.getPrimaryPath();
+					try {
+						if (Files.isDirectory(primary)) {
+							return List.of(primary);
+						}
+						FileSystem fs = openOrGetFileSystem(primary);
+						return List.copyOf(fs.getRootDirectories());
+					} catch (Exception e) {
+						return List.of();
+					}
 				}
 			});
 		}

@@ -45,14 +45,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.frozenblock.lib.config.v2.entry.EntryType;
+import net.frozenblock.lib.event.api.events.ClientTickEvents;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.resource_pack.impl.client.PackDownloadToast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -63,7 +62,7 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");
@@ -84,14 +83,14 @@ public class FrozenLibModResourcePackApi {
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
 	 * <p>
 	 * These Resource Packs will be force-enabled.
-	 * @param mod The {@link ModContainer} of the mod.
+	 * @param mod The {@link LoaderHelper.ModEntry} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
 	 * @param isDoubleZip Whether the Resource Pack is double-zipped.
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
 	 * @param skipHashCheck Whether the Resource Pack will still be extracted even if an identical version was already extracted prior.
 	 * @throws IOException
 	 */
-	public static void findAndPrepareResourcePack(ModContainer mod, String packName, boolean isDoubleZip, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
+	public static void findAndPrepareResourcePack(LoaderHelper.ModEntry mod, String packName, boolean isDoubleZip, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
 		final String zipPackName = packName + ".zip";
 		final String packId = "frozenlib:mod/file/" + zipPackName;
 		final String subPath = "frozenlib_resourcepacks/" + zipPackName;

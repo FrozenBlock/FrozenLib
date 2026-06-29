@@ -21,33 +21,25 @@ import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.multiplayer.ClientLevel;
 
 @ClientOnly
-public class ClientConnectionEvents {
+public class ClientLevelEvents {
 
-	public static final Event<Join> JOIN = FrozenEvents.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
-		for (Join callback : callbacks) {
-			callback.onJoin(handler, client);
-		}
-	});
-
-	public static final Event<Disconnect> DISCONNECT = FrozenEvents.createEnvironmentEvent(Disconnect.class, callbacks -> (handler, client) -> {
-		for (Disconnect callback : callbacks) {
-			callback.onDisconnect(handler, client);
+	/**
+	 * Called after the client level has been changed.
+	 *
+	 * <p>The provided level is the new level. This event is not called when the level becomes {@code null}.
+	 */
+	public static final Event<AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE = FrozenEvents.createEnvironmentEvent(AfterClientLevelChange.class, callbacks -> (client, level) -> {
+		for (AfterClientLevelChange callback : callbacks) {
+			callback.afterLevelChange(client, level);
 		}
 	});
 
 	@ClientOnly
 	@FunctionalInterface
-	public interface Join {
-		void onJoin(ClientPacketListener handler, Minecraft client);
-	}
-
-	@ClientOnly
-	@FunctionalInterface
-	public interface Disconnect {
-		void onDisconnect(@Nullable ClientPacketListener handler, Minecraft client);
+	public interface AfterClientLevelChange {
+		void afterLevelChange(Minecraft client, ClientLevel level);
 	}
 }

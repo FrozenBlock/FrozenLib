@@ -24,17 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
@@ -44,7 +43,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ClientCapeUtil {
 	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
@@ -56,9 +55,9 @@ public class ClientCapeUtil {
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
 	public static void init() {
-		ClientPlayConnectionEvents.JOIN.register((listener, sender, minecraft) -> {
-			ClientPlayNetworking.send(CapeCustomizePacket.create(Identifier.parse(FrozenLibConfig.CAPE.get())));
-		});
+		ClientConnectionEvents.JOIN.register((handler, client) ->
+			FrozenLibInitPlatformUtils.NETWORKING.sendToServer(CapeCustomizePacket.create(Identifier.parse(FrozenLibConfig.CAPE.get())))
+		);
 	}
 
 	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {

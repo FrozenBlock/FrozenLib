@@ -32,6 +32,9 @@ public final class FabricClientLifecycleEventBridge {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(mc ->
 			net.frozenblock.lib.event.api.events.ClientLifecycleEvents.CLIENT_STOPPING.invoker().onClientStopping(mc)
 		);
+		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
+			ClientConnectionEvents.JOIN.invoker().onJoin(handler, client)
+		);
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
 			ClientConnectionEvents.DISCONNECT.invoker().onDisconnect(handler, client)
 		);

@@ -35,10 +35,12 @@ public final class NeoEventBridge {
 		NeoForge.EVENT_BUS.register(NeoEventBridge.class);
 		NeoLootTableEventBridge.init();
 		NeoServerTickEventBridge.init();
+		NeoServerLevelEventBridge.init();
 	}
 
 	public static void initClientModStage() {
 		NeoClientLifecycleEventBridge.init();
+		NeoClientTickEventBridge.init();
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

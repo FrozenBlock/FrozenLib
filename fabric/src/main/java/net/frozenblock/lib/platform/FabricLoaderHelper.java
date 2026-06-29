@@ -30,6 +30,7 @@ import net.frozenblock.lib.platform.service.LoaderHelper;
 import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -125,6 +126,16 @@ public class FabricLoaderHelper implements LoaderHelper {
 					CustomValue value = metadata.getCustomValue(key);
 					if (value == null) return Optional.empty();
 					return Optional.of(toJsonElement(value));
+				}
+
+				@Override
+				public Optional<Path> findPath(String file) {
+					return container.findPath(file);
+				}
+
+				@Override
+				public Collection<Path> getRootPaths() {
+					return container.getRootPaths();
 				}
 			});
 		}

@@ -23,8 +23,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.nio.file.Path;
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.minecraft.network.chat.Component;
@@ -35,7 +34,7 @@ import net.minecraft.server.packs.repository.PackSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(FolderRepositorySource.class)
 public class FolderRepositorySourceMixin {
 

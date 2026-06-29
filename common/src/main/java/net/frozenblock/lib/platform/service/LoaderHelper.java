@@ -21,6 +21,7 @@ import com.google.gson.JsonElement;
 import net.frozenblock.lib.platform.api.Env;
 import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -59,6 +60,13 @@ public interface LoaderHelper {
 	 */
 	List<ModEntry> getAllMods();
 
+	/**
+	 * Returns the {@link ModEntry} for the mod with the given id, or empty if not loaded.
+	 */
+	default Optional<ModEntry> getModById(String modId) {
+		return getAllMods().stream().filter(e -> e.getId().equals(modId)).findFirst();
+	}
+
 	interface ModEntry {
 		String getId();
 
@@ -69,5 +77,20 @@ public interface LoaderHelper {
 		 * The value is returned as a {@link JsonElement} regardless of the underlying format.
 		 */
 		Optional<JsonElement> getCustomData(String key);
+
+		/**
+		 * Searches for a resource at the given path within the mod's file (jar or directory).
+		 * Equivalent to Fabric's {@code ModContainer.findPath()}.
+		 * <p>
+		 * The returned {@link Path} may refer to a path inside a ZIP filesystem and must not be
+		 * used after the game closes.
+		 */
+		Optional<Path> findPath(String file);
+
+		/**
+		 * Returns all root paths of the mod's content, from which resource sub-paths can be resolved.
+		 * Equivalent to Fabric's {@code ModContainer.getRootPaths()}.
+		 */
+		Collection<Path> getRootPaths();
 	}
 }

@@ -38,6 +38,9 @@ public final class NeoClientLifecycleEventBridge {
 			}
 		});
 
+		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingIn.class, event ->
+			ClientConnectionEvents.JOIN.invoker().onJoin(Minecraft.getInstance().getConnection(), Minecraft.getInstance())
+		);
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientConnectionEvents.DISCONNECT.invoker().onDisconnect(null, Minecraft.getInstance())
 		);
