@@ -201,7 +201,6 @@ public class WindManager {
 				existingExtension.applyFromSyncedInstance(syncedExtension);
 			}
 		}
-		INSTANCE.extensions.addAll(extensions);
 		INSTANCE.seed = seed;
 		return INSTANCE;
 	}
