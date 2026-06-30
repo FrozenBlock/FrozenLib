@@ -32,3 +32,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - This replaces the previous `ShovelApi` and `AxeApi` classes.
 - Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
   - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
+- Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.

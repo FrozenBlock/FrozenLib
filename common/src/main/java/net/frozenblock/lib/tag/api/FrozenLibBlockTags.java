@@ -32,6 +32,7 @@ public class FrozenLibBlockTags {
 	public static final TagKey<Block> HAS_PUSHABLE_BLOCK_ENTITY = bind("has_pushable_block_entity");
 	public static final TagKey<Block> DEFAULT_FIRE_BLOCKS = bind("default_fire_blocks");
 	public static final TagKey<Block> SOUL_FIRE_BLOCKS = bind("soul_fire_blocks");
+	public static final TagKey<Block> PATHFINDING_DAMAGING_BLOCKS = bind("pathfinding_damaging_blocks");
 
     private static TagKey<Block> bind(String path) {
         return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
