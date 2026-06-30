@@ -13,7 +13,9 @@
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
-    "cubemob.sulfurcube.SulfurCubeMixin"
+    "cubemob.sulfurcube.SulfurCubeMixin",
+    "pathfinding.EntityTypeMixin",
+    "pathfinding.WalkNodeEvaluatorMixin"
   ],
   "client": [
     "client.rendering.LivingEntityRendererMixin"
