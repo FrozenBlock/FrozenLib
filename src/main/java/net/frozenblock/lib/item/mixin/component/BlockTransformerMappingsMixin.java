@@ -46,7 +46,7 @@ public class BlockTransformerMappingsMixin {
 	)
 	private static BlockTransformer frozenLib$modifyShovelBlockTransformers(BlockTransformer original) {
 		final BlockTransformerMappingsApi.Context context = BlockTransformerMappingsApi.createContext(original);
-		BlockTransformerMappingsApi.MODIFY_SHOVEL.invoker().modifyBlockTransformer(context);
+		BlockTransformerMappingsApi.MODIFY_SHOVEL.invoker().modifyShovelBlockTransformer(context);
 		return context.toBlockTransformer();
 	}
 
@@ -72,7 +72,7 @@ public class BlockTransformerMappingsMixin {
 	)
 	private static BlockTransformer frozenLib$modifyAxeBlockTransformers(BlockTransformer original) {
 		final BlockTransformerMappingsApi.Context context = BlockTransformerMappingsApi.createContext(original);
-		BlockTransformerMappingsApi.MODIFY_AXE.invoker().modifyBlockTransformer(context);
+		BlockTransformerMappingsApi.MODIFY_AXE.invoker().modifyAxeBlockTransformer(context);
 		return context.toBlockTransformer();
 	}
 
@@ -98,7 +98,7 @@ public class BlockTransformerMappingsMixin {
 	)
 	private static BlockTransformer frozenLib$modifyHoeBlockTransformers(BlockTransformer original) {
 		final BlockTransformerMappingsApi.Context context = BlockTransformerMappingsApi.createContext(original);
-		BlockTransformerMappingsApi.MODIFY_HOE.invoker().modifyBlockTransformer(context);
+		BlockTransformerMappingsApi.MODIFY_HOE.invoker().modifyHoeBlockTransformer(context);
 		return context.toBlockTransformer();
 	}
 }
