@@ -37,30 +37,40 @@ public class BlockTransformerMappingsApi {
 	/**
 	 * An event used to modify the Shovel's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyBlockTransformer> MODIFY_SHOVEL = FrozenEvents.createEnvironmentEvent(ModifyBlockTransformer.class,
+	public static final Event<ModifyShovelBlockTransformer> MODIFY_SHOVEL = FrozenEvents.createEnvironmentEvent(ModifyShovelBlockTransformer.class,
 		callbacks -> (context) -> {
-			for (var callback : callbacks) callback.modifyBlockTransformer(context);
+			for (var callback : callbacks) callback.modifyShovelBlockTransformer(context);
 	});
 
 	/**
 	 * An event used to modify the Axe's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyBlockTransformer> MODIFY_AXE = FrozenEvents.createEnvironmentEvent(ModifyBlockTransformer.class,
+	public static final Event<ModifyAxeBlockTransformer> MODIFY_AXE = FrozenEvents.createEnvironmentEvent(ModifyAxeBlockTransformer.class,
 		callbacks -> (context) -> {
-			for (var callback : callbacks) callback.modifyBlockTransformer(context);
+			for (var callback : callbacks) callback.modifyAxeBlockTransformer(context);
 	});
 
 	/**
 	 * An event used to modify the Hoe's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyBlockTransformer> MODIFY_HOE = FrozenEvents.createEnvironmentEvent(ModifyBlockTransformer.class,
+	public static final Event<ModifyHoeBlockTransformer> MODIFY_HOE = FrozenEvents.createEnvironmentEvent(ModifyHoeBlockTransformer.class,
 		callbacks -> (context) -> {
-			for (var callback : callbacks) callback.modifyBlockTransformer(context);
+			for (var callback : callbacks) callback.modifyHoeBlockTransformer(context);
 	});
 
 	@FunctionalInterface
-	public interface ModifyBlockTransformer extends CommonEventEntrypoint {
-		void modifyBlockTransformer(Context context);
+	public interface ModifyShovelBlockTransformer extends CommonEventEntrypoint {
+		void modifyShovelBlockTransformer(Context context);
+	}
+
+	@FunctionalInterface
+	public interface ModifyAxeBlockTransformer extends CommonEventEntrypoint {
+		void modifyAxeBlockTransformer(Context context);
+	}
+
+	@FunctionalInterface
+	public interface ModifyHoeBlockTransformer extends CommonEventEntrypoint {
+		void modifyHoeBlockTransformer(Context context);
 	}
 
 	public static Context createContext(BlockTransformer blockTransformer) {
