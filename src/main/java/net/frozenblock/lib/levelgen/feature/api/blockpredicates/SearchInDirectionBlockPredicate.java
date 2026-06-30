@@ -23,7 +23,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
@@ -82,7 +82,7 @@ public class SearchInDirectionBlockPredicate implements BlockPredicate {
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, BlockPos pos) {
+	public boolean test(LevelAccessor level, BlockPos pos) {
 		final BlockPos.MutableBlockPos mutable = pos.mutable();
 		for (int step = 1; step <= this.searchSteps; step++) {
 			if (this.blockPredicate.test(level, mutable.move(this.searchDirection, step))) {

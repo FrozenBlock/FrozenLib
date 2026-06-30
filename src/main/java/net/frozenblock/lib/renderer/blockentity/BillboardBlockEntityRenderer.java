@@ -65,24 +65,34 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 
 	@Override
 	public void submit(
-		S renderState,
+		S state,
 		PoseStack poseStack,
 		SubmitNodeCollector collector,
-		CameraRenderState cameraState
+		CameraRenderState camera
 	) {
 		poseStack.translate(0.5F, 0F, 0.5F);
-		poseStack.mulPose(cameraState.frozenLib$horizontalOrientation());
-		final TextureAtlasSprite sprite = this.getSprite(renderState);
+		poseStack.mulPose(camera.frozenLib$horizontalOrientation());
+		final TextureAtlasSprite sprite = this.getSprite(state);
 		collector.submitModelPart(
 			this.base,
 			poseStack,
 			FrozenLibRenderTypes.NO_SHADING_CUTOUT_BLOCK_SHEET,
-			renderState.lightCoords,
+			state.lightCoords,
 			OverlayTexture.NO_OVERLAY,
 			sprite,
-			-1,
-			renderState.breakProgress
+			-1
 		);
+		if (state.breakProgress != null) {
+			collector.order(1).submitCrumblingOverlay(
+				this.base,
+				poseStack,
+				FrozenLibRenderTypes.NO_SHADING_CUTOUT_BLOCK_SHEET,
+				state.lightCoords,
+				OverlayTexture.NO_OVERLAY,
+				-1,
+				state.breakProgress
+			);
+		}
 	}
 
 	public abstract ModelPart getRoot(Context context);
@@ -91,5 +101,5 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(texture);
 	}
 
-	public abstract TextureAtlasSprite getSprite(S renderState);
+	public abstract TextureAtlasSprite getSprite(S state);
 }

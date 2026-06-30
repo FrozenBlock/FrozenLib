@@ -20,17 +20,15 @@ package net.frozenblock.lib.levelgen.placement.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-public class NoisePlacementFilter extends PlacementFilter {
+public class NoisePlacementFilter implements PlacementFilter {
 	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		EasyNoiseSampler.NoiseType.CODEC.fieldOf("noise_type").forGetter(config -> config.noiseType),
 		Codec.doubleRange(0.0001D, 128D).fieldOf("noise_scale").orElse(0.05).forGetter(config -> config.noiseScale),
@@ -78,7 +76,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 	}
 
 	@Override
-	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
+	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
 		final WorldGenLevel level = context.level;
 		final ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
 		final double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
@@ -96,7 +94,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 	}
 
 	@Override
-	public PlacementModifierType<?> type() {
-		return FrozenLibPlacementModifiers.NOISE_FILTER;
+	public MapCodec<NoisePlacementFilter> codec() {
+		return CODEC;
 	}
 }

@@ -24,15 +24,17 @@ import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public class FrozenLibPlacementModifiers {
-	public static final PlacementModifierType<ConfigPlacementFilter<?>> CONFIG_PREDICATE = register("config_predicate", ConfigPlacementFilter.CODEC);
-	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
 
-	public static void init() {}
+	public static void init() {
+		register("config_predicate", ConfigPlacementFilter.CODEC);
+		register("noise_filter", NoisePlacementFilter.CODEC);
+	}
 
-	private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenLibConstants.id(name), () -> codec);
+	private static <P extends PlacementModifier> void register(String name, MapCodec<P> codec) {
+		Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenLibConstants.id(name), codec);
 	}
 }

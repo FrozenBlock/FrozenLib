@@ -36,7 +36,7 @@ public class AnyOfPredicate extends CombiningPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.ANY_OF;
+	public MapCodec<AnyOfPredicate> codec() {
+		return CODEC;
 	}
 }

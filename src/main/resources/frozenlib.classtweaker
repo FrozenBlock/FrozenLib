@@ -82,6 +82,8 @@ transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/m
 transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;)Lnet/minecraft/world/item/Item;
 transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/references/BlockItemId;Ljava/util/function/Function;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
 transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/component/BlockTransformerMappings getStrippableBlockData (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/core/component/BlockTransformer$BlockTransformData;
+transitive-accessible method net/minecraft/world/item/component/BlockTransformerMappings axe (Ljava/util/Set;Lnet/minecraft/core/Holder;Lnet/minecraft/core/component/BlockTransformer$TransformParticle;)Ljava/util/List;
 
 transitive-inject-interface net/minecraft/world/item/ItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface
 transitive-inject-interface net/minecraft/world/item/ServerItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface

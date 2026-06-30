@@ -36,7 +36,7 @@ public class NotPredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.NOT;
+	public MapCodec<NotPredicate> codec() {
+		return CODEC;
 	}
 }

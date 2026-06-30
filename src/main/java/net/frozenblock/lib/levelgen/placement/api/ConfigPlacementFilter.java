@@ -20,14 +20,12 @@ package net.frozenblock.lib.levelgen.placement.api;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
-public class ConfigPlacementFilter<T> extends PlacementFilter {
+public class ConfigPlacementFilter<T> implements PlacementFilter {
 	public static final MapCodec<ConfigPlacementFilter<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
 	).apply(instance, ConfigPlacementFilter::new));
@@ -38,12 +36,12 @@ public class ConfigPlacementFilter<T> extends PlacementFilter {
 	}
 
 	@Override
-	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
+	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
 		return this.configPredicate.test();
 	}
 
 	@Override
-	public PlacementModifierType<?> type() {
-		return FrozenLibPlacementModifiers.CONFIG_PREDICATE;
+	public MapCodec<ConfigPlacementFilter<?>> codec() {
+		return CODEC;
 	}
 }

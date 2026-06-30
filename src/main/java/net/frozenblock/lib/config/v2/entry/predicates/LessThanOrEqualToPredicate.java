@@ -33,7 +33,7 @@ public class LessThanOrEqualToPredicate<T> extends ValuePredicate<T> {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.LESS_THAN_OR_EQUAL_TO;
+	public MapCodec<LessThanOrEqualToPredicate<?>> codec() {
+		return CODEC;
 	}
 }

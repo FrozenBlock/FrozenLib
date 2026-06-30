@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.mixin.bundle;
+package net.frozenblock.lib.item.mixin.component;
 
 import com.mojang.serialization.DataResult;
 import net.frozenblock.lib.item.api.component.BundleWeightOverride;

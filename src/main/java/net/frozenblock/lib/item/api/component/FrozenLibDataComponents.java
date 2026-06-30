@@ -31,7 +31,7 @@ public class FrozenLibDataComponents {
 
 	public static void init() {}
 
-	private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> unaryOperator) {
-		return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, FrozenLibConstants.id(id), unaryOperator.apply(DataComponentType.builder()).build());
+	private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> unaryOperator) {
+		return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, FrozenLibConstants.id(name), unaryOperator.apply(DataComponentType.builder()).build());
 	}
 }

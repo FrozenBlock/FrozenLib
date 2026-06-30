@@ -19,11 +19,11 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 
-public class TrueConfigPredicate implements ConfigPredicate {
-	public static TrueConfigPredicate INSTANCE = new TrueConfigPredicate();
-	public static final MapCodec<TrueConfigPredicate> CODEC = MapCodec.unit(() -> INSTANCE);
+public class TruePredicate implements ConfigPredicate {
+	public static TruePredicate INSTANCE = new TruePredicate();
+	public static final MapCodec<TruePredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
-	private TrueConfigPredicate() {}
+	private TruePredicate() {}
 
 	@Override
 	public Boolean get() {
@@ -31,7 +31,7 @@ public class TrueConfigPredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.TRUE;
+	public MapCodec<TruePredicate> codec() {
+		return CODEC;
 	}
 }

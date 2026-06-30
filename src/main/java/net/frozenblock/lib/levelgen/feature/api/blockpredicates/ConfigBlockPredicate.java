@@ -22,7 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.ApiStatus;
@@ -44,7 +44,7 @@ public class ConfigBlockPredicate implements BlockPredicate {
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, BlockPos pos) {
+	public boolean test(LevelAccessor level, BlockPos pos) {
 		return this.configPredicate.test();
 	}
 

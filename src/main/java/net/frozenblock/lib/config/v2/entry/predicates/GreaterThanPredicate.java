@@ -33,7 +33,7 @@ public class GreaterThanPredicate<T> extends ValuePredicate<T> {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.GREATER_THAN;
+	public MapCodec<GreaterThanPredicate<?>> codec() {
+		return CODEC;
 	}
 }
