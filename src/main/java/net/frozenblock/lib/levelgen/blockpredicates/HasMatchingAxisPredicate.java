@@ -40,6 +40,10 @@ public class HasMatchingAxisPredicate extends PropertyTestingPredicate<Direction
 		super(offset, BlockStateProperties.AXIS, value);
 	}
 
+	public static HasMatchingAxisPredicate of(Direction.Axis value) {
+		return new HasMatchingAxisPredicate(Vec3i.ZERO, value);
+	}
+
 	@Override
 	public BlockPredicateType<?> type() {
 		return FrozenLibBlockPredicateTypes.HAS_MATCHING_AXIS;
