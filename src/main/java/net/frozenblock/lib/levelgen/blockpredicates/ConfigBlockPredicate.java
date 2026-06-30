@@ -15,12 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api.blockpredicates;
+package net.frozenblock.lib.levelgen.blockpredicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
+import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -47,5 +47,4 @@ public class ConfigBlockPredicate implements BlockPredicate {
 	public boolean test(LevelAccessor level, BlockPos pos) {
 		return this.configPredicate.test();
 	}
-
 }

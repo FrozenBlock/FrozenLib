@@ -15,14 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.impl.blockpredicates;
+package net.frozenblock.lib.levelgen.blockpredicates.impl;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
-import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInAreaBlockPredicate;
-import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInDirectionBlockPredicate;
-import net.frozenblock.lib.levelgen.feature.api.blockpredicates.TouchingBlockPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.HasMatchingAxisPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.SearchInAreaBlockPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.SearchInDirectionBlockPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.TouchingBlockPredicate;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -33,6 +34,7 @@ public class FrozenLibBlockPredicateTypes {
 	public static final BlockPredicateType<SearchInAreaBlockPredicate> SEARCH_IN_AREA = register("search_in_area", SearchInAreaBlockPredicate.CODEC);
 	public static final BlockPredicateType<TouchingBlockPredicate> TOUCHING = register("touching", TouchingBlockPredicate.CODEC);
 	public static final BlockPredicateType<ConfigBlockPredicate> CONFIG_PREDICATE = register("config_predicate", ConfigBlockPredicate.CODEC);
+	public static final BlockPredicateType<HasMatchingAxisPredicate> HAS_MATCHING_AXIS = register("has_matching_axis", HasMatchingAxisPredicate.CODEC);
 
 	public static void init() {}
 

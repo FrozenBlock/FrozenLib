@@ -30,3 +30,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `config_predicate`: An optional field, determining whether this can be used.
 - Added `BlockTransformerMappingsApi`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
   - This replaces the previous `ShovelApi` and `AxeApi` classes.
+- Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
+  - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
