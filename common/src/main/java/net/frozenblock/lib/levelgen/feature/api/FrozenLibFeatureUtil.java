@@ -28,7 +28,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -39,7 +39,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManage
 public class FrozenLibFeatureUtil {
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
 
-	public static boolean isBlockExposed(WorldGenLevel level, BlockPos pos) {
+	public static boolean isBlockExposed(LevelAccessor level, BlockPos pos) {
 		final BlockPos.MutableBlockPos mutable = pos.mutable();
 		for (Direction direction : Direction.values()) {
 			final BlockState state = level.getBlockState(mutable.setWithOffset(pos, direction));
@@ -48,7 +48,7 @@ public class FrozenLibFeatureUtil {
 		return false;
 	}
 
-	public static boolean matchesConditionsTouching(WorldGenLevel level, BlockPos pos, boolean requiredOnAllSides, BlockPredicate predicate) {
+	public static boolean matchesConditionsTouching(LevelAccessor level, BlockPos pos, boolean requiredOnAllSides, BlockPredicate predicate) {
 		final BlockPos.MutableBlockPos mutable = pos.mutable();
 
 		int validSides = 0;
@@ -61,15 +61,15 @@ public class FrozenLibFeatureUtil {
 		return validSides == 6;
 	}
 
-	public static boolean isAirOrWaterNearby(WorldGenLevel level, BlockPos pos, int searchDistance) {
+	public static boolean isAirOrWaterNearby(LevelAccessor level, BlockPos pos, int searchDistance) {
 		return matchesConditionNearby(level, pos, searchDistance, BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE);
 	}
 
-	public static boolean isWaterNearby(WorldGenLevel level, BlockPos pos, int searchDistance) {
+	public static boolean isWaterNearby(LevelAccessor level, BlockPos pos, int searchDistance) {
 		return matchesConditionNearby(level, pos, searchDistance, BlockPredicate.matchesBlocks(Blocks.WATER));
 	}
 
-	public static boolean matchesConditionNearby(WorldGenLevel level, BlockPos pos, int searchDistance, BlockPredicate predicate) {
+	public static boolean matchesConditionNearby(LevelAccessor level, BlockPos pos, int searchDistance, BlockPredicate predicate) {
 		final Iterable<BlockPos> poses = BlockPos.betweenClosed(
 			pos.offset(-searchDistance, -searchDistance, -searchDistance),
 			pos.offset(searchDistance, searchDistance, searchDistance)

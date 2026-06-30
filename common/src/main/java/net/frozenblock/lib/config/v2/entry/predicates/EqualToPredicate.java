@@ -33,7 +33,7 @@ public class EqualToPredicate<T> extends ValuePredicate<T> {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.EQUAL_TO;
+	public MapCodec<EqualToPredicate<?>> codec() {
+		return CODEC;
 	}
 }

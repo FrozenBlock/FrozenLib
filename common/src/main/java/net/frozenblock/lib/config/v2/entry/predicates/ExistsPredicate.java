@@ -40,7 +40,7 @@ public class ExistsPredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.EXISTS;
+	public MapCodec<ExistsPredicate> codec() {
+		return CODEC;
 	}
 }

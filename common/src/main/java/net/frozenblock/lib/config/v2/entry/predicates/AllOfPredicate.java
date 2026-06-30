@@ -36,7 +36,7 @@ public class AllOfPredicate extends CombiningPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.ALL_OF;
+	public MapCodec<AllOfPredicate> codec() {
+		return CODEC;
 	}
 }

@@ -33,7 +33,7 @@ public class GreaterThanOrEqualToPredicate<T> extends ValuePredicate<T> {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.GREATER_THAN_OR_EQUAL_TO;
+	public MapCodec<GreaterThanOrEqualToPredicate<?>> codec() {
+		return CODEC;
 	}
 }

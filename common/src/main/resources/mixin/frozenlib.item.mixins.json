@@ -8,17 +8,18 @@
   },
   "mixins": [
     "AbstractContainerMenuMixin",
+    "FuelValuesMixin",
     "ItemCooldownsMixin",
     "ItemStackMixin",
     "ServerItemCooldownsMixin",
     "ServerPlayerMixin",
-    "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
-    "bundle.BundleContentsMixin",
+    "component.BlockTransformerMappingsMixin",
+    "component.BundleContentsMixin",
+    "component.removable.ItemStackMixin",
     "loot.LootTableBuilderMixin",
     "loot.LootTableMixin",
-    "recipe.RecipeBuilderMixin",
-    "shovel.ShovelItemMixin"
+    "recipe.RecipeBuilderMixin"
   ],
   "client": [
     "client.LevelExtractorMixin"

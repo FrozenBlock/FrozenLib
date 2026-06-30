@@ -22,6 +22,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
@@ -32,6 +33,8 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class FrozenLibBiome {
@@ -124,8 +127,8 @@ public abstract class FrozenLibBiome {
 			.downfall(this.downfall())
 			.hasPrecipitation(this.hasPrecipitation());
 
-		var placedFeatures = entries.lookup(Registries.PLACED_FEATURE);
-		var worldCarvers = entries.lookup(Registries.CONFIGURED_CARVER);
+		final HolderGetter<PlacedFeature> placedFeatures = entries.lookup(Registries.PLACED_FEATURE);
+		final HolderGetter<WorldCarver> worldCarvers = entries.lookup(Registries.CARVER);
 		final BiomeGenerationSettings.Builder featureBuilder = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 		this.addFeatures(featureBuilder);
 		biomeBuilder.generationSettings(featureBuilder.build());

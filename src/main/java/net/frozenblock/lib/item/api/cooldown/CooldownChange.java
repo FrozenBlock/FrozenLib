@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api;
+package net.frozenblock.lib.item.api.cooldown;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.item.impl.CooldownInterface;

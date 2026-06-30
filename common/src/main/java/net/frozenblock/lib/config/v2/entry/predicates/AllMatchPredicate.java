@@ -39,7 +39,7 @@ public class AllMatchPredicate extends CombiningPredicate {
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.ALL_MATCH;
+	public MapCodec<AllMatchPredicate> codec() {
+		return CODEC;
 	}
 }

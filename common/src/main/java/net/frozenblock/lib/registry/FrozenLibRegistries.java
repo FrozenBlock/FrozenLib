@@ -18,6 +18,7 @@
 package net.frozenblock.lib.registry;
 
 import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
@@ -26,7 +27,7 @@ import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
@@ -74,8 +75,8 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<WindDisturbanceType<?>>> WIND_DISTURBANCE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_type"));
 	public static final MappedRegistry<WindDisturbanceType<?>> WIND_DISTURBANCE_TYPE = createSimple(WIND_DISTURBANCE_TYPE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED);
 
-	public static final ResourceKey<Registry<ConfigPredicateType<?>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
-	public static final MappedRegistry<ConfigPredicateType<?>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());
+	public static final ResourceKey<Registry<MapCodec<? extends ConfigPredicate>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
+	public static final MappedRegistry<MapCodec<? extends ConfigPredicate>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());
 
 	public static final ResourceKey<Registry<MovingSoundType<?>>> MOVING_SOUND_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("moving_sound_type"));
 	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = createSimple(MOVING_SOUND_TYPE_REGISTRY, Lifecycle.stable());

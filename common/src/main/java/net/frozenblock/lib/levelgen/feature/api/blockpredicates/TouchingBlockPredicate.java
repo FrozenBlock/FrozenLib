@@ -23,7 +23,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureUtil;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
@@ -71,8 +71,7 @@ public class TouchingBlockPredicate implements BlockPredicate {
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, BlockPos pos) {
+	public boolean test(LevelAccessor level, BlockPos pos) {
 		return FrozenLibFeatureUtil.matchesConditionsTouching(level, pos, this.allMustMatch, this.blockPredicate);
 	}
-
 }

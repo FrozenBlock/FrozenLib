@@ -19,7 +19,9 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.Codec;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
@@ -33,9 +35,9 @@ import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public interface ConfigPredicate extends Supplier<Boolean> {
-	Codec<ConfigPredicate> CODEC = FrozenLibRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::type, ConfigPredicateType::codec);
+	Codec<ConfigPredicate> CODEC = FrozenLibRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity());
 
-	ConfigPredicateType<?> type();
+	MapCodec<? extends ConfigPredicate> codec();
 
 	default boolean test() {
 		return this.get();
@@ -138,7 +140,7 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 	}
 
 	static ConfigPredicate alwaysTrue() {
-		return TrueConfigPredicate.INSTANCE;
+		return TruePredicate.INSTANCE;
 	}
 
 	default BlockPredicate asBlockPredicate() {

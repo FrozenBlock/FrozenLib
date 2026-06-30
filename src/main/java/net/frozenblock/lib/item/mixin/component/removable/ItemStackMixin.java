@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2024-2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.item.mixin.component.removable;
+
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.frozenblock.lib.item.api.component.removable.RemovableDataComponents;
+import net.frozenblock.lib.item.api.component.removable.RemovableItemTags;
+import net.frozenblock.lib.item.impl.ItemStackExtension;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(ItemStack.class)
+public abstract class ItemStackMixin implements ItemStackExtension {
+
+	@Shadow
+	public abstract Item getItem();
+
+	@Unique
+	private boolean frozenLib$canRemoveTags = false;
+
+	@Inject(at = @At("TAIL"), method = "inventoryTick")
+	public void frozenLib$removeTags(Level level, Entity owner, EquipmentSlot slot, CallbackInfo info) {
+		final ItemStack stack = ItemStack.class.cast(this);
+
+		// Removable Item Tags
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.canRemoveTag(key, level, owner, slot)) compound.remove(key);
+			}
+		});
+
+		// Removable Data Components
+		for (Holder<DataComponentType<?>> component : RemovableDataComponents.keys()) {
+			final DataComponentType<?> value = component.value();
+			if (RemovableDataComponents.canRemoveComponent(value, level, owner, slot)) stack.remove(value);
+		}
+	}
+
+	@WrapOperation(
+		method = "isSameItemSameComponents",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Objects;equals(Ljava/lang/Object;Ljava/lang/Object;)Z"
+		)
+	)
+	private static boolean frozenLib$removeTagsAndCompare(
+		Object a, Object b, Operation<Boolean> original,
+		ItemStack left, ItemStack right
+	) {
+		if (left.frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(left);
+		if (right.frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(right);
+		return original.call(a, b);
+	}
+
+	@Unique
+	private static void frozenLib$fixEmptyTags(ItemStack stack) {
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) compound.remove(key);
+			}
+		});
+
+		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
+			final var value = holder.value();
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) stack.remove(value);
+		}
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$canRemoveTags() {
+		return this.frozenLib$canRemoveTags;
+	}
+
+	@Unique
+	@Override
+	public void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
+		this.frozenLib$canRemoveTags = canRemoveTags;
+	}
+}

@@ -28,3 +28,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `structures`: A Structure's ID, a list of Structure IDs, or a Structure Tag that `processors` will be added to.
     - `processors`: A list of `StructureProcessor`s to add to `structures`.
     - `config_predicate`: An optional field, determining whether this can be used.
+- Added `BlockTransformerMappingsApi`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
+  - This replaces the previous `ShovelApi` and `AxeApi` classes.

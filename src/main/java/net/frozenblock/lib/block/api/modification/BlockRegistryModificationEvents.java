@@ -30,7 +30,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Allows for the modification of Blocks before they are registered.
  * <p>
- * These events should be used sparingly and referenced as early as possible via the {@code frozenlib:events} entrypoint.
+ * These events should be referenced via the {@code frozenlib:events} entrypoint, or they may not work properly.
  */
 @ApiStatus.Experimental
 public class BlockRegistryModificationEvents {
