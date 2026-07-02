@@ -49,6 +49,7 @@
     "mixin/frozenlib.cape.mixins.json",
     "mixin/frozenlib.clothconfig.mixins.json",
     "mixin/frozenlib.core.mixins.json",
+    "mixin/frozenlib.data_attachment.mixins.json",
     "mixin/frozenlib.debug.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.entity-fabric.mixins.json",

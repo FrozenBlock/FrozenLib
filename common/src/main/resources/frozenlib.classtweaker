@@ -350,6 +350,12 @@ transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootP
 transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer functions Ljava/util/List;
 transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
 
+# Data Attachment
+transitive-inject-interface net/minecraft/world/level/block/entity/BlockEntity net/frozenblock/lib/platform/api/data/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/level/chunk/ChunkAccess net/frozenblock/lib/platform/api/data/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/platform/api/data/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/level/Level net/frozenblock/lib/platform/api/data/DataAttachmentTarget
+
 # QuiltMC Resource Reloaders
 transitive-accessible class net/minecraft/resources/RegistryDataLoader$LoaderFactory
 transitive-accessible class net/minecraft/resources/RegistryLoadTask
