@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @ClientOnly
 @Mixin(MultiPlayerGameMode.class)
-public abstract class MultiPlayerGameModeMixin {
+public abstract class MultiPlayerGameModeMixin { // added in common mixins.json
 
 	@ModifyExpressionValue(
 		method = "destroyBlock",

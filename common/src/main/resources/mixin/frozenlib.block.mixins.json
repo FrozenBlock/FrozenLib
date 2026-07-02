@@ -7,6 +7,10 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "beacon.BeaconBlockEntityMixin",
+    "clipgroup.BlockGetterMixin",
+    "clipgroup.EntityMixin",
+    "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
     "fire.BaseFireBlockMixin",
     "fire.CampfireBlockMixin",
@@ -18,6 +22,8 @@
     "fire.WitherSkeletonMixin",
     "fire.ZombieMixin",
     "friction.LivingEntityMixin",
+    "sound.BlockBehaviourMixin",
+    "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",
     "waterlike.BlockStateBaseMixin",
     "waterlike.BreathAirGoalMixin",

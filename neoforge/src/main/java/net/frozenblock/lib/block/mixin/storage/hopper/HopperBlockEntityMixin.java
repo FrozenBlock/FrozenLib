@@ -26,6 +26,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.Hopper;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.neoforged.neoforge.transfer.item.ContainerOrHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,13 +39,13 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 		method = "ejectItems",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getContainerOrHandlerAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/transfer/item/ContainerOrHandler;",
 			ordinal = 0
 		)
 	)
-	private static Container frozenLib$preventEjectionA(
-		Container original,
-		@Share("frozenLib$container") LocalRef<Container> containerRef
+	private static ContainerOrHandler frozenLib$preventEjectionA(
+		ContainerOrHandler original,
+		@Share("frozenLib$container") LocalRef<ContainerOrHandler> containerRef
 	) {
 		containerRef.set(original);
 		return original;
@@ -54,7 +55,7 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 		method = "ejectItems",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getContainerOrHandlerAt(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/transfer/item/ContainerOrHandler;",
 			ordinal = 0,
 			shift = At.Shift.AFTER
 		),
@@ -62,22 +63,23 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 	)
     private static void frozenLib$preventEjectionB(
 		Level level, BlockPos pos, HopperBlockEntity hopper, CallbackInfoReturnable<Boolean> info,
-		@Share("frozenLib$container") LocalRef<Container> containerRef
+		@Share("frozenLib$container") LocalRef<ContainerOrHandler> containerRef
 	) {
-        if (HopperApi.isContainerBlacklisted(containerRef.get())) info.setReturnValue(false);
+		// hopper is a container so its probably safe to use .container()
+        if (HopperApi.isContainerBlacklisted(containerRef.get().container())) info.setReturnValue(false);
     }
 
     @ModifyExpressionValue(
 		method = "suckInItems",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainerOrHandler(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/neoforged/neoforge/transfer/item/ContainerOrHandler;",
 			ordinal = 0
 		)
 	)
-    private static Container frozenLib$preventInsertionA(
-		Container original,
-		@Share("frozenLib$container") LocalRef<Container> containerRef
+    private static ContainerOrHandler frozenLib$preventInsertionA(
+		ContainerOrHandler original,
+		@Share("frozenLib$container") LocalRef<ContainerOrHandler> containerRef
 	) {
 		containerRef.set(original);
 		return original;
@@ -87,7 +89,7 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 		method = "suckInItems",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainerOrHandler(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/neoforged/neoforge/transfer/item/ContainerOrHandler;",
 			ordinal = 0,
 			shift = At.Shift.AFTER
 		),
@@ -95,8 +97,8 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 	)
 	private static void frozenLib$preventInsertionB(
 		Level level, Hopper hopper, CallbackInfoReturnable<Boolean> info,
-		@Share("frozenLib$container") LocalRef<Container> containerRef
+		@Share("frozenLib$container") LocalRef<ContainerOrHandler> containerRef
 	) {
-		if (HopperApi.isContainerBlacklisted(containerRef.get())) info.setReturnValue(false);
+		if (HopperApi.isContainerBlacklisted(containerRef.get().container())) info.setReturnValue(false);
 	}
 }

@@ -7,15 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "beacon.BeaconBlockEntityMixin",
-    "clipgroup.BlockGetterMixin",
-    "clipgroup.EntityMixin",
-    "dripstone.PointedDripstoneBlockMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
     "piston.structure_resolver.DoubleChestStickingMixin",
-    "sound.BlockBehaviourMixin",
-    "storage.hopper.HopperBlockEntityMixin"
   ],
   "client": [
     "client.piston.MovingBlockRenderStateMixin",
