@@ -22,15 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public final class UnderWaterAmbientSoundInstanceHandler {
 	private static final Map<WaterLikeType, AbstractTickableSoundInstance> WATER_LIKE_TYPE_SOUNDS = new Reference2ObjectArrayMap<>();
 	private static final List<AbstractTickableSoundInstance> VANILLA_SOUNDS = new ArrayList<>();

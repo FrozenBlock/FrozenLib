@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.minecraft.client.Minecraft;
@@ -30,6 +31,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -43,6 +45,7 @@ public final class FrozenLibClientNeoForge {
 		NeoEventBridge.initClientModStage();
 
 		modBus.addListener(AddClientReloadListenersEvent.class, NeoResourceLoaderHelper::flushClientListeners);
+		modBus.addListener(RegisterGuiLayersEvent.class, NeoHudElementHelper::flush);
 
 		NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
 			Minecraft minecraft = Minecraft.getInstance();

@@ -19,8 +19,11 @@ package net.frozenblock.lib.renderer.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.Map;
+import java.util.stream.Collectors;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.minecraft.util.context.ContextKey;
@@ -30,10 +33,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(BaseRenderState.class)
 public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 

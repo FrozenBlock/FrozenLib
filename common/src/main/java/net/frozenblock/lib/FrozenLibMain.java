@@ -22,6 +22,7 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -62,6 +63,7 @@ public final class FrozenLibMain {
 		register.register();
 
 		CapeUtil.init();
+		SpottingIcons.init();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

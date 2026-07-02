@@ -20,8 +20,9 @@ package net.frozenblock.lib.block.mixin.client.fire;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -32,7 +33,7 @@ import net.minecraft.client.resources.model.sprite.AtlasManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(FlameFeatureRenderer.class)
 public class FlameFeatureRendererMixin {
 

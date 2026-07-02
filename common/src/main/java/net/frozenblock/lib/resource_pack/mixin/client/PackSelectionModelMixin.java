@@ -21,13 +21,14 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.gui.screens.packs.PackSelectionModel;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(PackSelectionModel.class)
 public class PackSelectionModelMixin {
 

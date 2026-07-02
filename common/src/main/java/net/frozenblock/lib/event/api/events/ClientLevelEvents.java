@@ -17,13 +17,14 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class ClientLevelEvents {
 
 	/**
@@ -37,7 +38,7 @@ public class ClientLevelEvents {
 		}
 	});
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface AfterClientLevelChange {
 		void afterLevelChange(Minecraft client, ClientLevel level);

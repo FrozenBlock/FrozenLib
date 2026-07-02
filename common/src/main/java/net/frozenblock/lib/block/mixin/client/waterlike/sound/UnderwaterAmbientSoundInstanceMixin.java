@@ -18,15 +18,17 @@
 package net.frozenblock.lib.block.mixin.client.waterlike.sound;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
-import net.frozenblock.lib.platform.api.ClientOnly;import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.UnderwaterAmbientSoundInstances;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(UnderwaterAmbientSoundInstances.UnderwaterAmbientSoundInstance.class)
 public class UnderwaterAmbientSoundInstanceMixin {
 

@@ -22,8 +22,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -32,7 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(MultiPlayerGameMode.class)
 public abstract class MultiPlayerGameModeMixin { // added in common mixins.json
 

@@ -20,9 +20,6 @@ package net.frozenblock.lib;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
@@ -37,6 +34,8 @@ import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenClientNetworkingFabric;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
+import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
+import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -79,12 +78,6 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 			PanoramaCommand.register(dispatcher);
 			FrozenLibClientCommand.register(dispatcher);
 		});
-
-		HudElementRegistry.attachElementAfter(
-			VanillaHudElements.MISC_OVERLAYS,
-			FrozenLibConstants.id("spotting_icons"),
-			new SpottingIconHudElement()
-		);
 
 		FrozenLibModResourcePackApi.init();
 		FrozenLibDebugScreenEntries.init();

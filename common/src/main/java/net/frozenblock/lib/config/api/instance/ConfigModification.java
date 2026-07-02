@@ -22,10 +22,11 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -78,7 +79,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 		}
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public enum EntryPermissionType {
 		CAN_MODIFY(true, Optional.empty(), Optional.empty()),
 		LOCKED_FOR_UNKNOWN_REASON(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason")), Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason"))),

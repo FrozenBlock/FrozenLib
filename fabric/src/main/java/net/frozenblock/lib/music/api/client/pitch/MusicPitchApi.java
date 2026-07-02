@@ -22,9 +22,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class MusicPitchApi {
 	public static final Function<Long, Float> SUBTLE_PITCH_SHIFTING = (l) -> 0.99F + (Mth.sin((l * Mth.PI) / 1200) * 0.025F);
 	private static final List<MusicPitchInfo> MUSIC_PITCH_INFO_LIST = new ArrayList<>();

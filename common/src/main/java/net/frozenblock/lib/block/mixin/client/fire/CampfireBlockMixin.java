@@ -25,9 +25,11 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.ClientOnly;import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
@@ -39,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(CampfireBlock.class)
 public class CampfireBlockMixin {
 

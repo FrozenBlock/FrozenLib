@@ -17,12 +17,13 @@
 
 package net.frozenblock.lib.renderer.mixin;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(EntityRenderState.class)
 public abstract class FrozenLibRenderStateMixin implements FrozenLibRenderState {
 	// literally only here for interface injection

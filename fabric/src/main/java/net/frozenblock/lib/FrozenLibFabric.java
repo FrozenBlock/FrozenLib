@@ -90,7 +90,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		FrozenLibStructurePoolElementTypes.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
-		SpottingIcons.init();
 		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();

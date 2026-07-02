@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.integration.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -107,12 +108,12 @@ public abstract class ModIntegration {
 	/**
 	 * Runs prior to registries freezing in order to allow for registering things.
 	 */
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public void clientInitPreFreeze() {
 	}
 
     public abstract void init();
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public void clientInit() {}
 }

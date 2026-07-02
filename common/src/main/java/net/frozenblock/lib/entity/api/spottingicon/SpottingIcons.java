@@ -24,9 +24,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
@@ -42,57 +39,57 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 		SpottingIcon.LIST_STREAM_CODEC, SpottingIcons::icons,
 		SpottingIcons::new
 	);
-	public static final AttachmentType<SpottingIcons> ATTACHMENT_TYPE = AttachmentRegistry.create(
+	public static final DataAttachmentType<SpottingIcons> ATTACHMENT_TYPE = DataAttachmentType.create(
 		FrozenLibConstants.id("spotting_icons"),
 		builder -> {
 			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
+			builder.syncWith(STREAM_CODEC, DataAttachmentSyncPredicate.all());
 		}
 	);
 
 	public static void init() {}
 
 	public static void set(Entity target, SpottingIcon... icons) {
-		target.setAttached(ATTACHMENT_TYPE, new SpottingIcons(List.of(icons)));
+		target.frozenLib$setAttached(ATTACHMENT_TYPE, new SpottingIcons(List.of(icons)));
 	}
 
 	public static void add(Entity target, SpottingIcon icon) {
-		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		final SpottingIcons icons = target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
 		if (icons.isEmpty()) {
 			set(target, icon);
 			return;
 		}
-		target.setAttached(ATTACHMENT_TYPE, icons.add(icon));
+		target.frozenLib$setAttached(ATTACHMENT_TYPE, icons.add(icon));
 	}
 
 	public static void removeAttachment(Entity target) {
-		target.removeAttached(ATTACHMENT_TYPE);
+		target.frozenLib$removeAttached(ATTACHMENT_TYPE);
 	}
 
 	public static void removeIf(Entity target, Predicate<SpottingIcon> removeIf) {
-		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		final SpottingIcons icons = target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
 		if (icons.isEmpty()) return;
-		target.setAttached(ATTACHMENT_TYPE, icons.removeIf(removeIf));
+		target.frozenLib$setAttached(ATTACHMENT_TYPE, icons.removeIf(removeIf));
 	}
 
 	public static boolean anyMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
+		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).anyMatch(predicate);
 	}
 
 	public static boolean allMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
+		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).allMatch(predicate);
 	}
 
 	public static boolean noneMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
+		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).noneMatch(predicate);
 	}
 
 	public static boolean has(Entity target) {
-		return !target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).isEmpty();
+		return !target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).isEmpty();
 	}
 
 	public static SpottingIcons get(Entity target) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
 	}
 
 	public SpottingIcons add(SpottingIcon icon) {

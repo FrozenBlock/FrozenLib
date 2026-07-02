@@ -18,7 +18,8 @@
 package net.frozenblock.lib.block.client.api;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -34,7 +35,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class LiquidRenderUtils {
 
 	/**

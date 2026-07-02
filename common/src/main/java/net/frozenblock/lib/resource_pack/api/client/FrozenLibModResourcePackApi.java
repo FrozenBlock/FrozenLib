@@ -45,13 +45,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.frozenblock.lib.resource_pack.impl.client.PackDownloadToast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -62,7 +63,7 @@ import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");

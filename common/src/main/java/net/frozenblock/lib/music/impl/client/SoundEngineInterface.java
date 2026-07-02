@@ -17,10 +17,11 @@
 
 package net.frozenblock.lib.music.impl.client;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.resources.sounds.SoundInstance;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public interface SoundEngineInterface {
 	default void frozenLib$setPitch(SoundInstance sound, float pitch) {
 		throw new AssertionError();

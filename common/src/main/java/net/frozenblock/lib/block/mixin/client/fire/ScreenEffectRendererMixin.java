@@ -20,8 +20,10 @@ package net.frozenblock.lib.block.mixin.client.fire;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.Optional;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireData;
-import net.frozenblock.lib.platform.api.ClientOnly;import net.minecraft.client.Minecraft;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,7 +35,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
 

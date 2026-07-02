@@ -17,15 +17,16 @@
 
 package net.frozenblock.lib.block.client.impl.waterlike;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.resources.sounds.UnderwaterAmbientSoundInstances;
 import net.minecraft.sounds.SoundSource;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class WaterLikeAmbientSoundInstance extends AbstractTickableSoundInstance {
 	public static final int FADE_DURATION = UnderwaterAmbientSoundInstances.UnderwaterAmbientSoundInstance.FADE_DURATION;
 	private final WaterLikeType type;

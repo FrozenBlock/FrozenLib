@@ -19,20 +19,22 @@ package net.frozenblock.lib.config.v2.impl.network;
 
 import java.util.Collection;
 import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.networking.PlayerLookup;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.networking.PlayerLookup;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -139,7 +141,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		sendEntryS2C(player, ConfigV2Registry.allConfigEntries());
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static void sendC2S(Iterable<ConfigEntry<?>> entries) {
 		if (!FrozenNetworking.connectedToServer()) return;
 
@@ -162,17 +164,17 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static void sendC2S() {
 		sendC2S(ConfigV2Registry.allConfigEntries());
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
 		trySendC2S(List.of(config));
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
 		if (!hasPermissionsToSendSync(Minecraft.getInstance().player, false)) return;
 		sendC2S(entries);

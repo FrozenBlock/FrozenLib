@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.platform.service;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.networking.ConfigPacketSender;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
@@ -59,7 +60,7 @@ public interface NetworkingHelper {
 		ServerPayloadHandler<P> handler
 	);
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	<P extends CustomPacketPayload> void registerGlobalClientReceiver(
 		CustomPacketPayload.Type<P> type,
 		ClientPayloadHandler<P> handler
@@ -67,7 +68,7 @@ public interface NetworkingHelper {
 
 	void sendToPlayer(ServerPlayer player, CustomPacketPayload payload);
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	void sendToServer(CustomPacketPayload payload);
 
 	<P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
@@ -85,7 +86,7 @@ public interface NetworkingHelper {
 		ServerConfigPayloadHandler<P> handler
 	);
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	<P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
 		CustomPacketPayload.Type<P> type,
 		ClientConfigPayloadHandler<P> handler
@@ -102,7 +103,7 @@ public interface NetworkingHelper {
 		void receive(P payload, MinecraftServer server, ServerPlayer player);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	interface ClientPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, Minecraft minecraft, LocalPlayer player);
@@ -113,7 +114,7 @@ public interface NetworkingHelper {
 		void receive(P payload, ServerConfigurationPacketListenerImpl listener, ConfigPacketSender sender);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	interface ClientConfigPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, Minecraft client, ConfigPacketSender sender);

@@ -6,6 +6,7 @@ plugins {
 }
 
 val minecraft_version: String by project
+val loader_version: String by project
 val asm_version: String by project
 
 val cloth_config_version: String by project
@@ -39,6 +40,9 @@ tasks {
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
+
+    // only for @Environment
+    api("net.fabricmc:fabric-loader:${loader_version}")
 
     compileOnlyApi("org.ow2.asm:asm:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")

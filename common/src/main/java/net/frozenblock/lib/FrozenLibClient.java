@@ -17,13 +17,15 @@
 
 package net.frozenblock.lib;
 
-import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;import net.fabricmc.api.Environment;import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
+import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
+import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
+import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {
@@ -37,5 +39,11 @@ public final class FrozenLibClient {
 
 	public static void init() {
 		ClientCapeUtil.init();
+
+		FrozenHudElements.attachElementAfter(
+			VanillaHudAnchor.MISC_OVERLAYS,
+			FrozenLibConstants.id("spotting_icons"),
+			new SpottingIconHudElement()
+		);
 	}
 }

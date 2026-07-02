@@ -18,7 +18,6 @@
 package net.frozenblock.lib.event.mixin.neoforge.client;
 
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.jspecify.annotations.Nullable;
@@ -27,11 +26,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@ClientOnly
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
-	@Inject(method = "updateLevelInEngines", at = @At("TAIL"))
+	@Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("TAIL"))
 	private void frozenLib$afterClientLevelChange(@Nullable ClientLevel level, boolean stopSound, CallbackInfo ci) {
 		if (level != null) {
 			ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.invoker().afterLevelChange((Minecraft) (Object) this, level);

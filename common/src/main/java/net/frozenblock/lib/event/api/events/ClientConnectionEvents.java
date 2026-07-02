@@ -17,14 +17,15 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.jetbrains.annotations.Nullable;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public class ClientConnectionEvents {
 
 	public static final Event<Join> JOIN = FrozenEvents.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
@@ -39,13 +40,13 @@ public class ClientConnectionEvents {
 		}
 	});
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface Join {
 		void onJoin(ClientPacketListener handler, Minecraft client);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface Disconnect {
 		void onDisconnect(@Nullable ClientPacketListener handler, Minecraft client);

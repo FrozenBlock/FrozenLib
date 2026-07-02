@@ -19,16 +19,18 @@ package net.frozenblock.lib.block.mixin.client.fire;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.fire.LavaParticleFireTypeInterface;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.ClientOnly;import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.LavaParticle;
 import net.minecraft.core.particles.ParticleOptions;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(LavaParticle.class)
 public class LavaParticleMixin implements LavaParticleFireTypeInterface {
 

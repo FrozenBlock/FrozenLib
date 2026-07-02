@@ -18,8 +18,9 @@
 package net.frozenblock.lib.resource_pack.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.resource_pack.impl.client.PackRepositoryInterface;
@@ -33,7 +34,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 

@@ -21,7 +21,8 @@ import java.util.List;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
@@ -29,14 +30,13 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import static net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper.*;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {

@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.cape.mixin.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -28,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(AvatarRenderer.class)
 public class AvatarRendererMixin<AvatarlikeEntity extends Avatar & ClientAvatarEntity> {
 

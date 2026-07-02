@@ -22,9 +22,9 @@ import java.util.Comparator;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
+import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -39,7 +39,7 @@ import org.joml.Vector3fc;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
-public final class SpottingIconHudElement implements HudElement {
+public final class SpottingIconHudElement implements HudElementRenderer {
 	private static final float Y_OFFSET = 0.25F;
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_HALF = ICON_SIZE / 2;
@@ -60,7 +60,7 @@ public final class SpottingIconHudElement implements HudElement {
 		minecraft.level.entitiesForRendering().forEach(entities::add);
 		entities.sort(Comparator.comparingDouble(e -> -e.position().distanceTo(cameraPos)));
 		for (Entity entity : entities) {
-			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT_TYPE, SpottingIcons.EMPTY);
+			final SpottingIcons icons = SpottingIcons.ATTACHMENT_TYPE.getAttachedOrGet(entity, () -> SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
 			final BlockPos blockPos = entity.blockPosition();

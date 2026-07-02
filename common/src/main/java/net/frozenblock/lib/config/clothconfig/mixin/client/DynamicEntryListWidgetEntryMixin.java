@@ -20,15 +20,16 @@ package net.frozenblock.lib.config.clothconfig.mixin.client;
 import me.shedaniel.clothconfig2.api.DisableableWidget;
 import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(DynamicEntryListWidget.Entry.class)
 public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWidget, DisableableWidgetInterface {
 

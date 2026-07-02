@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.block.client.impl.waterlike;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -27,7 +28,7 @@ import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
-@ClientOnly
+@Environment(EnvType.CLIENT)
 public final class WaterLikeFogUtil {
 	private static final Vector3f EMPTY_VEC = new Vector3f(0F, 0F, 0F);
 	private static Vector3f prevFogColor = new Vector3f(0F, 0F, 0F);

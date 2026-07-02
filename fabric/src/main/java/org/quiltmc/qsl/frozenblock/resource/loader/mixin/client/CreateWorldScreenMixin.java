@@ -20,7 +20,8 @@ package org.quiltmc.qsl.frozenblock.resource.loader.mixin.client;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldCallback;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
@@ -46,7 +47,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Modified to work on Fabric
  */
-@ClientOnly
+@Environment(EnvType.CLIENT)
 @Mixin(CreateWorldScreen.class)
 public abstract class CreateWorldScreenMixin {
 
