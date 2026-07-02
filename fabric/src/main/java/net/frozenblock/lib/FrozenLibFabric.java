@@ -109,7 +109,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
 		StructureStatus.init();
-		CapeUtil.init();
 		ScreenShakes.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
@@ -125,7 +124,5 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 		FrozenNetworking.registerNetworking();
 		FrozenNetworkingFabric.registerNetworking();
-
-		FrozenLibConfig.CONFIG.load(true);
 	}
 }

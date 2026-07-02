@@ -22,6 +22,7 @@ import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.frozenblock.lib.platform.service.EventHelper;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
 import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.frozenblock.lib.platform.service.ResourceLoaderHelper;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
 
 @UtilityClass
@@ -30,4 +31,5 @@ public class FrozenLibInitPlatformUtils {
 	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
 	public static final EventHelper EVENT = load(EventHelper.class);
 	public static final NetworkingHelper NETWORKING = load(NetworkingHelper.class);
+	public static final ResourceLoaderHelper RESOURCE_LOADER = load(ResourceLoaderHelper.class);
 }

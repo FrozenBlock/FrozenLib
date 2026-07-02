@@ -17,15 +17,48 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
+import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = FrozenLibConstants.MOD_ID, dist = Dist.CLIENT)
 public final class FrozenLibClientNeoForge {
 
-	public FrozenLibClientNeoForge(IEventBus eventBus) {
+	public FrozenLibClientNeoForge(IEventBus modBus) {
 		FrozenLibClient.quiltInit();
 		FrozenLibClient.init();
+
+		NeoEventBridge.initClientModStage();
+
+		modBus.addListener(AddClientReloadListenersEvent.class, NeoResourceLoaderHelper::flushClientListeners);
+
+		NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
+			Minecraft minecraft = Minecraft.getInstance();
+			ClientLevel level = minecraft.level;
+			if (level == null) return;
+			ClientScreenShaker.tick(minecraft, level);
+		});
+
+		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
+			ClientScreenShaker.reset()
+		);
+
+		ModLoadingContext.get().registerExtensionPoint(
+			IConfigScreenFactory.class,
+			() -> (container, parent) ->
+				FrozenLibConfigGui.buildScreen(parent)
+		);
 	}
 }

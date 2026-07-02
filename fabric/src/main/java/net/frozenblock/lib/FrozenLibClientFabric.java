@@ -71,7 +71,6 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 		registerClientEvents();
 		FrozenClientNetworking.registerClientReceivers();
 		FrozenClientNetworkingFabric.registerClientReceivers();
-		ClientCapeUtil.init();
 
 		FrozenLibParticleResources.init();
 		FrozenLibModelLayers.init();

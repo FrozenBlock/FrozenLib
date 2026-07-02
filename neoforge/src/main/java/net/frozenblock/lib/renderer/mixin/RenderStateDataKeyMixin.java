@@ -17,22 +17,27 @@
 
 package net.frozenblock.lib.renderer.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.minecraft.util.context.ContextKey;
-import net.neoforged.neoforge.client.renderstate.BaseRenderState;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
+import net.minecraft.util.context.ContextKey;
+import net.neoforged.neoforge.client.renderstate.BaseRenderState;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @ClientOnly
 @Mixin(BaseRenderState.class)
 public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 
 	@Shadow
-	@Nullable
 	public abstract <T> T getRenderData(ContextKey<T> key);
 
 	@Shadow
@@ -40,6 +45,16 @@ public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 
 	@Shadow
 	public abstract void resetRenderData();
+
+	@WrapOperation(method = "resetRenderData", at = @At(value = "INVOKE", target = "Ljava/util/Map;clear()V"))
+	private void frozenLib$keepFrozenLibData(Map<ContextKey<?>, Object> extensions, Operation<Void> original) {
+		var frozenlibData = extensions.entrySet()
+			.stream().filter(key -> key.getKey().name().getNamespace().equals(FrozenLibConstants.MOD_ID))
+			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		original.call(extensions);
+		extensions.putAll(frozenlibData);
+	}
 
 	@Unique
 	@Override

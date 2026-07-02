@@ -21,12 +21,12 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.ChatFormatting;
 
 /**
  * Used to override an entity's texture if a condition is met.
@@ -67,9 +67,9 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 		if (texture == null) throw new IllegalArgumentException("Texture cannot be null!");
 
 		return register(key, clazz, texture, renderState -> {
-			if (renderState.nameTag == null) return false;
+			final String entityName = renderState.frozenLib$getData(FrozenLibRenderStateDataKeys.ENTITY_NAME);
+			if (entityName == null) return false;
 
-			final String entityName = ChatFormatting.stripFormatting(renderState.nameTag.getString());
 			final AtomicBoolean isNameCorrect = new AtomicBoolean(false);
 			if (names.length == 0) return true;
 

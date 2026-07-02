@@ -18,11 +18,12 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -60,6 +61,8 @@ public final class FrozenLibMain {
 
 		register.register();
 
+		CapeUtil.init();
+
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();
 		});
@@ -68,5 +71,7 @@ public final class FrozenLibMain {
 			if (!allRegistries) return;
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
 		});
+
+		FrozenLibConfig.CONFIG.load(true);
 	}
 }

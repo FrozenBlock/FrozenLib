@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.networking;
 
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.event.api.events.PlayerJoinEvents;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
@@ -44,6 +46,11 @@ public final class FrozenNetworking {
 		networking.registerGlobalServerReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, server, player) -> {
 			if (ConfigEntrySyncPacket.hasPermissionsToSendSync(player, true)) ConfigEntrySyncPacket.receive(packet, player, server);
 		});
+
+		// CAPE
+		networking.registerC2SPayloadType(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
+		networking.registerGlobalServerReceiver(CapeCustomizePacket.TYPE, (packet, server, player) -> CapeCustomizePacket.handle(packet, player));
+		networking.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 	}
 
 	public static void sendPacketToAllPlayers(ServerLevel level, CustomPacketPayload payload) {

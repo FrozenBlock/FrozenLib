@@ -10,6 +10,9 @@ config="mixin/frozenlib.advancement.mixins.json"
 config="mixin/frozenlib.block.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.cape.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.clothconfig.mixins.json"
 requiredMods=["cloth_config"]
 
@@ -39,6 +42,9 @@ config="mixin/frozenlib.loot.neoforge.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.networking.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.resource_pack.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib_quiltmc_datafixerupper.mixins.json"

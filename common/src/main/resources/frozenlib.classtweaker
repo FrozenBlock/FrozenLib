@@ -255,6 +255,7 @@ transitive-mutable field net/minecraft/world/level/block/entity/BeaconBlockEntit
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;[Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/block/entity/BlockEntityType;
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/List;)Lnet/minecraft/world/level/block/entity/BlockEntityType;
 
+transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingBlockEntity net/frozenblock/lib/block/impl/piston/PistonMovingBlockEntityInterface
 transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/piston/state/MovingBlockRenderStateInterface
 

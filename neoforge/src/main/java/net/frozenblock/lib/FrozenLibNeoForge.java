@@ -26,19 +26,16 @@ import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
 import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
 import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
+import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
-import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
@@ -79,6 +76,7 @@ public final class FrozenLibNeoForge {
 			neoNetworking.flush(registrar);
 			neoNetworking.flushConfig(registrar);
 		});
+		modBus.addListener(AddPackFindersEvent.class, NeoResourceLoaderHelper::flushPackFinders);
 
 		FrozenLibMain.preQuiltInit();
 		FrozenLibMain.quiltInit();
@@ -115,10 +113,12 @@ public final class FrozenLibNeoForge {
 
 		ScreenShakes.init();
 
-		// Register command dispatcher on the global event bus — RegisterCommandsEvent is fired on NeoForge.EVENT_BUS
+		// some events need to use the NeoForge event bus
 		NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->
 			NeoFrozenLibCommand.register(event.getDispatcher())
 		);
+
+		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, NeoResourceLoaderHelper::flushServerListeners);
 
 		NeoForge.EVENT_BUS.addListener(LevelTickEvent.Post.class, event -> {
 			Level level = event.getLevel();
@@ -129,20 +129,5 @@ public final class FrozenLibNeoForge {
 				ScreenShakes.tick(serverLevel, entity);
 			}
 		});
-
-		if (FMLEnvironment.getDist().isClient()) {
-			NeoEventBridge.initClientModStage();
-
-			NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
-				Minecraft minecraft = Minecraft.getInstance();
-				ClientLevel level = minecraft.level;
-				if (level == null) return;
-				ClientScreenShaker.tick(minecraft, level);
-			});
-
-			NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
-				ClientScreenShaker.reset()
-			);
-		}
 	}
 }

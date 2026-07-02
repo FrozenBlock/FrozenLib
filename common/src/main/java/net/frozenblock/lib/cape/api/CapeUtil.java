@@ -85,7 +85,10 @@ public class CapeUtil {
 	}
 
 	public static boolean canPlayerUserCape(UUID uuid, Cape cape) {
-		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
+		if (FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment()) {
+			return true;
+		}
+ 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
 	public static void registerCape(Identifier id, Identifier texture, Component name) {

@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
@@ -34,6 +32,8 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.platform.api.resource.FrozenResourceLoader;
+import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
@@ -48,7 +48,7 @@ public class ClientCapeUtil {
 	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
 	@ApiStatus.Internal
-	public static final RenderStateDataKey<Cape.CapeTexture> CAPE_TEXTURE_DATA_KEY = RenderStateDataKey.create();
+	public static final RenderStateDataKey<Cape.CapeTexture> CAPE_TEXTURE_DATA_KEY = RenderStateDataKey.create(FrozenLibConstants.id("cape"));
 	@ApiStatus.Internal
 	private static final List<Identifier> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 	@ApiStatus.Internal
@@ -63,7 +63,7 @@ public class ClientCapeUtil {
 	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {
 		if (REGISTERED_CAPE_LISTENERS.contains(capeID)) return;
 
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, (ResourceManagerReloadListener) resourceManager ->
+		FrozenResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, (ResourceManagerReloadListener) resourceManager ->
 			Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
 				texture,
 				CAPE_CACHE_PATH.resolve(capeID.getNamespace()).resolve(capeID.getPath() + ".png"),
@@ -83,9 +83,9 @@ public class ClientCapeUtil {
 	public static void extractCapeToRenderState(Entity entity, EntityRenderState state) {
 		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(Cape.ATTACHMENT_TYPE.get(entity));
 		if (capeAttachment.isEmpty() || capeAttachment.get().isEmpty() || capeAttachment.get().get().dummy()) {
-			state.setData(CAPE_TEXTURE_DATA_KEY, null);
+			state.frozenLib$setData(CAPE_TEXTURE_DATA_KEY, null);
 		} else {
-			state.setData(CAPE_TEXTURE_DATA_KEY, capeAttachment.get().get().texture());
+			state.frozenLib$setData(CAPE_TEXTURE_DATA_KEY, capeAttachment.get().get().texture());
 		}
 	}
 

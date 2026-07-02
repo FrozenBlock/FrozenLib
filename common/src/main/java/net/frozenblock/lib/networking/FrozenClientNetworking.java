@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.networking;
 
+import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
@@ -38,6 +40,14 @@ public final class FrozenClientNetworking {
 		);
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> {
 			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);
+		});
+
+		receiveCapeRepoPacket();
+	}
+
+	private static void receiveCapeRepoPacket() {
+		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+			CapeUtil.registerCapesFromURL(packet.capeRepo());
 		});
 	}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2025-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,27 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib;
+package net.frozenblock.lib.resource_pack.impl.client;
 
-import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.repository.RepositorySource;
 
+/**
+ * Implemented into {@link PackRepository}.
+ * <p>
+ * Allows modders to add their own {@link RepositorySource}s for resource packs.
+ */
 @ClientOnly
-public final class FrozenLibClient {
-
-	public static void preQuiltInit() {
-		FrozenLibClientRegistries.init();
-	}
-
-	public static void quiltInit() {
-		ClientFreezer.onInitializeClient();
-		ClientRegistrySync.registerHandlers();
-	}
-
-	public static void init() {
-		ClientCapeUtil.init();
-	}
+public interface PackRepositoryInterface {
+	void frozenLib$addRepositorySource(RepositorySource source);
 }

@@ -25,14 +25,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
-import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
-import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
@@ -60,11 +53,7 @@ import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundL
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.Identifier;
@@ -91,7 +80,6 @@ public final class FrozenClientNetworkingFabric {
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
 		receiveFileTransferPacket();
-		receiveCapeRepoPacket();
 
 		// DEBUG
 		receiveWindDebugPacket();
@@ -283,12 +271,6 @@ public final class FrozenClientNetworkingFabric {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 				}
 			}
-		});
-	}
-
-	private static void receiveCapeRepoPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			CapeUtil.registerCapesFromURL(packet.capeRepo());
 		});
 	}
 

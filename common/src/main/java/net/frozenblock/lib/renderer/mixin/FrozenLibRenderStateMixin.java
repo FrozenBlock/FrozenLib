@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource_pack.impl.client;
+package net.frozenblock.lib.renderer.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.repository.RepositorySource;
+import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.renderer.FrozenLibRenderState;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * Implemented into {@link PackRepository}.
- * <p>
- * Allows modders to add their own {@link RepositorySource}s for resource packs.
- */
-@Environment(EnvType.CLIENT)
-public interface PackRepositoryInterface {
-	void frozenLib$addRepositorySource(RepositorySource source);
+@ClientOnly
+@Mixin(EntityRenderState.class)
+public abstract class FrozenLibRenderStateMixin implements FrozenLibRenderState {
+	// literally only here for interface injection
 }

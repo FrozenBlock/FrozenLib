@@ -9,6 +9,7 @@
   "mixins": [
   ],
   "client": [
-    "client.rendering.LivingEntityRendererMixin"
+    "client.rendering.LivingEntityRendererMixin",
+    "client.rendering.EntityRendererExtractNameMixin"
   ]
 }
