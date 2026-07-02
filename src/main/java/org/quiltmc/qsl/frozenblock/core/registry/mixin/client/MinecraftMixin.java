@@ -35,5 +35,4 @@ public class MinecraftMixin {
 	private void quilt$restoreRegistries(CallbackInfo info) {
 		ClientRegistrySync.disconnectCleanup(Minecraft.class.cast(this));
 	}
-
 }

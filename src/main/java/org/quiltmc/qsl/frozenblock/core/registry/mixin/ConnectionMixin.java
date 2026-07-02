@@ -36,7 +36,7 @@ public class ConnectionMixin implements ExtendedConnection {
 	private final Object2IntMap<String> frozenLib$modProtocol = new Object2IntOpenHashMap<>();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void setDefault(PacketFlow receiving, CallbackInfo ci) {
+	private void setDefault(PacketFlow receiving, CallbackInfo info) {
 		this.frozenLib$modProtocol.defaultReturnValue(ProtocolVersions.NO_PROTOCOL);
 	}
 
