@@ -343,12 +343,27 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 
 		@Override
+		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, Consumer<EntityType<E>> also) {
+			var id = Identifier.fromNamespaceAndPath(this.inner.getNamespace(), name);
+			return register(name, () -> EntityType.Builder.of(factory, category).build(ResourceKey.create(Registries.ENTITY_TYPE, id)), also);
+		}
+
+		@Override
 		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder) {
 			return register(name, () -> {
 				var id = Identifier.fromNamespaceAndPath(this.inner.getNamespace(), name);
 				var b = EntityType.Builder.of(factory, category);
 				return builder.apply(b).build(ResourceKey.create(Registries.ENTITY_TYPE, id));
 			});
+		}
+
+		@Override
+		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder, Consumer<EntityType<E>> also) {
+			return register(name, () -> {
+				var id = Identifier.fromNamespaceAndPath(this.inner.getNamespace(), name);
+				var b = EntityType.Builder.of(factory, category);
+				return builder.apply(b).build(ResourceKey.create(Registries.ENTITY_TYPE, id));
+			}, also);
 		}
 	}
 }

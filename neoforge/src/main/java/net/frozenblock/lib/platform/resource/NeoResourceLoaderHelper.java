@@ -19,12 +19,16 @@ package net.frozenblock.lib.platform.resource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.resource.PackActivationType;
 import net.frozenblock.lib.platform.service.ResourceLoaderHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -32,6 +36,8 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
+import net.neoforged.neoforge.resource.JarContentsPackResources;
+import net.neoforged.neoforgespi.language.IModInfo;
 import org.jetbrains.annotations.Nullable;
 
 public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
@@ -103,11 +109,49 @@ public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
 			boolean alwaysActive = entry.activationType() == PackActivationType.ALWAYS_ENABLED;
 
 			try {
-				event.addPackFinders(packLocation, PackType.CLIENT_RESOURCES, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
-				event.addPackFinders(packLocation, PackType.SERVER_DATA, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
+				addPackFinder(event, packLocation, PackType.CLIENT_RESOURCES, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
+				addPackFinder(event, packLocation, PackType.SERVER_DATA, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
 			} catch (IllegalArgumentException e) {
 				FrozenLibConstants.LOGGER.warn("Failed to register builtin pack {} for mod {}", entry.id(), entry.modId(), e);
 			}
 		}
+	}
+
+	private static void addPackFinder(
+		AddPackFindersEvent event,
+		Identifier packLocation,
+		PackType packType,
+		Component packNameDisplay,
+		PackSource packSource,
+		boolean alwaysActive,
+		Pack.Position packPosition
+	) {
+		if (event.getPackType() != packType) return;
+
+		IModInfo modInfo = ModList.get().getModContainerById(packLocation.getNamespace())
+			.orElseThrow(() -> new IllegalArgumentException("Mod not found: " + packLocation.getNamespace()))
+			.getModInfo();
+
+		String version = modInfo.getVersion().toString();
+		String prefix = "resourcepacks/" + packLocation.getPath();
+
+		Pack pack = Pack.readMetaAndCreate(
+			new PackLocationInfo(
+				"mod/" + packLocation,
+				packNameDisplay,
+				packSource,
+				Optional.of(new KnownPack("neoforge", packLocation.toString(), version))
+			),
+			new JarContentsPackResources.JarContentsResourcesSupplier(modInfo.getOwningFile().getFile().getContents(), prefix),
+			packType,
+			new PackSelectionConfig(alwaysActive, packPosition, false)
+		);
+
+		if (pack == null) {
+			FrozenLibConstants.LOGGER.warn("Failed to read pack metadata for builtin pack {} (looked under {})", packLocation, prefix);
+			return;
+		}
+
+		event.addRepositorySource(packConsumer -> packConsumer.accept(pack));
 	}
 }

@@ -30,6 +30,7 @@ public final class FabricEventBridge {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();
 		FabricServerLevelEventsBridge.init();
+		FabricEntityTrackingEventsBridge.init();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(instance -> LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance));
 		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));

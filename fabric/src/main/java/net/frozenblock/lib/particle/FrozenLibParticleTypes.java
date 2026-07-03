@@ -24,78 +24,78 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 
 public class FrozenLibParticleTypes {
-	public static final ParticleType<ControlledNoteParticleOptions> CONTROLLED_NOTE = register("controlled_note",
+	private static final FrozenDeferredRegister<ParticleType<?>> REGISTER = FrozenDeferredRegister.create(
+		Registries.PARTICLE_TYPE,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final FrozenHolder<ParticleType<?>, ParticleType<ControlledNoteParticleOptions>> CONTROLLED_NOTE = register("controlled_note",
 		false,
 		particleType -> ControlledNoteParticleOptions.CODEC,
 		particleType -> ControlledNoteParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<ColoredSmokeParticleOptions> SMOKE_COLORED = register("smoke_colored",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> SMOKE_COLORED = register("smoke_colored",
 		false,
 		particleType -> ColoredSmokeParticleOptions.CODEC,
 		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<ColoredSmokeParticleOptions> LARGE_SMOKE_COLORED = register("large_smoke_colored",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> LARGE_SMOKE_COLORED = register("large_smoke_colored",
 		false,
 		particleType -> ColoredSmokeParticleOptions.CODEC,
 		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<ColoredSmokeParticleOptions> CAMPFIRE_COSY_SMOKE_COLORED = register("campfire_cosy_smoke_colored",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_COSY_SMOKE_COLORED = register("campfire_cosy_smoke_colored",
 		false,
 		particleType -> ColoredSmokeParticleOptions.CODEC,
 		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<ColoredSmokeParticleOptions> CAMPFIRE_SIGNAL_SMOKE_COLORED = register("campfire_signal_smoke_colored",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_SIGNAL_SMOKE_COLORED = register("campfire_signal_smoke_colored",
 		false,
 		particleType -> ColoredSmokeParticleOptions.CODEC,
 		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<WindParticleOptions> WIND_SMALL = register("wind_small",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_SMALL = register("wind_small",
 		false,
 		particleType -> WindParticleOptions.CODEC,
 		particleType -> WindParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<WindParticleOptions> WIND_MEDIUM = register("wind_medium",
+	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_MEDIUM = register("wind_medium",
 		false,
 		particleType -> WindParticleOptions.CODEC,
 		particleType -> WindParticleOptions.STREAM_CODEC
 	);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {}
 
-	private static SimpleParticleType register(String name, boolean alwaysShow) {
-		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenLibConstants.id(name), FabricParticleTypes.simple(alwaysShow));
+	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name, boolean alwaysShow) {
+		return REGISTER.register(name, () -> FabricParticleTypes.simple(alwaysShow));
 	}
 
-	private static SimpleParticleType register(String name) {
+	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name) {
 		return register(name, false);
 	}
 
-	private static <T extends ParticleOptions> ParticleType<T> register(
-		String name,
+	private static <T extends ParticleOptions> FrozenHolder<ParticleType<?>, ParticleType<T>> register(
+		String id,
 		boolean alwaysShow,
 		Function<ParticleType<T>, MapCodec<T>> codec,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return register(FrozenLibConstants.id(name), alwaysShow, codec, streamCodec);
-	}
-
-	private static <T extends ParticleOptions> ParticleType<T> register(
-		Identifier id,
-		boolean alwaysShow,
-		Function<ParticleType<T>, MapCodec<T>> codec,
-		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
-	) {
-		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id, new ParticleType<T>(alwaysShow) {
+		return REGISTER.register(id, () -> new ParticleType<>(alwaysShow) {
 			@Override
 			public MapCodec<T> codec() {
 				return codec.apply(this);

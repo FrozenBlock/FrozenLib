@@ -74,6 +74,9 @@ config="mixin/frozenlib.resource_pack.mixins.json"
     config="mixin/frozenlib.screenshake.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.sound.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.tag.mixins.json"
 
 [[mixins]]

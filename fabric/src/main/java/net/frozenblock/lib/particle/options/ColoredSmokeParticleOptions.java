@@ -92,10 +92,10 @@ public record ColoredSmokeParticleOptions(float rDifference, float gDifference, 
 	@Override
 	public ParticleType<?> getType() {
 		return switch (this.smokeType) {
-			case SMOKE -> FrozenLibParticleTypes.SMOKE_COLORED;
-			case LARGE_SMOKE -> FrozenLibParticleTypes.LARGE_SMOKE_COLORED;
-			case CAMPFIRE_COSY -> FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED;
-			case CAMPFIRE_SIGNAL -> FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED;
+			case SMOKE -> FrozenLibParticleTypes.SMOKE_COLORED.get();
+			case LARGE_SMOKE -> FrozenLibParticleTypes.LARGE_SMOKE_COLORED.get();
+			case CAMPFIRE_COSY -> FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED.get();
+			case CAMPFIRE_SIGNAL -> FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED.get();
 		};
 	}
 }

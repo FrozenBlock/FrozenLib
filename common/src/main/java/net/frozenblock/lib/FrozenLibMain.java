@@ -27,6 +27,8 @@ import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
@@ -67,6 +69,8 @@ public final class FrozenLibMain {
 		SpottingIcons.init();
 		SulfurCubeEvents.init();
 		StructureStatus.init();
+		SoundPredicate.init();
+		MovingSoundTypes.init();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

@@ -11,6 +11,7 @@
     "EntityMixin",
     "VariantUtilsMixin",
     "behavior.BehaviorMixin",
+    "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin"
   ],

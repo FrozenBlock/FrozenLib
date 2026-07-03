@@ -58,8 +58,8 @@ public record WindParticleOptions(int lifespan, Vec3 velocity, ParticleLength le
 
 	@Override
 	public ParticleType<?> getType() {
-		if (this.length == ParticleLength.MEDIUM) return FrozenLibParticleTypes.WIND_MEDIUM;
-		return FrozenLibParticleTypes.WIND_SMALL;
+		if (this.length == ParticleLength.MEDIUM) return FrozenLibParticleTypes.WIND_MEDIUM.get();
+		return FrozenLibParticleTypes.WIND_SMALL.get();
 	}
 
 	public enum ParticleLength implements StringRepresentable {

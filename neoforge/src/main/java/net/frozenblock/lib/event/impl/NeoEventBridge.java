@@ -18,10 +18,12 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
@@ -29,6 +31,7 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 @UtilityClass
+@EventBusSubscriber(modid = FrozenLibConstants.MOD_ID)
 public final class NeoEventBridge {
 
 	public static void initModStage(IEventBus modBus) {
@@ -36,6 +39,7 @@ public final class NeoEventBridge {
 		NeoLootTableEventBridge.init();
 		NeoServerTickEventBridge.init();
 		NeoServerLevelEventBridge.init();
+		NeoEntityTrackingEventBridge.init();
 	}
 
 	public static void initClientModStage() {

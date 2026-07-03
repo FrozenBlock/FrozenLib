@@ -20,7 +20,11 @@ package net.frozenblock.lib;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
+import net.frozenblock.lib.platform.model.NeoModelLayerHelper;
+import net.frozenblock.lib.platform.renderer.NeoBlockEntityRendererHelper;
+import net.frozenblock.lib.platform.renderer.NeoEntityRendererHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -31,6 +35,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
@@ -42,10 +47,15 @@ public final class FrozenLibClientNeoForge {
 		FrozenLibClient.quiltInit();
 		FrozenLibClient.init();
 
+		FrozenLibModelLayers.init();
+
 		NeoEventBridge.initClientModStage();
 
 		modBus.addListener(AddClientReloadListenersEvent.class, NeoResourceLoaderHelper::flushClientListeners);
 		modBus.addListener(RegisterGuiLayersEvent.class, NeoHudElementHelper::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, NeoModelLayerHelper::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoBlockEntityRendererHelper::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoEntityRendererHelper::flush);
 
 		NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
 			Minecraft minecraft = Minecraft.getInstance();

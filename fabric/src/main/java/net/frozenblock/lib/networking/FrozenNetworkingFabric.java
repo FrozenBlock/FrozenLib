@@ -17,17 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
-import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.event.api.events.PlayerJoinEvents;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
-import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
-import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 
 // TODO PORT THESE TO NEOFORGE
@@ -35,19 +25,6 @@ public final class FrozenNetworkingFabric {
 
 	public static void registerNetworking() {
 		final var networking = FrozenLibInitPlatformUtils.NETWORKING;
-
-		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
-			CapeUtil.sendCapeReposToPlayer(player);
-		});
-
-		networking.registerS2CPayloadType(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
-		networking.registerS2CPayloadType(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
-		networking.registerS2CPayloadType(RelativeMovingSoundPacket.PACKET_TYPE, RelativeMovingSoundPacket.CODEC);
-		networking.registerS2CPayloadType(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
-		networking.registerS2CPayloadType(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
-		networking.registerS2CPayloadType(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
-		networking.registerS2CPayloadType(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, FadingDistanceSwitchingSoundPacket.CODEC);
-		networking.registerS2CPayloadType(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
 
 		// DEBUG
 		networking.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);

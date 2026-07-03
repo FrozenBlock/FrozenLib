@@ -32,12 +32,12 @@ public class FrozenLibParticleResources {
 
 	public static void init() {
 		final ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
-		particleRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED, ColoredSmokeParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED, ColoredLargeSmokeParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED, ColoredCampfireSmokeParticle.CosyProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED, ColoredCampfireSmokeParticle.SignalProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE.get(), FrozenLibParticleProviders.NoteProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED.get(), ColoredSmokeParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED.get(), ColoredLargeSmokeParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED.get(), ColoredCampfireSmokeParticle.CosyProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED.get(), ColoredCampfireSmokeParticle.SignalProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL.get(), WindParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM.get(), WindParticle.Provider::new);
 	}
 }

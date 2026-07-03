@@ -23,6 +23,7 @@ import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
 import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
 import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
@@ -37,6 +38,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
@@ -77,6 +79,7 @@ public final class FrozenLibNeoForge {
 			neoNetworking.flushConfig(registrar);
 		});
 		modBus.addListener(AddPackFindersEvent.class, NeoResourceLoaderHelper::flushPackFinders);
+		modBus.addListener(EntityAttributeCreationEvent.class, NeoDefaultAttributeRegistryHelper::flush);
 
 		FrozenLibMain.preQuiltInit();
 		FrozenLibMain.quiltInit();

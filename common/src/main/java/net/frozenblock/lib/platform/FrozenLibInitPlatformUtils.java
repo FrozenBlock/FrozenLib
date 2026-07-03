@@ -19,9 +19,15 @@ package net.frozenblock.lib.platform;
 
 import lombok.experimental.UtilityClass;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.service.BlockEntityRendererHelper;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
+import net.frozenblock.lib.platform.service.DefaultAttributeRegistryHelper;
+import net.frozenblock.lib.platform.service.EntityRendererHelper;
 import net.frozenblock.lib.platform.service.EventHelper;
 import net.frozenblock.lib.platform.service.HudElementHelper;
+import net.frozenblock.lib.platform.service.ModelLayerHelper;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.frozenblock.lib.platform.service.ResourceLoaderHelper;
@@ -30,8 +36,16 @@ import net.frozenblock.lib.platform.service.ResourceLoaderHelper;
 public class FrozenLibInitPlatformUtils {
 	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
 	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
+	public static final DefaultAttributeRegistryHelper DEFAULT_ATTRIBUTE_REGISTRY = load(DefaultAttributeRegistryHelper.class);
 	public static final EventHelper EVENT = load(EventHelper.class);
 	public static final NetworkingHelper NETWORKING = load(NetworkingHelper.class);
 	public static final ResourceLoaderHelper RESOURCE_LOADER = load(ResourceLoaderHelper.class);
 	public static final HudElementHelper HUD_ELEMENT = load(HudElementHelper.class);
+
+	@Environment(EnvType.CLIENT)
+	public static final ModelLayerHelper MODEL_LAYER = load(ModelLayerHelper.class);
+	@Environment(EnvType.CLIENT)
+	public static final BlockEntityRendererHelper BLOCK_ENTITY_RENDERER = load(BlockEntityRendererHelper.class);
+	@Environment(EnvType.CLIENT)
+	public static final EntityRendererHelper ENTITY_RENDERER = load(EntityRendererHelper.class);
 }

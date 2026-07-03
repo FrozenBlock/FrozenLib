@@ -351,6 +351,13 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 		}
 
 		@Override
+		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, Consumer<EntityType<E>> also) {
+			var id = Identifier.fromNamespaceAndPath(this.namespace, name);
+			var key = ResourceKey.create(Registries.ENTITY_TYPE, id);
+			return register(name, () -> EntityType.Builder.of(factory, category).build(key), also);
+		}
+
+		@Override
 		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder) {
 			return register(name, () -> {
 				var id = Identifier.fromNamespaceAndPath(this.namespace, name);
@@ -358,6 +365,16 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 				var b = EntityType.Builder.of(factory, category);
 				return builder.apply(b).build(key);
 			});
+		}
+
+		@Override
+		public <E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder, Consumer<EntityType<E>> also) {
+			return register(name, () -> {
+				var id = Identifier.fromNamespaceAndPath(this.namespace, name);
+				var key = ResourceKey.create(Registries.ENTITY_TYPE, id);
+				var b = EntityType.Builder.of(factory, category);
+				return builder.apply(b).build(key);
+			}, also);
 		}
 	}
 
