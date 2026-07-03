@@ -57,9 +57,9 @@ public class FrozenLibLootTableEvents {
 	 */
 	public static final Event<Replace> REPLACE = FrozenEvents.createEnvironmentEvent(
 		Replace.class,
-		callbacks -> (key, original, registries) -> {
+		callbacks -> (key, original, source, registries) -> {
 			for (var callback : callbacks) {
-				LootTable replaced = callback.replaceLootTable(key, original, registries);
+				LootTable replaced = callback.replaceLootTable(key, original, source, registries);
 				if (replaced != null) return replaced;
 			}
 			return null;
@@ -71,8 +71,8 @@ public class FrozenLibLootTableEvents {
 	 */
 	public static final Event<Modify> MODIFY = FrozenEvents.createEnvironmentEvent(
 		Modify.class,
-		callbacks -> (key, builder, registries) -> {
-			for (var callback : callbacks) callback.modifyLootTable(key, builder, registries);
+		callbacks -> (key, builder, source, registries) -> {
+			for (var callback : callbacks) callback.modifyLootTable(key, builder, source, registries);
 		});
 
 	/**
@@ -115,11 +115,12 @@ public class FrozenLibLootTableEvents {
 		 *
 		 * @param key the loot table key
 		 * @param original the original loot table
+		 * @param source the source of the original loot table
 		 * @param registries the holder lookup
 		 * @return the new loot table, or null if it wasn't replaced
 		 */
 		@Nullable
-		LootTable replaceLootTable(ResourceKey<LootTable> key, LootTable original, HolderLookup.Provider registries);
+		LootTable replaceLootTable(ResourceKey<LootTable> key, LootTable original, FrozenLibLootTableSource source, HolderLookup.Provider registries);
 	}
 
 	@FunctionalInterface
@@ -129,9 +130,10 @@ public class FrozenLibLootTableEvents {
 		 *
 		 * @param key the loot table key
 		 * @param builder a builder of the loot table being loaded
+		 * @param source the source of the loot table
 		 * @param registries the holder lookup
 		 */
-		void modifyLootTable(ResourceKey<LootTable> key, LootTable.Builder builder, HolderLookup.Provider registries);
+		void modifyLootTable(ResourceKey<LootTable> key, LootTable.Builder builder, FrozenLibLootTableSource source, HolderLookup.Provider registries);
 	}
 
 	@FunctionalInterface

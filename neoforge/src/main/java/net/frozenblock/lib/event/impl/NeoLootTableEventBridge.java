@@ -18,6 +18,8 @@
 package net.frozenblock.lib.event.impl;
 
 import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableSource;
+import net.frozenblock.lib.loot.impl.NeoLootUtil;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableAccessor;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableBuilderAccessor;
 import net.minecraft.core.HolderLookup;
@@ -41,15 +43,18 @@ public class NeoLootTableEventBridge {
 		LootTable original = event.getTable();
 		HolderLookup.Provider registries = event.getRegistries();
 
-		LootTable replaced = FrozenLibLootTableEvents.REPLACE.invoker().replaceLootTable(key, original, registries);
+		FrozenLibLootTableSource source = NeoLootUtil.SOURCES.get().getOrDefault(key.identifier(), FrozenLibLootTableSource.DATA_PACK);
+
+		LootTable replaced = FrozenLibLootTableEvents.REPLACE.invoker().replaceLootTable(key, original, source, registries);
+		LootTable table = original;
 		if (replaced != null) {
-			event.setTable(replaced);
-			return;
+			table = replaced;
+			source = FrozenLibLootTableSource.REPLACED;
 		}
 
-		LootTable.Builder builder = toBuilder(original);
+		LootTable.Builder builder = toBuilder(table);
 
-		FrozenLibLootTableEvents.MODIFY.invoker().modifyLootTable(key, builder, registries);
+		FrozenLibLootTableEvents.MODIFY.invoker().modifyLootTable(key, builder, source, registries);
 		event.setTable(builder.build());
 	}
 

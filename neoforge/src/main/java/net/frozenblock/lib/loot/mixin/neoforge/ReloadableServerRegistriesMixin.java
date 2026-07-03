@@ -20,6 +20,7 @@ package net.frozenblock.lib.loot.mixin.neoforge;
 import com.google.gson.JsonElement;
 import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
+import net.frozenblock.lib.loot.impl.NeoLootUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryOps;
@@ -57,5 +58,6 @@ abstract class ReloadableServerRegistriesMixin {
 			((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
 
 		FrozenLibLootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(resourceManager, lootTableRegistry);
+		NeoLootUtil.SOURCES.remove();
 	}
 }
