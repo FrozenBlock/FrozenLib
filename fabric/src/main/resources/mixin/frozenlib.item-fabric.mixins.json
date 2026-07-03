@@ -9,14 +9,10 @@
   "mixins": [
     "AbstractContainerMenuMixin",
     "FuelValuesMixin",
-    "ItemCooldownsMixin",
     "ItemStackMixin",
-    "ServerItemCooldownsMixin",
-    "ServerPlayerMixin",
     "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
     "bundle.BundleContentsMixin",
-    "recipe.RecipeBuilderMixin",
     "sherd.DecoratedPotPatternsMixin",
     "shovel.ShovelItemMixin"
   ],

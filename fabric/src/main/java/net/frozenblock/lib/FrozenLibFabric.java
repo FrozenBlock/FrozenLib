@@ -107,7 +107,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
-		StructureStatus.init();
 		ScreenShakes.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init

@@ -7,6 +7,10 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "loot.LootTableMixin"
+    "ItemCooldownsMixin",
+    "loot.LootTableMixin",
+    "ServerItemCooldownsMixin",
+    "ServerPlayerMixin",
+    "recipe.RecipeBuilderMixin"
   ]
 }

@@ -38,6 +38,7 @@ transitive-accessible field net/minecraft/client/multiplayer/ClientCommonPacketL
 transitive-accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
 transitive-accessible method net/minecraft/server/network/ServerConfigurationPacketListenerImpl finishCurrentTask (Lnet/minecraft/server/network/ConfigurationTask$Type;)V
 transitive-accessible field net/minecraft/server/network/ServerConfigurationPacketListenerImpl currentTask Lnet/minecraft/server/network/ConfigurationTask;
+transitive-accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
 
 # Command
 transitive-accessible field net/minecraft/commands/synchronization/ArgumentTypeInfos BY_CLASS Ljava/util/Map;
@@ -329,6 +330,11 @@ transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Bui
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Ljava/util/Optional;
 
 # Loot Pool
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool entries Ljava/util/List;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool conditions Ljava/util/List;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool functions Ljava/util/List;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder conditions Lcom/google/common/collect/ImmutableList$Builder;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
@@ -437,6 +443,7 @@ transitive-inject-interface net/minecraft/client/particle/LavaParticle net/froze
 
 # Minecraft Instance
 transitive-accessible method net/minecraft/client/Minecraft isMultiplayerServer ()Z
+transitive-accessible field net/minecraft/server/level/ServerPlayerGameMode level Lnet/minecraft/server/level/ServerLevel;
 
 # Splashes
 transitive-accessible method net/minecraft/client/resources/SplashManager literalSplash (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
@@ -467,3 +474,4 @@ transitive-inject-interface net/minecraft/server/packs/repository/PackRepository
 
 # Debug
 transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z
+transitive-accessible field net/minecraft/SharedConstants DEBUG_PRINT_PROPERTIES Z

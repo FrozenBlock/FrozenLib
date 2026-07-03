@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Environment(EnvType.CLIENT)
 @Mixin(FabricRenderState.class)
-public interface RenderStateDataKeyMixin extends FrozenLibRenderState {
+public interface RenderStateDataKeyMixin extends FrozenLibRenderState { // in common mixins.json
 
 	@Shadow
 	@Nullable <T> T getData(net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T> key);

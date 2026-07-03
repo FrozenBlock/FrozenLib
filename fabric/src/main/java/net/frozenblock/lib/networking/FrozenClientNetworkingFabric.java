@@ -76,10 +76,6 @@ public final class FrozenClientNetworkingFabric {
 		receiveFadingDistanceSwitchingSoundPacket();
 		receiveMovingFadingDistanceSwitchingSoundPacket();
 		onReceiveFlyBySoundPacket();
-		receiveCooldownChangePacket();
-		receiveForcedCooldownPacket();
-		receiveCooldownTickCountPacket();
-		receiveFileTransferPacket();
 
 		// DEBUG
 		receiveWindDebugPacket();
@@ -196,81 +192,6 @@ public final class FrozenClientNetworkingFabric {
 
 			final FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.source(), packet.sound().value());
 			FlyBySoundHub.addEntity(entity, flyBySound);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveCooldownChangePacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(CooldownChangePacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			final Identifier cooldownGroup = packet.cooldownGroup();
-			final int additional = packet.additional();
-			((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additional);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveForcedCooldownPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			final Identifier cooldownGroup = packet.cooldownGroup();
-			final int startTime = packet.startTime();
-			final int endTime = packet.endTime();
-			player.getCooldowns().cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveCooldownTickCountPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			if (player != null) player.getCooldowns().tickCount = packet.count();
-		});
-	}
-
-	private static void receiveFileTransferPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FileTransferPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
-
-			if (packet.request()) {
-				final String requestPath = packet.transferPath();
-				final String fileName = packet.fileName();
-				final List<String> fileExtensions = packet.fileExtensions();
-				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, null)) return;
-
-				final Path requestedPath = minecraft.gameDirectory.toPath().resolve(requestPath);
-				for (String fileExtension : fileExtensions) {
-					final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
-					final String fileNameWithExtension = fileName + "." + fixedExtension;
-					final File file = requestedPath.resolve(fileNameWithExtension).toFile();
-					final File localFile = requestedPath.resolve(FileTransferPacket.LOCAL_SOURCE).resolve(fileNameWithExtension).toFile();
-
-					final File sendingFile = file.exists() ? file : localFile.exists() ? localFile : null;
-					if (sendingFile == null) continue;
-
-					if (FrozenNetworking.connectedToIntegratedServer()) {
-						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
-						return;
-					} else {
-						try {
-							FrozenLibInitPlatformUtils.NETWORKING.sendToServer(FileTransferPacket.create(requestPath, sendingFile));
-							return;
-						} catch (IOException ignored) {}
-					}
-				}
-
-				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {}!", packet.fileName());
-			} else {
-				final String destPath = packet.transferPath();
-				final String fileName = packet.fileName();
-				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, null)) return;
-
-				try {
-					final Path path = minecraft.gameDirectory.toPath().resolve(destPath).resolve(fileName);
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), path.toFile());
-					FrozenLibConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
-					ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
-				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
-				}
-			}
 		});
 	}
 

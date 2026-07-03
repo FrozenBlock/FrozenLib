@@ -57,5 +57,27 @@ public final class FrozenLibConstants {
 		return id(path).toString().replace(":", "_");
 	}
 
+	private static String prefixDebugFlagName(final String name) {
+		return "MC_DEBUG_" + name;
+	}
+
+	private static boolean booleanProperty(final String name) {
+		String value = System.getProperty(name);
+		return value != null && (value.isEmpty() || Boolean.parseBoolean(value));
+	}
+
+	public static boolean debugFlag(final String name) {
+		if (!SharedConstants.DEBUG_ENABLED) {
+			return false;
+		} else {
+			String prefixedName = prefixDebugFlagName(name);
+			if (SharedConstants.DEBUG_PRINT_PROPERTIES) {
+				System.out.println("Debug property available: " + prefixedName + ": bool");
+			}
+
+			return booleanProperty(prefixedName);
+		}
+	}
+
 	private FrozenLibConstants() {}
 }

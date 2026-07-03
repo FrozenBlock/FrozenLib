@@ -8,6 +8,13 @@
   },
   "client": [
     "FrozenLibRenderStateMixin",
-    "RenderStateDataKeyMixin"
+    "RenderStateDataKeyMixin",
+    "builtinblockmodels.BuiltInBlockModelsMixin",
+    "camera.CameraMixin",
+    "camera.CameraRenderStateMixin",
+    "invert.ModelPartCubeMixin",
+    "invert.ModelPartMixin",
+    "invert.PartDefinitionMixin",
+    "invert.PolygonMixin"
   ]
 }

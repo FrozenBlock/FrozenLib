@@ -7,15 +7,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AbstractFishMixin",
-    "EntityMixin",
-    "VariantUtilsMixin",
-    "behavior.BehaviorMixin",
-    "category.MobCategoryMixin",
-    "cubemob.sulfurcube.AbstractCubeMobMixin",
-    "cubemob.sulfurcube.SulfurCubeMixin"
+    "category.MobCategoryMixin"
   ],
   "client": [
-    "client.rendering.LivingEntityRendererMixin"
   ]
 }

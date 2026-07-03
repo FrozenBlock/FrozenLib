@@ -13,6 +13,9 @@ config="mixin/frozenlib.block.mixins.json"
 config="mixin/frozenlib.cape.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.core.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.clothconfig.mixins.json"
 requiredMods=["cloth_config"]
 
@@ -35,6 +38,9 @@ config="mixin/frozenlib.item.mixins.json"
 config="mixin/frozenlib.levelgen.biome.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.levelgen.structure.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.levelgen.surface.mixins.json"
 
 [[mixins]]
@@ -44,10 +50,13 @@ config="mixin/frozenlib.event.neoforge.mixins.json"
 config="mixin/frozenlib.loot.neoforge.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.networking.mixins.json"
+config="mixin/frozenlib.menu.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.resource_pack.mixins.json"
+config="mixin/frozenlib.music.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.networking.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib_quiltmc_datafixerupper.mixins.json"
@@ -59,10 +68,16 @@ config="mixin/frozenlib_quiltmc_registry.mixins.json"
 config="mixin/frozenlib.renderer.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.resource_pack.mixins.json"
+
+[[mixins]]
     config="mixin/frozenlib.screenshake.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.tag.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.texture.mixins.json"
 
 [[mods]]
     modId="frozenlib"
