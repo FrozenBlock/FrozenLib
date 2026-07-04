@@ -26,6 +26,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -266,7 +267,8 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 		@Override
 		public <I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
-			return new FrozenDeferredItem<>(register(name, () -> func.apply(properties.get())));
+			var key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.namespace, name));
+			return new FrozenDeferredItem<>(register(name, () -> func.apply(properties.get().setId(key))));
 		}
 
 		@Override
@@ -277,6 +279,21 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 		@Override
 		public <I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func) {
 			return registerItem(name, func, Item.Properties::new);
+		}
+
+		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
+			return registerItem(key.identifier().getPath(), func, properties);
+		}
+
+		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerItem(key.identifier().getPath(), func, propertiesOp);
+		}
+
+		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func) {
+			return registerItem(key.identifier().getPath(), func);
 		}
 
 		@Override
@@ -295,8 +312,24 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 		}
 
 		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, Supplier<Item.Properties> properties) {
+			return registerItem(key, Item::new, properties);
+		}
+
+		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerItem(key, Item::new, propertiesOp);
+		}
+
+		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key) {
+			return registerItem(key, Item::new);
+		}
+
+		@Override
 		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
-			return registerItem(name, props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix());
+			var key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.namespace, name));
+			return registerItem(name, props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix().setId(key));
 		}
 
 		@Override
@@ -306,6 +339,21 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 		@Override
 		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block) {
+			return registerSimpleBlockItem(name, block, Item.Properties::new);
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
+			return registerSimpleBlockItem(name.item().identifier().getPath(), block, properties);
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerSimpleBlockItem(name, block, () -> propertiesOp.apply(new Item.Properties()));
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block) {
 			return registerSimpleBlockItem(name, block, Item.Properties::new);
 		}
 

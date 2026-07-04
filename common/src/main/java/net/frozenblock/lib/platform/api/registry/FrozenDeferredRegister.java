@@ -29,6 +29,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -188,11 +189,23 @@ public interface FrozenDeferredRegister<T> {
 
 		<I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func);
 
+		<I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties);
+
+		<I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> properties);
+
+		<I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func);
+
 		FrozenDeferredItem<Item> registerSimpleItem(String name, Supplier<Item.Properties> properties);
 
 		FrozenDeferredItem<Item> registerSimpleItem(String name, UnaryOperator<Item.Properties> properties);
 
 		FrozenDeferredItem<Item> registerSimpleItem(String name);
+
+		FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, Supplier<Item.Properties> properties);
+
+		FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, UnaryOperator<Item.Properties> properties);
+
+		FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key);
 
 		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties);
 
@@ -200,11 +213,21 @@ public interface FrozenDeferredRegister<T> {
 
 		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block);
 
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, Supplier<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block);
+
 		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, Supplier<Item.Properties> properties);
 
 		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, UnaryOperator<Item.Properties> properties);
 
 		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block);
+
+		default FrozenDeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type) {
+			return registerItem(key, SpawnEggItem::new, () -> new Item.Properties().spawnEgg(type.get()));
+		}
 	}
 
 	interface DataComponents extends FrozenDeferredRegister<DataComponentType<?>> {

@@ -37,6 +37,7 @@ import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.FabricFuelRegistry;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
@@ -102,6 +103,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
+		FabricFuelRegistry.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 

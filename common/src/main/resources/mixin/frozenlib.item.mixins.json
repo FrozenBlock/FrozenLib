@@ -7,10 +7,19 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "AbstractContainerMenuMixin",
     "ItemCooldownsMixin",
+    "ItemStackMixin",
+    "axe.AxeItemMixin",
+    "bonemeal.BoneMealItemMixin",
+    "bundle.BundleContentsMixin",
     "loot.LootTableMixin",
     "ServerItemCooldownsMixin",
     "ServerPlayerMixin",
+    "shovel.ShovelItemMixin",
     "recipe.RecipeBuilderMixin"
+  ],
+  "client": [
+    "client.LevelExtractorMixin"
   ]
 }

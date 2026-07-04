@@ -17,19 +17,15 @@
 
 package net.frozenblock.lib.item.api;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.minecraft.core.registries.Registries;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Instrument;
-import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 /**
@@ -46,11 +42,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final ItemStack stack = new ItemStack(item);
-				stack.setCount(1);
-				entries.accept(stack);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.insert(tab, item);
 		}
 	}
 
@@ -74,12 +66,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final ItemStack stack = new ItemStack(item);
-				stack.setCount(1);
-				final List<ItemStack> list = List.of(stack);
-				entries.insertBefore(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertBefore(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
@@ -95,14 +82,9 @@ public class FrozenCreativeTabs {
 		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null ) return;
+		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final ItemStack stack = new ItemStack(item);
-				stack.setCount(1);
-				final List<ItemStack> list = List.of(stack);
-				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
-				entries.insertBefore(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertBefore(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
@@ -130,12 +112,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final ItemStack stack = new ItemStack(item);
-				stack.setCount(1);
-				final List<ItemStack> list = List.of(stack);
-				entries.insertAfter(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertAfter(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
@@ -151,14 +128,9 @@ public class FrozenCreativeTabs {
 		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
+		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final ItemStack stack = new ItemStack(item);
-				stack.setCount(1);
-				final List<ItemStack> list = List.of(stack);
-				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
-				entries.insertAfter(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertAfter(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
@@ -170,17 +142,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				entries.getContext()
-					.holders()
-					.lookupOrThrow(Registries.INSTRUMENT)
-					.get(tagKey)
-					.ifPresent(
-						named -> named.stream()
-						.map(holder -> InstrumentItem.create(instrument, holder))
-						.forEach(stack -> entries.accept(stack, tabVisibility))
-					);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrument(tab, instrument, tagKey, tabVisibility);
 		}
 	}
 
@@ -197,19 +159,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final List<ItemStack> list = new ArrayList<>();
-				entries.getContext()
-					.holders()
-					.lookupOrThrow(Registries.INSTRUMENT)
-					.get(tagKey)
-					.ifPresent(
-						named -> named.stream()
-						.map(holder -> InstrumentItem.create(instrument, holder))
-						.forEach(list::add)
-					);
-				entries.insertBefore(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrumentBefore(tab, comparedItem, instrument, tagKey, tabVisibility);
 		}
 	}
 
@@ -226,19 +176,7 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
-				final List<ItemStack> list = new ArrayList<>();
-				entries.getContext()
-					.holders()
-					.lookupOrThrow(Registries.INSTRUMENT)
-					.get(tagKey)
-					.ifPresent(
-						named -> named.stream()
-						.map(holder -> InstrumentItem.create(instrument, holder))
-						.forEach(list::add)
-					);
-				entries.insertAfter(comparedItem, list, tabVisibility);
-			});
+			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrumentAfter(tab, comparedItem, instrument, tagKey, tabVisibility);
 		}
 	}
 }

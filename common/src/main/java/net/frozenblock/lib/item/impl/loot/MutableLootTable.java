@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import net.fabricmc.fabric.api.loot.v3.LootTableSource;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableSource;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKeySet;
@@ -54,7 +54,7 @@ public class MutableLootTable {
 	}
 
 	@Nullable
-	public static MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, LootTableSource source) {
+	public static MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, FrozenLibLootTableSource source) {
 		if (source.isBuiltin()) return getMutable(lootTableKey, id, lootTable);
 		return null;
 	}

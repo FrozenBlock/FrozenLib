@@ -1,15 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.item.mixin",
+  "package": "net.frozenblock.lib.registry.mixin.neoforge",
   "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "sherd.DecoratedPotPatternsMixin"
-  ],
-  "client": [
-    "client.LevelExtractorMixin"
+    "AxeItemAccessor",
+    "FireBlockAccessor"
   ]
 }

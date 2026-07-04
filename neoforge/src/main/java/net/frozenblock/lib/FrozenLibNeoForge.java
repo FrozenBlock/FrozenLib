@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import net.frozenblock.lib.command.NeoFrozenLibCommand;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
@@ -115,6 +116,7 @@ public final class FrozenLibNeoForge {
 		});
 
 		ScreenShakes.init();
+		NeoFuelRegistry.init();
 
 		// some events need to use the NeoForge event bus
 		NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->

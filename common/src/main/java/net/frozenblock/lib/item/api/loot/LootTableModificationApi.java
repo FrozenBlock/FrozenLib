@@ -18,7 +18,6 @@
 package net.frozenblock.lib.item.api.loot;
 
 import io.netty.util.internal.UnstableApi;
-import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.frozenblock.lib.item.impl.loot.MutableLootTable;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -27,14 +26,14 @@ import net.minecraft.world.level.storage.loot.LootTable;
 public class LootTableModificationApi {
 
 	public static void editTable(ResourceKey<LootTable> targetLootTable, boolean requiresBuiltIn, Edit listener) {
-		LootTableEvents.Replace modification = (id, lootTable, source, registries) -> {
+		FrozenLibLootTableEvents.Replace modification = (id, lootTable, source, registries) -> {
 			if ((requiresBuiltIn && !source.isBuiltin()) || !targetLootTable.equals(id)) return null;
 			final MutableLootTable mutableLootTable = new MutableLootTable(lootTable);
 			listener.editLootTable(id, mutableLootTable);
 			return mutableLootTable.build();
 		};
 
-		LootTableEvents.REPLACE.register(modification);
+		FrozenLibLootTableEvents.REPLACE.register(modification);
 	}
 
 	@FunctionalInterface

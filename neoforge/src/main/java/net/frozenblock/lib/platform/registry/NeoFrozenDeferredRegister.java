@@ -26,6 +26,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -61,7 +62,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
 		var holder = new NeoFrozenHolder<>(this.inner.register(name, supplier));
-		consumers.put((FrozenHolder) holder, (Consumer) also);
+		if (also != null) consumers.put((FrozenHolder) holder, (Consumer) also);
 		return (FrozenHolder<T, I>) holder;
 	}
 
@@ -73,7 +74,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Function<Identifier, ? extends I> func, Consumer<I> also) {
 		var holder = new NeoFrozenHolder<>(this.inner.register(name, func));
-		consumers.put((FrozenHolder) holder, (Consumer) also);
+		if (also != null) consumers.put((FrozenHolder) holder, (Consumer) also);
 		return (FrozenHolder<T, I>) holder;
 	}
 
@@ -85,7 +86,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, Consumer<I> also) {
 		var holder = new NeoFrozenHolder<>(this.inner.register(key.identifier().getPath(), supplier));
-		consumers.put((FrozenHolder) holder, (Consumer) also);
+		if (also != null) consumers.put((FrozenHolder) holder, (Consumer) also);
 		return (FrozenHolder<T, I>) holder;
 	}
 
@@ -97,7 +98,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Function<Identifier, ? extends I> func, Consumer<I> also) {
 		var holder = new NeoFrozenHolder<>(this.inner.register(key.identifier().getPath(), func));
-		consumers.put((FrozenHolder) holder, (Consumer) also);
+		if (also != null) consumers.put((FrozenHolder) holder, (Consumer) also);
 		return (FrozenHolder<T, I>) holder;
 	}
 
@@ -273,6 +274,21 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 
 		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
+			return registerItem(key.identifier().getPath(), func, properties);
+		}
+
+		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerItem(key.identifier().getPath(), func, propertiesOp);
+		}
+
+		@Override
+		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func) {
+			return registerItem(key.identifier().getPath(), func);
+		}
+
+		@Override
 		public FrozenDeferredItem<Item> registerSimpleItem(String name, Supplier<Item.Properties> properties) {
 			return registerItem(name, Item::new, properties);
 		}
@@ -288,6 +304,21 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 
 		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, Supplier<Item.Properties> properties) {
+			return registerItem(key, Item::new, properties);
+		}
+
+		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerItem(key, Item::new, propertiesOp);
+		}
+
+		@Override
+		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key) {
+			return registerItem(key, Item::new);
+		}
+
+		@Override
 		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
 			return registerItem(name, props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix());
 		}
@@ -299,6 +330,21 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 		@Override
 		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block) {
+			return registerSimpleBlockItem(name, block, Item.Properties::new);
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
+			return registerSimpleBlockItem(name.item().identifier().getPath(), block, properties);
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
+			return registerSimpleBlockItem(name, block, () -> propertiesOp.apply(new Item.Properties()));
+		}
+
+		@Override
+		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block) {
 			return registerSimpleBlockItem(name, block, Item.Properties::new);
 		}
 
