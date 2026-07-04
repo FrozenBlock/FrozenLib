@@ -31,6 +31,9 @@ public final class FabricEventBridge {
 		FabricServerTickEventsBridge.init();
 		FabricServerLevelEventsBridge.init();
 		FabricEntityTrackingEventsBridge.init();
+		FabricEntityLifecycleEventsBridge.init();
+		FabricBlockEntityLifecycleEventsBridge.init();
+		FabricChunkLifecycleEventsBridge.init();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(instance -> LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance));
 		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));
@@ -49,5 +52,8 @@ public final class FabricEventBridge {
 		FabricClientLifecycleEventBridge.init();
 		FabricClientTickEventsBridge.init();
 		FabricClientLevelEventsBridge.init();
+		FabricClientEntityLifecycleEventsBridge.init();
+		FabricClientBlockEntityLifecycleEventsBridge.init();
+		FabricClientChunkLifecycleEventsBridge.init();
 	}
 }

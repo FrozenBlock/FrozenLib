@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.config.api.sync;
 
-//TODO NEOFORGE
-//import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 
 /**
  * Used to provide the behavior for a config entry when syncing is in action.

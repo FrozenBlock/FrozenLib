@@ -21,9 +21,16 @@ import java.util.function.Supplier;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
+import net.fabricmc.fabric.impl.attachment.sync.AttachmentSync;
+import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
+import net.frozenblock.lib.networking.PlayerLookup;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 public class FabricDataAttachmentHelper implements DataAttachmentHelper {
@@ -49,28 +56,39 @@ public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 		}
 
 		@Override
-		public @Nullable T get(Object holder) {
+		public @Nullable T get(DataAttachmentTarget holder) {
 			return ((AttachmentTarget) holder).getAttached(this.attachmentType);
 		}
 
 		@Override
-		public T getOrDefault(Object holder, T fallback) {
+		public T getOrDefault(DataAttachmentTarget holder, T fallback) {
 			return ((AttachmentTarget) holder).getAttachedOrElse(this.attachmentType, fallback);
 		}
 
 		@Override
-		public void set(Object holder, T value) {
+		public void set(DataAttachmentTarget holder, T value) {
 			((AttachmentTarget) holder).setAttached(this.attachmentType, value);
 		}
 
 		@Override
-		public void remove(Object holder) {
+		public void remove(DataAttachmentTarget holder) {
 			((AttachmentTarget) holder).removeAttached(this.attachmentType);
 		}
 
 		@Override
-		public boolean has(Object holder) {
+		public boolean has(DataAttachmentTarget holder) {
 			return ((AttachmentTarget) holder).hasAttached(this.attachmentType);
+		}
+
+		@Override
+		public void sync(DataAttachmentTarget holder) {
+			if (!(holder instanceof ServerLevel serverLevel)) {
+				throw new UnsupportedOperationException("Manual sync is only supported for ServerLevel holders, got " + holder);
+			}
+
+			final T value = ((AttachmentTarget) holder).getAttached(this.attachmentType);
+			final AttachmentChange change = new AttachmentChange(AttachmentTargetInfo.LevelTarget.INSTANCE, this.attachmentType, value);
+			for (ServerPlayer player : PlayerLookup.level(serverLevel)) AttachmentSync.trySync(change, player);
 		}
 
 		@Override

@@ -18,6 +18,7 @@
 package net.frozenblock.lib.wind.mixin;
 
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.minecraft.world.level.Level;
@@ -37,9 +38,9 @@ public class AttachmentChangeMixin {
 		if (!level.isClientSide()) return;
 
 		AttachmentChange attachmentChange = AttachmentChange.class.cast(this);
-		if (attachmentChange.type() != WindDisturbances.ATTACHMENT_TYPE) return;
+		if (!attachmentChange.type().identifier().equals(WindDisturbances.ATTACHMENT_TYPE.identifier())) return;
 
 		final WindManager windManager = WindManager.getOrCreate(level);
-		windManager.trackDisturbanceHolder(attachmentChange.targetInfo().getTarget(level));
+		windManager.trackDisturbanceHolder((DataAttachmentTarget) attachmentChange.targetInfo().getTarget(level));
 	}
 }

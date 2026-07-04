@@ -32,6 +32,7 @@ import net.frozenblock.lib.platform.service.FlammableBlockRegistryHelper;
 import net.frozenblock.lib.platform.service.HudElementHelper;
 import net.frozenblock.lib.platform.service.ModelLayerHelper;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
+import net.frozenblock.lib.platform.service.ParticleProviderRegistryHelper;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.frozenblock.lib.platform.service.ResourceLoaderHelper;
 import net.frozenblock.lib.platform.service.StrippableBlockRegistryHelper;
@@ -56,4 +57,6 @@ public class FrozenLibInitPlatformUtils {
 	public static final BlockEntityRendererHelper BLOCK_ENTITY_RENDERER = load(BlockEntityRendererHelper.class);
 	@Environment(EnvType.CLIENT)
 	public static final EntityRendererHelper ENTITY_RENDERER = load(EntityRendererHelper.class);
+	@Environment(EnvType.CLIENT)
+	public static final ParticleProviderRegistryHelper PARTICLE_PROVIDER_REGISTRY = load(ParticleProviderRegistryHelper.class);
 }

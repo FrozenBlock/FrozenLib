@@ -19,13 +19,13 @@ package net.frozenblock.lib.particle;
 
 import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.FrozenParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -82,7 +82,7 @@ public class FrozenLibParticleTypes {
 	public static void init() {}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name, boolean alwaysShow) {
-		return REGISTER.register(name, () -> FabricParticleTypes.simple(alwaysShow));
+		return REGISTER.register(name, () -> FrozenParticleTypes.simple(alwaysShow));
 	}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name) {
@@ -95,16 +95,6 @@ public class FrozenLibParticleTypes {
 		Function<ParticleType<T>, MapCodec<T>> codec,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return REGISTER.register(id, () -> new ParticleType<>(alwaysShow) {
-			@Override
-			public MapCodec<T> codec() {
-				return codec.apply(this);
-			}
-
-			@Override
-			public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
-				return streamCodec.apply(this);
-			}
-		});
+		return REGISTER.register(id, () -> FrozenParticleTypes.complex(alwaysShow, codec, streamCodec));
 	}
 }

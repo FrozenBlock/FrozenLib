@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -105,28 +106,33 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 		}
 
 		@Override
-		public @Nullable T get(Object holder) {
+		public @Nullable T get(DataAttachmentTarget holder) {
 			return ((IAttachmentHolder) holder).getExistingDataOrNull(this.holder.get());
 		}
 
 		@Override
-		public T getOrDefault(Object holder, T fallback) {
+		public T getOrDefault(DataAttachmentTarget holder, T fallback) {
 			return ((IAttachmentHolder) holder).getExistingData(this.holder.get()).orElse(fallback);
 		}
 
 		@Override
-		public void set(Object holder, T value) {
+		public void set(DataAttachmentTarget holder, T value) {
 			((IAttachmentHolder) holder).setData(this.holder.get(), value);
 		}
 
 		@Override
-		public void remove(Object holder) {
+		public void remove(DataAttachmentTarget holder) {
 			((IAttachmentHolder) holder).removeData(this.holder.get());
 		}
 
 		@Override
-		public boolean has(Object holder) {
+		public boolean has(DataAttachmentTarget holder) {
 			return ((IAttachmentHolder) holder).hasData(this.holder.get());
+		}
+
+		@Override
+		public void sync(DataAttachmentTarget holder) {
+			((IAttachmentHolder) holder).syncData(this.holder.get());
 		}
 
 		@Override

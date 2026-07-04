@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
@@ -47,7 +48,7 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 			.syncWith(STREAM_CODEC)
 	);
 
-	public static void tick(Level level, Object target) {
+	public static void tick(Level level, DataAttachmentTarget target) {
 		final ScreenShakes screenShakes = ATTACHMENT.get(target);
 		if (screenShakes == null) return;
 		if (screenShakes.isEmpty()) {
@@ -70,11 +71,11 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		});
 	}
 
-	public static void set(Object target, ScreenShake... screenShakes) {
+	public static void set(DataAttachmentTarget target, ScreenShake... screenShakes) {
 		ATTACHMENT.set(target, new ScreenShakes(List.of(screenShakes)));
 	}
 
-	public static void add(Object target, ScreenShake screenShake) {
+	public static void add(DataAttachmentTarget target, ScreenShake screenShake) {
 		final ScreenShakes screenShakes = ATTACHMENT.getOrDefault(target, EMPTY);
 		if (screenShakes.isEmpty()) {
 			set(target, screenShake);
@@ -83,33 +84,33 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		ATTACHMENT.set(target, screenShakes.add(screenShake));
 	}
 
-	public static void removeAttachment(Object target) {
+	public static void removeAttachment(DataAttachmentTarget target) {
 		ATTACHMENT.remove(target);
 	}
 
-	public static void removeIf(Object target, Predicate<ScreenShake> removeIf) {
+	public static void removeIf(DataAttachmentTarget target, Predicate<ScreenShake> removeIf) {
 		final ScreenShakes screenShakes = ATTACHMENT.getOrDefault(target, EMPTY);
 		if (screenShakes.isEmpty()) return;
 		ATTACHMENT.set(target, screenShakes.removeIf(removeIf));
 	}
 
-	public static boolean anyMatch(Object target, Predicate<ScreenShake> predicate) {
+	public static boolean anyMatch(DataAttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return ATTACHMENT.getOrDefault(target, EMPTY).anyMatch(predicate);
 	}
 
-	public static boolean allMatch(Object target, Predicate<ScreenShake> predicate) {
+	public static boolean allMatch(DataAttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return ATTACHMENT.getOrDefault(target, EMPTY).allMatch(predicate);
 	}
 
-	public static boolean noneMatch(Object target, Predicate<ScreenShake> predicate) {
+	public static boolean noneMatch(DataAttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return ATTACHMENT.getOrDefault(target, EMPTY).noneMatch(predicate);
 	}
 
-	public static boolean has(Object target) {
+	public static boolean has(DataAttachmentTarget target) {
 		return !ATTACHMENT.getOrDefault(target, EMPTY).isEmpty();
 	}
 
-	public static ScreenShakes get(Object target) {
+	public static ScreenShakes get(DataAttachmentTarget target) {
 		return ATTACHMENT.getOrDefault(target, EMPTY);
 	}
 

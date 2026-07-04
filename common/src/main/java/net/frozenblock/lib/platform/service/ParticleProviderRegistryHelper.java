@@ -15,18 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.networking;
+package net.frozenblock.lib.platform.service;
 
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
+import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import java.util.function.Supplier;
 
-// TODO PORT THESE TO NEOFORGE
-public final class FrozenNetworkingFabric {
+public interface ParticleProviderRegistryHelper {
 
-	public static void registerNetworking() {
-		final var networking = FrozenLibInitPlatformUtils.NETWORKING;
+	<T extends ParticleOptions> void register(Supplier<ParticleType<T>> type, ParticleProvider<T> provider);
 
-		// DEBUG
-		networking.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
-	}
+	<T extends ParticleOptions> void register(Supplier<ParticleType<T>> type, PendingParticleProvider<T> provider);
 }

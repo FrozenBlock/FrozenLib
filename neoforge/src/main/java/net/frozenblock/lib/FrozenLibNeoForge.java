@@ -31,6 +31,10 @@ import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
+import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
+import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
@@ -116,6 +120,10 @@ public final class FrozenLibNeoForge {
 		});
 
 		ScreenShakes.init();
+		WindManager.init();
+		WindManagerExtensionType.init();
+		WindDisturbances.init();
+		WindDisturbanceType.init();
 		NeoFuelRegistry.init();
 
 		// some events need to use the NeoForge event bus

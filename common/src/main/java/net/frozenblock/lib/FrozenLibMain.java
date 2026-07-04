@@ -26,6 +26,7 @@ import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;import
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -71,6 +72,7 @@ public final class FrozenLibMain {
 		StructureStatus.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
+		FrozenLibParticleTypes.init();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

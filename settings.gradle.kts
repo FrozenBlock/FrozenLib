@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        mavenLocal()
         maven("https://maven.quiltmc.org/repository/release") {
             name = "Quilt"
         }

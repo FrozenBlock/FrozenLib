@@ -18,7 +18,6 @@
 package net.frozenblock.lib.platform.api.data;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -27,17 +26,12 @@ import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A cross-platform per-object data attachment, analogous to Fabric's {@code AttachmentType}
  * and NeoForge's {@code AttachmentType}.
- *
- * <p>{@code holder} is intentionally typed as {@link Object}: common code cannot reference
- * Fabric's {@code AttachmentTarget} or NeoForge's {@code IAttachmentHolder} marker interfaces,
- * since those only exist on their respective platforms. Pass the actual {@code Entity},
- * {@code Level}, {@code BlockEntity}, etc. instance; each platform implementation casts it
- * internally.
  *
  * <p>Create with {@link #builder(Identifier)}.
  *
@@ -62,15 +56,20 @@ public interface DataAttachmentType<T> {
 	Identifier identifier();
 
 	@Nullable
-	T get(Object holder);
+	T get(DataAttachmentTarget holder);
 
-	T getOrDefault(Object holder, T fallback);
+	T getOrDefault(DataAttachmentTarget holder, T fallback);
 
-	void set(Object holder, T value);
+	void set(DataAttachmentTarget holder, T value);
 
-	void remove(Object holder);
+	void remove(DataAttachmentTarget holder);
 
-	boolean has(Object holder);
+	boolean has(DataAttachmentTarget holder);
+
+	/**
+	 * A manual force sync
+	 */
+	void sync(DataAttachmentTarget holder);
 
 	@Nullable
 	Supplier<T> initializer();
@@ -81,17 +80,17 @@ public interface DataAttachmentType<T> {
 
 	boolean copyOnDeath();
 
-	default T getAttachedOrThrow(Object holder) {
+	default T getAttachedOrThrow(DataAttachmentTarget holder) {
 		return Objects.requireNonNull(get(holder), "No value attached for " + identifier());
 	}
 
-	default T getAttachedOrCreate(Object holder) {
+	default T getAttachedOrCreate(DataAttachmentTarget holder) {
 		Supplier<T> init = initializer();
 		if (init == null) throw new IllegalArgumentException("getAttachedOrCreate() without supplier requires an initializer on the attachment type");
 		return getAttachedOrCreate(holder, init);
 	}
 
-	default T getAttachedOrCreate(Object holder, Supplier<T> initializer) {
+	default T getAttachedOrCreate(DataAttachmentTarget holder, Supplier<T> initializer) {
 		T value = get(holder);
 		if (value != null) return value;
 		T initialized = Objects.requireNonNull(initializer.get(), "initializer result cannot be null");
@@ -99,7 +98,7 @@ public interface DataAttachmentType<T> {
 		return initialized;
 	}
 
-	default T getAttachedOrSet(Object holder, T defaultValue) {
+	default T getAttachedOrSet(DataAttachmentTarget holder, T defaultValue) {
 		Objects.requireNonNull(defaultValue, "default value cannot be null");
 		T value = get(holder);
 		if (value != null) return value;
@@ -107,14 +106,14 @@ public interface DataAttachmentType<T> {
 		return defaultValue;
 	}
 
-	default T getAttachedOrGet(Object holder, Supplier<T> defaultValue) {
+	default T getAttachedOrGet(DataAttachmentTarget holder, Supplier<T> defaultValue) {
 		Objects.requireNonNull(defaultValue, "default value supplier cannot be null");
 		T value = get(holder);
 		return value != null ? value : defaultValue.get();
 	}
 
 	@Nullable
-	default T modifyAttached(Object holder, UnaryOperator<T> modifier) {
+	default T modifyAttached(DataAttachmentTarget holder, UnaryOperator<T> modifier) {
 		T previous = get(holder);
 		set(holder, modifier.apply(previous));
 		return previous;

@@ -19,7 +19,7 @@ package net.frozenblock.lib.debug.client.renderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 		if (level == null) return;
 		ClientWindUtil.Debug.getWindDisturbances().forEach(
 			tracked -> {
-				final AttachmentTarget target = tracked.getFirst();
+				final DataAttachmentTarget target = tracked.getFirst();
 				for (WindDisturbance disturbance : tracked.getSecond()) {
 					final Vec3 origin = disturbance.origin(target, level);
 					Gizmos.cuboid(disturbance.area(target, level, origin), WIND_DISTURBANCE_AREA_STYLE);

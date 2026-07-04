@@ -21,14 +21,14 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.event.api.events.ClientBlockEntityLifecycleEvents;
+import net.frozenblock.lib.event.api.events.ClientChunkLifecycleEvents;
+import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
+import net.frozenblock.lib.event.api.events.ClientEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
@@ -51,22 +51,22 @@ public class ClientWindUtil {
 
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, level) -> WindManager.INSTANCE.reset());
 
-		ClientPlayConnectionEvents.DISCONNECT.register((minecraft, level) -> WindManager.INSTANCE.reset());
+		ClientConnectionEvents.DISCONNECT.register((handler, client) -> WindManager.INSTANCE.reset());
 
-		ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
-		ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
+		ClientEntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
+		ClientEntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
-		ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
-		ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
 
-		ClientChunkEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder(chunk));
-		ClientChunkEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder(chunk));
+		ClientChunkLifecycleEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder(chunk));
+		ClientChunkLifecycleEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder(chunk));
 	}
 
 	@VisibleForDebug
 	public static class Debug {
 		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-		private static final List<Pair<AttachmentTarget, WindDisturbances>> WIND_DISTURBANCES = new ArrayList<>();
+		private static final List<Pair<DataAttachmentTarget, WindDisturbances>> WIND_DISTURBANCES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
 
@@ -110,7 +110,7 @@ public class ClientWindUtil {
 
 		@VisibleForDebug
 		@Unmodifiable
-		public static List<Pair<AttachmentTarget, WindDisturbances>> getWindDisturbances() {
+		public static List<Pair<DataAttachmentTarget, WindDisturbances>> getWindDisturbances() {
 			return ImmutableList.copyOf(WIND_DISTURBANCES);
 		}
 
@@ -123,7 +123,7 @@ public class ClientWindUtil {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			WIND_DISTURBANCES.forEach(
 				tracked -> {
-					final AttachmentTarget target = tracked.getFirst();
+					final DataAttachmentTarget target = tracked.getFirst();
 					for (WindDisturbance disturbance : tracked.getSecond()) {
 						final AABB area = disturbance.area(target, level, disturbance.origin(target, level));
 						BlockPos.betweenClosed(

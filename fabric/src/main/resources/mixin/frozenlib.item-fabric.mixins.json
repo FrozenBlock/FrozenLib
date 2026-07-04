@@ -10,6 +10,5 @@
     "sherd.DecoratedPotPatternsMixin"
   ],
   "client": [
-    "client.LevelExtractorMixin"
   ]
 }

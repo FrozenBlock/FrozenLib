@@ -24,20 +24,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.frozenblock.lib.networking.PlayerLookup;
-import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
-import net.fabricmc.fabric.impl.attachment.sync.AttachmentSync;
-import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
@@ -50,7 +44,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -90,17 +83,14 @@ public class WindManager {
 		ByteBufCodecs.optional(ByteBufCodecs.LONG), windManager -> windManager.seed,
 		WindManager::applyFromStreamCodec
 	);
-	public static final AttachmentType<WindManager> ATTACHMENT_TYPE = AttachmentRegistry.create(
+	public static final DataAttachmentType<WindManager> ATTACHMENT_TYPE = DataAttachmentType.create(
 		FrozenLibConstants.id("wind"),
-		builder -> {
-			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
-		}
+		builder -> builder.persistent(CODEC).syncWith(STREAM_CODEC)
 	);
 
 	private Level level;
 	public final List<WindManagerExtension> extensions = new ArrayList<>();
-	private final List<AttachmentTarget> disturbanceHolders = new ArrayList<>();
+	private final List<DataAttachmentTarget> disturbanceHolders = new ArrayList<>();
 	private boolean loadedExtensions;
 	public Optional<Vec3> windOverride = Optional.empty();
 	public double windX;
@@ -133,7 +123,9 @@ public class WindManager {
 		}
 	}
 
-	public static void init() {}
+	public static void init() {
+		TickEvents.START_LEVEL_TICK.register(serverLevel -> getOrCreate(serverLevel).tick(serverLevel));
+	}
 
 	/**
 	 * Returns the {@link WindManager} used for a given {@link Level}.
@@ -143,11 +135,11 @@ public class WindManager {
 	 */
 	public static WindManager getOrCreate(Level level) {
 		WindManager windManager = level instanceof ServerLevel
-			? level.getAttached(ATTACHMENT_TYPE)
+			? level.frozenLib$getAttached(ATTACHMENT_TYPE)
 			: INSTANCE;
 		if (windManager == null) {
 			windManager = new WindManager((ServerLevel) level);
-			level.setAttached(ATTACHMENT_TYPE, windManager);
+			level.frozenLib$setAttached(ATTACHMENT_TYPE, windManager);
 		} else {
 			windManager.setLevel(level);
 		}
@@ -211,7 +203,7 @@ public class WindManager {
 		if (this.loadedExtensions) return;
 
 		final List<WindManagerExtension> extensions = new ArrayList<>(this.extensions);
-		level.registryAccess().lookupOrThrow(FrozenLibFabricRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY).stream()
+		level.registryAccess().lookupOrThrow(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY).stream()
 			.filter(type -> extensions.stream().noneMatch(extension -> extension.type() == type))
 			.forEach(type -> extensions.add(type.supplier().get()));
 
@@ -250,43 +242,43 @@ public class WindManager {
 	}
 
 	/**
-	 * @return the currently tracked {@link WindDisturbances}, paired with their respective sources in {@link AttachmentTarget} sources.
+	 * @return the currently tracked {@link WindDisturbances}, paired with their respective sources.
 	 */
-	public List<Pair<AttachmentTarget, WindDisturbances>> getWindDisturbances() {
+	public List<Pair<DataAttachmentTarget, WindDisturbances>> getWindDisturbances() {
 		return this.disturbanceHolders.stream()
-			.map(target -> WindDisturbances.getAsPair(target))
+			.map(WindDisturbances::getAsPair)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();
 	}
 
 	/**
-	 * Tracks an {@link AttachmentTarget}.
+	 * Tracks a disturbance holder.
 	 * <p>
 	 * This is used to track {@link WindDisturbances}.
 	 *
-	 * @param target The {@link AttachmentTarget} to be tracked.
+	 * @param target The holder to be tracked.
 	 */
-	public void trackDisturbanceHolder(@Nullable AttachmentTarget target) {
+	public void trackDisturbanceHolder(@Nullable DataAttachmentTarget target) {
 		if (target == null || this.disturbanceHolders.contains(target)) return;
 		this.disturbanceHolders.add(target);
 	}
 
 	/**
-	 * Untracks an {@link AttachmentTarget}.
+	 * Untracks a disturbance holder.
 	 *
-	 * @param target The {@link AttachmentTarget} to be untracked.
+	 * @param target The holder to be untracked.
 	 */
-	public void untrackDisturbanceHolder(AttachmentTarget target) {
+	public void untrackDisturbanceHolder(DataAttachmentTarget target) {
 		this.disturbanceHolders.remove(target);
 	}
 
 	/**
-	 * Tracks or untracks a {@link AttachmentTarget} depending on whether it is present and has {@link WindDisturbances}.
+	 * Tracks or untracks a holder depending on whether it is present and has {@link WindDisturbances}.
 	 *
-	 * @param target The {@link AttachmentTarget} to be tracked or untracked.
+	 * @param target The holder to be tracked or untracked.
 	 */
-	public void trackOrUntrackDisturbanceHolder(@Nullable AttachmentTarget target) {
+	public void trackOrUntrackDisturbanceHolder(@Nullable DataAttachmentTarget target) {
 		if (target == null) return;
 		if (WindDisturbances.has(target)) {
 			trackDisturbanceHolder(target);
@@ -398,9 +390,7 @@ public class WindManager {
 
 	public void trySync(Level level) {
 		if (!(level instanceof ServerLevel serverLevel)) return;
-
-		final AttachmentChange syncedAttachment = new AttachmentChange(AttachmentTargetInfo.LevelTarget.INSTANCE, ATTACHMENT_TYPE, this);
-		for (ServerPlayer player : PlayerLookup.level(serverLevel)) AttachmentSync.trySync(syncedAttachment, player);
+		ATTACHMENT_TYPE.sync(serverLevel);
 	}
 
 	/**
@@ -491,7 +481,7 @@ public class WindManager {
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
 			FrozenNetworking.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
-		} else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+		} else if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
 			ClientWindUtil.Debug.addAccessedPosition(target);
 		}
 
@@ -523,8 +513,8 @@ public class WindManager {
 	private Pair<Double, Vec3> calculateWindDisturbance(Vec3 target) {
 		final ArrayList<WindDisturbanceResult.Success> successes = new ArrayList<>();
 		double maxStrength = 0D;
-		for (Pair<AttachmentTarget, WindDisturbances> tracked : this.getWindDisturbances()) {
-			final AttachmentTarget source = tracked.getFirst();
+		for (Pair<DataAttachmentTarget, WindDisturbances> tracked : this.getWindDisturbances()) {
+			final DataAttachmentTarget source = tracked.getFirst();
 			for (WindDisturbance disturbance : tracked.getSecond()) {
 				if (disturbance.expired(source, this.level)) continue;
 

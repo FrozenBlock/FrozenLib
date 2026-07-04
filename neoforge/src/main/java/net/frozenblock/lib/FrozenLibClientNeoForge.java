@@ -18,14 +18,18 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
+import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
 import net.frozenblock.lib.platform.model.NeoModelLayerHelper;
+import net.frozenblock.lib.platform.particle.NeoParticleProviderRegistryHelper;
 import net.frozenblock.lib.platform.renderer.NeoBlockEntityRendererHelper;
 import net.frozenblock.lib.platform.renderer.NeoEntityRendererHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
+import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.api.distmarker.Dist;
@@ -37,6 +41,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
@@ -56,6 +61,7 @@ public final class FrozenLibClientNeoForge {
 		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, NeoModelLayerHelper::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoBlockEntityRendererHelper::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoEntityRendererHelper::flush);
+		modBus.addListener(RegisterParticleProvidersEvent.class, NeoParticleProviderRegistryHelper::flush);
 
 		NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
 			Minecraft minecraft = Minecraft.getInstance();
@@ -67,6 +73,9 @@ public final class FrozenLibClientNeoForge {
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientScreenShaker.reset()
 		);
+
+		ClientTickEvents.START_LEVEL_TICK.register(level -> WindManager.getOrCreate(level).tick(level));
+		ClientWindUtil.init();
 
 		ModLoadingContext.get().registerExtensionPoint(
 			IConfigScreenFactory.class,

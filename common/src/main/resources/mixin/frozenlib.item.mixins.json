@@ -10,14 +10,15 @@
     "AbstractContainerMenuMixin",
     "ItemCooldownsMixin",
     "ItemStackMixin",
+    "ServerItemCooldownsMixin",
+    "ServerPlayerMixin",
     "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
     "bundle.BundleContentsMixin",
+    "loot.LootTableBuilderMixin",
     "loot.LootTableMixin",
-    "ServerItemCooldownsMixin",
-    "ServerPlayerMixin",
-    "shovel.ShovelItemMixin",
-    "recipe.RecipeBuilderMixin"
+    "recipe.RecipeBuilderMixin",
+    "shovel.ShovelItemMixin"
   ],
   "client": [
     "client.LevelExtractorMixin"

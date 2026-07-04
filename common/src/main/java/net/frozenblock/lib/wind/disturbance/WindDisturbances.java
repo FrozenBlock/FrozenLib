@@ -26,14 +26,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.event.api.events.BlockEntityLifecycleEvents;
+import net.frozenblock.lib.event.api.events.ChunkLifecycleEvents;
+import net.frozenblock.lib.event.api.events.EntityLifecycleEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -50,43 +48,40 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 		WindDisturbance.LIST_STREAM_CODEC, WindDisturbances::windDisturbances,
 		WindDisturbances::new
 	);
-	public static final AttachmentType<WindDisturbances> ATTACHMENT_TYPE = AttachmentRegistry.create(
+	public static final DataAttachmentType<WindDisturbances> ATTACHMENT_TYPE = DataAttachmentType.create(
 		FrozenLibConstants.id("wind_disturbances"),
-		builder -> {
-			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
-		}
+		builder -> builder.persistent(CODEC).syncWith(STREAM_CODEC)
 	);
 
 	public static void init() {
-		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
+		EntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> {
 			WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity);
 			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
 			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
 		});
-		ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
+		EntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
-		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
-		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
+		BlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
+		BlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
 
-		ServerChunkEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceHolder(chunk));
-		ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder(chunk));
+		ChunkLifecycleEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceHolder(chunk));
+		ChunkLifecycleEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder(chunk));
 	}
 
-	public static void set(Level level, AttachmentTarget target, WindDisturbances windDisturbances) {
-		target.setAttached(ATTACHMENT_TYPE, windDisturbances);
+	public static void set(Level level, DataAttachmentTarget target, WindDisturbances windDisturbances) {
+		ATTACHMENT_TYPE.set(target, windDisturbances);
 		WindManager.getOrCreate(level).trackDisturbanceHolder(target);
 	}
 
-	public static void set(Level level, AttachmentTarget target, List<WindDisturbance<?>> windDisturbances) {
+	public static void set(Level level, DataAttachmentTarget target, List<WindDisturbance<?>> windDisturbances) {
 		set(level, target, new WindDisturbances(windDisturbances));
 	}
 
-	public static void set(Level level, AttachmentTarget target, WindDisturbance<?>... windDisturbances) {
+	public static void set(Level level, DataAttachmentTarget target, WindDisturbance<?>... windDisturbances) {
 		set(level, target, List.of(windDisturbances));
 	}
 
-	public static void add(Level level, AttachmentTarget target, WindDisturbance<?> windDisturbance) {
+	public static void add(Level level, DataAttachmentTarget target, WindDisturbance<?> windDisturbance) {
 		final WindDisturbances windDisturbances = get(target);
 		if (windDisturbances.isEmpty()) {
 			set(level, target, windDisturbance);
@@ -95,35 +90,35 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 		set(level, target, windDisturbances.add(windDisturbance));
 	}
 
-	public static void addIf(Level level, AttachmentTarget target, Predicate<AttachmentTarget> predicate, Supplier<WindDisturbance<?>> windDisturbance) {
+	public static void addIf(Level level, DataAttachmentTarget target, Predicate<DataAttachmentTarget> predicate, Supplier<WindDisturbance<?>> windDisturbance) {
 		if (!predicate.test(target)) return;
 		add(level, target, windDisturbance.get());
 	}
 
-	public static void removeAttachment(Level level, AttachmentTarget target) {
-		target.removeAttached(ATTACHMENT_TYPE);
+	public static void removeAttachment(Level level, DataAttachmentTarget target) {
+		ATTACHMENT_TYPE.remove(target);
 		WindManager.getOrCreate(level).untrackDisturbanceHolder(target);
 	}
 
-	public static void removeIf(Level level, AttachmentTarget target, Predicate<WindDisturbance<?>> removeIf) {
+	public static void removeIf(Level level, DataAttachmentTarget target, Predicate<WindDisturbance<?>> removeIf) {
 		final WindDisturbances windDisturbances = get(target);
 		if (windDisturbances.isEmpty()) return;
 		set(level, target, windDisturbances.removeIf(removeIf));
 	}
 
-	public static Predicate<AttachmentTarget> isOfClassAndDoesntHaveDisturbance(Class<?> clazz, WindDisturbanceType<?> type) {
-		return target -> target.getClass().isAssignableFrom(clazz) && noneMatch(target, type(type));
+	public static Predicate<DataAttachmentTarget> isOfClassAndDoesntHaveDisturbance(Class<?> clazz, WindDisturbanceType<?> type) {
+		return target -> clazz.isAssignableFrom(target.getClass()) && noneMatch(target, type(type));
 	}
 
-	public static boolean anyMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+	public static boolean anyMatch(DataAttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
 		return get(target).anyMatch(predicate);
 	}
 
-	public static boolean allMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+	public static boolean allMatch(DataAttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
 		return  get(target).allMatch(predicate);
 	}
 
-	public static boolean noneMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+	public static boolean noneMatch(DataAttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
 		return  get(target).noneMatch(predicate);
 	}
 
@@ -131,15 +126,15 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 		return windDisturbance -> windDisturbance.type().equals(type);
 	}
 
-	public static boolean has(AttachmentTarget target) {
+	public static boolean has(DataAttachmentTarget target) {
 		return ! get(target).isEmpty();
 	}
 
-	public static WindDisturbances get(AttachmentTarget target) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+	public static WindDisturbances get(DataAttachmentTarget target) {
+		return ATTACHMENT_TYPE.getOrDefault(target, EMPTY);
 	}
 
-	public static Optional<Pair<AttachmentTarget, WindDisturbances>> getAsPair(AttachmentTarget target) {
+	public static Optional<Pair<DataAttachmentTarget, WindDisturbances>> getAsPair(DataAttachmentTarget target) {
 		final WindDisturbances disturbances = get(target);
 		return disturbances.isEmpty()
 			? Optional.empty()

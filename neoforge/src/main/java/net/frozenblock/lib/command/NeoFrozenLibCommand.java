@@ -24,6 +24,7 @@ import net.frozenblock.lib.entity.client.api.spottingicon.command.SpottingIconCo
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.tag.api.TagListCommand;
+import net.frozenblock.lib.wind.command.WindCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.ApiStatus;
@@ -40,6 +41,7 @@ public final class NeoFrozenLibCommand {
 			.then(SpottingIconCommand.buildSubcommand())
 			.then(StructureUpgradeCommand.buildSubCommand())
 			.then(TagListCommand.buildSubCommand())
+			.then(WindCommand.buildSubCommand())
 		);
 	}
 }

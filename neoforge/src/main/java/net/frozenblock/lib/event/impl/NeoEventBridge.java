@@ -40,6 +40,8 @@ public final class NeoEventBridge {
 		NeoServerTickEventBridge.init();
 		NeoServerLevelEventBridge.init();
 		NeoEntityTrackingEventBridge.init();
+		NeoEntityLifecycleEventBridge.init();
+		NeoChunkLifecycleEventBridge.init();
 	}
 
 	public static void initClientModStage() {

@@ -19,25 +19,24 @@ package net.frozenblock.lib.particle.client.resource;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.frozenblock.lib.particle.ColoredCampfireSmokeParticle;
 import net.frozenblock.lib.particle.ColoredLargeSmokeParticle;
 import net.frozenblock.lib.particle.ColoredSmokeParticle;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.provider.FrozenLibParticleProviders;
+import net.frozenblock.lib.platform.api.client.particle.FrozenParticleProviderRegistry;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibParticleResources {
 
 	public static void init() {
-		final ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
-		particleRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE.get(), FrozenLibParticleProviders.NoteProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED.get(), ColoredSmokeParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED.get(), ColoredLargeSmokeParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED.get(), ColoredCampfireSmokeParticle.CosyProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED.get(), ColoredCampfireSmokeParticle.SignalProvider::new);
-		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL.get(), WindParticle.Provider::new);
-		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM.get(), WindParticle.Provider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED, ColoredSmokeParticle.Provider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED, ColoredLargeSmokeParticle.Provider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED, ColoredCampfireSmokeParticle.CosyProvider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED, ColoredCampfireSmokeParticle.SignalProvider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
+		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
 	}
 }

@@ -52,9 +52,6 @@ import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.networking.FrozenNetworkingFabric;
-import net.frozenblock.lib.particle.FrozenLibParticleTypes;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -77,7 +74,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		DelayedRegistry.setFactory(FabricDelayedRegistry::new);
 		FrozenLibMain.preQuiltInit();
 		FrozenLibRegistries.init();
-		FrozenLibFabricRegistries.init();
 		SoundTypeOverrides.init();
 		FabricEventBridge.initModStage();
 
@@ -90,7 +86,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
 		FrozenLibDataComponents.init();
-		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		ConfigPredicateType.init();
 		WindManager.init();
@@ -115,12 +110,8 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 			FrozenLibCommand.register(dispatcher);
 		});
 
-		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
-			WindManager.getOrCreate(serverLevel).tick(serverLevel);
-			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
-		});
+		ServerTickEvents.START_LEVEL_TICK.register(StructureStatusUpdater::updatePlayerStructureStatusesForLevel);
 
 		FrozenNetworking.registerNetworking();
-		FrozenNetworkingFabric.registerNetworking();
 	}
 }

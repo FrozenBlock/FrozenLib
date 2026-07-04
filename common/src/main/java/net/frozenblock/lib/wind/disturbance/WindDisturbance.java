@@ -19,9 +19,9 @@ package net.frozenblock.lib.wind.disturbance;
 
 import com.mojang.serialization.Codec;
 import java.util.List;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,9 +29,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public interface WindDisturbance<T extends AttachmentTarget> {
-	Codec<WindDisturbance<?>> CODEC = FrozenLibFabricRegistries.WIND_DISTURBANCE_TYPE.byNameCodec().dispatch(WindDisturbance::type, WindDisturbanceType::codec);
-	StreamCodec<RegistryFriendlyByteBuf, WindDisturbance<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibFabricRegistries.WIND_DISTURBANCE_TYPE_REGISTRY)
+public interface WindDisturbance<T extends DataAttachmentTarget> {
+	Codec<WindDisturbance<?>> CODEC = FrozenLibRegistries.WIND_DISTURBANCE_TYPE.byNameCodec().dispatch(WindDisturbance::type, WindDisturbanceType::codec);
+	StreamCodec<RegistryFriendlyByteBuf, WindDisturbance<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY)
 		.dispatch(WindDisturbance::type, WindDisturbanceType::streamCodec);
 	Codec<List<WindDisturbance<?>>> LIST_CODEC = CODEC.listOf();
 	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbance<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
@@ -60,7 +60,7 @@ public interface WindDisturbance<T extends AttachmentTarget> {
 
 	boolean expired(T source, Level level);
 
-	default boolean invalidOrExpired(Object source, Level level) {
+	default boolean invalidOrExpired(DataAttachmentTarget source, Level level) {
 		try {
 			return this.expired((T) source, level);
 		} catch (Exception e) {

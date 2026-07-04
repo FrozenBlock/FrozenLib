@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.api.EnvType;import net.fabricmc.api.Environment;import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
+import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
@@ -39,6 +40,7 @@ public final class FrozenLibClient {
 
 	public static void init() {
 		ClientCapeUtil.init();
+		FrozenLibParticleResources.init();
 
 		FrozenHudElements.attachElementAfter(
 			VanillaHudAnchor.MISC_OVERLAYS,
