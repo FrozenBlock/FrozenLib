@@ -10,6 +10,9 @@ config="mixin/frozenlib.advancement.mixins.json"
 config="mixin/frozenlib.block.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.brewing.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.cape.mixins.json"
 
 [[mixins]]
@@ -81,6 +84,9 @@ config="mixin/frozenlib.resource_pack.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.sound.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.storage.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.tag.mixins.json"

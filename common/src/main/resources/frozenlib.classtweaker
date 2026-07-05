@@ -92,6 +92,16 @@ transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/m
 
 transitive-inject-interface net/minecraft/world/item/ItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface
 transitive-inject-interface net/minecraft/world/item/ServerItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface
+
+# Potions
+transitive-accessible class net/minecraft/world/item/alchemy/PotionBrewing$Mix
+transitive-accessible method net/minecraft/world/item/alchemy/PotionBrewing$Mix <init> (Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/core/Holder;)V
+transitive-accessible field net/minecraft/world/item/alchemy/PotionBrewing$Builder containerMixes Ljava/util/List;
+transitive-accessible field net/minecraft/world/item/alchemy/PotionBrewing$Builder potionMixes Ljava/util/List;
+transitive-accessible field net/minecraft/world/item/alchemy/PotionBrewing$Builder enabledFeatures Lnet/minecraft/world/flag/FeatureFlagSet;
+transitive-accessible method net/minecraft/world/item/alchemy/PotionBrewing$Builder expectPotion (Lnet/minecraft/world/item/Item;)V
+
+transitive-inject-interface net/minecraft/world/item/alchemy/PotionBrewing$Builder net/frozenblock/lib/registry/impl/FrozenPotionBrewingBuilder
 transitive-inject-interface net/minecraft/world/item/ItemStack net/frozenblock/lib/item/impl/ItemStackExtension
 
 # Structures

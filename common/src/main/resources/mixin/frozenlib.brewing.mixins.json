@@ -1,14 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.registry.mixin.neoforge",
+  "package": "net.frozenblock.lib.registry.mixin",
   "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "AxeItemAccessor",
-    "AxeItemMixin",
-    "FireBlockAccessor"
+    "PotionBrewingBuilderMixin"
   ]
 }

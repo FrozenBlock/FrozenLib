@@ -17,30 +17,39 @@
 
 package net.frozenblock.lib.block.mixin.blockentity;
 
-import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import net.frozenblock.lib.block.api.blockentity.BlockEntityTypeExtension;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockEntityType.class)
-public abstract class BlockEntityTypeMixin implements BlockEntityTypeExtension {
+public abstract class BlockEntityTypeMixin<T extends BlockEntity> implements BlockEntityTypeExtension {
 
+	@Mutable
 	@Shadow
 	@Final
 	private Set<Block> validBlocks;
 
+	@Inject(method = "<init>", at = @At("RETURN"))
+	private void mutableBlocks(BlockEntityType.BlockEntitySupplier<? extends T> factory, Set<Block> blocks, CallbackInfo ci) {
+		if (!(this.validBlocks instanceof HashSet)) {
+			this.validBlocks = new HashSet<>(this.validBlocks);
+		}
+	}
+
 	@Override
 	public void frozenLib$addValidBlock(Block block) {
+		Objects.requireNonNull(block, "block");
 		this.validBlocks.add(block);
 	}
 }

@@ -42,6 +42,7 @@ public final class NeoEventBridge {
 		NeoEntityTrackingEventBridge.init();
 		NeoEntityLifecycleEventBridge.init();
 		NeoChunkLifecycleEventBridge.init();
+		NeoPotionBrewingEventBridge.init();
 	}
 
 	public static void initClientModStage() {
