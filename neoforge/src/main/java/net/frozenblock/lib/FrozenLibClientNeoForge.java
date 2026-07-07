@@ -17,6 +17,10 @@
 
 package net.frozenblock.lib;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
@@ -41,6 +45,7 @@ import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -75,6 +80,20 @@ public final class FrozenLibClientNeoForge {
 
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientScreenShaker.reset()
+		);
+
+		NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> {
+				FrozenLibClientCommand.register(
+					(CommandDispatcher) event.getDispatcher(),
+					string -> LiteralArgumentBuilder.literal(string),
+					(string, type) -> RequiredArgumentBuilder.argument(string, type),
+					message -> {
+						final Minecraft minecraft = Minecraft.getInstance();
+						minecraft.gui.hud.getChat().addClientSystemMessage(message);
+						minecraft.getNarrator().saySystemChatQueued(message);
+					}
+				);
+			}
 		);
 
 		ClientTickEvents.START_LEVEL_TICK.register(level -> WindManager.getOrCreate(level).tick(level));
