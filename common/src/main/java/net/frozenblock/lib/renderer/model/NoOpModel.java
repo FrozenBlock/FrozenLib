@@ -28,12 +28,13 @@ import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 @Environment(EnvType.CLIENT)
 public class NoOpModel<T extends EntityRenderState> extends EntityModel<T> {
+	private static final LayerDefinition LAYER_DEFINITION = LayerDefinition.create(new MeshDefinition(), 1, 1);
 
 	public NoOpModel(ModelPart root) {
 		super(root, RenderTypes::entityCutout);
 	}
 
-	public static LayerDefinition createEmptyLayer() {
-		return LayerDefinition.create(new MeshDefinition(), 16, 16);
+	public static LayerDefinition layer() {
+		return LAYER_DEFINITION;
 	}
 }

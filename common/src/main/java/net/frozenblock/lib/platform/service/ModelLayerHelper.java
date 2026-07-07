@@ -20,6 +20,7 @@ package net.frozenblock.lib.platform.service;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.renderer.model.NoOpModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 
@@ -27,4 +28,13 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 public interface ModelLayerHelper {
 
 	void registerModelLayer(ModelLayerLocation layer, Supplier<LayerDefinition> provider);
+
+	default void registerBoatModelLayers(ModelLayerLocation boat, ModelLayerLocation chestBoat, LayerDefinition boatLayer, LayerDefinition chestBoatLayer) {
+		this.registerModelLayer(boat, () -> boatLayer);
+		this.registerModelLayer(chestBoat, () -> chestBoatLayer);
+	}
+
+	default void registerNoOpModelLayer(ModelLayerLocation layer) {
+		this.registerModelLayer(layer, NoOpModel::layer);
+	}
 }

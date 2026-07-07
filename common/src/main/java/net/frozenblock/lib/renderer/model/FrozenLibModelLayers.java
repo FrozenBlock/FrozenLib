@@ -28,6 +28,6 @@ public final class FrozenLibModelLayers {
 	public static final ModelLayerLocation NO_MODEL = new ModelLayerLocation(FrozenLibConstants.id("no_model"), "main");
 
 	public static void init() {
-		FrozenLibInitPlatformUtils.MODEL_LAYER.registerModelLayer(NO_MODEL, NoOpModel::createEmptyLayer);
+		FrozenLibInitPlatformUtils.MODEL_LAYER.registerModelLayer(NO_MODEL, NoOpModel::layer);
 	}
 }
