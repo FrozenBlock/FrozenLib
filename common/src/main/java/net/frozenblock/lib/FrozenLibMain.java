@@ -39,7 +39,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElement
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
-import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
@@ -118,7 +118,7 @@ public final class FrozenLibMain {
 
 		ScreenShakes.init();
 
-		FrozenNetworking.registerNetworking();
+		FrozenLibNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

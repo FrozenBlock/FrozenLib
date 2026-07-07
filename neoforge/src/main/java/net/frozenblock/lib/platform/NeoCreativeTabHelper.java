@@ -48,17 +48,28 @@ public class NeoCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void insertBefore(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
+	public void insertBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
 		listen(tab, event -> event.insertBefore(comparedItem.asItem().getDefaultInstance(), new ItemStack(item), tabVisibility));
 	}
 
 	@Override
-	public void insertAfter(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
+	public void insertAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		listen(tab, event -> event.insertAfter(comparedItem.asItem().getDefaultInstance(), new ItemStack(item), tabVisibility));
 	}
 
 	@Override
-	public void addInstrument(ResourceKey<CreativeModeTab> tab, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrument(
+		ResourceKey<CreativeModeTab> tab,
+		Item instrument, TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		listen(tab, event -> event.getParameters()
 			.holders()
 			.lookupOrThrow(Registries.INSTRUMENT)
@@ -72,7 +83,13 @@ public class NeoCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void addInstrumentBefore(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrumentBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		listen(tab, event -> {
 			final ItemStack existing = comparedItem.asItem().getDefaultInstance();
 			final List<ItemStack> list = new ArrayList<>();
@@ -92,7 +109,13 @@ public class NeoCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void addInstrumentAfter(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrumentAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		listen(tab, event -> {
 			final ItemStack existing = comparedItem.asItem().getDefaultInstance();
 			final List<ItemStack> list = new ArrayList<>();

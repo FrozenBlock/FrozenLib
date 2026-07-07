@@ -76,9 +76,9 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 	}
 
 	@Override
-	public Optional<ResourceKey<ConfiguredFeature<?, ?>>> getFeatureKey(ConfiguredFeature<?, ?> configuredFeature) {
+	public Optional<ResourceKey<ConfiguredFeature<?, ?>>> getFeatureKey(ConfiguredFeature<?, ?> feature) {
 		Registry<ConfiguredFeature<?, ?>> registry = dynamicRegistries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
-		return registry.getResourceKey(configuredFeature);
+		return registry.getResourceKey(feature);
 	}
 
 	@Override
@@ -105,8 +105,8 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 	}
 
 	@Override
-	public boolean canGenerateIn(ResourceKey<LevelStem> levelStemKey) {
-		LevelStem dimension = dynamicRegistries.lookupOrThrow(Registries.LEVEL_STEM).getValue(levelStemKey);
+	public boolean canGenerateIn(ResourceKey<LevelStem> key) {
+		LevelStem dimension = dynamicRegistries.lookupOrThrow(Registries.LEVEL_STEM).getValue(key);
 
 		if (dimension == null) {
 			return false;

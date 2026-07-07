@@ -40,7 +40,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MusicManagerMixin {
 
 	@Shadow
-	private @Nullable SoundInstance currentMusic;
+	@Nullable
+	private SoundInstance currentMusic;
 
 	@Shadow
 	@Final

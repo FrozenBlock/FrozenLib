@@ -270,18 +270,16 @@ public interface BiomeModificationContext {
 		/**
 		 * Removes a feature from one of this biomes generation steps, and returns if any features were removed.
 		 */
-		boolean removeFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> placedFeatureKey);
+		boolean removeFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> key);
 
 		/**
 		 * Removes a feature from all of this biomes generation steps, and returns if any features were removed.
 		 */
-		default boolean removeFeature(ResourceKey<PlacedFeature> placedFeatureKey) {
+		default boolean removeFeature(ResourceKey<PlacedFeature> key) {
 			boolean anyFound = false;
 
 			for (GenerationStep.Decoration step : GenerationStep.Decoration.values()) {
-				if (removeFeature(step, placedFeatureKey)) {
-					anyFound = true;
-				}
+				if (removeFeature(step, key)) anyFound = true;
 			}
 
 			return anyFound;
@@ -290,19 +288,19 @@ public interface BiomeModificationContext {
 		/**
 		 * Adds a feature to one of this biomes generation steps, identified by the placed feature's resource key.
 		 */
-		void addFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> placedFeatureKey);
+		void addFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> key);
 
 		/**
 		 * Adds a configured world carver to this biome.
 		 */
-		void addCarver(ResourceKey<ConfiguredWorldCarver<?>> carverKey);
+		void addCarver(ResourceKey<ConfiguredWorldCarver<?>> key);
 
 		/**
 		 * Removes all carvers with the given key from this biome.
 		 *
 		 * @return True if any carvers were removed.
 		 */
-		boolean removeCarver(ResourceKey<ConfiguredWorldCarver<?>> carverKey);
+		boolean removeCarver(ResourceKey<ConfiguredWorldCarver<?>> key);
 	}
 
 	interface MobSpawnSettingsContext {
@@ -346,8 +344,8 @@ public interface BiomeModificationContext {
 		 *
 		 * @return True if any spawns were removed.
 		 */
-		default boolean removeSpawnsOfEntityType(EntityType<?> entityType) {
-			return removeSpawns((category, spawnEntry) -> spawnEntry.type() == entityType);
+		default boolean removeSpawnsOfEntityType(EntityType<?> type) {
+			return removeSpawns((category, spawnEntry) -> spawnEntry.type() == type);
 		}
 
 		/**
@@ -374,13 +372,13 @@ public interface BiomeModificationContext {
 		 * @see MobSpawnSettings#getMobSpawnCost(EntityType)
 		 * @see MobSpawnSettings.Builder#addMobCharge(EntityType, double, double)
 		 */
-		void addMobCharge(EntityType<?> entityType, double charge, double energyBudget);
+		void addMobCharge(EntityType<?> type, double charge, double energyBudget);
 
 		/**
 		 * Removes a spawn cost entry for a given entity type.
 		 *
 		 * <p>Associated JSON property: <code>spawn_costs</code>.
 		 */
-		void clearMobCharge(EntityType<?> entityType);
+		void clearMobCharge(EntityType<?> type);
 	}
 }

@@ -46,5 +46,4 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		if (ruleSource == null || ruleSource == this.frozenLib$frozenSurfaceRules) return;
 		this.frozenLib$frozenSurfaceRules = ruleSource;
 	}
-
 }

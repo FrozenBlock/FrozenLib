@@ -24,7 +24,6 @@ import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
-import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
 import net.frozenblock.lib.platform.model.NeoModelLayerHelper;
 import net.frozenblock.lib.platform.particle.NeoParticleProviderRegistryHelper;
@@ -60,7 +59,7 @@ public final class FrozenLibClientNeoForge {
 
 		FrozenLibModelLayers.init();
 
-		FrozenClientNetworking.registerClientReceivers();
+		net.frozenblock.lib.networking.FrozenLibClientNetworking.registerClientReceivers();
 
 		NeoEventBridge.initClientModStage();
 

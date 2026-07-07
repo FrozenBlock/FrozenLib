@@ -40,9 +40,9 @@ public class OverworldBiomeBuilderMixin {
 			shift = At.Shift.AFTER
 		)
 	)
-	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
-		for (FrozenLibBiome frozenLibBiome : FrozenLibBiome.getFrozenBiomes()) {
-			if (frozenLibBiome.isEnabled()) frozenLibBiome.injectToOverworld(consumer);
+	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> biomes, CallbackInfo info) {
+		for (FrozenLibBiome frozenLibBiome : FrozenLibBiome.allFrozenLibBiomes()) {
+			if (frozenLibBiome.isEnabled()) frozenLibBiome.injectToOverworld(biomes);
 		}
 	}
 }

@@ -49,10 +49,10 @@ public abstract class MinecraftServerMixin {
 
 	@Inject(method = "createLevels", at = @At("TAIL"))
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
-		final RegistryAccess registryAccess = this.registries.compositeAccess();
-		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
+		final RegistryAccess registries = this.registries.compositeAccess();
+		final Registry<LevelStem> levelStems = registries.lookupOrThrow(Registries.LEVEL_STEM);
 
-		final Registry<Biome> biomes = registryAccess.lookupOrThrow(Registries.BIOME);
+		final Registry<Biome> biomes = registries.lookupOrThrow(Registries.BIOME);
 		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
 			final LevelStem levelStem = entry.getValue();
 			final ChunkGenerator chunkGenerator = levelStem.generator();
@@ -63,5 +63,4 @@ public abstract class MinecraftServerMixin {
 			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, biomes, dimension);
 		}
 	}
-
 }

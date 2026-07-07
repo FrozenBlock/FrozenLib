@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.levelgen.biome.impl.modifications;
 
-import net.frozenblock.lib.levelgen.biome.impl.FrozenGrassColorModifier;
+import net.frozenblock.lib.levelgen.biome.impl.FrozenLibGrassColorModifier;
 import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeInterface {
 	Biome.ClimateSettings frozenLib$getClimateSettings();
 	void frozenLib$setClimateSettings(Biome.ClimateSettings settings);
 
-	void frozenLib$setFrozenGrassColorModifier(FrozenGrassColorModifier frozenGrassColorModifier);
-	FrozenGrassColorModifier frozenLib$getFrozenGrassColorModifier();
+	void frozenLib$setFrozenLibGrassColorModifier(FrozenLibGrassColorModifier modifier);
+	FrozenLibGrassColorModifier frozenLib$getFrozenLibGrassColorModifier();
 }

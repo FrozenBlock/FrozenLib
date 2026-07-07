@@ -23,6 +23,8 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
 import net.minecraft.resources.Identifier;
 
+// TODO: data-drive me
+
 /**
  * @param type The in-game id type to check, in {@link MusicPitchDetectionType} form.
  * @param id The {@link Identifier} of the in-game id that triggers the pitch change.

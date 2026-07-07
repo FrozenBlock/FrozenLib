@@ -33,17 +33,20 @@ package net.frozenblock.lib.levelgen.biome.api;
  * limitations under the License.
  */
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Context given to a biome selector for deciding whether it applies to a biome or not.
@@ -52,23 +55,28 @@ public interface BiomeSelectionContext {
 	ResourceKey<Biome> getBiomeKey();
 
 	/**
-	 * Returns the biome with modifications by biome modifiers of higher priority already applied.
+	 * @return the biome with modifications by biome modifiers of higher priority already applied.
 	 */
 	Biome getBiome();
 
 	Holder<Biome> getBiomeHolder();
 
 	/**
-	 * Returns true if this biome contains a placed feature referencing a configured feature with the given key.
+	 * @return a list of all features in this biome, ordered by {@link GenerationStep}.
 	 */
-	default boolean hasFeature(ResourceKey<ConfiguredFeature<?, ?>> key) {
-		List<HolderSet<PlacedFeature>> featureSteps = getBiome().getGenerationSettings().features();
+	default List<HolderSet<PlacedFeature>> featureSteps() {
+		return getBiome().getGenerationSettings().features();
+	}
 
-		for (HolderSet<PlacedFeature> featureSuppliers : featureSteps) {
-			for (Holder<PlacedFeature> featureSupplier : featureSuppliers) {
-				if (featureSupplier.value().getFeatures().anyMatch(cf -> getFeatureKey(cf.value()).orElse(null) == key)) {
-					return true;
-				}
+	/**
+	 * @return true if this biome contains a placed feature matching the given {@link Predicate}.
+	 */
+	default boolean hasPlacedFeature(Predicate<Holder<PlacedFeature>> predicate) {
+		final List<HolderSet<PlacedFeature>> featureSteps = featureSteps();
+
+		for (HolderSet<PlacedFeature> features : featureSteps) {
+			for (Holder<PlacedFeature> featureHolder : features) {
+				if (predicate.test(featureHolder)) return true;
 			}
 		}
 
@@ -76,20 +84,21 @@ public interface BiomeSelectionContext {
 	}
 
 	/**
-	 * Returns true if this biome contains a placed feature with the given key.
+	 * @return true if this biome contains a placed feature referencing a configured feature with the given key.
+	 */
+	default boolean hasFeature(ResourceKey<ConfiguredFeature<?, ?>> key) {
+		return hasPlacedFeature(featureHolder ->
+			featureHolder.value()
+				.getFeatures()
+				.anyMatch(feature -> getFeatureKey(feature.value()).orElse(null) == key)
+		);
+	}
+
+	/**
+	 * @return true if this biome contains a placed feature with the given key.
 	 */
 	default boolean hasPlacedFeature(ResourceKey<PlacedFeature> key) {
-		List<HolderSet<PlacedFeature>> featureSteps = getBiome().getGenerationSettings().features();
-
-		for (HolderSet<PlacedFeature> featureSuppliers : featureSteps) {
-			for (Holder<PlacedFeature> featureSupplier : featureSuppliers) {
-				if (getPlacedFeatureKey(featureSupplier.value()).orElse(null) == key) {
-					return true;
-				}
-			}
-		}
-
-		return false;
+		return hasPlacedFeature(featureHolder -> getPlacedFeatureKey(featureHolder.value()).orElse(null) == key);
 	}
 
 	/**
@@ -97,7 +106,7 @@ public interface BiomeSelectionContext {
 	 * current feature list. May be empty if the configured feature is not registered, or does not come
 	 * from this biomes feature list.
 	 */
-	Optional<ResourceKey<ConfiguredFeature<?, ?>>> getFeatureKey(ConfiguredFeature<?, ?> configuredFeature);
+	Optional<ResourceKey<ConfiguredFeature<?, ?>>> getFeatureKey(ConfiguredFeature<?, ?> feature);
 
 	/**
 	 * Tries to retrieve the resource key for the given placed feature, which should be from this biomes
@@ -117,18 +126,18 @@ public interface BiomeSelectionContext {
 	 * current structure list. May be empty if the configured feature is not registered, or does not come
 	 * from this biomes feature list.
 	 */
-	Optional<ResourceKey<Structure>> getStructureKey(Structure structureFeature);
+	Optional<ResourceKey<Structure>> getStructureKey(Structure structure);
 
 	/**
-	 * Tries to determine whether this biome generates in a specific dimension, based on the {@link net.minecraft.world.level.levelgen.WorldOptions}
+	 * Tries to determine whether this biome generates in a specific dimension, based on the {@link WorldOptions}
 	 * used by the current level.
 	 *
 	 * <p>If no level stem exists for the given level stem key, <code>false</code> is returned.
 	 */
-	boolean canGenerateIn(ResourceKey<LevelStem> levelStemKey);
+	boolean canGenerateIn(ResourceKey<LevelStem> key);
 
 	/**
-	 * {@return true if this biome is in the given {@link TagKey}}.
+	 * @return true if this biome is in the given {@link TagKey}.
 	 */
 	boolean hasTag(TagKey<Biome> tag);
 }

@@ -66,7 +66,5 @@ public abstract class FrozenLibNetherBiome extends FrozenLibBiome {
 	}
 
 	@Override
-	public final void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters) {
-	}
-
+	public final void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> biomes) {}
 }

@@ -18,6 +18,6 @@
 package net.frozenblock.lib.levelgen.biome.impl;
 
 public interface BiomeInterface {
-	void frozenLib$setFrozenGrassColorModifier(FrozenGrassColorModifier frozenGrassColorModifier);
-	FrozenGrassColorModifier frozenLib$getFrozenGrassColorModifier();
+	void frozenLib$setFrozenGrassColorModifier(FrozenLibGrassColorModifier frozenLibGrassColorModifier);
+	FrozenLibGrassColorModifier frozenLib$getFrozenGrassColorModifier();
 }

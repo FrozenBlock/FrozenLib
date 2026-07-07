@@ -18,7 +18,6 @@
 package net.frozenblock.lib.platform.data;
 
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
@@ -36,7 +35,10 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class NeoDataAttachmentHelper implements DataAttachmentHelper {
-	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, FrozenLibConstants.MOD_ID);
+	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(
+		NeoForgeRegistries.Keys.ATTACHMENT_TYPES,
+		FrozenLibConstants.MOD_ID
+	);
 
 	public static void register(IEventBus modBus) {
 		ATTACHMENT_TYPES.register(modBus);

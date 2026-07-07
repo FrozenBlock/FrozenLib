@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.networking.mixin.ChunkMapAccessor;
 import net.frozenblock.lib.networking.mixin.EntityTrackerAccessor;
 import net.minecraft.core.BlockPos;
@@ -61,6 +62,7 @@ import net.minecraft.world.phys.Vec3;
  *
  * <p>These methods should only be called on the server thread and only be used on logical a server.
  */
+@UtilityClass
 public final class PlayerLookup {
 	/**
 	 * Gets all the players on the minecraft server.
@@ -74,9 +76,7 @@ public final class PlayerLookup {
 		Objects.requireNonNull(server, "The server cannot be null");
 
 		// return an immutable collection to guard against accidental removals.
-		if (server.getPlayerList() != null) {
-			return Collections.unmodifiableCollection(server.getPlayerList().getPlayers());
-		}
+		if (server.getPlayerList() != null) return Collections.unmodifiableCollection(server.getPlayerList().getPlayers());
 
 		return Collections.emptyList();
 	}
@@ -125,22 +125,19 @@ public final class PlayerLookup {
 	 */
 	public static Collection<ServerPlayer> tracking(Entity entity) {
 		Objects.requireNonNull(entity, "Entity cannot be null");
-		ChunkSource manager = entity.level().getChunkSource();
+		final ChunkSource manager = entity.level().getChunkSource();
 
-		if (manager instanceof ServerChunkCache) {
-			ChunkMap chunkMap = ((ServerChunkCache) manager).chunkMap;
-			EntityTrackerAccessor tracker = ((ChunkMapAccessor) chunkMap).getEntityMap().get(entity.getId());
+		if (!(manager instanceof ServerChunkCache)) throw new IllegalArgumentException("Only supported on server levels!");
 
-			// return an immutable collection to guard against accidental removals.
-			if (tracker != null) {
-				return tracker.getSeenBy()
-					.stream().map(ServerPlayerConnection::getPlayer).collect(Collectors.toUnmodifiableSet());
-			}
+		final ChunkMap chunkMap = ((ServerChunkCache) manager).chunkMap;
+		final EntityTrackerAccessor tracker = ((ChunkMapAccessor) chunkMap).getEntityMap().get(entity.getId());
 
-			return Collections.emptySet();
-		}
+		// return an immutable collection to guard against accidental removals.
+		if (tracker != null) return tracker.getSeenBy().stream()
+			.map(ServerPlayerConnection::getPlayer)
+			.collect(Collectors.toUnmodifiableSet());
 
-		throw new IllegalArgumentException("Only supported on server levels!");
+		return Collections.emptySet();
 	}
 
 	/**
@@ -154,9 +151,7 @@ public final class PlayerLookup {
 		Objects.requireNonNull(blockEntity, "BlockEntity cannot be null");
 
 		//noinspection ConstantConditions - IJ intrinsics don't know hasLevel == true will result in no null
-		if (!blockEntity.hasLevel() || blockEntity.getLevel().isClientSide()) {
-			throw new IllegalArgumentException("Only supported on server levels!");
-		}
+		if (!blockEntity.hasLevel() || blockEntity.getLevel().isClientSide()) throw new IllegalArgumentException("Only supported on server levels!");
 
 		return tracking((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos());
 	}
@@ -185,11 +180,11 @@ public final class PlayerLookup {
 	 * @return the players around the position
 	 */
 	public static Collection<ServerPlayer> around(ServerLevel level, Vec3 pos, double radius) {
-		double radiusSq = radius * radius;
+		final double radiusSq = radius * radius;
 
 		return level(level)
 			.stream()
-			.filter((p) -> p.distanceToSqr(pos) <= radiusSq)
+			.filter(player -> player.distanceToSqr(pos) <= radiusSq)
 			.collect(Collectors.toList());
 	}
 
@@ -204,14 +199,11 @@ public final class PlayerLookup {
 	 * @return the players around the position
 	 */
 	public static Collection<ServerPlayer> around(ServerLevel level, Vec3i pos, double radius) {
-		double radiusSq = radius * radius;
+		final double radiusSq = radius * radius;
 
 		return level(level)
 			.stream()
-			.filter((p) -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= radiusSq)
+			.filter(player -> player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= radiusSq)
 			.collect(Collectors.toList());
-	}
-
-	private PlayerLookup() {
 	}
 }

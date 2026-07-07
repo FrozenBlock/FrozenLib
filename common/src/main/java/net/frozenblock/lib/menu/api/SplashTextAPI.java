@@ -23,7 +23,6 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 
 @UtilityClass
@@ -45,19 +44,16 @@ public final class SplashTextAPI {
 		REMOVALS.add(text);
 	}
 
-	@Contract(pure = true)
 	@Unmodifiable
 	public static List<Identifier> getSplashFiles() {
 		return List.copyOf(SPLASH_FILES);
 	}
 
-	@Contract(pure = true)
 	@Unmodifiable
 	public static List<String> getAdditions() {
 		return List.copyOf(ADDITIONS);
 	}
 
-	@Contract(pure = true)
 	@Unmodifiable
 	public static List<String> getRemovals() {
 		return List.copyOf(REMOVALS);

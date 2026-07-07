@@ -18,6 +18,6 @@
 package net.frozenblock.lib.levelgen.biome.impl;
 
 @FunctionalInterface
-public interface FrozenGrassColorModifier {
-	int modifyGrassColor(double x, double z, int originalGrassColor);
+public interface FrozenLibGrassColorModifier {
+	int modifyGrassColor(double x, double z, int original);
 }

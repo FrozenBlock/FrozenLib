@@ -35,6 +35,8 @@ import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: convert to data-driven registry
+
 @UtilityClass
 @Environment(EnvType.CLIENT)
 public class MusicPitchApi {
