@@ -114,13 +114,13 @@ Provides a NeoForge implementation of QuiltMC's DataFixerUpper API.
 [[ dependencies.frozenlib ]]
     modId="neoforge"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[~26.3-,)"
     ordering="NONE"
     side="BOTH"
 
 [[ dependencies.frozenlib ]]
     modId="minecraft"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[~26.3-,)"
     ordering="NONE"
     side="BOTH"
