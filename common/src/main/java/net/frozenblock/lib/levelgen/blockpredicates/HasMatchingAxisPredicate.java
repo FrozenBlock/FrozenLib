@@ -46,6 +46,6 @@ public class HasMatchingAxisPredicate extends PropertyTestingPredicate<Direction
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.HAS_MATCHING_AXIS;
+		return FrozenLibBlockPredicateTypes.HAS_MATCHING_AXIS.get();
 	}
 }
