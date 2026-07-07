@@ -39,17 +39,44 @@ public class FabricCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void insertBefore(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
-		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.insertBefore(comparedItem, List.of(new ItemStack(item)), tabVisibility));
+	public void insertBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries ->
+			entries.insertBefore(
+				comparedItem,
+				List.of(new ItemStack(item)),
+				tabVisibility
+			)
+		);
 	}
 
 	@Override
-	public void insertAfter(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
-		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.insertAfter(comparedItem, List.of(new ItemStack(item)), tabVisibility));
+	public void insertAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries ->
+			entries.insertAfter(
+				comparedItem,
+				List.of(new ItemStack(item)),
+				tabVisibility
+			)
+		);
 	}
 
 	@Override
-	public void addInstrument(ResourceKey<CreativeModeTab> tab, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrument(
+		ResourceKey<CreativeModeTab> tab,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.getContext()
 			.holders()
 			.lookupOrThrow(Registries.INSTRUMENT)
@@ -63,7 +90,13 @@ public class FabricCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void addInstrumentBefore(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrumentBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
 			final List<ItemStack> list = new ArrayList<>();
 			entries.getContext()
@@ -80,7 +113,13 @@ public class FabricCreativeTabHelper implements CreativeTabHelper {
 	}
 
 	@Override
-	public void addInstrumentAfter(ResourceKey<CreativeModeTab> tab, ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility) {
+	public void addInstrumentAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
 			final List<ItemStack> list = new ArrayList<>();
 			entries.getContext()

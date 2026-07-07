@@ -48,7 +48,7 @@ public abstract class MinecraftServerMixin {
 	public abstract RegistryAccess.Frozen registryAccess();
 
 	@Inject(method = "<init>", at = @At(value = "RETURN"))
-	private void finalizeWorldGen(CallbackInfo ci) {
+	private void finalizeWorldGen(CallbackInfo info) {
 		BiomeModificationImpl.INSTANCE.finalizeWorldGen(registryAccess());
 	}
 }

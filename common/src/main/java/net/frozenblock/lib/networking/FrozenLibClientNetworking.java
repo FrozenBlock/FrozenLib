@@ -75,8 +75,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenClientNetworking {
+public final class FrozenLibClientNetworking {
 
+	@ApiStatus.Internal
 	public static void registerClientReceivers() {
 		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, minecraft, player) ->
 			ConfigEntrySyncPacket.receive(packet, null, null)
@@ -92,7 +93,7 @@ public final class FrozenClientNetworking {
 		receiveMovingRestrictionSoundPacket();
 		receiveFadingDistanceSwitchingSoundPacket();
 		receiveMovingFadingDistanceSwitchingSoundPacket();
-		onReceiveFlyBySoundPacket();
+		receiveFlyBySoundPacket();
 		receiveCapeRepoPacket();
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
@@ -211,7 +212,7 @@ public final class FrozenClientNetworking {
 	}
 
 	@ApiStatus.Internal
-	public static void onReceiveFlyBySoundPacket() {
+	private static void receiveFlyBySoundPacket() {
 		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = (ClientLevel) player.level();
 			final Entity entity = level.getEntity(packet.id());
@@ -222,12 +223,14 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveCapeRepoPacket() {
 		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			CapeUtil.registerCapesFromURL(packet.capeRepo());
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveFileTransferPacket() {
 		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FileTransferPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
@@ -248,7 +251,7 @@ public final class FrozenClientNetworking {
 					final File sendingFile = file.exists() ? file : localFile.exists() ? localFile : null;
 					if (sendingFile == null) continue;
 
-					if (FrozenNetworking.connectedToIntegratedServer()) {
+					if (FrozenLibNetworking.connectedToIntegratedServer()) {
 						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
 						return;
 					} else {

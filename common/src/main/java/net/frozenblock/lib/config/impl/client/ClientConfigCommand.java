@@ -19,10 +19,12 @@ package net.frozenblock.lib.config.impl.client;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -31,27 +33,31 @@ import net.minecraft.network.chat.Component;
 @Environment(EnvType.CLIENT)
 public final class ClientConfigCommand {
 
-	public static LiteralArgumentBuilder<FabricClientCommandSource> buildSubCommand() {
-		return ClientCommands.literal("config")
-			.then(ClientCommands.literal("reload")
-				.then(ClientCommands.argument("modId", StringArgumentType.string()).suggests((context, builder) ->
-					SharedSuggestionProvider.suggest(
-						ConfigV2Registry.allConfigData().stream()
-							.map(configData -> configData.id().namespace())
-							.toList(),
-						builder
-					)
-				).executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
-				)
-			);
+	public static LiteralArgumentBuilder<SharedSuggestionProvider> buildSubCommand(
+		Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal,
+		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SharedSuggestionProvider, ?>> argument,
+		Consumer<Component> feedbackCallback
+	) {
+		return literal.apply("config").then(
+			literal.apply("reload").then(
+				argument.apply("modId", StringArgumentType.string()).suggests((context, builder) ->
+						SharedSuggestionProvider.suggest(
+							ConfigV2Registry.allConfigData().stream()
+								.map(configData -> configData.id().namespace())
+								.toList(),
+							builder
+						)
+				).executes(context -> reloadConfigs(StringArgumentType.getString(context, "modId"), feedbackCallback))
+			)
+		);
 	}
 
-	private static int reloadConfigs(FabricClientCommandSource source, String modId) {
+	private static int reloadConfigs(String modId, Consumer<Component> feedbackCallback) {
 		final int configCount = ConfigCommand.reloadConfigsAndCount(modId);
 		if (configCount == 1) {
-			source.sendFeedback(Component.translatable("commands.frozenlib_config.reload.single", modId));
+			feedbackCallback.accept(Component.translatable("commands.frozenlib_config.reload.single", modId));
 		} else {
-			source.sendFeedback(Component.translatable("commands.frozenlib_config.reload.multiple", configCount, modId));
+			feedbackCallback.accept(Component.translatable("commands.frozenlib_config.reload.multiple", configCount, modId));
 		}
 		return configCount;
 	}

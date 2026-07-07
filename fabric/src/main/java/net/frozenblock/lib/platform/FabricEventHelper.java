@@ -108,9 +108,7 @@ public class FabricEventHelper implements EventHelper {
 			final net.fabricmc.fabric.api.event.Event<T> rebuilt = this.emptyInvoker != null
 				? EventFactory.createArrayBacked((Class<T>) this.type, this.emptyInvoker, this.invokerFactory)
 				: EventFactory.createArrayBacked(this.type, this.invokerFactory);
-			for (T listener : this.listeners) {
-				rebuilt.register(listener);
-			}
+			for (T listener : this.listeners) rebuilt.register(listener);
 			this.delegate = rebuilt;
 		}
 

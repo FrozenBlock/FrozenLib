@@ -48,36 +48,36 @@ public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 		return new FabricDataAttachmentType<>(attachmentType);
 	}
 
-	private record FabricDataAttachmentType<T>(AttachmentType<T> attachmentType) implements DataAttachmentType<T> {
+	private record FabricDataAttachmentType<T>(AttachmentType<T> type) implements DataAttachmentType<T> {
 
 		@Override
 		public Identifier identifier() {
-			return this.attachmentType.identifier();
+			return this.type.identifier();
 		}
 
 		@Override
 		public @Nullable T get(DataAttachmentTarget holder) {
-			return ((AttachmentTarget) holder).getAttached(this.attachmentType);
+			return ((AttachmentTarget) holder).getAttached(this.type);
 		}
 
 		@Override
 		public T getOrDefault(DataAttachmentTarget holder, T fallback) {
-			return ((AttachmentTarget) holder).getAttachedOrElse(this.attachmentType, fallback);
+			return ((AttachmentTarget) holder).getAttachedOrElse(this.type, fallback);
 		}
 
 		@Override
 		public void set(DataAttachmentTarget holder, T value) {
-			((AttachmentTarget) holder).setAttached(this.attachmentType, value);
+			((AttachmentTarget) holder).setAttached(this.type, value);
 		}
 
 		@Override
 		public void remove(DataAttachmentTarget holder) {
-			((AttachmentTarget) holder).removeAttached(this.attachmentType);
+			((AttachmentTarget) holder).removeAttached(this.type);
 		}
 
 		@Override
 		public boolean has(DataAttachmentTarget holder) {
-			return ((AttachmentTarget) holder).hasAttached(this.attachmentType);
+			return ((AttachmentTarget) holder).hasAttached(this.type);
 		}
 
 		@Override
@@ -86,29 +86,29 @@ public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 				throw new UnsupportedOperationException("Manual sync is only supported for ServerLevel holders, got " + holder);
 			}
 
-			final T value = ((AttachmentTarget) holder).getAttached(this.attachmentType);
-			final AttachmentChange change = new AttachmentChange(AttachmentTargetInfo.LevelTarget.INSTANCE, this.attachmentType, value);
+			final T value = ((AttachmentTarget) holder).getAttached(this.type);
+			final AttachmentChange change = new AttachmentChange(AttachmentTargetInfo.LevelTarget.INSTANCE, this.type, value);
 			for (ServerPlayer player : PlayerLookup.level(serverLevel)) AttachmentSync.trySync(change, player);
 		}
 
 		@Override
 		public @Nullable Supplier<T> initializer() {
-			return this.attachmentType.initializer();
+			return this.type.initializer();
 		}
 
 		@Override
 		public boolean isPersistent() {
-			return this.attachmentType.isPersistent();
+			return this.type.isPersistent();
 		}
 
 		@Override
 		public boolean isSynced() {
-			return this.attachmentType.isSynced();
+			return this.type.isSynced();
 		}
 
 		@Override
 		public boolean copyOnDeath() {
-			return this.attachmentType.copyOnDeath();
+			return this.type.copyOnDeath();
 		}
 	}
 }

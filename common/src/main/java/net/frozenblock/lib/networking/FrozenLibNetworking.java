@@ -48,15 +48,16 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;import org.jetbrains.annotations.ApiStatus;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public final class FrozenNetworking {
+public final class FrozenLibNetworking {
 
+	@ApiStatus.Internal
 	public static void registerNetworking() {
 		final var networking = FrozenLibInitPlatformUtils.NETWORKING;
 
@@ -172,5 +173,4 @@ public final class FrozenNetworking {
 		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return true;
 		return !Minecraft.getInstance().hasSingleplayerServer();
 	}
-
 }

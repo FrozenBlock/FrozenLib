@@ -34,5 +34,4 @@ public class CameraMixin {
 	public void frozenLib$resetPitch(CallbackInfo info) {
 		MusicPitchApi.resetCurrentPitch();
 	}
-
 }

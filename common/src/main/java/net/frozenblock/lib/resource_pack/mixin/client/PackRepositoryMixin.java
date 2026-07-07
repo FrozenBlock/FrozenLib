@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.resource_pack.mixin.client;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,6 +42,8 @@ public class PackRepositoryMixin implements PackRepositoryInterface {
 	@Unique
 	@Override
 	public void frozenLib$addRepositorySource(RepositorySource source) {
-		this.sources = ImmutableSet.<RepositorySource>builder().addAll(this.sources).add(source).build();
+		Set<RepositorySource> newSources = new LinkedHashSet<>(this.sources);
+		newSources.add(source);
+		this.sources = newSources;
 	}
 }

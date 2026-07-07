@@ -17,12 +17,11 @@
 
 package net.frozenblock.lib;
 
-import net.frozenblock.lib.command.NeoFrozenLibCommand;
+import java.util.function.Consumer;
+import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
+import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.item.impl.NeoFuelRegistry;
-import net.frozenblock.lib.networking.FrozenClientNetworking;
-import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
@@ -35,6 +34,11 @@ import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
@@ -51,13 +55,6 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
-import java.util.function.Consumer;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.network.ConfigurationTask;
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
-import net.minecraft.server.level.ServerLevel;
-import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.DelayedRegistry;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.NeoForgeDelayedRegistry;
@@ -124,7 +121,7 @@ public final class FrozenLibNeoForge {
 
 		// some events need to use the NeoForge event bus
 		NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->
-			NeoFrozenLibCommand.register(event.getDispatcher())
+			FrozenLibCommand.register(event.getDispatcher())
 		);
 
 		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, NeoResourceLoaderHelper::flushServerListeners);

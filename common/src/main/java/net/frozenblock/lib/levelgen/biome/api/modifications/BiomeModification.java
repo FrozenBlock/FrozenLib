@@ -60,7 +60,11 @@ public class BiomeModification {
 	 * for this are modifiers that simply add or remove features unconditionally, or change other values
 	 * to constants.
 	 */
-	public BiomeModification add(ModificationPhase phase, Predicate<BiomeSelectionContext> selector, Consumer<BiomeModificationContext> modifier) {
+	public BiomeModification add(
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		Consumer<BiomeModificationContext> modifier
+	) {
 		BiomeModificationImpl.INSTANCE.addModifier(id, phase, selector, modifier);
 		return this;
 	}
@@ -73,7 +77,11 @@ public class BiomeModification {
 	 * conditions to the selector, and use a context-free modifier instead, as this will greatly help
 	 * with debugging world generation issues.
 	 */
-	public BiomeModification add(ModificationPhase phase, Predicate<BiomeSelectionContext> selector, BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier) {
+	public BiomeModification add(
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier
+	) {
 		BiomeModificationImpl.INSTANCE.addModifier(id, phase, selector, modifier);
 		return this;
 	}

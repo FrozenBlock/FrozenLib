@@ -277,8 +277,8 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public boolean removeFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> placedFeatureKey) {
-			PlacedFeature placedFeature = getHolder(features, placedFeatureKey).value();
+		public boolean removeFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> key) {
+			PlacedFeature placedFeature = getHolder(features, key).value();
 
 			int stepIndex = step.ordinal();
 			List<HolderSet<PlacedFeature>> featureSteps = generationSettings.features;
@@ -301,7 +301,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void addFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> entry) {
+		public void addFeature(GenerationStep.Decoration step, ResourceKey<PlacedFeature> key) {
 			List<HolderSet<PlacedFeature>> featureSteps = generationSettings.features;
 			int index = step.ordinal();
 
@@ -310,7 +310,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 				featureSteps.add(HolderSet.direct(Collections.emptyList()));
 			}
 
-			Holder.Reference<PlacedFeature> feature = getHolder(features, entry);
+			Holder.Reference<PlacedFeature> feature = getHolder(features, key);
 
 			// Don't add the feature if it's already present
 			if (featureSteps.get(index).contains(feature)) {
@@ -324,14 +324,14 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void addCarver(ResourceKey<WorldCarver> entry) {
+		public void addCarver(ResourceKey<WorldCarver> key) {
 			// We do not need to delay evaluation of this since the registries are already fully built
-			generationSettings.carvers = plus(generationSettings.carvers, getHolder(carvers, entry));
+			generationSettings.carvers = plus(generationSettings.carvers, getHolder(carvers, key));
 		}
 
 		@Override
-		public boolean removeCarver(ResourceKey<WorldCarver> carverKey) {
-			WorldCarver carver = getHolder(carvers, carverKey).value();
+		public boolean removeCarver(ResourceKey<WorldCarver> key) {
+			WorldCarver carver = getHolder(carvers, key).value();
 			List<Holder<WorldCarver>> genCarvers = new ArrayList<>(generationSettings.carvers.stream().toList());
 
 			if (genCarvers.removeIf(entry -> entry.value() == carver)) {
@@ -451,14 +451,14 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void addMobCharge(EntityType<?> entityType, double charge, double energyBudget) {
-			Objects.requireNonNull(entityType);
-			spawnSettings.mobSpawnCosts.put(entityType, new MobSpawnSettings.MobSpawnCost(energyBudget, charge));
+		public void addMobCharge(EntityType<?> type, double charge, double energyBudget) {
+			Objects.requireNonNull(type);
+			spawnSettings.mobSpawnCosts.put(type, new MobSpawnSettings.MobSpawnCost(energyBudget, charge));
 		}
 
 		@Override
-		public void clearMobCharge(EntityType<?> entityType) {
-			spawnSettings.mobSpawnCosts.remove(entityType);
+		public void clearMobCharge(EntityType<?> type) {
+			spawnSettings.mobSpawnCosts.remove(type);
 		}
 	}
 }

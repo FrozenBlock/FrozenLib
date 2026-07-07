@@ -50,10 +50,8 @@ public class RegistryAccessImmutableRegistryAccessMixin implements BiomeModifica
 
 	@Override
 	public void frozenLib$markModified() {
-		if (frozenLib$modified) {
-			throw new IllegalStateException("This dynamic registries instance has already been modified");
-		}
+		if (this.frozenLib$modified) throw new IllegalStateException("This dynamic registries instance has already been modified");
 
-		frozenLib$modified = true;
+		this.frozenLib$modified = true;
 	}
 }

@@ -49,8 +49,8 @@ public abstract class MinecraftServerMixin {
 
 	@Inject(method = "createLevels", at = @At("TAIL"))
 	private void frozenLib$addRuleSources(CallbackInfo info) {
-		final RegistryAccess registryAccess = this.registries.compositeAccess();
-		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
+		final RegistryAccess registries = this.registries.compositeAccess();
+		final Registry<LevelStem> levelStems = registries.lookupOrThrow(Registries.LEVEL_STEM);
 
 		for (LevelStem levelStem : levelStems) {
 			final ChunkGenerator chunkGenerator = levelStem.generator();
@@ -59,7 +59,7 @@ public abstract class MinecraftServerMixin {
 			final NoiseGeneratorSettings noiseGeneratorSettings = noiseBasedChunkGenerator.generatorSettings().value();
 			final Holder<DimensionType> dimension = levelStem.type();
 
-			RuleSourceAdditions.compileAndGet(registryAccess, dimension).ifPresent(noiseGeneratorSettings::frozenLib$setRuleSourceAddition);
+			RuleSourceAdditions.compileAndGet(registries, dimension).ifPresent(noiseGeneratorSettings::frozenLib$setRuleSourceAddition);
 		}
 	}
 }

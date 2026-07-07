@@ -34,6 +34,10 @@ package net.frozenblock.lib.levelgen.biome.api;
  */
 
 import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
+import java.util.Set;
+import java.util.function.Predicate;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModifications;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BuiltInResourceKeys;
 import net.minecraft.resources.ResourceKey;
@@ -44,16 +48,12 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.dimension.LevelStem;
-import java.util.Collection;
-import java.util.Set;
-import java.util.function.Predicate;
 
 /**
  * Provides several convenient biome selectors that can be used with {@link BiomeModifications}.
  */
+@UtilityClass
 public final class BiomeSelectors {
-	private BiomeSelectors() {
-	}
 
 	/**
 	 * Matches all Biomes. Use a more specific selector if possible.
@@ -160,13 +160,11 @@ public final class BiomeSelectors {
 	 */
 	public static Predicate<BiomeSelectionContext> spawnsOneOf(Set<EntityType<?>> entityTypes) {
 		return context -> {
-			MobSpawnSettings spawnSettings = context.getBiome().getMobSettings();
+			final MobSpawnSettings spawnSettings = context.getBiome().getMobSettings();
 
 			for (MobCategory mobCategory : MobCategory.values()) {
 				for (Weighted<MobSpawnSettings.SpawnerData> spawnEntry : spawnSettings.getMobs(mobCategory).unwrap()) {
-					if (entityTypes.contains(spawnEntry.value().type())) {
-						return true;
-					}
+					if (entityTypes.contains(spawnEntry.value().type())) return true;
 				}
 			}
 

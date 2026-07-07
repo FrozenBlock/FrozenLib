@@ -39,11 +39,11 @@ public class NoExperimentalMixin {
 		require = 0
 	)
 	private void frozenLib$preventBackupScreenAndProceed(
-		LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean customizedWorld, Runnable runnable, Runnable runnable2, CallbackInfo info
+		LevelStorageSource.LevelStorageAccess levelAccess, boolean oldCustomized, Runnable proceedCallback, Runnable cancelCallback, CallbackInfo info
 	) {
 		if (!FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.get()) return;
 		info.cancel();
-		runnable.run();
+		proceedCallback.run();
 	}
 
 	@ModifyVariable(
@@ -53,9 +53,8 @@ public class NoExperimentalMixin {
 		ordinal = 0,
 		require = 0
 	)
-	private static boolean frozenLib$skipCreationWarning(boolean original) {
+	private static boolean frozenLib$skipCreationWarning(boolean skipWarning) {
 		if (FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.get()) return true;
-		return original;
+		return skipWarning;
 	}
-
 }

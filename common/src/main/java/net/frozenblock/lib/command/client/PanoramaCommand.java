@@ -15,38 +15,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.core.client.api;
+package net.frozenblock.lib.command.client;
 
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.commands.SharedSuggestionProvider;
 
 @Environment(EnvType.CLIENT)
 public class PanoramaCommand {
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-	public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-		dispatcher.register(
-			ClientCommands.literal("panorama")
-				.executes(
-					context -> {
-						Minecraft client = Minecraft.getInstance();
-						File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
-						File directory1 = new File(directory, "screenshots");
-						directory1.mkdir();
-						directory1.mkdirs();
-						client.grabPanoramixScreenshot(directory);
-						return 1;
-					}
-				)
-		);
+	public static LiteralArgumentBuilder<SharedSuggestionProvider> buildSubCommand(Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal) {
+		return literal.apply("panorama").executes(context -> {
+			Minecraft client = Minecraft.getInstance();
+			File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
+			File directory1 = new File(directory, "screenshots");
+			directory1.mkdir();
+			directory1.mkdirs();
+			client.grabPanoramixScreenshot(directory);
+			return 1;
+		});
 	}
 
 	private static File getPanoramaFolderName(File directory) {

@@ -36,6 +36,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class FrozenLibBiome {
 	private static final List<FrozenLibBiome> BIOMES = new ArrayList<>();
@@ -169,9 +170,9 @@ public abstract class FrozenLibBiome {
 	 * Injects this biome to overworld generation.
 	 * This will be called automatically by FrozenLib unless the `disable` method is called.
 	 *
-	 * @param consumer The consumers used by {@link net.minecraft.world.level.biome.OverworldBiomeBuilder} to add biomes to worldgen.
+	 * @param biomes The consumers used by {@link net.minecraft.world.level.biome.OverworldBiomeBuilder} to add biomes to worldgen.
 	 */
-	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer);
+	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> biomes);
 
 	/**
 	 * Disables this biome from being automatically injected into worldgen.
@@ -234,10 +235,10 @@ public abstract class FrozenLibBiome {
 	}
 
 	/**
-	 * @return the list of all FrozenBiomes.
+	 * @return a list of all {@link FrozenLibBiome}s.
 	 */
-	public static ImmutableList<FrozenLibBiome> getFrozenBiomes() {
+	@Unmodifiable
+	public static ImmutableList<FrozenLibBiome> allFrozenLibBiomes() {
 		return ImmutableList.copyOf(BIOMES);
 	}
-
 }

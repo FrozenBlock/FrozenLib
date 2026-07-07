@@ -41,7 +41,7 @@ public class SplashManagerMixin {
 		method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;",
 		at = @At("RETURN")
 	)
-	public List<Component> frozenLib$addSplashFiles(List<Component> original, ResourceManager resourceManager, ProfilerFiller profiler) {
+	public List<Component> frozenLib$addSplashFiles(List<Component> original, ResourceManager manager, ProfilerFiller profiler) {
 		final ArrayList<Component> splashes = new ArrayList<>(original);
 
 		splashes.addAll(
@@ -61,18 +61,16 @@ public class SplashManagerMixin {
 		);
 
 		for (Identifier splashLocation : SplashTextAPI.getSplashFiles()) {
-			try (BufferedReader bufferedReader = resourceManager.openAsReader(splashLocation)) {
+			try (BufferedReader bufferedReader = manager.openAsReader(splashLocation)) {
 				splashes.addAll(
 					bufferedReader.lines()
 						.map(String::trim)
 						.map(SplashManager::literalSplash)
 						.toList()
 				);
-			} catch (IOException ignored) {
-			}
+			} catch (IOException ignored) {}
 		}
 
 		return splashes;
 	}
-
 }

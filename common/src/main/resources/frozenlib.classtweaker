@@ -112,7 +112,6 @@ transitive-accessible method net/minecraft/world/level/levelgen/structure/Scatte
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece generateBox (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;IIIIIILnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Z)V
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece placeBlock (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece fillColumnDown (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
-transitive-accessible field net/minecraft/world/level/levelgen/structure/Structure settings Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 transitive-accessible class net/minecraft/world/level/levelgen/structure/pools/alias/RandomPoolAlias
 
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/placement/StructurePlacement net/frozenblock/lib/levelgen/structure/impl/StructureSetAndPlacementInterface

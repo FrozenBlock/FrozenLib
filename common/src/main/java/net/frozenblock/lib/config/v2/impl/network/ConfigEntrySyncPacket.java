@@ -27,7 +27,7 @@ import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.networking.PlayerLookup;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
@@ -71,10 +71,10 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
 		if (player == null) return false;
 		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
-		if (!FrozenNetworking.connectedToServer()) return false;
+		if (!FrozenLibNetworking.connectedToServer()) return false;
 
-		final boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
-		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		final boolean isHost = serverSide && FrozenLibNetworking.isLocalPlayer(player);
+		return FrozenLibNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 	}
 
 	public void write(FriendlyByteBuf buf) {
@@ -93,7 +93,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		if (sender != null) {
 			// C2S logic
 			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON SERVER: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
-			if (FrozenNetworking.isLocalPlayer(sender)) {
+			if (FrozenLibNetworking.isLocalPlayer(sender)) {
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(entry));
 				}
@@ -101,7 +101,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 				entry.setValue(packet.value());
 			}
 
-			if (!FrozenNetworking.connectedToIntegratedServer()) entry.configData().save();
+			if (!FrozenLibNetworking.connectedToIntegratedServer()) entry.configData().save();
 		} else {
 			// S2C logic
 			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON CLIENT: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
@@ -111,12 +111,12 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
     }
 
 	public static void sendDataS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
-		if (FrozenNetworking.isLocalPlayer(player)) return;
+		if (FrozenLibNetworking.isLocalPlayer(player)) return;
 		for (ConfigData<?> entry : entries) sendEntryS2C(player, entry.entries().values());
 	}
 
 	public static void sendEntryS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
-		if (FrozenNetworking.isLocalPlayer(player)) return;
+		if (FrozenLibNetworking.isLocalPlayer(player)) return;
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
@@ -143,7 +143,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S(Iterable<ConfigEntry<?>> entries) {
-		if (!FrozenNetworking.connectedToServer()) return;
+		if (!FrozenLibNetworking.connectedToServer()) return;
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;

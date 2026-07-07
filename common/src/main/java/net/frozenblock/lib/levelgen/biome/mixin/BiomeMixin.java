@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.biome.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.levelgen.biome.impl.FrozenGrassColorModifier;
+import net.frozenblock.lib.levelgen.biome.impl.FrozenLibGrassColorModifier;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeInterface;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
@@ -36,27 +36,22 @@ public class BiomeMixin implements BiomeInterface {
 	private Biome.ClimateSettings climateSettings;
 
 	@Unique
-	private FrozenGrassColorModifier frozenLib$frozenGrassColorModifier;
+	private FrozenLibGrassColorModifier frozenLib$frozenLibGrassColorModifier;
 
-	@ModifyReturnValue(
-		method = "getGrassColor",
-		at = @At(
-			value = "RETURN"
-		)
-	)
-	public int frozenLib$modifyGrassColor(int original, double x, double y) {
-		if (this.frozenLib$frozenGrassColorModifier != null) return this.frozenLib$frozenGrassColorModifier.modifyGrassColor(x, y, original);
+	@ModifyReturnValue(method = "getGrassColor", at = @At("RETURN"))
+	public int frozenLib$modifyGrassColor(int original, double x, double z) {
+		if (this.frozenLib$frozenLibGrassColorModifier != null) return this.frozenLib$frozenLibGrassColorModifier.modifyGrassColor(x, z, original);
 		return original;
 	}
 
 	@Override
-	public void frozenLib$setFrozenGrassColorModifier(FrozenGrassColorModifier frozenGrassColorModifier) {
-		this.frozenLib$frozenGrassColorModifier = frozenGrassColorModifier;
+	public void frozenLib$setFrozenLibGrassColorModifier(FrozenLibGrassColorModifier modifier) {
+		this.frozenLib$frozenLibGrassColorModifier = modifier;
 	}
 
 	@Override
-	public FrozenGrassColorModifier frozenLib$getFrozenGrassColorModifier() {
-		return this.frozenLib$frozenGrassColorModifier;
+	public FrozenLibGrassColorModifier frozenLib$getFrozenLibGrassColorModifier() {
+		return this.frozenLib$frozenLibGrassColorModifier;
 	}
 
 	@Override

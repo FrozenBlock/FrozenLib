@@ -33,6 +33,7 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  * limitations under the License.
  */
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -43,17 +44,15 @@ import net.minecraft.world.level.biome.Biome;
 /**
  * Utility class for accessing the worldgen data that vanilla uses to generate its vanilla datapack.
  */
+@UtilityClass
 public final class BuiltInResourceKeys {
-	private static final HolderLookup.Provider vanillaRegistries = VanillaRegistries.createLookup();
-
-	private BuiltInResourceKeys() {
-	}
+	private static final HolderLookup.Provider VANILLA_REGISTRIES = VanillaRegistries.createLookup();
 
 	public static boolean isBuiltinBiome(ResourceKey<Biome> key) {
 		return biomeHolderGetter().get(key).isPresent();
 	}
 
 	public static HolderGetter<Biome> biomeHolderGetter() {
-		return vanillaRegistries.lookupOrThrow(Registries.BIOME);
+		return VANILLA_REGISTRIES.lookupOrThrow(Registries.BIOME);
 	}
 }

@@ -126,7 +126,7 @@ public final class FrozenLibMain {
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
 		});
 
-		FrozenNetworking.registerNetworking();
+		FrozenLibNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

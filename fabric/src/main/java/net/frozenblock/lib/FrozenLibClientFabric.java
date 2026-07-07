@@ -17,14 +17,16 @@
 
 package net.frozenblock.lib;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
-import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
-import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
@@ -32,8 +34,6 @@ import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
-import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
-import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -71,8 +71,16 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 		FrozenLibModelLayers.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
-			PanoramaCommand.register(dispatcher);
-			FrozenLibClientCommand.register(dispatcher);
+			FrozenLibClientCommand.register(
+				(CommandDispatcher) dispatcher,
+				string -> (LiteralArgumentBuilder) ClientCommands.literal(string),
+				(string, type) -> (RequiredArgumentBuilder) ClientCommands.argument(string, type),
+				message -> {
+					final Minecraft minecraft = Minecraft.getInstance();
+					minecraft.gui.hud.getChat().addClientSystemMessage(message);
+					minecraft.getNarrator().saySystemChatQueued(message);
+				}
+			);
 		});
 
 		FrozenLibModResourcePackApi.init();
