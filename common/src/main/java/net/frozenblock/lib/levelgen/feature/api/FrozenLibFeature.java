@@ -84,7 +84,7 @@ public class FrozenLibFeature<F extends Feature> {
 		return this;
 	}
 
-	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC> makeAndSetHolder(FrozenHolder<Feature<?>, F> feature, FC config) {
-		return makeAndSetHolder(feature.get(), config);
+	public FrozenLibFeature<F> makeAndSetHolder(FrozenHolder<Feature, F> feature) {
+		return makeAndSetHolder(feature.get());
 	}
 }

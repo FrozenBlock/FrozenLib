@@ -33,35 +33,36 @@ import net.frozenblock.lib.levelgen.feature.api.feature.UnderwaterVegetationPatc
 import net.frozenblock.lib.levelgen.feature.api.feature.VegetationPatchWithEdgeDecorationFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.NoisePathFeature;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.Feature;
 
 public class FrozenLibFeatureTypes {
 
 	public static void init() {
-		register("config_selector", ConfigSelectorFeature.CODEC);
-		register("noise_path", NoisePathFeature.CODEC);
-		register("ball", BallFeature.CODEC);
-		register("column", ColumnFeature.CODEC);
-		register("column_with_disk", ColumnWithDiskFeature.CODEC);
-		register("vegetation_patch_with_edge_decoration", VegetationPatchWithEdgeDecorationFeature.CODEC);
-		register("underwater_vegetation_patch", UnderwaterVegetationPatchFeature.CODEC);
-		register("underwater_vegetation_patch_with_edge_decoration", UnderwaterVegetationPatchWithEdgeDecorationFeature.CODEC);
-		register("circular_waterlogged_vegetation_patch", CircularWaterloggedVegetationPatchFeature.CODEC);
-		register("circular_waterlogged_vegetation_patch_less_borders", CircularWaterloggedVegetationPatchLessBordersFeature.CODEC);
-		register("circular_lava_vegetation_patch", CircularLavaVegetationPatchFeature.CODEC);
-		register("circular_lava_vegetation_patch_less_borders", CircularLavaVegetationPatchLessBordersFeature.CODEC);
-		register("large_spire", LargeSpireFeature.CODEC);
-		register("curving_spike", CurvingSpikeFeature.CODEC);
-	}
+		var register = FrozenDeferredRegister.create(
+			Registries.FEATURE_TYPE,
+			FrozenLibConstants.MOD_ID
+		);
 
-	public static <F extends Feature> void register(Identifier id, MapCodec<F> featureCodec) {
-		Registry.register(BuiltInRegistries.FEATURE_TYPE, id, featureCodec);
-	}
+		register.register("config_selector", () -> ConfigSelectorFeature.CODEC);
+		register.register("noise_path", () -> NoisePathFeature.CODEC);
+		register.register("ball", () -> BallFeature.CODEC);
+		register.register("column", () -> ColumnFeature.CODEC);
+		register.register("column_with_disk", () -> ColumnWithDiskFeature.CODEC);
+		register.register("vegetation_patch_with_edge_decoration", () -> VegetationPatchWithEdgeDecorationFeature.CODEC);
+		register.register("underwater_vegetation_patch", () -> UnderwaterVegetationPatchFeature.CODEC);
+		register.register("underwater_vegetation_patch_with_edge_decoration", () -> UnderwaterVegetationPatchWithEdgeDecorationFeature.CODEC);
+		register.register("circular_waterlogged_vegetation_patch", () -> CircularWaterloggedVegetationPatchFeature.CODEC);
+		register.register("circular_waterlogged_vegetation_patch_less_borders", () -> CircularWaterloggedVegetationPatchLessBordersFeature.CODEC);
+		register.register("circular_lava_vegetation_patch", () -> CircularLavaVegetationPatchFeature.CODEC);
+		register.register("circular_lava_vegetation_patch_less_borders", () -> CircularLavaVegetationPatchLessBordersFeature.CODEC);
+		register.register("large_spire", () -> LargeSpireFeature.CODEC);
+		register.register("curving_spike", () -> CurvingSpikeFeature.CODEC);
 
-	private static <F extends Feature> void register(String name, MapCodec<F> featureCodec) {
-		register(FrozenLibConstants.id(name), featureCodec);
+		register.register();
 	}
 }
