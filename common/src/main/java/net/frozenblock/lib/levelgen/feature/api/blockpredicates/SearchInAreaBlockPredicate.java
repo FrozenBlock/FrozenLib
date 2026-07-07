@@ -71,7 +71,7 @@ public class SearchInAreaBlockPredicate implements BlockPredicate {
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.SEARCH_IN_AREA;
+		return FrozenLibBlockPredicateTypes.SEARCH_IN_AREA.get();
 	}
 
 	@Override

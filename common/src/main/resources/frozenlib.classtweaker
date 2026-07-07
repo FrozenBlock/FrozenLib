@@ -399,6 +399,7 @@ transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljav
 transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
 transitive-accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
 transitive-inject-interface net/minecraft/core/MappedRegistry org/quiltmc/qsl/frozenblock/core/registry/api/event/RegistryEventStorage
+accessible class net/minecraft/core/RegistrySetBuilder$BuildState
 
 # Sounds
 transitive-accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;

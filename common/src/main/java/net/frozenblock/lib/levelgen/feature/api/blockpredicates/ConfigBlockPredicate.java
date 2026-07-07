@@ -40,7 +40,7 @@ public class ConfigBlockPredicate implements BlockPredicate {
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.CONFIG_PREDICATE;
+		return FrozenLibBlockPredicateTypes.CONFIG_PREDICATE.get();
 	}
 
 	@Override

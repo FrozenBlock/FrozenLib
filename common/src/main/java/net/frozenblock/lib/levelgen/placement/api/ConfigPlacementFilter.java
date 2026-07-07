@@ -44,6 +44,6 @@ public class ConfigPlacementFilter<T> extends PlacementFilter {
 
 	@Override
 	public PlacementModifierType<?> type() {
-		return FrozenLibPlacementModifiers.CONFIG_PREDICATE;
+		return FrozenLibPlacementModifiers.CONFIG_PREDICATE.get();
 	}
 }

@@ -21,18 +21,29 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import java.util.function.Supplier;
 
 public class FrozenLibPlacementModifiers {
-	public static final PlacementModifierType<ConfigPlacementFilter<?>> CONFIG_PREDICATE = register("config_predicate", ConfigPlacementFilter.CODEC);
-	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
+	private static final FrozenDeferredRegister<PlacementModifierType<?>> REGISTER = FrozenDeferredRegister.create(
+		Registries.PLACEMENT_MODIFIER_TYPE,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final FrozenHolder<PlacementModifierType<?>, PlacementModifierType<ConfigPlacementFilter<?>>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigPlacementFilter.CODEC);
+	public static final FrozenHolder<PlacementModifierType<?>, PlacementModifierType<NoisePlacementFilter>> NOISE_FILTER = register("noise_filter", () -> NoisePlacementFilter.CODEC);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {}
 
-	private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenLibConstants.id(name), () -> codec);
+	private static <P extends PlacementModifier> FrozenHolder<PlacementModifierType<?>, PlacementModifierType<P>> register(String name, Supplier<MapCodec<P>> codec) {
+		return REGISTER.register(name, () -> codec::get);
 	}
 }

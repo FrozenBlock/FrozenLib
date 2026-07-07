@@ -66,7 +66,7 @@ public class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
 
 	@Override
 	public StructurePoolElementType<?> getType() {
-		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_SINGLE;
+		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_SINGLE.get();
 	}
 
 	@Override

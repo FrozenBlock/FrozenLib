@@ -97,6 +97,6 @@ public class NoisePlacementFilter extends PlacementFilter {
 
 	@Override
 	public PlacementModifierType<?> type() {
-		return FrozenLibPlacementModifiers.NOISE_FILTER;
+		return FrozenLibPlacementModifiers.NOISE_FILTER.get();
 	}
 }

@@ -39,39 +39,66 @@ import net.frozenblock.lib.levelgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallFeatureConfiguration;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.NoisePathFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoisePathFeatureConfiguration;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenLibFeatures {
-	public static final ConfigSelectorFeature CONFIG_SELECTOR = new ConfigSelectorFeature(ConfigSelectorFeatureConfiguration.CODEC);
-	public static final NoisePathFeature NOISE_PATH = new NoisePathFeature(NoisePathFeatureConfiguration.CODEC);
-	public static final BallFeature BALL = new BallFeature(BallFeatureConfiguration.CODEC);
-	public static final ColumnFeature COLUMN = new ColumnFeature(ColumnFeatureConfiguration.CODEC);
-	public static final ColumnWithDiskFeature COLUMN_WITH_DISK = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfiguration.CODEC);
-	public static final VegetationPatchWithEdgeDecorationFeature VEGETATION_PATCH_WITH_EDGE_DECORATION = new VegetationPatchWithEdgeDecorationFeature(VegetationPatchConfiguration.CODEC);
-	public static final UnderwaterVegetationPatchFeature UNDERWATER_VEGETATION_PATCH = new UnderwaterVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
-	public static final UnderwaterVegetationPatchWithEdgeDecorationFeature UNDERWATER_VEGETATION_PATCH_WITH_EDGE_DECORATION = new UnderwaterVegetationPatchWithEdgeDecorationFeature(VegetationPatchConfiguration.CODEC);public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
-	public static final CircularWaterloggedVegetationPatchLessBordersFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
-	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
-	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
-	public static final LargeSpireFeature LARGE_SPIRE = new LargeSpireFeature(LargeSpireConfiguration.CODEC);
-	public static final CurvingSpikeFeature CURVING_SPIKE = new CurvingSpikeFeature(CurvingSpikeConfiguration.CODEC);
+	private static final FrozenDeferredRegister<Feature<?>> REGISTER = FrozenDeferredRegister.create(
+		Registries.FEATURE,
+		FrozenLibConstants.MOD_ID
+	);
 
-	public static void init() {
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("config_selector"), CONFIG_SELECTOR);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path"), NOISE_PATH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("ball"), BALL);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column"), COLUMN);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column_with_disk"), COLUMN_WITH_DISK);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("vegetation_patch_with_edge_decoration"), VEGETATION_PATCH_WITH_EDGE_DECORATION);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("underwater_vegetation_patch"), UNDERWATER_VEGETATION_PATCH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("underwater_vegetation_patch_with_edge_decoration"), UNDERWATER_VEGETATION_PATCH_WITH_EDGE_DECORATION);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("large_spire"), LARGE_SPIRE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("curving_spike"), CURVING_SPIKE);
+	public static final FrozenHolder<Feature<?>, ConfigSelectorFeature> CONFIG_SELECTOR = REGISTER.register("config_selector",
+		() -> new ConfigSelectorFeature(ConfigSelectorFeatureConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, NoisePathFeature> NOISE_PATH = REGISTER.register("noise_path",
+		() -> new NoisePathFeature(NoisePathFeatureConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, BallFeature> BALL = REGISTER.register("ball",
+		() -> new BallFeature(BallFeatureConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, ColumnFeature> COLUMN = REGISTER.register("column",
+		() -> new ColumnFeature(ColumnFeatureConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, ColumnWithDiskFeature> COLUMN_WITH_DISK = REGISTER.register("column_with_disk",
+		() -> new ColumnWithDiskFeature(ColumnWithDiskFeatureConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, VegetationPatchWithEdgeDecorationFeature> VEGETATION_PATCH_WITH_EDGE_DECORATION = REGISTER.register("vegetation_patch_with_edge_decoration",
+		() -> new VegetationPatchWithEdgeDecorationFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, UnderwaterVegetationPatchFeature> UNDERWATER_VEGETATION_PATCH = REGISTER.register("underwater_vegetation_patch",
+		() -> new UnderwaterVegetationPatchFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, UnderwaterVegetationPatchWithEdgeDecorationFeature> UNDERWATER_VEGETATION_PATCH_WITH_EDGE_DECORATION = REGISTER.register("underwater_vegetation_patch_with_edge_decoration",
+		() -> new UnderwaterVegetationPatchWithEdgeDecorationFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, CircularWaterloggedVegetationPatchFeature> CIRCULAR_WATERLOGGED_VEGETATION_PATCH = REGISTER.register("circular_waterlogged_vegetation_patch",
+		() -> new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, CircularWaterloggedVegetationPatchLessBordersFeature> CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = REGISTER.register("circular_waterlogged_vegetation_patch_less_borders",
+		() -> new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, CircularLavaVegetationPatchFeature> CIRCULAR_LAVA_VEGETATION_PATCH = REGISTER.register("circular_lava_vegetation_patch",
+		() -> new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, CircularLavaVegetationPatchLessBordersFeature> CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = REGISTER.register("circular_lava_vegetation_patch_less_borders",
+		() -> new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, LargeSpireFeature> LARGE_SPIRE = REGISTER.register("large_spire",
+		() -> new LargeSpireFeature(LargeSpireConfiguration.CODEC)
+	);
+	public static final FrozenHolder<Feature<?>, CurvingSpikeFeature> CURVING_SPIKE = REGISTER.register("curving_spike",
+		() -> new CurvingSpikeFeature(CurvingSpikeConfiguration.CODEC)
+	);
+
+	static {
+		REGISTER.register();
 	}
+
+	public static void init() {}
 }

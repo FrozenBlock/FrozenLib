@@ -36,14 +36,14 @@ public class BundleContentsMixin {
 	@Inject(method = "getWeight", at = @At("HEAD"), cancellable = true)
 	private static void cameraPort$getFilmBundleWeight(ItemInstance item, CallbackInfoReturnable<DataResult<Fraction>> info) {
 		if (item instanceof ItemStack stack) {
-			final BundleWeightOverride weightOverride = stack.get(FrozenLibDataComponents.BUNDLE_WEIGHT_OVERRIDE);
+			final BundleWeightOverride weightOverride = stack.get(FrozenLibDataComponents.BUNDLE_WEIGHT_OVERRIDE.get());
 			if (weightOverride == null) return;
 			info.setReturnValue(DataResult.success(weightOverride.fraction()));
 			return;
 		}
 
 		if (item instanceof ItemStackTemplate stackTemplate) {
-			final BundleWeightOverride weightOverride = stackTemplate.get(FrozenLibDataComponents.BUNDLE_WEIGHT_OVERRIDE);
+			final BundleWeightOverride weightOverride = stackTemplate.get(FrozenLibDataComponents.BUNDLE_WEIGHT_OVERRIDE.get());
 			if (weightOverride == null) return;
 			info.setReturnValue(DataResult.success(weightOverride.fraction()));
 			return;

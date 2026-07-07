@@ -21,26 +21,37 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.DataMarkerProcessableLegacySinglePoolElement;
 import net.frozenblock.lib.levelgen.structure.api.DataMarkerProcessableSinglePoolElement;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
+import java.util.function.Supplier;
 
 public final class FrozenLibStructurePoolElementTypes {
-	public static final StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
+	private static final FrozenDeferredRegister<StructurePoolElementType<?>> REGISTER = FrozenDeferredRegister.create(
+		Registries.STRUCTURE_POOL_ELEMENT,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement>> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
 		"data_marker_processable_legacy_single_pool_element",
-		DataMarkerProcessableLegacySinglePoolElement.CODEC
+		() -> DataMarkerProcessableLegacySinglePoolElement.CODEC
 	);
-	public static final StructurePoolElementType<DataMarkerProcessableSinglePoolElement> DATA_MARKER_PROCESSABLE_SINGLE = register(
+	public static final FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableSinglePoolElement>> DATA_MARKER_PROCESSABLE_SINGLE = register(
 		"data_marker_processable_single_pool_element",
-		DataMarkerProcessableSinglePoolElement.CODEC
+		() -> DataMarkerProcessableSinglePoolElement.CODEC
 	);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {
 	}
 
-	private static <P extends StructurePoolElement> StructurePoolElementType<P> register(String path, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.STRUCTURE_POOL_ELEMENT, FrozenLibConstants.id(path), () -> codec);
+	private static <P extends StructurePoolElement> FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<P>> register(String name, Supplier<MapCodec<P>> codec) {
+		return REGISTER.register(name, () -> codec::get);
 	}
 
 }

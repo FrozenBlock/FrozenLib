@@ -67,7 +67,7 @@ public class TouchingBlockPredicate implements BlockPredicate {
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.TOUCHING;
+		return FrozenLibBlockPredicateTypes.TOUCHING.get();
 	}
 
 	@Override

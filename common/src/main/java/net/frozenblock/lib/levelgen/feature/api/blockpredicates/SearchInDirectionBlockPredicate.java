@@ -78,7 +78,7 @@ public class SearchInDirectionBlockPredicate implements BlockPredicate {
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.SEARCH_IN_DIRECTION;
+		return FrozenLibBlockPredicateTypes.SEARCH_IN_DIRECTION.get();
 	}
 
 	@Override

@@ -49,7 +49,7 @@ dependencies {
     compileOnlyApi("org.ow2.asm:asm-commons:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-util:${asm_version}")
 
-    compileOnlyApi("org.spongepowered:mixin:0.8.5")
+    compileOnlyApi("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7")
     compileOnlyApi("io.github.llamalad7:mixinextras-common:0.5.3")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3")
 

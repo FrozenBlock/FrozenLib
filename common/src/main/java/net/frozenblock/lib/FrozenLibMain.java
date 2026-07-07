@@ -22,15 +22,34 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
+import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
+import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
+import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
+import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
+import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
+import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
+import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
+import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
+import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
@@ -50,12 +69,12 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		var register = FrozenDeferredRegister.create(
+		var argTypes = FrozenDeferredRegister.create(
 			Registries.COMMAND_ARGUMENT_TYPE,
 			FrozenLibConstants.MOD_ID
 		);
 
-		register.register(
+		argTypes.register(
 			"tag_key",
 			() -> new TagKeyArgument.Info<>(),
 			info -> ArgumentTypeInfos.BY_CLASS.put(
@@ -64,7 +83,7 @@ public final class FrozenLibMain {
 			)
 		);
 
-		register.register();
+		argTypes.register();
 
 		CapeUtil.init();
 		SpottingIcons.init();
@@ -73,6 +92,33 @@ public final class FrozenLibMain {
 		SoundPredicate.init();
 		MovingSoundTypes.init();
 		FrozenLibParticleTypes.init();
+		FrozenLibRuleBlockEntityModifiers.init();
+		FrozenLibStructureProcessorTypes.init();
+		FrozenLibStructurePoolElementTypes.init();
+		FrozenLibDataComponents.init();
+		FrozenLibFeatures.init();
+		ConfigPredicateType.init();
+		WindManager.init();
+		WindManagerExtensionType.init();
+		WindDisturbances.init();
+		WindDisturbanceType.init();
+		FrozenLibBlockPredicateTypes.init();
+		FrozenLibPlacementModifiers.init();
+		FrozenLibLootConditionTypes.init();
+		StructureGenerationConditionApi.init();
+		StructurePlacementExclusionApi.init();
+		TemplatePoolApi.init();
+
+		var matCon = FrozenDeferredRegister.create(
+			Registries.MATERIAL_CONDITION,
+			FrozenLibConstants.MOD_ID
+		);
+		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);
+		matCon.register();
+
+		ScreenShakes.init();
+
+		FrozenNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

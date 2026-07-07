@@ -17,24 +17,25 @@
 
 package net.frozenblock.lib.levelgen.structure.impl;
 
-import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.BlockStateRespectingRuleProcessor;
 import net.frozenblock.lib.levelgen.structure.api.MarkForPostProcessingProcessor;
 import net.frozenblock.lib.levelgen.structure.api.WeightedRuleProcessor;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.minecraft.core.registries.Registries;
 
 public class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
-		register("block_state_respecting_rule", BlockStateRespectingRuleProcessor.MAP_CODEC);
-		register("weighted_rule", WeightedRuleProcessor.MAP_CODEC);
-		register("mark_for_post_processing", MarkForPostProcessingProcessor.MAP_CODEC);
-	}
+		var register = FrozenDeferredRegister.create(
+			Registries.STRUCTURE_PROCESSOR,
+			FrozenLibConstants.MOD_ID
+		);
 
-	private static void register(String id, MapCodec<? extends StructureProcessor> codec) {
-		Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), codec);
+		register.register("block_state_respecting_rule", () -> BlockStateRespectingRuleProcessor.MAP_CODEC);
+		register.register("weighted_rule", () -> WeightedRuleProcessor.MAP_CODEC);
+		register.register("mark_for_post_processing", () -> MarkForPostProcessingProcessor.MAP_CODEC);
+
+		register.register();
 	}
 }

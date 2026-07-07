@@ -82,27 +82,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibMain.init();
-		FrozenLibRuleBlockEntityModifiers.init();
-		FrozenLibStructureProcessorTypes.init();
-		FrozenLibStructurePoolElementTypes.init();
-		FrozenLibDataComponents.init();
-		FrozenLibFeatures.init();
-		ConfigPredicateType.init();
-		WindManager.init();
-		WindManagerExtensionType.init();
-		WindDisturbances.init();
-		WindDisturbanceType.init();
-		FrozenLibBlockPredicateTypes.init();
-		FrozenLibPlacementModifiers.init();
-		FrozenLibLootConditionTypes.init();
-		StructureGenerationConditionApi.init();
-		StructurePlacementExclusionApi.init();
-		TemplatePoolApi.init();
 		FabricFuelRegistry.init();
-
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
-
-		ScreenShakes.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
@@ -111,7 +91,5 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		});
 
 		ServerTickEvents.START_LEVEL_TICK.register(StructureStatusUpdater::updatePlayerStructureStatusesForLevel);
-
-		FrozenNetworking.registerNetworking();
 	}
 }

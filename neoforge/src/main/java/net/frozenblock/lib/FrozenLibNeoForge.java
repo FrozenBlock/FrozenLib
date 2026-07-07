@@ -74,10 +74,6 @@ public final class FrozenLibNeoForge {
 			NeoRegistryHelper.flushDynamicRegistries(event);
 		});
 		modBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
-			FrozenNetworking.registerNetworking();
-			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
-				FrozenClientNetworking.registerClientReceivers();
-			}
 			NeoNetworkingHelper neoNetworking = (NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING;
 			PayloadRegistrar registrar = event.registrar("frozenlib");
 			neoNetworking.flush(registrar);

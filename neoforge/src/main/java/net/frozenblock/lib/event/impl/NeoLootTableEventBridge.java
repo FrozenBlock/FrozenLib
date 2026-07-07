@@ -62,7 +62,7 @@ public class NeoLootTableEventBridge {
 		LootTableAccessor accessor = (LootTableAccessor) lootTable;
 		LootTable.Builder builder = LootTable.lootTable();
 		builder.setParamSet(lootTable.getParamSet());
-		builder.setRandomSequence(accessor.frozenLib$getRandomSequence().orElse(null));
+		accessor.frozenLib$getRandomSequence().ifPresent(builder::setRandomSequence);
 		((LootTableBuilderAccessor) builder).frozenLib$getPools().addAll(accessor.frozenLib$getPools());
 		((LootTableBuilderAccessor) builder).frozenLib$getFunctions().addAll(accessor.frozenLib$getFunctions());
 		return builder;

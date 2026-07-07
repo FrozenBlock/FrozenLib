@@ -67,7 +67,7 @@ public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElem
 
 	@Override
 	public StructurePoolElementType<?> getType() {
-		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_LEGACY_SINGLE;
+		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_LEGACY_SINGLE.get();
 	}
 
 	@Override

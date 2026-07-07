@@ -19,19 +19,29 @@ package net.frozenblock.lib.item.api.component;
 
 import java.util.function.UnaryOperator;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 
 public class FrozenLibDataComponents {
-	public static final DataComponentType<BundleWeightOverride> BUNDLE_WEIGHT_OVERRIDE = register(
+	private static final FrozenDeferredRegister<DataComponentType<?>> REGISTER = FrozenDeferredRegister.create(
+		Registries.DATA_COMPONENT_TYPE,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final FrozenHolder<DataComponentType<?>, DataComponentType<BundleWeightOverride>> BUNDLE_WEIGHT_OVERRIDE = register(
 		"bundle_weight_override",
 		builder -> builder.persistent(BundleWeightOverride.CODEC).networkSynchronized(BundleWeightOverride.STREAM_CODEC)
 	);
 
+	static {
+		REGISTER.register();
+	}
+
 	public static void init() {}
 
-	private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> unaryOperator) {
-		return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, FrozenLibConstants.id(id), unaryOperator.apply(DataComponentType.builder()).build());
+	private static <T> FrozenHolder<DataComponentType<?>, DataComponentType<T>> register(String id, UnaryOperator<DataComponentType.Builder<T>> unaryOperator) {
+		return REGISTER.register(id, () -> unaryOperator.apply(DataComponentType.builder()).build());
 	}
 }
