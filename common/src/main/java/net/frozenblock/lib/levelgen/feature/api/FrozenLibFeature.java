@@ -83,7 +83,7 @@ public class FrozenLibFeature {
 		return this;
 	}
 
-	public FrozenLibFeature<> makeAndSetHolder(FrozenHolder<Feature, Feature> feature) {
+	public FrozenLibFeature makeAndSetHolder(FrozenHolder<Feature, Feature> feature) {
 		return makeAndSetHolder(feature.get());
 	}
 }
