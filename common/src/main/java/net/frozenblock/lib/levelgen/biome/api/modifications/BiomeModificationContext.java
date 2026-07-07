@@ -45,7 +45,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.UnmodifiableView;
 import java.util.List;
@@ -295,14 +295,14 @@ public interface BiomeModificationContext {
 		/**
 		 * Adds a configured world carver to this biome.
 		 */
-		void addCarver(ResourceKey<ConfiguredWorldCarver<?>> carverKey);
+		void addCarver(ResourceKey<WorldCarver> carverKey);
 
 		/**
 		 * Removes all carvers with the given key from this biome.
 		 *
 		 * @return True if any carvers were removed.
 		 */
-		boolean removeCarver(ResourceKey<ConfiguredWorldCarver<?>> carverKey);
+		boolean removeCarver(ResourceKey<WorldCarver> carverKey);
 	}
 
 	interface MobSpawnSettingsContext {

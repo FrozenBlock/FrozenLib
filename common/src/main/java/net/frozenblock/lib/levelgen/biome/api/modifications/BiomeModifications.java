@@ -34,14 +34,16 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  */
 
 import com.google.common.base.Preconditions;
-import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;import net.minecraft.core.registries.BuiltInRegistries;
+import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
+import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import java.util.function.Predicate;
 
@@ -70,7 +72,7 @@ public final class BiomeModifications {
 	 *
 	 * @see BiomeSelectors
 	 */
-	public static void addCarver(Predicate<BiomeSelectionContext> biomeSelector, ResourceKey<ConfiguredWorldCarver<?>> configuredCarverKey) {
+	public static void addCarver(Predicate<BiomeSelectionContext> biomeSelector, ResourceKey<WorldCarver> configuredCarverKey) {
 		create(configuredCarverKey.identifier()).add(ModificationPhase.ADDITIONS, biomeSelector, context -> {
 			context.getGenerationSettings().addCarver(configuredCarverKey);
 		});

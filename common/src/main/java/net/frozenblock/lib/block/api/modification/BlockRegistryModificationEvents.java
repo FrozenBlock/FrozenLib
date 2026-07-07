@@ -18,8 +18,8 @@
 package net.frozenblock.lib.block.api.modification;
 
 import java.util.function.Function;
-import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;

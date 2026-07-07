@@ -72,9 +72,6 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		SoundPredicate.init();
-		MovingSoundTypes.init();
-		FrozenLibParticleTypes.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		SoundPredicate.init();
@@ -97,7 +94,7 @@ public final class FrozenLibMain {
 		StructureSetApi.init();
 
 		var matCon = FrozenDeferredRegister.create(
-			Registries.MATERIAL_CONDITION,
+			Registries.MATERIAL_CONDITION_TYPE,
 			FrozenLibConstants.MOD_ID
 		);
 		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);

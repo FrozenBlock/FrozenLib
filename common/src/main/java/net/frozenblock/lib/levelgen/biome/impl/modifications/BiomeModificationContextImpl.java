@@ -57,7 +57,7 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.jspecify.annotations.Nullable;
@@ -227,7 +227,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 	}
 
 	private class GenerationSettingsContextImpl implements GenerationSettingsContext {
-		private final Registry<ConfiguredWorldCarver<?>> carvers = registries.lookupOrThrow(Registries.CONFIGURED_CARVER);
+		private final Registry<WorldCarver> carvers = registries.lookupOrThrow(Registries.CARVER);
 		private final Registry<PlacedFeature> features = registries.lookupOrThrow(Registries.PLACED_FEATURE);
 		private final BiomeGenerationSettings generationSettings = biome.getGenerationSettings();
 
@@ -324,15 +324,15 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		@Override
-		public void addCarver(ResourceKey<ConfiguredWorldCarver<?>> entry) {
+		public void addCarver(ResourceKey<WorldCarver> entry) {
 			// We do not need to delay evaluation of this since the registries are already fully built
 			generationSettings.carvers = plus(generationSettings.carvers, getHolder(carvers, entry));
 		}
 
 		@Override
-		public boolean removeCarver(ResourceKey<ConfiguredWorldCarver<?>> carverKey) {
-			ConfiguredWorldCarver<?> carver = getHolder(carvers, carverKey).value();
-			List<Holder<ConfiguredWorldCarver<?>>> genCarvers = new ArrayList<>(generationSettings.carvers.stream().toList());
+		public boolean removeCarver(ResourceKey<WorldCarver> carverKey) {
+			WorldCarver carver = getHolder(carvers, carverKey).value();
+			List<Holder<WorldCarver>> genCarvers = new ArrayList<>(generationSettings.carvers.stream().toList());
 
 			if (genCarvers.removeIf(entry -> entry.value() == carver)) {
 				generationSettings.carvers = HolderSet.direct(genCarvers);

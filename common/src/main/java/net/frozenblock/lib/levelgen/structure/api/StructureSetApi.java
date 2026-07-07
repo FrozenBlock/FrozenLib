@@ -18,8 +18,8 @@
 package net.frozenblock.lib.levelgen.structure.api;
 
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.levelgen.structure.impl.StructureSetAdditionInterface;
 import net.minecraft.core.Holder;

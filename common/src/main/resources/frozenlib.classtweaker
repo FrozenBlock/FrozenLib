@@ -117,13 +117,7 @@ transitive-accessible class net/minecraft/world/level/levelgen/structure/pools/a
 
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/placement/StructurePlacement net/frozenblock/lib/levelgen/structure/impl/StructureSetAndPlacementInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureSet net/frozenblock/lib/levelgen/structure/impl/StructureSetAndPlacementInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureStart net/frozenblock/lib/levelgen/structure/impl/StructureStartInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate net/frozenblock/lib/levelgen/structure/impl/StructureTemplateInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool net/frozenblock/lib/levelgen/structure/impl/StructureTemplatePoolInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/ListPoolElement net/frozenblock/lib/levelgen/structure/impl/StructurePoolElementInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement net/frozenblock/lib/levelgen/structure/impl/StructurePoolElementInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/PoolElementStructurePiece net/frozenblock/lib/levelgen/structure/impl/InitialPieceProcessorInjectionInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/TemplateStructurePiece net/frozenblock/lib/levelgen/structure/impl/InitialPieceProcessorInjectionInterface
 
 # Entities
 transitive-accessible method net/minecraft/world/entity/Entity updateFluidInteraction ()Z
@@ -316,7 +310,6 @@ mutable field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Lja
 
 # Noise
 transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
-transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSettings net/frozenblock/lib/levelgen/surface/impl/NoiseGeneratorInterface
 
 # Material Rules
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource <init> (Ljava/util/List;)V

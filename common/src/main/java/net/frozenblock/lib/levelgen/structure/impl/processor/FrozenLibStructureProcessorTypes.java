@@ -33,15 +33,10 @@ public class FrozenLibStructureProcessorTypes {
 			FrozenLibConstants.MOD_ID
 		);
 
-<<<<<<<< HEAD:common/src/main/java/net/frozenblock/lib/levelgen/structure/impl/FrozenLibStructureProcessorTypes.java
 		register.register("block_state_respecting_rule", () -> BlockStateRespectingRuleProcessor.MAP_CODEC);
 		register.register("weighted_rule", () -> WeightedRuleProcessor.MAP_CODEC);
 		register.register("mark_for_post_processing", () -> MarkForPostProcessingProcessor.MAP_CODEC);
 
 		register.register();
-========
-	private static void register(String name, MapCodec<? extends StructureProcessor> codec) {
-		Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(name), codec);
->>>>>>>> 2cdac879d (make structure processor additions data-driven):src/main/java/net/frozenblock/lib/levelgen/structure/impl/processor/FrozenLibStructureProcessorTypes.java
 	}
 }

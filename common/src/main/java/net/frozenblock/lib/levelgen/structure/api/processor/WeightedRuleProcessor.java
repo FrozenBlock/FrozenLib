@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.jetbrains.annotations.Nullable;
 
 public class WeightedRuleProcessor implements StructureProcessor {
-	public static final MapCodec<WeightedRuleProcessor> MAP_CODEC = net.frozenblock.lib.levelgen.structure.api.WeightedProcessorRule.CODEC.listOf()
+	public static final MapCodec<WeightedRuleProcessor> MAP_CODEC = WeightedProcessorRule.CODEC.listOf()
 		.fieldOf("rules").xmap(WeightedRuleProcessor::new, processor -> processor.rules);
 	private final ImmutableList<WeightedProcessorRule> rules;
 
