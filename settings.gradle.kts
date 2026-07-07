@@ -38,19 +38,28 @@ rootProject.name = "FrozenLib"
 
 includeBuild("build-logic")
 
+object Constants {
+    const val FABRIC: Boolean = true
+    const val NEOFORGE: Boolean = true
+}
+
 include("flib-common")
 project(":flib-common").projectDir = file("common")
 
-include("flib-fabric")
-project(":flib-fabric").projectDir = file("fabric")
+if (Constants.FABRIC) {
+    include("flib-fabric")
+    project(":flib-fabric").projectDir = file("fabric")
+}
 
-include("flib-neoforge")
-project(":flib-neoforge").projectDir = file("neoforge")
+if (Constants.NEOFORGE) {
+    include("flib-neoforge")
+    project(":flib-neoforge").projectDir = file("neoforge")
+}
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
 
 
-fun localRepository(repo: String, dependencySub: String, kotlin: Boolean, enabled: Boolean) {
+fun localRepository(repo: String, dependencySub: String, prefix: String = "", multi: Boolean = true, kotlin: Boolean = true, enabled: Boolean) {
     if (!enabled) return
     println("Attempting to include local repo $repo")
 
@@ -77,8 +86,18 @@ fun localRepository(repo: String, dependencySub: String, kotlin: Boolean, enable
         if (file.exists()) {
             includeBuild(path) {
                 dependencySubstitution {
-                    if (dependencySub != "") {
-                        substitute(module(dependencySub)).using(project(":"))
+                    val allSuffixes = mutableListOf("common")
+                    if (Constants.FABRIC) allSuffixes.add("fabric")
+                    if (Constants.NEOFORGE) allSuffixes.add("neoforge")
+                    if (multi && allSuffixes.isNotEmpty()) {
+                        for (suffix in allSuffixes) {
+                            substitute(module("$dependencySub-$suffix")).using(project(":$prefix-$suffix"))
+                        }
+                    } else {
+                        val projectPath = if (dependencySub.isNotEmpty()) {
+                            if (prefix.isNotEmpty()) ":$prefix-$dependencySub" else ":$dependencySub"
+                        } else ":"
+                        substitute(module(dependencySub)).using(project(projectPath))
                     }
                 }
             }
@@ -88,3 +107,4 @@ fun localRepository(repo: String, dependencySub: String, kotlin: Boolean, enable
         }
     }
 }
+
