@@ -33,7 +33,7 @@ import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.networking.FrozenClientNetworking;
+import net.frozenblock.lib.networking.FrozenLibClientNetworking;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -66,7 +66,7 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 		FrozenLibClient.init();
 
 		registerClientEvents();
-		FrozenClientNetworking.registerClientReceivers();
+		FrozenLibClientNetworking.registerClientReceivers();
 
 		FrozenLibModelLayers.init();
 
