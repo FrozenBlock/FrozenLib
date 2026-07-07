@@ -42,7 +42,7 @@ import net.frozenblock.lib.levelgen.structure.api.processor.FrozenLibRuleBlockEn
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;

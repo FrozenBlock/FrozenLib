@@ -85,6 +85,20 @@ loom {
             source(testmod.get())
         }
 
+        register("datagen") {
+            client()
+            name("Data Generation")
+            preferGradleTask = true
+            source(datagen.get())
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=${rootProject.file("common/src/main/generated")}")
+            //vmArg("-Dfabric-api.datagen.strict-validation")
+            vmArg("-Dfabric-api.datagen.modid=frozenlib")
+
+            ideConfigGenerated(true)
+            runDir = "build/datagen"
+        }
+
         named("client") {
             name("Fabric Client")
             ideConfigGenerated(true)
@@ -100,30 +114,6 @@ loom {
     accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
     interfaceInjection {
         enableDependencyInterfaceInjection = true
-    }
-}
-
-loom {
-    runs {
-        register("datagen") {
-            client()
-            name("Data Generation")
-            source(datagen.get())
-            vmArg("-Dfabric-api.datagen")
-            vmArg("-Dfabric-api.datagen.output-dir=${rootProject.file("common/src/main/generated")}")
-            //vmArg("-Dfabric-api.datagen.strict-validation")
-            vmArg("-Dfabric-api.datagen.modid=frozenlib")
-
-            ideConfigGenerated(true)
-            runDir = "build/datagen"
-        }
-
-        named("client") {
-            ideConfigGenerated(true)
-        }
-        named("server") {
-            ideConfigGenerated(true)
-        }
     }
 }
 
