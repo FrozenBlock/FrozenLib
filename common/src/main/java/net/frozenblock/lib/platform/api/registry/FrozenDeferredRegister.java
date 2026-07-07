@@ -134,11 +134,47 @@ public interface FrozenDeferredRegister<T> {
 
 		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also);
 
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
+			return registerBlock(id.block(), func, properties);
+		}
+
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return registerBlock(id.block(), func, properties, also);
+		}
+
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return registerBlock(id.block(), func, properties);
+		}
+
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return registerBlock(id.block(), func, properties, also);
+		}
+
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func) {
+			return registerBlock(id.block(), func);
+		}
+
+		default <B extends Block> FrozenDeferredBlock<B> registerBlock(BlockItemId id, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also) {
+			return registerBlock(id.block(), func, also);
+		}
+
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties);
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> properties);
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key);
+
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId id, Supplier<BlockBehaviour.Properties> properties) {
+			return registerSimpleBlock(id.block(), properties);
+		}
+
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId id, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return registerSimpleBlock(id.block(), properties);
+		}
+
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId id) {
+			return registerSimpleBlock(id.block());
+		}
 
 		default FrozenDeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Supplier<? extends Block> base) {
 			return registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
