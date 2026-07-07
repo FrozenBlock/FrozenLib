@@ -25,7 +25,6 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import net.minecraft.util.Util;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
 
 /**
@@ -63,8 +62,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      * @param executorGetter The executor supplier, only invoked if the game is using optimized data fixers
      * @return The newly built data fixer
      */
-    @Contract(value = "_, _ -> new")
-    public DataFixer build(Set<DSL.TypeReference> typesToOptimize, Supplier<Executor> executorGetter) {
+	public DataFixer build(Set<DSL.TypeReference> typesToOptimize, Supplier<Executor> executorGetter) {
 		return typesToOptimize.isEmpty() ? this.build().fixer() : Util.make(() -> {
 			final Result result = this.build();
 			result.optimize(typesToOptimize, executorGetter.get()).join();
