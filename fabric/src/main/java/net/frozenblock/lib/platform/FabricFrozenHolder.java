@@ -21,7 +21,6 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import java.util.function.Consumer;
 
 public class FabricFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 

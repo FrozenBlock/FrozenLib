@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.impl.blockpredicates;
 
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInAreaBlockPredicate;
@@ -28,7 +29,6 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
-import java.util.function.Supplier;
 
 public class FrozenLibBlockPredicateTypes {
 	private static final FrozenDeferredRegister<BlockPredicateType<?>> REGISTER = FrozenDeferredRegister.create(

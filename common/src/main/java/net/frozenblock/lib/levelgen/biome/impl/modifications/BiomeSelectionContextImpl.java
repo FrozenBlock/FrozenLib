@@ -33,6 +33,7 @@ package net.frozenblock.lib.levelgen.biome.impl.modifications;
  * limitations under the License.
  */
 
+import java.util.Optional;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -45,7 +46,6 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import java.util.Optional;
 
 public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 	private final RegistryAccess dynamicRegistries;

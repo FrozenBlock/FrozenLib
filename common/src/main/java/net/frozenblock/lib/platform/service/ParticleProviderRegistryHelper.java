@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.platform.service;
 
+import java.util.function.Supplier;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import java.util.function.Supplier;
 
 public interface ParticleProviderRegistryHelper {
 

@@ -16,7 +16,7 @@
     "cubemob.sulfurcube.SulfurCubeMixin"
   ],
   "client": [
-    "client.rendering.LivingEntityRendererMixin",
-    "client.rendering.EntityRendererExtractNameMixin"
+    "client.rendering.EntityRendererExtractNameMixin",
+    "client.rendering.LivingEntityRendererMixin"
   ]
 }

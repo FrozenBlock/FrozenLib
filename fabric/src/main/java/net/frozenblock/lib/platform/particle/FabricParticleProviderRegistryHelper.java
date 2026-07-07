@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.platform.particle;
 
+import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
 import net.frozenblock.lib.platform.service.ParticleProviderRegistryHelper;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import java.util.function.Supplier;
 
 public class FabricParticleProviderRegistryHelper implements ParticleProviderRegistryHelper {
 

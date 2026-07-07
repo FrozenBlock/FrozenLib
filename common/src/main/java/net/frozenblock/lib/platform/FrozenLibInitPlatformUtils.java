@@ -18,9 +18,9 @@
 package net.frozenblock.lib.platform;
 
 import lombok.experimental.UtilityClass;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import static net.frozenblock.lib.platform.PlatformUtil.load;
 import net.frozenblock.lib.platform.service.BlockEntityRendererHelper;
 import net.frozenblock.lib.platform.service.CompostableRegistryHelper;
 import net.frozenblock.lib.platform.service.CreativeTabHelper;

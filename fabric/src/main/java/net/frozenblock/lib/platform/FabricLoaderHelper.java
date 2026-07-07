@@ -22,12 +22,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.frozenblock.lib.platform.api.Env;
-import net.frozenblock.lib.platform.service.LoaderHelper;
-import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.metadata.CustomValue;
+import net.frozenblock.lib.platform.api.Env;
+import net.frozenblock.lib.platform.service.LoaderHelper;
+import org.jspecify.annotations.Nullable;
 
 public class FabricLoaderHelper implements LoaderHelper {
 	@Override

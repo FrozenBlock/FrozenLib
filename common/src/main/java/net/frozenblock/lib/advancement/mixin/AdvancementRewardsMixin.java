@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.advancement.mixin;
 
+import java.util.List;
 import net.frozenblock.lib.advancement.impl.AdvancementRewardsInterface;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +27,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import java.util.List;
 
 @Mixin(AdvancementRewards.class)
 public class AdvancementRewardsMixin implements AdvancementRewardsInterface {

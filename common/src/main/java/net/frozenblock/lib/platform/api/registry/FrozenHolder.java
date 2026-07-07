@@ -17,11 +17,10 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
+import java.util.function.Supplier;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * A cross-platform lazy holder for a registered object.

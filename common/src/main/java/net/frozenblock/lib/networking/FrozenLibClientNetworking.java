@@ -17,6 +17,11 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -68,11 +73,6 @@ import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibClientNetworking {

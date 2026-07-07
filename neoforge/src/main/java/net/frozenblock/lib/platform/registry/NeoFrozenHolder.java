@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.platform.registry;
 
+import java.util.function.Consumer;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredHolder;
-import java.util.function.Consumer;
 
 public class NeoFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 

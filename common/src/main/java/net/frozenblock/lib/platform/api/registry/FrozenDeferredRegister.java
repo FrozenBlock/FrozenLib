@@ -17,6 +17,10 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -35,10 +39,6 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 /**
  * A cross-platform deferred registry abstraction, analogous to NeoForge's {@code DeferredRegister}.

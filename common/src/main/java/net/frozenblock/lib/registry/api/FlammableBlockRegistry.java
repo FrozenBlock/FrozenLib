@@ -20,7 +20,6 @@ package net.frozenblock.lib.registry.api;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FireBlock;
 
 @UtilityClass
 public class FlammableBlockRegistry {

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform.api.client.particle;
 
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +25,6 @@ import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 @UtilityClass

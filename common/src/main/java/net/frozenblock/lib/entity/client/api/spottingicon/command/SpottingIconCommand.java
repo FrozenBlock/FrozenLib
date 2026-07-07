@@ -19,6 +19,7 @@ package net.frozenblock.lib.entity.client.api.spottingicon.command;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import java.util.Collection;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,7 +31,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
-import java.util.Collection;
 
 @ApiStatus.Internal
 public final class SpottingIconCommand {

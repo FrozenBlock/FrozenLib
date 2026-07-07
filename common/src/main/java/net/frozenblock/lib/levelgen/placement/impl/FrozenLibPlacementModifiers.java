@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.placement.impl;
 
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
@@ -26,7 +27,6 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
-import java.util.function.Supplier;
 
 public class FrozenLibPlacementModifiers {
 	private static final FrozenDeferredRegister<PlacementModifierType<?>> REGISTER = FrozenDeferredRegister.create(

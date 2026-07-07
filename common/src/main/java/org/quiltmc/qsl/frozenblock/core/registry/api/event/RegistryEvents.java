@@ -19,8 +19,8 @@
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;

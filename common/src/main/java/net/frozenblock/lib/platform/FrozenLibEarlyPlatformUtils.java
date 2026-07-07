@@ -18,9 +18,9 @@
 package net.frozenblock.lib.platform;
 
 import lombok.experimental.UtilityClass;
+import static net.frozenblock.lib.platform.PlatformUtil.load;
 import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.frozenblock.lib.platform.service.MobCategoryHelper;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
 
 @UtilityClass
 public class FrozenLibEarlyPlatformUtils {

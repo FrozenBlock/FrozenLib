@@ -33,6 +33,10 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  * limitations under the License.
  */
 
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.function.BiPredicate;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.world.attribute.EnvironmentAttribute;
@@ -48,10 +52,6 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.UnmodifiableView;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.BiPredicate;
 
 /**
  * Allows {@link Biome} properties to be modified.

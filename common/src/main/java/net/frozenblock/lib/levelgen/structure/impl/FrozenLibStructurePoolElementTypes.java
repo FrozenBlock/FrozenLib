@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.structure.impl;
 
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.DataMarkerProcessableLegacySinglePoolElement;
 import net.frozenblock.lib.levelgen.structure.api.DataMarkerProcessableSinglePoolElement;
@@ -26,7 +27,6 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
-import java.util.function.Supplier;
 
 public final class FrozenLibStructurePoolElementTypes {
 	private static final FrozenDeferredRegister<StructurePoolElementType<?>> REGISTER = FrozenDeferredRegister.create(

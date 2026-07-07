@@ -18,14 +18,6 @@
 package net.frozenblock.lib.platform;
 
 import com.google.gson.JsonElement;
-import net.frozenblock.lib.platform.api.Env;
-import net.frozenblock.lib.platform.service.LoaderHelper;
-import net.minecraft.client.Minecraft;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.jspecify.annotations.Nullable;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileSystem;
@@ -39,6 +31,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import net.frozenblock.lib.platform.api.Env;
+import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.minecraft.client.Minecraft;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.jspecify.annotations.Nullable;
 
 public class NeoLoaderHelper implements LoaderHelper {
 	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();

@@ -17,15 +17,11 @@
 
 package net.frozenblock.lib.advancement.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.triggers.Criterion;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.level.storage.loot.LootTable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public interface AdvancementInterface {
 	AdvancementRewards frozenLib$getRewards();
