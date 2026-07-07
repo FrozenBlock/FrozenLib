@@ -49,6 +49,16 @@ repositories {
         name = "KotlinForForge"
         content { includeGroup("thedarkcolour") }
     }
+    exclusiveContent {
+        forRepository {
+            maven("https://api.modrinth.com/maven") {
+                name = "Modrinth"
+            }
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 tasks.named<Jar>("sourcesJar") {
