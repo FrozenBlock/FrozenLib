@@ -34,5 +34,4 @@ public class BuiltInBlockModelsMixin {
 	private static void frozenLib$addCustomBuildInBlockModels(BuiltInBlockModels.Builder builder, CallbackInfo info) {
 		BuiltInBlockModelRegistry.REGISTER.invoker().addBuiltInBlockModels(builder);
 	}
-
 }

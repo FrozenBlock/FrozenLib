@@ -30,6 +30,7 @@ import net.frozenblock.lib.platform.particle.NeoParticleProviderRegistryHelper;
 import net.frozenblock.lib.platform.renderer.NeoBlockEntityRendererHelper;
 import net.frozenblock.lib.platform.renderer.NeoEntityRendererHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.wind.WindManager;
@@ -44,6 +45,7 @@ import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
@@ -80,6 +82,10 @@ public final class FrozenLibClientNeoForge {
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientScreenShaker.reset()
 		);
+
+		NeoForge.EVENT_BUS.addListener(RegisterBlockModelsEvent.class, event -> {
+			BuiltInBlockModelRegistry.REGISTER.invoker().addBuiltInBlockModels(event.getBuilder());
+		});
 
 		NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> {
 				FrozenLibClientCommand.register(
