@@ -17,19 +17,10 @@
 
 package net.frozenblock.lib.levelgen.surface.mixin;
 
-import java.util.Map;
-import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.RegistryLayer;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,18 +40,6 @@ public abstract class MinecraftServerMixin {
 
 	@Inject(method = "createLevels", at = @At("TAIL"))
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
-		final RegistryAccess registries = this.registries.compositeAccess();
-		final Registry<LevelStem> levelStems = registries.lookupOrThrow(Registries.LEVEL_STEM);
-
-		final Registry<Biome> biomes = registries.lookupOrThrow(Registries.BIOME);
-		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
-			final LevelStem levelStem = entry.getValue();
-			final ChunkGenerator chunkGenerator = levelStem.generator();
-			if (!(chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator)) continue;
-
-			final var noiseSettings = noiseGenerator.generatorSettings().value();
-			final var dimension = levelStem.type().unwrapKey().orElseThrow();
-			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, biomes, dimension);
-		}
+		throw new AssertionError();
 	}
 }

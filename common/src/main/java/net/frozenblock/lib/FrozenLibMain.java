@@ -43,6 +43,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTy
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
+import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -108,6 +109,7 @@ public final class FrozenLibMain {
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();
+		SurfaceRuleUtil.init();
 		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
