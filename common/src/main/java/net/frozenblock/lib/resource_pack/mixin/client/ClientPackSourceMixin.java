@@ -45,10 +45,9 @@ public class ClientPackSourceMixin {
 		)
 	)
 	public Pack frozenLib$forceEnableFrozenLibPacks(
-		PackLocationInfo locationInfo, Pack.ResourcesSupplier supplier, PackType type, PackSelectionConfig config, Operation<Pack> original
+		PackLocationInfo location, Pack.ResourcesSupplier resources, PackType packType, PackSelectionConfig selectionConfig, Operation<Pack> original
 	) {
-		if (locationInfo.id().startsWith("frozenlib:")) config = FROZENLIB$FROZENLIB_PACK_SELECTION_CONFIG;
-		return original.call(locationInfo, supplier, type, config);
+		if (location.id().startsWith("frozenlib:")) selectionConfig = FROZENLIB$FROZENLIB_PACK_SELECTION_CONFIG;
+		return original.call(location, resources, packType, selectionConfig);
 	}
-
 }

@@ -42,7 +42,7 @@ public class PackRepositoryMixin implements PackRepositoryInterface {
 	@Unique
 	@Override
 	public void frozenLib$addRepositorySource(RepositorySource source) {
-		Set<RepositorySource> newSources = new LinkedHashSet<>(this.sources);
+		final Set<RepositorySource> newSources = new LinkedHashSet<>(this.sources);
 		newSources.add(source);
 		this.sources = newSources;
 	}
