@@ -18,14 +18,12 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.item.impl.FabricFuelRegistry;
-import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.DelayedRegistry;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.FabricDelayedRegistry;
@@ -47,7 +45,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		FrozenLibMain.quiltInit();
 
 		// CONTINUE FROZENLIB INIT
-		FrozenLibMain.init();
+		FrozenLibMain.setup();
 		FabricFuelRegistry.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
@@ -55,7 +53,5 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			FrozenLibCommand.register(dispatcher);
 		});
-
-		ServerTickEvents.START_LEVEL_TICK.register(StructureStatusUpdater::updatePlayerStructureStatusesForLevel);
 	}
 }

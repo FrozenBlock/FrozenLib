@@ -29,7 +29,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesIntern
 @ApiStatus.Internal
 public final class ClientFreezer {
 
-    public static void onInitializeClient() {
+    public static void onSetupClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             FrozenLibLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
             QuiltDataFixesInternals.get().freeze();

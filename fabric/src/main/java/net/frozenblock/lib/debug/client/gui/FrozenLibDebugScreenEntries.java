@@ -30,6 +30,7 @@ import org.jetbrains.annotations.ApiStatus;
 public final class FrozenLibDebugScreenEntries {
 	public static final Identifier STRUCTURE_STATUSES = register("structure_status", new DebugEntryStructureStatuses());
 
+	// TODO: multiloader
 	public static void init() {}
 
 	private static Identifier register(String name, DebugScreenEntry entry) {

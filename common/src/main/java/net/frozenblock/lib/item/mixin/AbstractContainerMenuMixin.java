@@ -34,12 +34,12 @@ public class AbstractContainerMenuMixin {
 			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
 		)
 	)
-	private boolean frozenLib$fixIsSameItemSameComponents(ItemStack stackA, ItemStack stackB, Operation<Boolean> original) {
-		stackA.frozenLib$setCanRemoveTags(true);
-		stackB.frozenLib$setCanRemoveTags(true);
-		final boolean retValue = original.call(stackA, stackB);
-		stackA.frozenLib$setCanRemoveTags(false);
-		stackB.frozenLib$setCanRemoveTags(false);
+	private boolean frozenLib$fixIsSameItemSameComponents(ItemStack a, ItemStack b, Operation<Boolean> original) {
+		a.frozenLib$setCanRemoveTags(true);
+		b.frozenLib$setCanRemoveTags(true);
+		final boolean retValue = original.call(a, b);
+		a.frozenLib$setCanRemoveTags(false);
+		b.frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 
@@ -50,12 +50,12 @@ public class AbstractContainerMenuMixin {
 			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
 		)
 	)
-	private boolean frozenLib$fixMoveItemStackTo(ItemStack stackA, ItemStack stackB, Operation<Boolean> original) {
-		stackA.frozenLib$setCanRemoveTags(true);
-		stackB.frozenLib$setCanRemoveTags(true);
-		final boolean retValue = original.call(stackA, stackB);
-		stackA.frozenLib$setCanRemoveTags(false);
-		stackB.frozenLib$setCanRemoveTags(false);
+	private boolean frozenLib$fixMoveItemStackTo(ItemStack a, ItemStack b, Operation<Boolean> original) {
+		a.frozenLib$setCanRemoveTags(true);
+		b.frozenLib$setCanRemoveTags(true);
+		final boolean retValue = original.call(a, b);
+		a.frozenLib$setCanRemoveTags(false);
+		b.frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 }

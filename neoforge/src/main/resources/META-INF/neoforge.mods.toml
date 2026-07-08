@@ -41,6 +41,9 @@ config="mixin/frozenlib.gravity.mixins.json"
 config="mixin/frozenlib.item.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.item.neoforge.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.levelgen.biome.mixins.json"
 
 [[mixins]]

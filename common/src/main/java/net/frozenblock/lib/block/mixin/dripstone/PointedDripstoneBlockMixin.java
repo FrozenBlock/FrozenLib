@@ -39,7 +39,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PointedDripstoneBlock.class)
 public class PointedDripstoneBlockMixin {
 
-	// FIXME: Use mixinextras stuff
 	@Inject(
 		method = "lambda$getFluidAboveStalactite$0",
 		at = @At(
@@ -49,14 +48,14 @@ public class PointedDripstoneBlockMixin {
 		cancellable = true
 	)
 	private static void frozenLib$getFluidAboveStalactite(
-		Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> info,
-		@Local(ordinal = 1) BlockPos blockPos, @Local BlockState state
+		Level level, BlockPos rootPos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> info,
+		@Local(name = "abovePos") BlockPos abovePos, @Local(name = "aboveState") BlockState aboveState
 	) {
-		if (blockPos == null || state == null) return;
-		if (DripstoneDripApi.containsWaterDrip(state.getBlock()) && !level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, blockPos)) {
-			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, state));
-		} else if (DripstoneDripApi.containsLavaDrip(state.getBlock())) {
-			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, state));
+		if (abovePos == null || aboveState == null) return;
+		if (DripstoneDripApi.containsWaterDrip(aboveState.getBlock()) && !level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, abovePos)) {
+			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.WATER, aboveState));
+		} else if (DripstoneDripApi.containsLavaDrip(aboveState.getBlock())) {
+			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.LAVA, aboveState));
 		}
 	}
 
@@ -69,18 +68,19 @@ public class PointedDripstoneBlockMixin {
 		cancellable = true
 	)
 	private static void frozenLib$maybeTransferFluid(
-		BlockState state, ServerLevel level, BlockPos pos, float randChance, CallbackInfo info,
-		@Local Optional<PointedDripstoneBlock.FluidInfo> optional, @Local Fluid fluid, @Local(ordinal = 1) BlockPos blockPos
+		BlockState state, ServerLevel level, BlockPos pos, float randomValue, CallbackInfo info,
+		@Local(name = "fluidInfo") Optional<PointedDripstoneBlock.FluidInfo> fluidInfo,
+		@Local(name = "fluid") Fluid fluid,
+		@Local(name = "stalactiteTipPos") BlockPos stalactiteTipPos
 	) {
-		if (optional.isEmpty()) return;
+		if (fluidInfo.isEmpty()) return;
 
-		final PointedDripstoneBlock.FluidInfo fluidInfo = optional.get();
-		final Block block = fluidInfo.sourceState().getBlock();
-		if (DripstoneDripApi.containsWaterDrip(block) && fluid == Fluids.WATER) {
-			DripstoneDripApi.runWaterDripsIfPresent(block, level, blockPos, fluidInfo);
+		final Block fluidBlock = fluidInfo.get().sourceState().getBlock();
+		if (DripstoneDripApi.containsWaterDrip(fluidBlock) && fluid == Fluids.WATER) {
+			DripstoneDripApi.runWaterDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo.get());
 			info.cancel();
-		} else if (DripstoneDripApi.containsLavaDrip(block) && fluid == Fluids.LAVA) {
-			DripstoneDripApi.runLavaDripsIfPresent(block, level, blockPos, fluidInfo);
+		} else if (DripstoneDripApi.containsLavaDrip(fluidBlock) && fluid == Fluids.LAVA) {
+			DripstoneDripApi.runLavaDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo.get());
 			info.cancel();
 		}
 	}
@@ -89,5 +89,4 @@ public class PointedDripstoneBlockMixin {
 	private static void frozenLib$dripOnNewAllowedBlocks(Fluid fluid, BlockState state, CallbackInfoReturnable<Boolean> info) {
 		if (state.is(FrozenLibBlockTags.DRIPSTONE_CAN_DRIP_ON)) info.setReturnValue(true);
 	}
-
 }

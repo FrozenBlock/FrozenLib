@@ -22,11 +22,10 @@ import net.minecraft.resources.Identifier;
 public interface CooldownInterface {
 
     default void frozenLib$changeCooldown(Identifier cooldownGroup, int additional) {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new AssertionError();
 	}
 
     default void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+		throw new AssertionError();
 	}
-
 }

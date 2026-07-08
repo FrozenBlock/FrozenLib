@@ -24,7 +24,8 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
-import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
+import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
@@ -40,6 +41,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModif
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
@@ -52,6 +54,7 @@ import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
+import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
@@ -71,11 +74,8 @@ public final class FrozenLibMain {
 		ServerRegistrySync.registerHandlers();
 	}
 
-	public static void init() {
-		var argTypes = FrozenDeferredRegister.create(
-			Registries.COMMAND_ARGUMENT_TYPE,
-			FrozenLibConstants.MOD_ID
-		);
+	public static void setup() {
+		FrozenDeferredRegister<ArgumentTypeInfo<?, ?>> argTypes = FrozenDeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
 
 		argTypes.register(
 			"tag_key",
@@ -121,6 +121,7 @@ public final class FrozenLibMain {
 		matCon.register();
 
 		ScreenShakes.init();
+		StructureStatusUpdater.init();
 
 		FrozenLibNetworking.registerNetworking();
 
