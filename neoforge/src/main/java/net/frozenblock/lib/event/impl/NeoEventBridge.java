@@ -18,12 +18,9 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -32,11 +29,9 @@ import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 @UtilityClass
-@EventBusSubscriber(modid = FrozenLibConstants.MOD_ID)
 public final class NeoEventBridge {
 
 	public static void initModStage(IEventBus modBus) {
-		NeoForge.EVENT_BUS.register(NeoEventBridge.class);
 		NeoLootTableEventBridge.init();
 		NeoServerTickEventBridge.init();
 		NeoServerLevelEventBridge.init();
@@ -44,35 +39,26 @@ public final class NeoEventBridge {
 		NeoEntityLifecycleEventBridge.init();
 		NeoChunkLifecycleEventBridge.init();
 		NeoPotionBrewingEventBridge.init();
+
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerAboutToStartEvent.class, event -> {
+			LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(event.getServer());
+		});
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerStartingEvent.class, event -> {
+			LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(event.getServer());
+		});
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerStartedEvent.class, event -> {
+			LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(event.getServer());
+		});
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerStoppingEvent.class, event -> {
+			LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(event.getServer());
+		});
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerStoppedEvent.class, event -> {
+			LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(event.getServer());
+		});
 	}
 
 	public static void initClientModStage() {
 		NeoClientLifecycleEventBridge.init();
 		NeoClientTickEventBridge.init();
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void event(ServerAboutToStartEvent event) {
-		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(event.getServer());
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void event(ServerStartingEvent event) {
-		LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(event.getServer());
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void event(ServerStartedEvent event) {
-		LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(event.getServer());
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void event(ServerStoppingEvent event) {
-		LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(event.getServer());
-	}
-
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void event(ServerStoppedEvent event) {
-		LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(event.getServer());
 	}
 }
