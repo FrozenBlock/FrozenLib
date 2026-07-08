@@ -77,47 +77,39 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 
 	@Override
 	public Optional<ResourceKey<ConfiguredFeature<?, ?>>> getFeatureKey(ConfiguredFeature<?, ?> feature) {
-		Registry<ConfiguredFeature<?, ?>> registry = dynamicRegistries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
+		final Registry<ConfiguredFeature<?, ?>> registry = this.dynamicRegistries.lookupOrThrow(Registries.CONFIGURED_FEATURE);
 		return registry.getResourceKey(feature);
 	}
 
 	@Override
 	public Optional<ResourceKey<PlacedFeature>> getPlacedFeatureKey(PlacedFeature placedFeature) {
-		Registry<PlacedFeature> registry = dynamicRegistries.lookupOrThrow(Registries.PLACED_FEATURE);
+		final Registry<PlacedFeature> registry = this.dynamicRegistries.lookupOrThrow(Registries.PLACED_FEATURE);
 		return registry.getResourceKey(placedFeature);
 	}
 
 	@Override
 	public boolean validForStructure(ResourceKey<Structure> key) {
-		Structure instance = dynamicRegistries.lookupOrThrow(Registries.STRUCTURE).getValue(key);
-
-		if (instance == null) {
-			return false;
-		}
-
+		final Structure instance = this.dynamicRegistries.lookupOrThrow(Registries.STRUCTURE).getValue(key);
+		if (instance == null) return false;
 		return instance.biomes().contains(getBiomeHolder());
 	}
 
 	@Override
 	public Optional<ResourceKey<Structure>> getStructureKey(Structure structure) {
-		Registry<Structure> registry = dynamicRegistries.lookupOrThrow(Registries.STRUCTURE);
+		final Registry<Structure> registry = this.dynamicRegistries.lookupOrThrow(Registries.STRUCTURE);
 		return registry.getResourceKey(structure);
 	}
 
 	@Override
 	public boolean canGenerateIn(ResourceKey<LevelStem> key) {
-		LevelStem dimension = dynamicRegistries.lookupOrThrow(Registries.LEVEL_STEM).getValue(key);
-
-		if (dimension == null) {
-			return false;
-		}
-
+		final LevelStem dimension = this.dynamicRegistries.lookupOrThrow(Registries.LEVEL_STEM).getValue(key);
+		if (dimension == null) return false;
 		return dimension.generator().getBiomeSource().possibleBiomes().stream().anyMatch(entry -> entry.value() == biome);
 	}
 
 	@Override
 	public boolean hasTag(TagKey<Biome> tag) {
-		Registry<Biome> biomeRegistry = dynamicRegistries.lookupOrThrow(Registries.BIOME);
+		final Registry<Biome> biomeRegistry = this.dynamicRegistries.lookupOrThrow(Registries.BIOME);
 		return biomeRegistry.getOrThrow(getBiomeKey()).is(tag);
 	}
 }

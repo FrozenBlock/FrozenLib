@@ -28,6 +28,7 @@ import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
+import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
@@ -105,6 +106,7 @@ public final class FrozenLibMain {
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();
+		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();

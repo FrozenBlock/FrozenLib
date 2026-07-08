@@ -44,6 +44,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModificationContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
@@ -62,16 +63,17 @@ import org.slf4j.LoggerFactory;
 
 public class BiomeModificationImpl {
 	private static final Logger LOGGER = LoggerFactory.getLogger(BiomeModificationImpl.class);
-
-	private static final Comparator<ModifierRecord> MODIFIER_ORDER_COMPARATOR = Comparator.<ModifierRecord>comparingInt(r -> r.phase.ordinal()).thenComparingInt(r -> r.order).thenComparing(r -> r.id);
-
+	private static final Comparator<ModifierRecord> MODIFIER_ORDER_COMPARATOR = Comparator.<ModifierRecord>comparingInt(r -> r.phase.ordinal())
+		.thenComparingInt(modifier -> modifier.order)
+		.thenComparing(modifier -> modifier.id);
 	public static final BiomeModificationImpl INSTANCE = new BiomeModificationImpl();
-
 	private final List<ModifierRecord> modifiers = new ArrayList<>();
-
 	private boolean modifiersUnsorted = true;
 
-	private BiomeModificationImpl() {
+	private BiomeModificationImpl() {}
+
+	public static void init() {
+		LifecycleEvents.SERVER_STARTING.register(server -> INSTANCE.finalizeWorldGen(server.registryAccess()));
 	}
 
 	public void addModifier(Identifier id, ModificationPhase phase, Predicate<BiomeSelectionContext> selector, BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier) {
