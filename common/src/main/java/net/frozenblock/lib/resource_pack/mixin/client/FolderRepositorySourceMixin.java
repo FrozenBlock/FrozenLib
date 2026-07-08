@@ -78,5 +78,4 @@ public class FolderRepositorySourceMixin {
 		content.toFile().delete();
 		return null;
 	}
-
 }

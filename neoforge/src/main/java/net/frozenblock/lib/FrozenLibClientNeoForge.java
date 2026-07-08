@@ -33,6 +33,7 @@ import net.frozenblock.lib.platform.renderer.NeoEntityRendererHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
+import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
@@ -52,6 +53,7 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 @Mod(value = FrozenLibConstants.MOD_ID, dist = Dist.CLIENT)
 public final class FrozenLibClientNeoForge {
@@ -86,6 +88,10 @@ public final class FrozenLibClientNeoForge {
 
 		modBus.addListener(RegisterBlockModelsEvent.class, event -> {
 			BuiltInBlockModelRegistry.REGISTER.invoker().addBuiltInBlockModels(event.getBuilder());
+		});
+
+		modBus.addListener(AddPackFindersEvent.class, event -> {
+			FrozenLibFolderRepositorySource.createDefaultSources(Minecraft.getInstance().directoryValidator()).forEach(event::addRepositorySource);
 		});
 
 		NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> {

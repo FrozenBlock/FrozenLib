@@ -65,6 +65,7 @@
     "mixin/frozenlib.renderer.mixins.json",
     "mixin/frozenlib.renderer-fabric.mixins.json",
     "mixin/frozenlib.resource_pack.mixins.json",
+    "mixin/frozenlib.resource_pack-fabric.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
     "mixin/frozenlib.storage.mixins.json",
