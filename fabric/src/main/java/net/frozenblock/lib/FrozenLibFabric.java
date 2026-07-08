@@ -20,7 +20,6 @@ package net.frozenblock.lib;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
@@ -41,8 +40,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 	public void onInitialize(String modId, ModContainer container) {
 		DelayedRegistry.setFactory(FabricDelayedRegistry::new);
 		FrozenLibMain.preQuiltInit();
-		FrozenLibRegistries.init();
-		SoundTypeOverrides.init();
+		FrozenLibRegistries.setup();
 		FabricEventBridge.initModStage();
 
 		// QUILT INIT

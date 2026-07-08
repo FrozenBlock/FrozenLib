@@ -67,7 +67,7 @@ public final class FrozenLibNeoForge {
 
 		modBus.addListener(NewRegistryEvent.class, NeoRegistryHelper::flushRegistries);
 		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
-			FrozenLibRegistries.init();
+			FrozenLibRegistries.setup();
 			NeoRegistryHelper.flushDynamicRegistries(event);
 		});
 		modBus.addListener(RegisterPayloadHandlersEvent.class, event -> {

@@ -95,9 +95,7 @@ public class NeoRegistryHelper implements RegistryHelper {
 	}
 
 	public static void flushRegistries(NewRegistryEvent event) {
-		for (Registry<?> registry : PENDING_REGISTRIES) {
-			event.register(registry);
-		}
+		for (Registry<?> registry : PENDING_REGISTRIES) event.register(registry);
 		PENDING_REGISTRIES.clear();
 	}
 

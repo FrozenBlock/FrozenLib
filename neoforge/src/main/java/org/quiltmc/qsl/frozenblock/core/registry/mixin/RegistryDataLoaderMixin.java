@@ -29,7 +29,6 @@ import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -57,12 +56,10 @@ public class RegistryDataLoaderMixin { // in common mixins.json
 		List<HolderLookup.RegistryLookup<?>> contextRegistries,
 		Executor executor,
 		boolean fromResources,
-		CallbackInfoReturnable<CompletableFuture<?>> cir,
+		CallbackInfoReturnable<CompletableFuture<?>> info,
 		@Local(name = "loadTasks") List<RegistryLoadTask<?>> loadTasks
 	) {
-		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
-			new DynamicRegistryManagerSetupContextImpl(loadTasks.stream().map(task -> task.registry))
-		);
+		RegistryEvents.invokeDynamicRegistrySetupEvent(loadTasks);
 	}
 
 	@Inject(
@@ -78,10 +75,8 @@ public class RegistryDataLoaderMixin { // in common mixins.json
 		List<RegistryLoadTask<?>> loadTasks,
 		Map<ResourceKey<?>, Exception> loadingErrors,
 		Void ignored,
-		CallbackInfoReturnable<RegistryAccess.Frozen> cir
+		CallbackInfoReturnable<RegistryAccess.Frozen> info
 	) {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(
-			new DynamicRegistryManagerSetupContextImpl(loadTasks.stream().map(task -> task.registry))
-		);
+		RegistryEvents.invokeDynamicRegistryLoadedEvent(loadTasks);
 	}
 }

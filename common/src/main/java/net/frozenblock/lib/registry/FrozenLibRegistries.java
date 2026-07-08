@@ -77,7 +77,7 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 
-	public static void init() {
+	public static void setup() {
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);

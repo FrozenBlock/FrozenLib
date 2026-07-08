@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -61,6 +62,7 @@ public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
 		FireData.init();
+		SoundTypeOverrides.init();
 	}
 
 	public static void quiltInit() {
