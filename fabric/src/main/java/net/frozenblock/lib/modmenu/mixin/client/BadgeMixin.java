@@ -102,5 +102,4 @@ public class BadgeMixin {
 
 		$VALUES = badges.toArray(new Mod.Badge[0]);
 	}
-
 }

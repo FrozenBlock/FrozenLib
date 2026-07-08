@@ -39,9 +39,7 @@ public class AxeItemMixin {
 	protected static Map<Block, Block> STRIPPABLES;
 
 	@Inject(method = "<clinit>", at = @At("RETURN"))
-	private static void makeMutable(CallbackInfo ci) {
-		if (!(STRIPPABLES instanceof HashMap<Block, Block>)) {
-			STRIPPABLES = new Object2ObjectLinkedOpenHashMap<>(STRIPPABLES);
-		}
+	private static void makeMutable(CallbackInfo info) {
+		if (!(STRIPPABLES instanceof HashMap<Block, Block>)) STRIPPABLES = new Object2ObjectLinkedOpenHashMap<>(STRIPPABLES);
 	}
 }

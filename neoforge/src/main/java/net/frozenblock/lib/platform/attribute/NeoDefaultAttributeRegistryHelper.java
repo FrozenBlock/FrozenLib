@@ -26,8 +26,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 public class NeoDefaultAttributeRegistryHelper implements DefaultAttributeRegistryHelper {
-	private record Entry(EntityType<? extends LivingEntity> type, AttributeSupplier container) {}
-
 	private static final List<Entry> ENTRIES = new ArrayList<>();
 
 	@Override
@@ -41,8 +39,8 @@ public class NeoDefaultAttributeRegistryHelper implements DefaultAttributeRegist
 	}
 
 	public static void flush(EntityAttributeCreationEvent event) {
-		for (Entry entry : ENTRIES) {
-			event.put(entry.type(), entry.container());
-		}
+		for (Entry entry : ENTRIES) event.put(entry.type(), entry.container());
 	}
+
+	private record Entry(EntityType<? extends LivingEntity> type, AttributeSupplier container) {}
 }

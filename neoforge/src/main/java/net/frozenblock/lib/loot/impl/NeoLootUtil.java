@@ -37,15 +37,11 @@ public final class NeoLootUtil {
 		if (resource != null) {
 			PackLocationInfo location = resource.source().location();
 
-			if (location.source() == PackSource.BUILT_IN) {
-				return FrozenLibLootTableSource.VANILLA;
-			}
+			if (location.source() == PackSource.BUILT_IN) return FrozenLibLootTableSource.VANILLA;
 
-			Optional<KnownPack> knownPack = location.knownPackInfo();
+			final Optional<KnownPack> knownPack = location.knownPackInfo();
 			// TODO test
-			if (knownPack.isPresent() && "neoforge".equals(knownPack.get().namespace())) {
-				return FrozenLibLootTableSource.MOD;
-			}
+			if (knownPack.isPresent() && "neoforge".equals(knownPack.get().namespace())) return FrozenLibLootTableSource.MOD;
 		}
 
 		// If not vanilla or a mod's own bundled pack, assume external data pack.

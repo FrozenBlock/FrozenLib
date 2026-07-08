@@ -33,7 +33,6 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 
 public class NeoRegistryHelper implements RegistryHelper {
-
 	private static final List<Registry<?>> PENDING_REGISTRIES = new ArrayList<>();
 
 	private record DynamicRegistryEntry<T>(ResourceKey<Registry<T>> key, Codec<T> codec, @Nullable Codec<T> networkCodec, boolean synced) {}
@@ -102,7 +101,7 @@ public class NeoRegistryHelper implements RegistryHelper {
 	@SuppressWarnings("unchecked")
 	public static void flushDynamicRegistries(DataPackRegistryEvent.NewRegistry event) {
 		for (DynamicRegistryEntry<?> entry : PENDING_DYNAMIC_REGISTRIES) {
-			var typedEntry = (DynamicRegistryEntry<Object>) entry;
+			final DynamicRegistryEntry typedEntry = entry;
 			if (typedEntry.synced()) {
 				event.dataPackRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.networkCodec());
 			} else {

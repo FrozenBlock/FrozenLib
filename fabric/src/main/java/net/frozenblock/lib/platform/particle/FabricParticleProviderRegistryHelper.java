@@ -34,6 +34,6 @@ public class FabricParticleProviderRegistryHelper implements ParticleProviderReg
 
 	@Override
 	public <T extends ParticleOptions> void register(Supplier<ParticleType<T>> type, PendingParticleProvider<T> provider) {
-		ParticleProviderRegistry.getInstance().register(type.get(), spriteSet -> provider.create(spriteSet));
+		ParticleProviderRegistry.getInstance().register(type.get(), provider::create);
 	}
 }

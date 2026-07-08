@@ -47,9 +47,15 @@ public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 	@Shadow
 	public abstract void resetRenderData();
 
-	@WrapOperation(method = "resetRenderData", at = @At(value = "INVOKE", target = "Ljava/util/Map;clear()V"))
+	@WrapOperation(
+		method = "resetRenderData",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Map;clear()V"
+		)
+	)
 	private void frozenLib$keepFrozenLibData(Map<ContextKey<?>, Object> extensions, Operation<Void> original) {
-		var frozenlibData = extensions.entrySet()
+		final var frozenlibData = extensions.entrySet()
 			.stream().filter(key -> key.getKey().name().getNamespace().equals(FrozenLibConstants.MOD_ID))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

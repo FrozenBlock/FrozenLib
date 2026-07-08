@@ -25,7 +25,6 @@ import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 public class NeoFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
-
 	private final DeferredHolder<R, T> delegate;
 	private final Consumer<T> consumer;
 

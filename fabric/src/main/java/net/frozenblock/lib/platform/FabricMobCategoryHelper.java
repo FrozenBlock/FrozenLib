@@ -34,8 +34,7 @@ public class FabricMobCategoryHelper implements MobCategoryHelper {
 			.forEach(entrypoint -> {
 				try {
 					entrypoint.getEntrypoint().newCategories(newCategories);
-				} catch (Throwable ignored) {
-				}
+				} catch (Throwable ignored) {}
 			});
 		return newCategories;
 	}

@@ -61,7 +61,7 @@ public abstract class HopperBlockEntityMixin { // in common mixins.json
 		cancellable = true
 	)
     private static void frozenLib$preventEjectionB(
-		Level level, BlockPos pos, HopperBlockEntity hopper, CallbackInfoReturnable<Boolean> info,
+		Level level, BlockPos blockPos, HopperBlockEntity self, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$container") LocalRef<Container> containerRef
 	) {
         if (HopperApi.isContainerBlacklisted(containerRef.get())) info.setReturnValue(false);

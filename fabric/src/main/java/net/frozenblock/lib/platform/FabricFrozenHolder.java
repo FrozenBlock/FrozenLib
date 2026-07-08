@@ -31,9 +31,7 @@ public class FabricFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 	}
 
 	private Holder.Reference<T> requireBound() {
-		if (this.reference == null) {
-			throw new IllegalStateException("FrozenHolder not yet bound; call FrozenDeferredRegister.register() first");
-		}
+		if (this.reference == null) throw new IllegalStateException("FrozenHolder not yet bound; call FrozenDeferredRegister.register() first");
 		return this.reference;
 	}
 

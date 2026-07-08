@@ -29,8 +29,6 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 @Environment(EnvType.CLIENT)
 public class NeoModelLayerHelper implements ModelLayerHelper {
-	private record Entry(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {}
-
 	private static final List<Entry> LAYERS = new ArrayList<>();
 
 	@Override
@@ -39,8 +37,8 @@ public class NeoModelLayerHelper implements ModelLayerHelper {
 	}
 
 	public static void flush(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		for (Entry entry : LAYERS) {
-			event.registerLayerDefinition(entry.layer(), entry.provider());
-		}
+		for (Entry entry : LAYERS) event.registerLayerDefinition(entry.layer(), entry.provider());
 	}
+
+	private record Entry(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {}
 }

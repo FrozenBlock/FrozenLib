@@ -28,10 +28,6 @@ import net.minecraft.core.particles.ParticleType;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 public class NeoParticleProviderRegistryHelper implements ParticleProviderRegistryHelper {
-	private record SpecialEntry<T extends ParticleOptions>(Supplier<ParticleType<T>> type, ParticleProvider<T> provider) {}
-
-	private record SpriteEntry<T extends ParticleOptions>(Supplier<ParticleType<T>> type, PendingParticleProvider<T> provider) {}
-
 	private static final List<SpecialEntry<?>> SPECIAL_ENTRIES = new ArrayList<>();
 	private static final List<SpriteEntry<?>> SPRITE_ENTRIES = new ArrayList<>();
 
@@ -46,12 +42,8 @@ public class NeoParticleProviderRegistryHelper implements ParticleProviderRegist
 	}
 
 	public static void flush(RegisterParticleProvidersEvent event) {
-		for (SpecialEntry<?> entry : SPECIAL_ENTRIES) {
-			flushSpecial(event, entry);
-		}
-		for (SpriteEntry<?> entry : SPRITE_ENTRIES) {
-			flushSprite(event, entry);
-		}
+		for (SpecialEntry<?> entry : SPECIAL_ENTRIES) flushSpecial(event, entry);
+		for (SpriteEntry<?> entry : SPRITE_ENTRIES) flushSprite(event, entry);
 	}
 
 	private static <T extends ParticleOptions> void flushSpecial(RegisterParticleProvidersEvent event, SpecialEntry<T> entry) {
@@ -61,4 +53,7 @@ public class NeoParticleProviderRegistryHelper implements ParticleProviderRegist
 	private static <T extends ParticleOptions> void flushSprite(RegisterParticleProvidersEvent event, SpriteEntry<T> entry) {
 		event.registerSpriteSet(entry.type().get(), entry.provider()::create);
 	}
+
+	private record SpecialEntry<T extends ParticleOptions>(Supplier<ParticleType<T>> type, ParticleProvider<T> provider) {}
+	private record SpriteEntry<T extends ParticleOptions>(Supplier<ParticleType<T>> type, PendingParticleProvider<T> provider) {}
 }

@@ -102,9 +102,7 @@ public class NeoCreativeTabHelper implements CreativeTabHelper {
 					.map(holder -> InstrumentItem.create(instrument, holder))
 					.forEach(list::add)
 				);
-			for (ItemStack stack : list) {
-				event.insertBefore(existing, stack, tabVisibility);
-			}
+			for (ItemStack stack : list) event.insertBefore(existing, stack, tabVisibility);
 		});
 	}
 
@@ -129,9 +127,7 @@ public class NeoCreativeTabHelper implements CreativeTabHelper {
 					.forEach(list::add)
 				);
 			Collections.reverse(list);
-			for (ItemStack stack : list) {
-				event.insertAfter(existing, stack, tabVisibility);
-			}
+			for (ItemStack stack : list) event.insertAfter(existing, stack, tabVisibility);
 		});
 	}
 }

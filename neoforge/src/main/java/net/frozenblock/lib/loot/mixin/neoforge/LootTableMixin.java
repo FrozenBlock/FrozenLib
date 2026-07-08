@@ -51,33 +51,31 @@ abstract class LootTableMixin implements FrozenNeoLootTable {
 	}
 
 	@WrapMethod(method = "getRandomItemsRaw(Lnet/minecraft/world/level/storage/loot/LootContext;Ljava/util/function/Consumer;)V")
-	private void frozenLib$modifyDrops(LootContext context, Consumer<ItemStack> lootConsumer, Operation<Void> original) {
-		if (this.frozenLib$holder == null) {
-			this.frozenLib$holder = frozenLib$resolveHolder(context);
-		}
+	private void frozenLib$modifyDrops(LootContext context, Consumer<ItemStack> output, Operation<Void> original) {
+		if (this.frozenLib$holder == null) this.frozenLib$holder = frozenLib$resolveHolder(context);
 
-		List<ItemStack> drops = new ArrayList<>();
+		final List<ItemStack> drops = new ArrayList<>();
 		original.call(context, (Consumer<ItemStack>) drops::add);
 		FrozenLibLootTableEvents.MODIFY_DROPS.invoker().modifyLootTableDrops(this.frozenLib$holder, context, drops);
-		drops.forEach(lootConsumer);
+		drops.forEach(output);
 	}
 
 	@Unique
 	private Holder<LootTable> frozenLib$resolveHolder(LootContext context) {
-		LootTable self = (LootTable) (Object) this;
+		final LootTable lootTable = LootTable.class.cast(this);
 
 		if (context.getLevel() instanceof ServerLevel serverLevel) {
-			HolderLookup.Provider provider = serverLevel.getServer().reloadableRegistries().lookup();
-			HolderLookup<LootTable> lootTableLookup = provider.lookup(Registries.LOOT_TABLE)
-				.orElseThrow(() -> new IllegalStateException("Failed to fetch LootTable provider from HolderLookup.Provider"));
+			final HolderLookup.Provider registries = serverLevel.getServer().reloadableRegistries().lookup();
+			final HolderLookup<LootTable> lootTables = registries.lookup(Registries.LOOT_TABLE)
+				.orElseThrow(() -> new IllegalStateException("Failed to fetch LootTable registry from HolderLookup.Provider"));
 
-			return lootTableLookup.listElements()
-				.filter(it -> it.value().equals(self))
+			return lootTables.listElements()
+				.filter(it -> it.value().equals(lootTable))
 				.<Holder<LootTable>>map(it -> it)
 				.findFirst()
-				.orElseGet(() -> Holder.direct(self));
+				.orElseGet(() -> Holder.direct(lootTable));
 		}
 
-		return Holder.direct(self);
+		return Holder.direct(lootTable);
 	}
 }

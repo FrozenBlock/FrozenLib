@@ -20,6 +20,7 @@ package net.frozenblock.lib.platform.data;
 import com.mojang.serialization.Codec;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
 import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
@@ -48,23 +49,28 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 	@SuppressWarnings("unchecked")
 	public <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
 		final Supplier<T> initializer = builder.initializer();
-		final var syncPredicate = builder.syncPredicate();
+		final DataAttachmentSyncPredicate syncPredicate = builder.syncPredicate();
+
 		DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder = ATTACHMENT_TYPES.register(
 			builder.id().getPath(),
 			() -> {
-				Supplier<T> defaultSupplier = initializer != null ? initializer : () -> (T) null;
-				AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(defaultSupplier);
+				final Supplier<T> defaultSupplier = initializer != null ? initializer : () -> (T) null;
+				final AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(defaultSupplier);
+
 				if (builder.codec() != null) {
 					attachmentBuilder.serialize(builder.codec().fieldOf("value"));
 					if (builder.isCopyOnDeath()) attachmentBuilder.copyOnDeath();
 				}
+
 				if (builder.streamCodec() != null && syncPredicate != null) {
 					final StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec = builder.streamCodec();
 					attachmentBuilder.sync(syncPredicate::test, streamCodec);
 				}
+
 				return attachmentBuilder.build();
 			}
 		);
+
 		return new NeoDataAttachmentType<>(
 			holder,
 			builder.id(),

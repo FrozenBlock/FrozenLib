@@ -33,8 +33,7 @@ public class NeoMobCategoryHelper implements MobCategoryHelper {
 			.forEach(entrypoint -> {
 				try {
 					entrypoint.newCategories(newCategories);
-				} catch (Throwable ignored) {
-				}
+				} catch (Throwable ignored) {}
 			});
 		return newCategories;
 	}

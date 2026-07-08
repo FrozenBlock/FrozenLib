@@ -40,19 +40,6 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
 public class NeoNetworkingHelper implements NetworkingHelper {
-
-	private record PayloadEntry<P extends CustomPacketPayload>(
-		CustomPacketPayload.Type<P> type,
-		StreamCodec<RegistryFriendlyByteBuf, P> codec,
-		boolean large,
-		int maxSize
-	) {}
-
-	private record ConfigPayloadEntry<P extends CustomPacketPayload>(
-		CustomPacketPayload.Type<P> type,
-		StreamCodec<FriendlyByteBuf, P> codec
-	) {}
-
 	private final List<PayloadEntry<?>> s2cEntries = new ArrayList<>();
 	private final List<PayloadEntry<?>> c2sEntries = new ArrayList<>();
 	private final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> serverHandlers = new HashMap<>();
@@ -68,7 +55,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		StreamCodec<RegistryFriendlyByteBuf, P> codec
 	) {
-		s2cEntries.add(new PayloadEntry<>(type, codec, false, 0));
+		this.s2cEntries.add(new PayloadEntry<>(type, codec, false, 0));
 	}
 
 	@Override
@@ -76,7 +63,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		StreamCodec<RegistryFriendlyByteBuf, P> codec
 	) {
-		c2sEntries.add(new PayloadEntry<>(type, codec, false, 0));
+		this.c2sEntries.add(new PayloadEntry<>(type, codec, false, 0));
 	}
 
 	@Override
@@ -85,7 +72,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		StreamCodec<RegistryFriendlyByteBuf, P> codec,
 		int maxSize
 	) {
-		s2cEntries.add(new PayloadEntry<>(type, codec, true, maxSize));
+		this.s2cEntries.add(new PayloadEntry<>(type, codec, true, maxSize));
 	}
 
 	@Override
@@ -94,7 +81,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		StreamCodec<RegistryFriendlyByteBuf, P> codec,
 		int maxSize
 	) {
-		c2sEntries.add(new PayloadEntry<>(type, codec, true, maxSize));
+		this.c2sEntries.add(new PayloadEntry<>(type, codec, true, maxSize));
 	}
 
 	@Override
@@ -102,7 +89,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		ServerPayloadHandler<P> handler
 	) {
-		serverHandlers.put(type, (payload, context) ->
+		this.serverHandlers.put(type, (payload, context) ->
 			handler.receive((P) payload, ((ServerPlayer) context.player()).server, (ServerPlayer) context.player())
 		);
 	}
@@ -112,7 +99,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		ClientPayloadHandler<P> handler
 	) {
-		clientHandlers.put(type, (payload, context) ->
+		this.clientHandlers.put(type, (payload, context) ->
 			handler.receive((P) payload, Minecraft.getInstance(), (LocalPlayer) context.player())
 		);
 	}
@@ -132,7 +119,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		StreamCodec<FriendlyByteBuf, P> codec
 	) {
-		s2cConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
+		this.s2cConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
 	}
 
 	@Override
@@ -140,7 +127,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		StreamCodec<FriendlyByteBuf, P> codec
 	) {
-		c2sConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
+		this.c2sConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
 	}
 
 	@Override
@@ -148,7 +135,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		ServerConfigPayloadHandler<P> handler
 	) {
-		serverConfigHandlers.put(type, (payload, context) -> {
+		this.serverConfigHandlers.put(type, (payload, context) -> {
 			ServerConfigurationPacketListenerImpl listener = (ServerConfigurationPacketListenerImpl) context.listener();
 			handler.receive((P) payload, listener, wrapNeoSender(context.listener()));
 		});
@@ -159,7 +146,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		ClientConfigPayloadHandler<P> handler
 	) {
-		clientConfigHandlers.put(type, (payload, context) ->
+		this.clientConfigHandlers.put(type, (payload, context) ->
 			handler.receive((P) payload, Minecraft.getInstance(), wrapNeoSender(context.listener()))
 		);
 	}
@@ -196,44 +183,40 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 
 	@SuppressWarnings("unchecked")
 	public void flush(PayloadRegistrar registrar) {
-		for (PayloadEntry<?> s2cEntry : s2cEntries) {
+		for (PayloadEntry<?> s2cEntry : this.s2cEntries) {
 			flushS2C(registrar, (PayloadEntry<CustomPacketPayload>) s2cEntry);
 		}
-		for (PayloadEntry<?> c2sEntry : c2sEntries) {
-			boolean isAlsoS2C = s2cEntries.stream().anyMatch(e -> e.type().equals(c2sEntry.type()));
-			if (!isAlsoS2C) {
-				flushC2SOnly(registrar, (PayloadEntry<CustomPacketPayload>) c2sEntry);
-			}
+		for (PayloadEntry<?> c2sEntry : this.c2sEntries) {
+			final boolean isAlsoS2C = this.s2cEntries.stream().anyMatch(e -> e.type().equals(c2sEntry.type()));
+			if (!isAlsoS2C) flushC2SOnly(registrar, (PayloadEntry<CustomPacketPayload>) c2sEntry);
 		}
-		s2cEntries.clear();
-		c2sEntries.clear();
-		serverHandlers.clear();
-		clientHandlers.clear();
+		this.s2cEntries.clear();
+		this.c2sEntries.clear();
+		this.serverHandlers.clear();
+		this.clientHandlers.clear();
 	}
 
 	@SuppressWarnings("unchecked")
 	public void flushConfig(PayloadRegistrar registrar) {
-		for (ConfigPayloadEntry<?> s2cEntry : s2cConfigEntries) {
+		for (ConfigPayloadEntry<?> s2cEntry : this.s2cConfigEntries) {
 			flushS2CConfig(registrar, (ConfigPayloadEntry<CustomPacketPayload>) s2cEntry);
 		}
-		for (ConfigPayloadEntry<?> c2sEntry : c2sConfigEntries) {
-			boolean isAlsoS2C = s2cConfigEntries.stream().anyMatch(e -> e.type().equals(c2sEntry.type()));
-			if (!isAlsoS2C) {
-				flushC2SConfigOnly(registrar, (ConfigPayloadEntry<CustomPacketPayload>) c2sEntry);
-			}
+		for (ConfigPayloadEntry<?> c2sEntry : this.c2sConfigEntries) {
+			final boolean isAlsoS2C = this.s2cConfigEntries.stream().anyMatch(e -> e.type().equals(c2sEntry.type()));
+			if (!isAlsoS2C) flushC2SConfigOnly(registrar, (ConfigPayloadEntry<CustomPacketPayload>) c2sEntry);
 		}
-		s2cConfigEntries.clear();
-		c2sConfigEntries.clear();
-		serverConfigHandlers.clear();
-		clientConfigHandlers.clear();
+		this.s2cConfigEntries.clear();
+		this.c2sConfigEntries.clear();
+		this.serverConfigHandlers.clear();
+		this.clientConfigHandlers.clear();
 	}
 
 	private <P extends CustomPacketPayload> void flushS2CConfig(PayloadRegistrar registrar, ConfigPayloadEntry<P> entry) {
-		@Nullable IPayloadHandler<P> clientHandler = (IPayloadHandler<P>) clientConfigHandlers.get(entry.type());
-		boolean isAlsoC2S = c2sConfigEntries.stream().anyMatch(e -> e.type().equals(entry.type()));
+		@Nullable IPayloadHandler<P> clientHandler = (IPayloadHandler<P>) this.clientConfigHandlers.get(entry.type());
+		boolean isAlsoC2S = this.c2sConfigEntries.stream().anyMatch(e -> e.type().equals(entry.type()));
 
 		if (isAlsoC2S) {
-			@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverConfigHandlers.get(entry.type());
+			@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) this.serverConfigHandlers.get(entry.type());
 			registrar.configurationBidirectional(entry.type(), entry.codec(), serverHandler != null ? serverHandler : (p, ctx) -> {}, clientHandler);
 		} else {
 			if (clientHandler != null) {
@@ -245,18 +228,16 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 	}
 
 	private <P extends CustomPacketPayload> void flushC2SConfigOnly(PayloadRegistrar registrar, ConfigPayloadEntry<P> entry) {
-		@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverConfigHandlers.get(entry.type());
-		if (serverHandler != null) {
-			registrar.configurationToServer(entry.type(), entry.codec(), serverHandler);
-		}
+		final @Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) this.serverConfigHandlers.get(entry.type());
+		if (serverHandler != null) registrar.configurationToServer(entry.type(), entry.codec(), serverHandler);
 	}
 
 	private <P extends CustomPacketPayload> void flushS2C(PayloadRegistrar registrar, PayloadEntry<P> entry) {
-		@Nullable IPayloadHandler<P> clientHandler = (IPayloadHandler<P>) clientHandlers.get(entry.type());
-		boolean isAlsoC2S = c2sEntries.stream().anyMatch(e -> e.type().equals(entry.type()));
+		final @Nullable IPayloadHandler<P> clientHandler = (IPayloadHandler<P>) this.clientHandlers.get(entry.type());
+		final boolean isAlsoC2S = this.c2sEntries.stream().anyMatch(e -> e.type().equals(entry.type()));
 
 		if (isAlsoC2S) {
-			@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverHandlers.get(entry.type());
+			@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) this.serverHandlers.get(entry.type());
 			registrar.playBidirectional(entry.type(), entry.codec(), serverHandler != null ? serverHandler : (p, ctx) -> {}, clientHandler);
 		} else {
 			if (clientHandler != null) {
@@ -268,9 +249,19 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 	}
 
 	private <P extends CustomPacketPayload> void flushC2SOnly(PayloadRegistrar registrar, PayloadEntry<P> entry) {
-		@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverHandlers.get(entry.type());
-		if (serverHandler != null) {
-			registrar.playToServer(entry.type(), entry.codec(), serverHandler);
-		}
+		final @Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) this.serverHandlers.get(entry.type());
+		if (serverHandler != null) registrar.playToServer(entry.type(), entry.codec(), serverHandler);
 	}
+
+	private record PayloadEntry<P extends CustomPacketPayload>(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<RegistryFriendlyByteBuf, P> codec,
+		boolean large,
+		int maxSize
+	) {}
+
+	private record ConfigPayloadEntry<P extends CustomPacketPayload>(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {}
 }

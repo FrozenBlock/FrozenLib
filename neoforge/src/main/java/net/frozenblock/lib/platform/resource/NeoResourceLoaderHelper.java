@@ -41,10 +41,6 @@ import net.neoforged.neoforgespi.language.IModInfo;
 import org.jetbrains.annotations.Nullable;
 
 public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
-	private record ReloadListenerEntry(Identifier id, PreparableReloadListener listener) {}
-	private record OrderingEntry(Identifier firstListener, Identifier secondListener) {}
-	private record BuiltinPackEntry(Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {}
-
 	private static final List<ReloadListenerEntry> SERVER_LISTENERS = new ArrayList<>();
 	private static final List<ReloadListenerEntry> CLIENT_LISTENERS = new ArrayList<>();
 	private static final List<OrderingEntry> SERVER_ORDERINGS = new ArrayList<>();
@@ -83,30 +79,22 @@ public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
 	}
 
 	public static void flushServerListeners(AddServerReloadListenersEvent event) {
-		for (ReloadListenerEntry entry : SERVER_LISTENERS) {
-			event.addListener(entry.id(), entry.listener());
-		}
-		for (OrderingEntry ordering : SERVER_ORDERINGS) {
-			event.addDependency(ordering.firstListener(), ordering.secondListener());
-		}
+		for (ReloadListenerEntry entry : SERVER_LISTENERS) event.addListener(entry.id(), entry.listener());
+		for (OrderingEntry ordering : SERVER_ORDERINGS) event.addDependency(ordering.firstListener(), ordering.secondListener());
 	}
 
 	public static void flushClientListeners(AddClientReloadListenersEvent event) {
-		for (ReloadListenerEntry entry : CLIENT_LISTENERS) {
-			event.addListener(entry.id(), entry.listener());
-		}
-		for (OrderingEntry ordering : CLIENT_ORDERINGS) {
-			event.addDependency(ordering.firstListener(), ordering.secondListener());
-		}
+		for (ReloadListenerEntry entry : CLIENT_LISTENERS) event.addListener(entry.id(), entry.listener());
+		for (OrderingEntry ordering : CLIENT_ORDERINGS) event.addDependency(ordering.firstListener(), ordering.secondListener());
 	}
 
 	public static void flushPackFinders(AddPackFindersEvent event) {
 		for (BuiltinPackEntry entry : BUILTIN_PACKS) {
-			Identifier packLocation = Identifier.fromNamespaceAndPath(entry.modId(), entry.id().getPath());
-			Component displayName = entry.displayName() != null
+			final Identifier packLocation = Identifier.fromNamespaceAndPath(entry.modId(), entry.id().getPath());
+			final Component displayName = entry.displayName() != null
 				? entry.displayName()
 				: Component.literal(entry.modId() + "/" + entry.id().getPath());
-			boolean alwaysActive = entry.activationType() == PackActivationType.ALWAYS_ENABLED;
+			final boolean alwaysActive = entry.activationType() == PackActivationType.ALWAYS_ENABLED;
 
 			try {
 				addPackFinder(event, packLocation, PackType.CLIENT_RESOURCES, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
@@ -128,14 +116,14 @@ public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
 	) {
 		if (event.getPackType() != packType) return;
 
-		IModInfo modInfo = ModList.get().getModContainerById(packLocation.getNamespace())
+		final IModInfo modInfo = ModList.get().getModContainerById(packLocation.getNamespace())
 			.orElseThrow(() -> new IllegalArgumentException("Mod not found: " + packLocation.getNamespace()))
 			.getModInfo();
 
-		String version = modInfo.getVersion().toString();
-		String prefix = "resourcepacks/" + packLocation.getPath();
+		final String version = modInfo.getVersion().toString();
+		final String prefix = "resourcepacks/" + packLocation.getPath();
 
-		Pack pack = Pack.readMetaAndCreate(
+		final Pack pack = Pack.readMetaAndCreate(
 			new PackLocationInfo(
 				"mod/" + packLocation,
 				packNameDisplay,
@@ -154,4 +142,8 @@ public class NeoResourceLoaderHelper implements ResourceLoaderHelper {
 
 		event.addRepositorySource(packConsumer -> packConsumer.accept(pack));
 	}
+
+	private record ReloadListenerEntry(Identifier id, PreparableReloadListener listener) {}
+	private record OrderingEntry(Identifier firstListener, Identifier secondListener) {}
+	private record BuiltinPackEntry(Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {}
 }

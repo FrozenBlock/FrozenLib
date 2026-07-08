@@ -70,7 +70,7 @@ public class NeoLoaderHelper implements LoaderHelper {
 
 	@Override
 	public boolean isModLoaded(String modId) {
-		var modList = ModList.get();
+		final var modList = ModList.get();
 		return modList != null && modList.isLoaded(modId);
 	}
 
@@ -124,9 +124,10 @@ public class NeoLoaderHelper implements LoaderHelper {
 
 	@Override
 	public List<ModEntry> getAllMods() {
-		ModList modList = ModList.get();
+		final ModList modList = ModList.get();
 		if (modList == null) return List.of();
-		List<ModEntry> result = new ArrayList<>();
+
+		final List<ModEntry> result = new ArrayList<>();
 		for (var modInfo : modList.getMods()) {
 			result.add(new ModEntry() {
 				@Override
@@ -146,15 +147,15 @@ public class NeoLoaderHelper implements LoaderHelper {
 
 				@Override
 				public Optional<Path> findPath(String file) {
-					var contents = modInfo.getOwningFile().getFile().getContents();
+					final var contents = modInfo.getOwningFile().getFile().getContents();
 					if (!contents.containsFile(file)) return Optional.empty();
-					Path primary = contents.getPrimaryPath();
+
+					final Path primary = contents.getPrimaryPath();
 					try {
-						if (Files.isDirectory(primary)) {
-							return Optional.of(primary.resolve(file));
-						}
-						FileSystem fs = openOrGetFileSystem(primary);
-						Path result = fs.getPath("/" + file);
+						if (Files.isDirectory(primary)) return Optional.of(primary.resolve(file));
+
+						final FileSystem fs = openOrGetFileSystem(primary);
+						final Path result = fs.getPath("/" + file);
 						return Files.exists(result) ? Optional.of(result) : Optional.empty();
 					} catch (Exception e) {
 						return Optional.empty();
@@ -163,14 +164,13 @@ public class NeoLoaderHelper implements LoaderHelper {
 
 				@Override
 				public Collection<Path> getRootPaths() {
-					var contents = modInfo.getOwningFile().getFile().getContents();
-					Path primary = contents.getPrimaryPath();
+					final var contents = modInfo.getOwningFile().getFile().getContents();
+					final Path primary = contents.getPrimaryPath();
 					try {
-						if (Files.isDirectory(primary)) {
-							return List.of(primary);
-						}
-						FileSystem fs = openOrGetFileSystem(primary);
-						List<Path> roots = new ArrayList<>();
+						if (Files.isDirectory(primary)) return List.of(primary);
+
+						final FileSystem fs = openOrGetFileSystem(primary);
+						final List<Path> roots = new ArrayList<>();
 						fs.getRootDirectories().forEach(roots::add);
 						return List.copyOf(roots);
 					} catch (Exception e) {
