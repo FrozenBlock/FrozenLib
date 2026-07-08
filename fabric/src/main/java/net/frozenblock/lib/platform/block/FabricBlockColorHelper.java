@@ -15,24 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.mixin.builtinblockmodels;
+package net.frozenblock.lib.platform.block;
 
+import java.util.Arrays;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
-import net.minecraft.client.renderer.block.BuiltInBlockModels;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
+import net.frozenblock.lib.platform.service.BlockColorHelper;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
-@Mixin(BuiltInBlockModels.class)
-public class BuiltInBlockModelsMixin {
+public class FabricBlockColorHelper implements BlockColorHelper {
 
-	@Inject(method = "addDefaults", at = @At("HEAD"))
-	private static void frozenLib$addCustomBuildInBlockModels(BuiltInBlockModels.Builder builder, CallbackInfo info) {
-		BuiltInBlockModelRegistry.REGISTER.invoker().addBuiltInBlockModels(builder);
+	@Override
+	public void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
+		BlockColorRegistry.register(tintSources, Arrays.stream(blocks).map(FrozenDeferredBlock::get).toArray(Block[]::new));
 	}
-
 }

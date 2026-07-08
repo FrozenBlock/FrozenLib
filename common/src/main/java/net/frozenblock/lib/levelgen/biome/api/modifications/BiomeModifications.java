@@ -34,6 +34,7 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  */
 
 import com.google.common.base.Preconditions;
+import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
@@ -46,7 +47,6 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import java.util.function.Predicate;
 
 /**
  * Provides an API to modify Biomes after they have been loaded and before they are used in the Level.

@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.levelgen.biome.impl.modifications;
 
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import java.util.Optional;
+import net.minecraft.world.level.biome.BiomeSpecialEffects;
 
 public interface BiomeSpecialEffectsInterface {
 

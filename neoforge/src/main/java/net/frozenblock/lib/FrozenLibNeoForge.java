@@ -18,8 +18,8 @@
 package net.frozenblock.lib;
 
 import java.util.function.Consumer;
-import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.command.FrozenLibCommand;
+import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
@@ -30,7 +30,6 @@ import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
-import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
@@ -67,7 +66,7 @@ public final class FrozenLibNeoForge {
 
 		modBus.addListener(NewRegistryEvent.class, NeoRegistryHelper::flushRegistries);
 		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
-			FrozenLibRegistries.init();
+			FrozenLibRegistries.setup();
 			NeoRegistryHelper.flushDynamicRegistries(event);
 		});
 		modBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
@@ -81,7 +80,7 @@ public final class FrozenLibNeoForge {
 
 		FrozenLibMain.preQuiltInit();
 		FrozenLibMain.quiltInit();
-		FrozenLibMain.init();
+		FrozenLibMain.setup();
 
 		NeoDataAttachmentHelper.register(modBus);
 		NeoEventBridge.initModStage(modBus);
@@ -113,7 +112,6 @@ public final class FrozenLibNeoForge {
 		});
 
 		ScreenShakes.init();
-		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
 		WindDisturbanceType.init();

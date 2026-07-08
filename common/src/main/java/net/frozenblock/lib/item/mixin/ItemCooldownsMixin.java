@@ -44,7 +44,5 @@ public class ItemCooldownsMixin implements CooldownInterface {
 
 	@Unique
 	@Override
-    public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
-    }
-
+    public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {}
 }

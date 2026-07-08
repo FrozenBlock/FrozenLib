@@ -28,7 +28,7 @@ import org.jetbrains.annotations.ApiStatus;
 public class FrozenLibPlacementModifiers {
 
 	public static void init() {
-		var register = FrozenDeferredRegister.create(
+		final var register = FrozenDeferredRegister.create(
 			Registries.PLACEMENT_MODIFIER_TYPE,
 			FrozenLibConstants.MOD_ID
 		);

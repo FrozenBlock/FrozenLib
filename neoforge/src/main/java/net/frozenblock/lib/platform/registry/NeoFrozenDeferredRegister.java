@@ -18,6 +18,11 @@
 package net.frozenblock.lib.platform.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredItem;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -39,11 +44,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
@@ -61,7 +61,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
-		var holder = new NeoFrozenHolder<>(this.inner.register(name, supplier));
+		final var holder = new NeoFrozenHolder<>(this.inner.register(name, supplier));
 		if (also != null) consumers.put((FrozenHolder) holder, (Consumer) also);
 		return (FrozenHolder<T, I>) holder;
 	}
@@ -104,19 +104,15 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 	@Override
 	public void register() {
-		var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+		final var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 		this.inner.register(bus);
 		bus.addListener(this::runCallbacks);
 	}
 
 	private void runCallbacks(RegisterEvent event) {
-		if (!event.getRegistryKey().equals(this.inner.getRegistryKey())) {
-			return;
-		}
+		if (!event.getRegistryKey().equals(this.inner.getRegistryKey())) return;
 
-		for (var consumer : consumers.entrySet()) {
-			consumer.getValue().accept(consumer.getKey().get());
-		}
+		for (var consumer : consumers.entrySet()) consumer.getValue().accept(consumer.getKey().get());
 	}
 
 	public static class Blocks extends NeoFrozenDeferredRegister<Block> implements FrozenDeferredRegister.Blocks {

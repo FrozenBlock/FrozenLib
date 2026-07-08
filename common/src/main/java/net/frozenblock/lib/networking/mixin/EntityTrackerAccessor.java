@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.networking.mixin;
 
+import java.util.Set;
 import net.minecraft.server.network.ServerPlayerConnection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
-import java.util.Set;
 
 /*
  * Copyright (c) 2016, 2017, 2018, 2019 FabricMC

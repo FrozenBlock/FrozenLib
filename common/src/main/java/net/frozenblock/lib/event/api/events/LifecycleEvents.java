@@ -24,6 +24,15 @@ import net.minecraft.server.players.PlayerList;
 
 public class LifecycleEvents {
 	/**
+	 * Called upon NeoForge's {@code ServerAboutToStartEvent} or Fabric's {@code SERVER_STARTING} event.
+	 */
+	public static final Event<ServerAboutToStart> SERVER_ABOUT_TO_START_OR_STARTING = FrozenEvents.createEnvironmentEvent(ServerAboutToStart.class, callbacks -> server -> {
+		for (ServerAboutToStart callback : callbacks) {
+			callback.onServerAboutToStart(server);
+		}
+	});
+
+	/**
 	 * Called when a Minecraft server is starting.
 	 *
 	 * <p>This occurs before the {@link PlayerList player list} and any levels are loaded.
@@ -68,6 +77,11 @@ public class LifecycleEvents {
 			callback.onServerStopped(server);
 		}
 	});
+
+	@FunctionalInterface
+	public interface ServerAboutToStart {
+		void onServerAboutToStart(MinecraftServer server);
+	}
 
 	@FunctionalInterface
 	public interface ServerStarting {

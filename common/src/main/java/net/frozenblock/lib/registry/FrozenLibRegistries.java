@@ -21,9 +21,7 @@ import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
-import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
@@ -43,7 +41,6 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 
@@ -91,12 +88,10 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<PlayerDamageTypeSound>> PLAYER_DAMAGE_TYPE_SOUND = ResourceKey.createRegistryKey(FrozenLibConstants.id("player_damage_type_sound"));
 	public static final ResourceKey<Registry<StructureProcessorListAddition>> STRUCTURE_PROCESSOR_LIST_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_processor_list_addition"));
 
-    public static void init() {
+    public static void setup() {
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
-		SoundTypeOverrides.init();
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
-		FireData.init();
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerDynamicRegistry(RULE_SOURCE_ADDITION, RuleSourceAddition.DIRECT_CODEC);

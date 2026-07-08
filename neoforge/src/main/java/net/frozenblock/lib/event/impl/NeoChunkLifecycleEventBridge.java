@@ -38,8 +38,8 @@ public class NeoChunkLifecycleEventBridge {
 		final LevelAccessor level = event.getLevel();
 		if (level instanceof ServerLevel serverLevel) {
 			ChunkLifecycleEvents.CHUNK_LOAD.invoker().onChunkLoad(serverLevel, event.getChunk(), event.isNewChunk());
-		} else if (level instanceof ClientLevel clientLevel) {
-			ClientChunkLifecycleEvents.CHUNK_LOAD.invoker().onChunkLoad(clientLevel, event.getChunk());
+		} else if (level.isClientSide()) {
+			ClientChunkLifecycleEvents.CHUNK_LOAD.invoker().onChunkLoad((ClientLevel) level, event.getChunk());
 		}
 	}
 
@@ -47,8 +47,8 @@ public class NeoChunkLifecycleEventBridge {
 		final LevelAccessor level = event.getLevel();
 		if (level instanceof ServerLevel serverLevel) {
 			ChunkLifecycleEvents.CHUNK_UNLOAD.invoker().onChunkUnload(serverLevel, event.getChunk());
-		} else if (level instanceof ClientLevel clientLevel) {
-			ClientChunkLifecycleEvents.CHUNK_UNLOAD.invoker().onChunkUnload(clientLevel, event.getChunk());
+		} else if (level.isClientSide()) {
+			ClientChunkLifecycleEvents.CHUNK_UNLOAD.invoker().onChunkUnload((ClientLevel) level, event.getChunk());
 		}
 	}
 }

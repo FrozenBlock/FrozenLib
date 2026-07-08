@@ -47,8 +47,8 @@ public class BoneMealItemMixin {
 		cancellable = true
 	)
 	private static void frozenLib$runBonemeal(
-		ItemStack stack, Level level, BlockPos pos, Player player, CallbackInfoReturnable<Boolean> info,
-		@Local(ordinal = 0) BlockState state
+		ItemStack itemStack, Level level, BlockPos pos, Player player, CallbackInfoReturnable<Boolean> info,
+		@Local(name = "state") BlockState state
 	) {
 		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(state.getBlock());
 		if (bonemealBehavior == null || !bonemealBehavior.meetsRequirements(level, pos, state)) return;
@@ -57,7 +57,7 @@ public class BoneMealItemMixin {
 			if (bonemealBehavior.isBoneMealSuccess(level, level.getRandom(), pos, state)) {
 				bonemealBehavior.performBoneMeal(serverLevel, level.getRandom(), pos, state);
 			}
-			stack.shrink(1);
+			itemStack.shrink(1);
 		}
 		info.setReturnValue(true);
 	}
@@ -72,12 +72,12 @@ public class BoneMealItemMixin {
 	)
 	private static void frozenLib$addGrowthParticles(
 		LevelAccessor level, BlockPos pos, int count, CallbackInfo info,
-		@Local(ordinal = 0) BlockState state
+		@Local(ordinal = 0) BlockState blockState
 	) {
-		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(state.getBlock());
+		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(blockState.getBlock());
 		if (bonemealBehavior == null) return;
 
-		final BlockPos particlePos = bonemealBehavior.getParticlePos(state, pos);
+		final BlockPos particlePos = bonemealBehavior.getParticlePos(blockState, pos);
 		if (bonemealBehavior.isNeighborSpreader()) {
 			ParticleUtils.spawnParticles(level, particlePos, count, 3D, 1D, false, ParticleTypes.HAPPY_VILLAGER);
 		} else {
@@ -85,5 +85,4 @@ public class BoneMealItemMixin {
 		}
 		info.cancel();
 	}
-
 }

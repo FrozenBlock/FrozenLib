@@ -31,7 +31,7 @@ public class NeoFuelRegistry {
 	}
 
 	private static void onFurnaceFuelBurnTime(FurnaceFuelBurnTimeEvent event) {
-		ItemStack stack = event.getItemStack();
+		final ItemStack stack = event.getItemStack();
 
 		for (FuelRegistry.ItemFuelValue value : FuelRegistry.ITEM_FUEL_VALUES) {
 			if (stack.is(value.item().asItem())) {

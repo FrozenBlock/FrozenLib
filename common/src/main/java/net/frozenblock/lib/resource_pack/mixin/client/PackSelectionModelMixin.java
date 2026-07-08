@@ -45,5 +45,4 @@ public class PackSelectionModelMixin {
 		entries.removeIf(entry -> FrozenLibModResourcePackApi.isPackHiddenFromMenu(entry.getId()));
 		return entries.stream();
 	}
-
 }

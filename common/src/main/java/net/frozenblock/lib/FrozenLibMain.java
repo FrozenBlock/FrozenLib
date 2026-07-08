@@ -17,26 +17,23 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
-import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateTypes;
-import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
-import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
-import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
-import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
+import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
+import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
-import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
 import net.frozenblock.lib.levelgen.structure.api.processor.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
@@ -63,6 +60,7 @@ public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
 		FireData.init();
+		SoundTypeOverrides.init();
 	}
 
 	public static void quiltInit() {
@@ -71,14 +69,25 @@ public final class FrozenLibMain {
 		ServerRegistrySync.registerHandlers();
 	}
 
-	public static void init() {
-		FrozenLibRuleBlockEntityModifiers.init();
-		FrozenLibStructureProcessorTypes.init();
+	public static void setup() {
+		final var argTypes = FrozenDeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
+		argTypes.register(
+			"tag_key",
+			() -> new TagKeyArgument.Info<>(),
+			info -> ArgumentTypeInfos.BY_CLASS.put(
+				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
+				info
+			)
+		);
+		argTypes.register();
+
+		StructureStatus.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
-		SpottingIcons.init();
-		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
+		FrozenLibRuleBlockEntityModifiers.init();
+		FrozenLibStructureProcessorTypes.init();
+		FrozenLibDataComponents.init();
 		FrozenLibFeatureTypes.init();
 		ConfigPredicateTypes.init();
 		WindManager.init();
@@ -88,43 +97,20 @@ public final class FrozenLibMain {
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();
+		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
-		StructureSetApi.init();
 
-		var matCon = FrozenDeferredRegister.create(
+		final var matCon = FrozenDeferredRegister.create(
 			Registries.MATERIAL_CONDITION_TYPE,
 			FrozenLibConstants.MOD_ID
 		);
 		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);
 		matCon.register();
 
-		var argTypes = FrozenDeferredRegister.create(
-			Registries.COMMAND_ARGUMENT_TYPE,
-			FrozenLibConstants.MOD_ID
-		);
-
-		argTypes.register(
-			"tag_key",
-			() -> new TagKeyArgument.Info<>(),
-			info -> ArgumentTypeInfos.BY_CLASS.put(
-				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
-				info
-			)
-		);
-
-		argTypes.register();
-
-		StructureStatus.init();
-		CapeUtil.init();
 		ScreenShakes.init();
-		SulfurCubeEvents.init();
-
-		TickEvents.START_LEVEL_TICK.register(serverLevel -> {
-			WindManager.getOrCreate(serverLevel).tick(serverLevel);
-			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
-		});
+		StructureStatusUpdater.init();
 
 		FrozenLibNetworking.registerNetworking();
 

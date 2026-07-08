@@ -32,7 +32,6 @@ public class ClientLifecycleEvents {
 		}
 	});
 
-	// TODO NEOFORGE
 	public static final Event<ClientStopping> CLIENT_STOPPING = FrozenEvents.createEnvironmentEvent(ClientStopping.class, callbacks -> client -> {
 		for (ClientStopping callback : callbacks) {
 			callback.onClientStopping(client);

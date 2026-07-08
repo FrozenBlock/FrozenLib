@@ -33,13 +33,13 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  * limitations under the License.
  */
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * Provides methods for modifying biomes. To create an instance, call

@@ -39,11 +39,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SimpleJsonResourceReloadListener.class)
 public class SimpleJsonResourceReloadListenerMixin {
 
-	@Definition(id = "fileToId", method = "Lnet/minecraft/resources/FileToIdConverter;fileToId(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/resources/Identifier;")
+	@Definition(
+		id = "fileToId",
+		method = "Lnet/minecraft/resources/FileToIdConverter;fileToId(Lnet/minecraft/resources/Identifier;)Lnet/minecraft/resources/Identifier;"
+	)
 	@Expression("? = ?.fileToId(?)")
 	@Inject(
 		method = "scanDirectory(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/resources/FileToIdConverter;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/Codec;Ljava/util/Map;)V",
-		at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER)
+		at = @At(
+			value = "MIXINEXTRAS:EXPRESSION",
+			shift = At.Shift.AFTER
+		)
 	)
 	private static <T> void frozenLib$fillSourceMap(
 		ResourceManager manager,
@@ -51,7 +57,7 @@ public class SimpleJsonResourceReloadListenerMixin {
 		DynamicOps<JsonElement> ops,
 		Codec<T> codec,
 		Map<Identifier, T> result,
-		CallbackInfo ci,
+		CallbackInfo info,
 		@Local(name = "entry") Map.Entry<Identifier, Resource> entry,
 		@Local(name = "id") Identifier id
 	) {

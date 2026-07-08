@@ -27,6 +27,5 @@ public abstract class FrozenModMenuEntrypoint {
 	public static FrozenModMenuBadge createBadge(String translationKey, int outlineColor, int fillColor, String key) {
 		return new FrozenModMenuBadge(translationKey, outlineColor, fillColor, key);
 	}
-
 }
 

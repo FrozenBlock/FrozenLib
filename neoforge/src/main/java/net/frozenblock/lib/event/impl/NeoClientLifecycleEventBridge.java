@@ -21,21 +21,23 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.lifecycle.ClientStartedEvent;
+import net.neoforged.neoforge.client.event.lifecycle.ClientStoppingEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class NeoClientLifecycleEventBridge {
 
-	private static boolean clientStartedFired = false;
-
+	@ApiStatus.Internal
 	public static void init() {
-		NeoForge.EVENT_BUS.addListener(ClientTickEvent.Pre.class, event -> {
-			if (!clientStartedFired) {
-				clientStartedFired = true;
-				ClientLifecycleEvents.CLIENT_STARTED.invoker().onClientStarted(Minecraft.getInstance());
-			}
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientStartedEvent.class, event -> {
+			ClientLifecycleEvents.CLIENT_STARTED.invoker().onClientStarted(event.getClient());
+		});
+		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ClientStoppingEvent.class, event -> {
+			ClientLifecycleEvents.CLIENT_STOPPING.invoker().onClientStopping(event.getClient());
 		});
 
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingIn.class, event ->

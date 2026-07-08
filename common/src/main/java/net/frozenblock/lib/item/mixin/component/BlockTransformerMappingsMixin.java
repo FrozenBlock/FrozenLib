@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
+// TODO: proper multiloader or alternative version
 @Mixin(BlockTransformerMappings.class)
 public class BlockTransformerMappingsMixin {
 

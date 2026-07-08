@@ -32,6 +32,5 @@ public final class ModMenuIntegration implements ModMenuApi {
         if (FrozenBools.HAS_CLOTH_CONFIG) return FrozenLibConfigGui::buildScreen;
         return screen -> null;
     }
-
 }
 

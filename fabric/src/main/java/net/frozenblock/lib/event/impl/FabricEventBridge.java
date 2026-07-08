@@ -36,7 +36,10 @@ public final class FabricEventBridge {
 		FabricChunkLifecycleEventsBridge.init();
 		FabricPotionBrewingEventBridge.init();
 
-		ServerLifecycleEvents.SERVER_STARTING.register(instance -> LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance));
+		ServerLifecycleEvents.SERVER_STARTING.register(instance -> {
+			LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(instance);
+			LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance);
+		});
 		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));
 		ServerLifecycleEvents.SERVER_STOPPING.register(instance -> LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(instance));
 		ServerLifecycleEvents.SERVER_STOPPED.register(instance -> LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(instance));

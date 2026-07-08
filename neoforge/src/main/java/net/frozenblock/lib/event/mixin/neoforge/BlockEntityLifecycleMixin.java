@@ -33,22 +33,22 @@ public abstract class BlockEntityLifecycleMixin {
 
 	@Inject(method = "setLevel", at = @At("TAIL"))
 	private void frozenLib$onLoad(Level level, CallbackInfo info) {
-		final BlockEntity self = (BlockEntity) (Object) this;
+		final BlockEntity blockEntity = BlockEntity.class.cast(this);
 		if (level instanceof ServerLevel serverLevel) {
-			BlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(self, serverLevel);
-		} else if (level instanceof ClientLevel clientLevel) {
-			ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(self, clientLevel);
+			BlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(blockEntity, serverLevel);
+		} else if (level.isClientSide()) {
+			ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(blockEntity, (ClientLevel) level);
 		}
 	}
 
 	@Inject(method = "setRemoved", at = @At("TAIL"))
 	private void frozenLib$onRemoved(CallbackInfo info) {
-		final BlockEntity self = (BlockEntity) (Object) this;
-		final Level level = self.getLevel();
+		final BlockEntity blockEntity = BlockEntity.class.cast(this);
+		final Level level = blockEntity.getLevel();
 		if (level instanceof ServerLevel serverLevel) {
-			BlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(self, serverLevel);
-		} else if (level instanceof ClientLevel clientLevel) {
-			ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(self, clientLevel);
+			BlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(blockEntity, serverLevel);
+		} else if (level.isClientSide()) {
+			ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(blockEntity, (ClientLevel) level);
 		}
 	}
 }

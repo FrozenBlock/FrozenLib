@@ -23,12 +23,11 @@ import net.frozenblock.lib.levelgen.structure.api.processor.MarkForPostProcessin
 import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcessor;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
-		var register = FrozenDeferredRegister.create(
+		final var register = FrozenDeferredRegister.create(
 			Registries.STRUCTURE_PROCESSOR,
 			FrozenLibConstants.MOD_ID
 		);

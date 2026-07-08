@@ -50,5 +50,4 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
     public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
 		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(this.player, new CooldownChangePacket(cooldownGroup, additional));
     }
-
 }

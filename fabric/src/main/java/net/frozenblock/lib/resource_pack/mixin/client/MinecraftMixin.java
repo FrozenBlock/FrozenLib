@@ -21,13 +21,10 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.resource_pack.impl.client.PackRepositoryInterface;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.PackRepository;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.validation.DirectoryValidator;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,6 +39,9 @@ public class MinecraftMixin {
 	@Final
 	private DirectoryValidator directoryValidator;
 
+	/**
+	 * @reason NeoForge seems extremely weird with Mixins on Minecraft, but luckily provides an event for this.
+	 */
 	@ModifyExpressionValue(
 		method = "<init>",
 		at = @At(
@@ -57,35 +57,8 @@ public class MinecraftMixin {
 			return original;
 		}
 
-		packRepositoryInterface.frozenLib$addRepositorySource(
-			new FrozenLibFolderRepositorySource(
-				FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY,
-				PackType.CLIENT_RESOURCES,
-				PackSource.BUILT_IN,
-				this.directoryValidator,
-				"frozenlib:"
-			)
-		);
-		packRepositoryInterface.frozenLib$addRepositorySource(
-			new FrozenLibFolderRepositorySource(
-				FrozenLibModResourcePackApi.MOD_RESOURCE_PACK_DIRECTORY,
-				PackType.CLIENT_RESOURCES,
-				PackSource.BUILT_IN,
-				this.directoryValidator,
-				"frozenlib:mod/"
-			)
-		);
-		packRepositoryInterface.frozenLib$addRepositorySource(
-			new FrozenLibFolderRepositorySource(
-				FrozenLibModResourcePackApi.DOWNLOADED_RESOURCE_PACK_DIRECTORY,
-				PackType.CLIENT_RESOURCES,
-				PackSource.BUILT_IN,
-				this.directoryValidator,
-				"frozenlib:mod/downloaded/"
-			)
-		);
+		FrozenLibFolderRepositorySource.createDefaultSources(this.directoryValidator).forEach(packRepositoryInterface::frozenLib$addRepositorySource);
 
 		return original;
 	}
-
 }

@@ -27,9 +27,6 @@ import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 public class NeoHudElementHelper implements HudElementHelper {
-	private record AnchoredEntry(VanillaHudAnchor vanillaElementId, Identifier id, HudElementRenderer renderer) {}
-	private record UnanchoredEntry(Identifier id, HudElementRenderer renderer) {}
-
 	private static final List<UnanchoredEntry> FIRST = new ArrayList<>();
 	private static final List<UnanchoredEntry> LAST = new ArrayList<>();
 	private static final List<AnchoredEntry> BEFORE = new ArrayList<>();
@@ -56,18 +53,13 @@ public class NeoHudElementHelper implements HudElementHelper {
 	}
 
 	public static void flush(RegisterGuiLayersEvent event) {
-		for (UnanchoredEntry entry : FIRST) {
-			event.registerBelowAll(entry.id(), entry.renderer()::extractRenderState);
-		}
-		for (UnanchoredEntry entry : LAST) {
-			event.registerAboveAll(entry.id(), entry.renderer()::extractRenderState);
-		}
-		for (AnchoredEntry entry : BEFORE) {
-			event.registerBelow(toNeo(entry.vanillaElementId()), entry.id(), entry.renderer()::extractRenderState);
-		}
-		for (AnchoredEntry entry : AFTER) {
-			event.registerAbove(toNeo(entry.vanillaElementId()), entry.id(), entry.renderer()::extractRenderState);
-		}
+		for (UnanchoredEntry entry : FIRST) event.registerBelowAll(entry.id(), entry.renderer()::extractRenderState);
+
+		for (UnanchoredEntry entry : LAST) event.registerAboveAll(entry.id(), entry.renderer()::extractRenderState);
+
+		for (AnchoredEntry entry : BEFORE) event.registerBelow(toNeo(entry.vanillaElementId()), entry.id(), entry.renderer()::extractRenderState);
+
+		for (AnchoredEntry entry : AFTER) event.registerAbove(toNeo(entry.vanillaElementId()), entry.id(), entry.renderer()::extractRenderState);
 	}
 
 	private static Identifier toNeo(VanillaHudAnchor anchor) {
@@ -97,4 +89,7 @@ public class NeoHudElementHelper implements HudElementHelper {
 			case SUBTITLES -> VanillaGuiLayers.SUBTITLE_OVERLAY;
 		};
 	}
+
+	private record AnchoredEntry(VanillaHudAnchor vanillaElementId, Identifier id, HudElementRenderer renderer) {}
+	private record UnanchoredEntry(Identifier id, HudElementRenderer renderer) {}
 }

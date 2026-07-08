@@ -7,8 +7,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "QuiltSyncTaskMixin",
-    "BlockEntityLifecycleMixin"
+    "BlockEntityLifecycleMixin",
+    "QuiltSyncTaskMixin"
   ],
   "client": [
     "client.MinecraftMixin"

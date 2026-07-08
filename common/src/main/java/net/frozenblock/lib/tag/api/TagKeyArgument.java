@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.SharedSuggestionProvider;

@@ -9,7 +9,6 @@
   "mixins": [
     "BiomeMixin",
     "BiomeSpecialEffectsMixin",
-    "MinecraftServerMixin",
     "MultiNoiseLibBiomeSourceMixin",
     "OverworldBiomeBuilderMixin",
     "OverworldBiomePresetMixin",

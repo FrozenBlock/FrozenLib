@@ -17,5 +17,4 @@
 
 package net.frozenblock.lib.modmenu.impl;
 
-public record FrozenModMenuBadge(String translationKey, int outlineColor, int fillColor, String key) {
-}
+public record FrozenModMenuBadge(String translationKey, int outlineColor, int fillColor, String key) { }

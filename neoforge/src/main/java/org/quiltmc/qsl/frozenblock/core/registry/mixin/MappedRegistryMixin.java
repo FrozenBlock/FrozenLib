@@ -19,7 +19,6 @@
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;

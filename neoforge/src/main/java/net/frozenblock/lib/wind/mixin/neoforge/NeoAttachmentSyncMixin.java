@@ -37,7 +37,11 @@ public class NeoAttachmentSyncMixin {
 
 	@Inject(method = "receiveSyncedDataAttachments", at = @At("TAIL"))
 	private static void frozenLib$onReceiveSyncedDataAttachments(
-		AttachmentHolder holder, RegistryAccess registryAccess, List<AttachmentType<?>> types, byte[] bytes, CallbackInfo info
+		AttachmentHolder holder,
+		RegistryAccess registryAccess,
+		List<AttachmentType<?>> types,
+		byte[] bytes,
+		CallbackInfo info
 	) {
 		final Level level;
 		final DataAttachmentTarget target;

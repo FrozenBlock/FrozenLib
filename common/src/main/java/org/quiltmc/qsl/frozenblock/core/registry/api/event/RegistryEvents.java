@@ -19,13 +19,17 @@
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
+import java.util.List;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.
@@ -56,6 +60,17 @@ public class RegistryEvents {
 			for (var callback : callbacks) callback.onDynamicRegistrySetup(context);
 		}
 	);
+
+	/**
+	 * NeoForge modifies the method this is implemented in, this is used to cut down on duplicate code.
+	 */
+	@ApiStatus.Internal
+	public static void invokeDynamicRegistrySetupEvent(List<RegistryLoadTask<?>> loadTasks) {
+		DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
+			new DynamicRegistryManagerSetupContextImpl(loadTasks.stream().map(task -> task.registry))
+		);
+	}
+
 	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
 	 * after it has been filled with the registry entries specified by data packs.
@@ -72,6 +87,16 @@ public class RegistryEvents {
 			for (var callback : callbacks) callback.onDynamicRegistryLoaded(registryManager);
 		}
 	);
+
+	/**
+	 * NeoForge modifies the method this is implemented in, this is used to cut down on duplicate code.
+	 */
+	@ApiStatus.Internal
+	public static void invokeDynamicRegistryLoadedEvent(List<RegistryLoadTask<?>> loadTasks) {
+		DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(
+			new DynamicRegistryManagerSetupContextImpl(loadTasks.stream().map(task -> task.registry))
+		);
+	}
 
 	/**
 	 * Gets the entry added event for a specific Minecraft registry.

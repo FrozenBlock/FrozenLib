@@ -22,11 +22,16 @@ import java.util.Set;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.ApiStatus;
 
 public class RemovableDataComponents {
 	private static final LinkedHashMap<Holder<DataComponentType<?>>, RemovableDataComponent> REMOVABLE_DATA_COMPONENTS = new LinkedHashMap<>();
@@ -62,6 +67,39 @@ public class RemovableDataComponents {
 
 	public static Set<Holder<DataComponentType<?>>> keys() {
 		return REMOVABLE_DATA_COMPONENTS.keySet();
+	}
+
+	@ApiStatus.Internal
+	public static void fixEmptyComponentsAndTags(ItemStack stack) {
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) compound.remove(key);
+			}
+		});
+
+		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
+			final DataComponentType<?> component = holder.value();
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(component)) stack.remove(component);
+		}
+	}
+
+	@ApiStatus.Internal
+	public static void fixEmptyComponentsAndTags(PatchedDataComponentMap components) {
+		final CustomData newData = components.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).update(compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) compound.remove(key);
+			}
+		});
+		if (newData.isEmpty()) {
+			components.remove(DataComponents.CUSTOM_DATA);
+		} else {
+			components.set(DataComponents.CUSTOM_DATA, newData);
+		}
+
+		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
+			final DataComponentType<?> component = holder.value();
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(component)) components.remove(component);
+		}
 	}
 
 	public static class RemovableDataComponent implements RemovalPredicate {

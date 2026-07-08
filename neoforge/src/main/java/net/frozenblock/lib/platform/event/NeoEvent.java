@@ -41,7 +41,6 @@ import net.neoforged.fml.event.IModBusEvent;
  * @param <T> the listener callback type
  */
 public class NeoEvent<T> implements Event<T> {
-
 	private final Class<T> listenerType;
 	private final Function<T[], T> invokerFactory;
 	private final List<T> listeners = new ArrayList<>();
@@ -55,12 +54,15 @@ public class NeoEvent<T> implements Event<T> {
 
 	private synchronized void registerBridge() {
 		if (this.bridgeRegistered) return;
+
 		IEventBus bus = FrozenLibEventBus.get();
 		if (bus == null) return; // still too early — try again on next invocation
+
 		bus.addListener(BridgeEvent.class, event -> {
 			if (event.source != this) return;
 			this.dispatch(event);
 		});
+
 		this.bridgeRegistered = true;
 	}
 
@@ -108,8 +110,8 @@ public class NeoEvent<T> implements Event<T> {
 			this.listenerType.getClassLoader(),
 			new Class<?>[]{this.listenerType},
 			(ignoredProxy, method, args) -> {
-				BridgeEvent event = new BridgeEvent(this, method, args);
-				IEventBus bus = FrozenLibEventBus.get();
+				final BridgeEvent event = new BridgeEvent(this, method, args);
+				final IEventBus bus = FrozenLibEventBus.get();
 				if (bus != null) {
 					this.registerBridge();
 					bus.post(event);

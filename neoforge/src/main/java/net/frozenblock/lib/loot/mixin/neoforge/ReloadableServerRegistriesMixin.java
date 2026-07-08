@@ -35,8 +35,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Drives {@link FrozenLibLootTableEvents#ALL_LOADED}, which has no NeoForge equivalent. NeoForge's own
- * {@code LootTableLoadEvent} already drives {@code REPLACE}/{@code MODIFY} (see {@code NeoLootTableEventBridge}),
+ * Drives {@link FrozenLibLootTableEvents#ALL_LOADED}, which has no NeoForge equivalent.
+ * <p>NeoForge's own {@code LootTableLoadEvent} already drives {@code REPLACE}/{@code MODIFY} (see {@code NeoLootTableEventBridge}),
  * so this only needs to fire once the loot table registry has finished loading for this reload, and to give each
  * loaded {@link LootTable} its registry holder (for {@code MODIFY_DROPS}).
  */
@@ -46,18 +46,18 @@ abstract class ReloadableServerRegistriesMixin {
 	@SuppressWarnings("unchecked")
 	@Inject(method = "lambda$scheduleRegistryLoad$0", at = @At("RETURN"))
 	private static <T extends Validatable> void frozenLib$onLootTablesLoaded(
-		LootDataType<T> lootDataType,
-		RegistryOps<JsonElement> registryOps,
-		ResourceManager resourceManager,
-		CallbackInfoReturnable<WritableRegistry<?>> cir
+		LootDataType<T> type,
+		RegistryOps<JsonElement> ops,
+		ResourceManager manager,
+		CallbackInfoReturnable<WritableRegistry<?>> info
 	) {
-		if (lootDataType != LootDataType.TABLE) return;
+		if (type != LootDataType.TABLE) return;
 
-		Registry<LootTable> lootTableRegistry = (Registry<LootTable>) cir.getReturnValue();
-		lootTableRegistry.listElements().forEach(reference ->
+		final Registry<LootTable> lootTables = (Registry<LootTable>) info.getReturnValue();
+		lootTables.listElements().forEach(reference ->
 			((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
 
-		FrozenLibLootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(resourceManager, lootTableRegistry);
+		FrozenLibLootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(manager, lootTables);
 		NeoLootUtil.SOURCES.remove();
 	}
 }

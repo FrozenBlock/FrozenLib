@@ -18,9 +18,9 @@
 package net.frozenblock.lib.block.api.fire;
 
 import java.util.Optional;
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;

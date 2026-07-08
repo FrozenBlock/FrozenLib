@@ -21,7 +21,6 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import java.util.function.Consumer;
 
 public class FabricFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 
@@ -32,9 +31,7 @@ public class FabricFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 	}
 
 	private Holder.Reference<T> requireBound() {
-		if (this.reference == null) {
-			throw new IllegalStateException("FrozenHolder not yet bound; call FrozenDeferredRegister.register() first");
-		}
+		if (this.reference == null) throw new IllegalStateException("FrozenHolder not yet bound; call FrozenDeferredRegister.register() first");
 		return this.reference;
 	}
 

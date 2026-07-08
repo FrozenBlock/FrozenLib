@@ -23,23 +23,12 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
-import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
-import net.frozenblock.lib.event.api.events.ClientLevelEvents;
-import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
-import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenLibClientNetworking;
-import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
-import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
-import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
-import net.frozenblock.lib.wind.WindManager;
-import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.minecraft.client.Minecraft;
 
 public final class FrozenLibClientFabric implements ClientModInitializer {
@@ -48,27 +37,15 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 	public void onInitializeClient() {
 		FabricEventBridge.initClientModStage();
 
-		ClientLifecycleEvents.CLIENT_STARTED.register((_) -> {
-			try {
-				ConfigSerializer.saveConfigs(true);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
-
 		FrozenLibClient.preQuiltInit();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 
 		// QUILT INIT
-		FrozenLibClient.quiltInit();
+		FrozenLibClient.quiltSetup();
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibClient.init();
-
-		registerClientEvents();
 		FrozenLibClientNetworking.registerClientReceivers();
-
-		FrozenLibModelLayers.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
 			FrozenLibClientCommand.register(
@@ -83,27 +60,8 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 			);
 		});
 
-		FrozenLibModResourcePackApi.init();
 		FrozenLibDebugScreenEntries.init();
-		ClientWindUtil.init();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
-	}
-
-	private static void registerClientEvents() {
-		ClientTickEvents.START_LEVEL_TICK.register(
-			level -> {
-				final Minecraft minecraft = Minecraft.getInstance();
-				WindManager.getOrCreate(level).tick(level);
-				ClientScreenShaker.tick(minecraft, level);
-				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
-			}
-		);
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearStaticClientData());
-		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, clientLevel) -> clearStaticClientData());
-	}
-
-	private static void clearStaticClientData() {
-		ClientScreenShaker.reset();
 	}
 }

@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.block.api.friction;
 
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 
 public class BlockFrictionAPI {

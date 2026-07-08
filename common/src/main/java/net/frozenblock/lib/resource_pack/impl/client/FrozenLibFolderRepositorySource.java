@@ -18,12 +18,15 @@
 package net.frozenblock.lib.resource_pack.impl.client;
 
 import java.nio.file.Path;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.validation.DirectoryValidator;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * An extension of {@link FolderRepositorySource}.
@@ -45,4 +48,30 @@ public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
 		return this.suffix;
 	}
 
+	@ApiStatus.Internal
+	public static List<FrozenLibFolderRepositorySource> createDefaultSources(DirectoryValidator directoryValidator) {
+		return List.of(
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				directoryValidator,
+				"frozenlib:"
+			),
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.MOD_RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				directoryValidator,
+				"frozenlib:mod/"
+			),
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.DOWNLOADED_RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				directoryValidator,
+				"frozenlib:mod/downloaded/"
+			)
+		);
+	}
 }

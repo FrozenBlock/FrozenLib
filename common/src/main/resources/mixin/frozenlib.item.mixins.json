@@ -8,7 +8,6 @@
   },
   "mixins": [
     "AbstractContainerMenuMixin",
-    "FuelValuesMixin",
     "ItemCooldownsMixin",
     "ItemStackMixin",
     "ServerItemCooldownsMixin",

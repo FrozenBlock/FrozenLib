@@ -19,8 +19,8 @@
 package org.quiltmc.qsl.frozenblock.resource.loader.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;

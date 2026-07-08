@@ -19,8 +19,8 @@ package net.frozenblock.lib.renderer.block;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.entrypoint.api.ClientEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 

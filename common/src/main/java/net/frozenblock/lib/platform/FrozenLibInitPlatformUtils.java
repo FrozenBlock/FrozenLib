@@ -18,9 +18,10 @@
 package net.frozenblock.lib.platform;
 
 import lombok.experimental.UtilityClass;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import static net.frozenblock.lib.platform.PlatformUtil.load;
+import net.frozenblock.lib.platform.service.BlockColorHelper;
 import net.frozenblock.lib.platform.service.BlockEntityRendererHelper;
 import net.frozenblock.lib.platform.service.CompostableRegistryHelper;
 import net.frozenblock.lib.platform.service.CreativeTabHelper;
@@ -59,4 +60,6 @@ public class FrozenLibInitPlatformUtils {
 	public static final EntityRendererHelper ENTITY_RENDERER = load(EntityRendererHelper.class);
 	@Environment(EnvType.CLIENT)
 	public static final ParticleProviderRegistryHelper PARTICLE_PROVIDER_REGISTRY = load(ParticleProviderRegistryHelper.class);
+	@Environment(EnvType.CLIENT)
+	public static final BlockColorHelper BLOCK_COLOR = load(BlockColorHelper.class);
 }

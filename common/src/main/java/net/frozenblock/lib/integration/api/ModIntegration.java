@@ -102,15 +102,13 @@ public abstract class ModIntegration {
 	/**
 	 * Runs prior to registries freezing in order to allow for the registering of things.
 	 */
-	public void initPreFreeze() {
-	}
+	public void initPreFreeze() {}
 
 	/**
 	 * Runs prior to registries freezing in order to allow for registering things.
 	 */
 	@Environment(EnvType.CLIENT)
-	public void clientInitPreFreeze() {
-	}
+	public void clientInitPreFreeze() {}
 
     public abstract void init();
 

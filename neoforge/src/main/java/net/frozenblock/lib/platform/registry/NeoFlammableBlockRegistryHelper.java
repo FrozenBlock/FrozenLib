@@ -26,7 +26,7 @@ public class NeoFlammableBlockRegistryHelper implements FlammableBlockRegistryHe
 
 	@Override
 	public void add(Block block, int igniteOdds, int burnOdds) {
-		FireBlockAccessor fireBlock = (FireBlockAccessor) Blocks.FIRE;
+		final FireBlockAccessor fireBlock = (FireBlockAccessor) Blocks.FIRE;
 		fireBlock.frozenLib$getIgniteOdds().put(block, igniteOdds);
 		fireBlock.frozenLib$getBurnOdds().put(block, burnOdds);
 	}

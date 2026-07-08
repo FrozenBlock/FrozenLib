@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.advancement.impl;
 
+import java.util.List;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
-import java.util.List;
 
 public interface AdvancementRewardsInterface {
 	List<ResourceKey<LootTable>> frozenLib$getLoot();

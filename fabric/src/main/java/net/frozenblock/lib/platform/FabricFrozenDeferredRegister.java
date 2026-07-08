@@ -17,6 +17,12 @@
 
 package net.frozenblock.lib.platform;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredItem;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -37,15 +43,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
-
 	protected final ResourceKey<? extends Registry<T>> registryKey;
 	protected final String namespace;
 	protected final List<PendingEntry<T, ?>> pending = new ArrayList<>();
@@ -62,7 +61,7 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
-		FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
+		final FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
 		this.pending.add(new PendingEntry<>(Identifier.fromNamespaceAndPath(this.namespace, name), supplier, also, holder));
 		return holder;
 	}
@@ -74,9 +73,9 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Function<Identifier, ? extends I> func, Consumer<I> also) {
-		FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
-		var id = Identifier.fromNamespaceAndPath(this.namespace, name);
-		this.pending.add(new PendingEntry<>(id, () -> func.apply(id), (Consumer) also, holder));
+		final FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
+		final Identifier id = Identifier.fromNamespaceAndPath(this.namespace, name);
+		this.pending.add(new PendingEntry<>(id, () -> func.apply(id), also, holder));
 		return holder;
 	}
 
@@ -107,24 +106,23 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 	@Override
 	@SuppressWarnings("unchecked")
 	public void register() {
-		Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY.getOptional(this.registryKey.identifier())
+		final Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY.getOptional(this.registryKey.identifier())
 			.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
-		for (PendingEntry<T, ?> entry : this.pending) {
-			registerEntry(registry, entry);
-		}
+		for (PendingEntry<T, ?> entry : this.pending) registerEntry(registry, entry);
 		this.pending.clear();
 	}
 
 	@SuppressWarnings("unchecked")
 	private <I extends T> void registerEntry(Registry<T> registry, PendingEntry<T, I> entry) {
-		ResourceKey<T> key = ResourceKey.create(this.registryKey, entry.id());
-		I value = entry.supplier().get();
+		final ResourceKey<T> key = ResourceKey.create(this.registryKey, entry.id());
+		final I value = entry.supplier().get();
 		Registry.register(registry, entry.id(), value);
-		Holder.Reference<T> ref = registry.getOrThrow(key);
-		entry.holder().bind((Holder.Reference<I>) ref);
-		var also = entry.also();
-		if (also != null)
-			also.accept((I) ref.value());
+
+		final Holder.Reference<T> holder = registry.getOrThrow(key);
+		entry.holder().bind((Holder.Reference<I>) holder);
+
+		final Consumer<I> also = entry.also();
+		if (also != null) also.accept((I) holder.value());
 	}
 
 	public static class Blocks extends FabricFrozenDeferredRegister<Block> implements FrozenDeferredRegister.Blocks {
