@@ -25,6 +25,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
@@ -48,6 +49,11 @@ public final class NeoEventBridge {
 	public static void initClientModStage() {
 		NeoClientLifecycleEventBridge.init();
 		NeoClientTickEventBridge.init();
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void event(ServerAboutToStartEvent event) {
+		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerStarting(event.getServer());
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)

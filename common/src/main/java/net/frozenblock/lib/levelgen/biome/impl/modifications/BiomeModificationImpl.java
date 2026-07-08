@@ -73,7 +73,7 @@ public class BiomeModificationImpl {
 	private BiomeModificationImpl() {}
 
 	public static void init() {
-		LifecycleEvents.SERVER_STARTING.register(server -> INSTANCE.finalizeWorldGen(server.registryAccess()));
+		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.register(server -> INSTANCE.finalizeWorldGen(server.registryAccess()));
 	}
 
 	public void addModifier(Identifier id, ModificationPhase phase, Predicate<BiomeSelectionContext> selector, BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier) {

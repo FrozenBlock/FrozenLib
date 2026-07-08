@@ -24,6 +24,17 @@ import net.minecraft.server.players.PlayerList;
 
 public class LifecycleEvents {
 	/**
+	 * Called upon NeoForge's {@code ServerAboutToStartEvent} or Fabric's {@code SERVER_STARTING} event.
+	 *
+	 * <p>This was done to alleviate a crash on NeoForge, as modifying Biomes would crash if using their {@code ServerStarting} event.
+	 */
+	public static final Event<ServerStarting> SERVER_ABOUT_TO_START_OR_STARTING = FrozenEvents.createEnvironmentEvent(ServerStarting.class, callbacks -> server -> {
+		for (ServerStarting callback : callbacks) {
+			callback.onServerStarting(server);
+		}
+	});
+
+	/**
 	 * Called when a Minecraft server is starting.
 	 *
 	 * <p>This occurs before the {@link PlayerList player list} and any levels are loaded.
