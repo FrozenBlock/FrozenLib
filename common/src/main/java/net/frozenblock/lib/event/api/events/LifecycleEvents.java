@@ -28,9 +28,9 @@ public class LifecycleEvents {
 	 *
 	 * <p>This was done to alleviate a crash on NeoForge, as modifying Biomes would crash if using their {@code ServerStarting} event.
 	 */
-	public static final Event<ServerStarting> SERVER_ABOUT_TO_START_OR_STARTING = FrozenEvents.createEnvironmentEvent(ServerStarting.class, callbacks -> server -> {
-		for (ServerStarting callback : callbacks) {
-			callback.onServerStarting(server);
+	public static final Event<ServerAboutToStart> SERVER_ABOUT_TO_START_OR_STARTING = FrozenEvents.createEnvironmentEvent(ServerAboutToStart.class, callbacks -> server -> {
+		for (ServerAboutToStart callback : callbacks) {
+			callback.onServerAboutToStart(server);
 		}
 	});
 
@@ -79,6 +79,11 @@ public class LifecycleEvents {
 			callback.onServerStopped(server);
 		}
 	});
+
+	@FunctionalInterface
+	public interface ServerAboutToStart {
+		void onServerAboutToStart(MinecraftServer server);
+	}
 
 	@FunctionalInterface
 	public interface ServerStarting {

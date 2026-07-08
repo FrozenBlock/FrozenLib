@@ -53,7 +53,7 @@ public final class NeoEventBridge {
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void event(ServerAboutToStartEvent event) {
-		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerStarting(event.getServer());
+		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(event.getServer());
 	}
 
 	@SubscribeEvent(priority = EventPriority.HIGH)
