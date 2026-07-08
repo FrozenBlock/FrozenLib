@@ -76,8 +76,9 @@ public abstract class ModIntegration {
         return getTag(BuiltInRegistries.ITEM, id(path));
     }
 
+	// TODO: see if this 26.3 change affects anything
     public TagKey<Biome> getBiomeTag(String path) {
-        return getTag(VanillaRegistries.createLookup().lookupOrThrow(Registries.BIOME), id(path));
+        return getTag(VanillaRegistries.createWorldLookup().lookupOrThrow(Registries.BIOME), id(path));
     }
 
     public <T> TagKey<T> getTag(Registry<T> registry, Identifier key) {

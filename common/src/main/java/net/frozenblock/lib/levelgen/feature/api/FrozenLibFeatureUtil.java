@@ -108,7 +108,8 @@ public class FrozenLibFeatureUtil {
 		return configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(feature).orElseThrow());
 	}
 
+	// TODO: see if this 26.3 change affects anything
 	public static Holder<Feature> getHolder(ResourceKey<Feature> resourceKey) {
-		return VanillaRegistries.createLookup().lookupOrThrow(Registries.FEATURE).getOrThrow(resourceKey);
+		return VanillaRegistries.createWorldLookup().lookupOrThrow(Registries.FEATURE).getOrThrow(resourceKey);
 	}
 }

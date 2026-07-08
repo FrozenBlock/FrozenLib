@@ -48,12 +48,17 @@ import net.minecraft.resources.ResourceKey;
 public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("mod_integration"));
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), false,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
-			@Override
-			public void init() {}
-		},
-		"dummy"
-		))
+		registry -> Registry.register(
+			registry,
+			FrozenLibConstants.id("dummy"),
+			new ModIntegrationSupplier(
+				() -> new ModIntegration("dummy") {
+					@Override
+					public void init() {}
+				},
+				"frozenlib_dummy"
+			)
+		)
 	);
 
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_predicate"));
@@ -99,8 +104,9 @@ public class FrozenLibRegistries {
 		FrozenLibInitPlatformUtils.REGISTRY.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC);
     }
 
+	// TODO: see if this 26.3 change affects anything
 	public static HolderLookup.Provider vanillaRegistries() {
-		return VanillaRegistries.createLookup();
+		return VanillaRegistries.createWorldLookup();
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {

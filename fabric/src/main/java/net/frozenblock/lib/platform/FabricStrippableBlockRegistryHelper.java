@@ -17,13 +17,17 @@
 
 package net.frozenblock.lib.platform;
 
+import net.frozenblock.lib.item.api.component.BlockTransformerMappingsApi;
 import net.frozenblock.lib.platform.service.StrippableBlockRegistryHelper;
+import net.minecraft.world.item.component.BlockTransformerMappings;
 import net.minecraft.world.level.block.Block;
 
 public class FabricStrippableBlockRegistryHelper implements StrippableBlockRegistryHelper {
 
 	@Override
-	public void register(Block block, Block strippedBlock) {
-		//TODO 26.3 StrippableBlockRegistry.register(block, strippedBlock);
+	public void register(Block fromBlock, Block toBlock) {
+		BlockTransformerMappingsApi.MODIFY_AXE.register(context -> {
+			context.addLast(BlockTransformerMappings.getStrippableBlockData(fromBlock, toBlock));
+		});
 	}
 }

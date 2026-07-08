@@ -23,7 +23,6 @@ import net.fabricmc.api.Environment;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
 import net.frozenblock.lib.platform.service.BlockColorHelper;
 import net.frozenblock.lib.platform.service.BlockEntityRendererHelper;
-import net.frozenblock.lib.platform.service.CompostableRegistryHelper;
 import net.frozenblock.lib.platform.service.CreativeTabHelper;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.frozenblock.lib.platform.service.DefaultAttributeRegistryHelper;
@@ -48,7 +47,6 @@ public class FrozenLibInitPlatformUtils {
 	public static final ResourceLoaderHelper RESOURCE_LOADER = load(ResourceLoaderHelper.class);
 	public static final HudElementHelper HUD_ELEMENT = load(HudElementHelper.class);
 	public static final FlammableBlockRegistryHelper FLAMMABLE_BLOCK_REGISTRY = load(FlammableBlockRegistryHelper.class);
-	public static final CompostableRegistryHelper COMPOSTABLE_REGISTRY = load(CompostableRegistryHelper.class);
 	public static final StrippableBlockRegistryHelper STRIPPABLE_BLOCK_REGISTRY = load(StrippableBlockRegistryHelper.class);
 	public static final CreativeTabHelper CREATIVE_TAB = load(CreativeTabHelper.class);
 

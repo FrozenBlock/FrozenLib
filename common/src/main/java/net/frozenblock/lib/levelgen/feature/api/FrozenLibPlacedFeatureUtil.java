@@ -77,7 +77,8 @@ public class FrozenLibPlacedFeatureUtil {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}
 
+	// TODO: see if this 26.3 change affects anything
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
-		return VanillaRegistries.createLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
+		return VanillaRegistries.createWorldLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
 	}
 }

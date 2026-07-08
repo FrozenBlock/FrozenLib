@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.event.impl;
 
+// TODO: wait for fabric to restore the loot api
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;

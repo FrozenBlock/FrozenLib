@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.renderer;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
-import com.mojang.blaze3d.pipeline.DepthStencilState;
-import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.CompareOp;
+import com.mojang.renderpearl.api.pipeline.BlendFunction;
+import com.mojang.renderpearl.api.pipeline.ColorTargetState;
+import com.mojang.renderpearl.api.pipeline.CompareOp;
+import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -31,6 +31,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {
+	// TODO: test if these work
 	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading"))

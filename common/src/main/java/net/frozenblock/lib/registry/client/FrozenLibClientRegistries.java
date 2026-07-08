@@ -24,11 +24,12 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibClientRegistries {
-	public static final ResourceKey<net.minecraft.core.Registry<EntityTextureOverride>> ENTITY_TEXTURE_OVERRIDE_REGISTRY =
+	public static final ResourceKey<Registry<EntityTextureOverride>> ENTITY_TEXTURE_OVERRIDE_REGISTRY =
 		ResourceKey.createRegistryKey(FrozenLibConstants.id("entity_texture_override"));
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE =
 		FrozenLibRegistries.createSimple(ENTITY_TEXTURE_OVERRIDE_REGISTRY, Lifecycle.stable());

@@ -38,8 +38,7 @@ public final class BlockSetTypeBuilder {
 	private SoundEvent buttonClickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF;
 	private SoundEvent buttonClickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON;
 
-	public BlockSetTypeBuilder() {
-	}
+	public BlockSetTypeBuilder() {}
 
 	public BlockSetTypeBuilder openableByHand(boolean openableByHand) {
 		this.openableByHand = openableByHand;
