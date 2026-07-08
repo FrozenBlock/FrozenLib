@@ -24,6 +24,7 @@ import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.networking.FrozenLibClientNetworking;
 import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
 import net.frozenblock.lib.platform.model.NeoModelLayerHelper;
 import net.frozenblock.lib.platform.particle.NeoParticleProviderRegistryHelper;
@@ -61,7 +62,7 @@ public final class FrozenLibClientNeoForge {
 
 		FrozenLibModelLayers.init();
 
-		net.frozenblock.lib.networking.FrozenLibClientNetworking.registerClientReceivers();
+		FrozenLibClientNetworking.registerClientReceivers();
 
 		NeoEventBridge.initClientModStage();
 
@@ -83,23 +84,21 @@ public final class FrozenLibClientNeoForge {
 			ClientScreenShaker.reset()
 		);
 
-		NeoForge.EVENT_BUS.addListener(RegisterBlockModelsEvent.class, event -> {
+		modBus.addListener(RegisterBlockModelsEvent.class, event -> {
 			BuiltInBlockModelRegistry.REGISTER.invoker().addBuiltInBlockModels(event.getBuilder());
 		});
 
 		NeoForge.EVENT_BUS.addListener(RegisterClientCommandsEvent.class, event -> {
-				FrozenLibClientCommand.register(
-					(CommandDispatcher) event.getDispatcher(),
-					string -> LiteralArgumentBuilder.literal(string),
-					(string, type) -> RequiredArgumentBuilder.argument(string, type),
-					message -> {
-						final Minecraft minecraft = Minecraft.getInstance();
-						minecraft.gui.hud.getChat().addClientSystemMessage(message);
-						minecraft.getNarrator().saySystemChatQueued(message);
-					}
-				);
-			}
-		);
+			FrozenLibClientCommand.register(
+				(CommandDispatcher) event.getDispatcher(),
+				string -> LiteralArgumentBuilder.literal(string),
+				(string, type) -> RequiredArgumentBuilder.argument(string, type),
+				message -> {
+					final Minecraft minecraft = Minecraft.getInstance();
+					minecraft.gui.hud.getChat().addClientSystemMessage(message);
+					minecraft.getNarrator().saySystemChatQueued(message);
+				});
+			});
 
 		ClientTickEvents.START_LEVEL_TICK.register(level -> WindManager.getOrCreate(level).tick(level));
 		ClientWindUtil.init();
