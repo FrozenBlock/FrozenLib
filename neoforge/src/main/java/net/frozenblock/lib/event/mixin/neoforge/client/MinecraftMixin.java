@@ -31,7 +31,6 @@ public class MinecraftMixin {
 
 	@Inject(method = "updateLevelInEngines(Lnet/minecraft/client/multiplayer/ClientLevel;Z)V", at = @At("TAIL"))
 	private void frozenLib$afterClientLevelChange(@Nullable ClientLevel level, boolean stopSound, CallbackInfo info) {
-		// FIXME: NeoForge doesn't allow mixins on Minecraft.class for some reason..
 		if (level != null) ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.invoker().afterLevelChange(Minecraft.class.cast(this), level);
 	}
 }
