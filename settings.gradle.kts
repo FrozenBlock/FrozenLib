@@ -16,6 +16,12 @@ pluginManagement {
         maven("https://jitpack.io") {
             name = "Jitpack"
         }
+        maven("https://maven.muon.rip/releases") { // MixinMCP
+            name = "MounR"
+        }
+        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight
+            name = "SomethingCatchy (MehVahdJukaar)"
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -31,7 +37,8 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version("+")
+    id("com.possible-triangle.helper") version("+")
 }
 
 rootProject.name = "FrozenLib"
@@ -57,7 +64,6 @@ if (Constants.NEOFORGE) {
 }
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
-
 
 fun localRepository(repo: String, dependencySub: String, prefix: String = "", multi: Boolean = true, kotlin: Boolean = true, enabled: Boolean) {
     if (!enabled) return

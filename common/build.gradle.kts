@@ -1,6 +1,6 @@
 plugins {
     id("flib-multiloader-common")
-    id("dev.architectury.loom-no-remap")
+    id("com.possible-triangle.common")
     id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
 }
@@ -22,8 +22,8 @@ val licenseChecks: Boolean = githubActions
 
 val applyLicenses: Task by tasks
 
-loom {
-    accessWidenerPath = file("src/main/resources/frozenlib.classtweaker")
+common {
+    accessWidener()
 }
 
 tasks {

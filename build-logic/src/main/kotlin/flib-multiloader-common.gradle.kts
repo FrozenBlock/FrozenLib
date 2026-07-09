@@ -47,7 +47,9 @@ repositories {
     maven("https://jitpack.io")
     maven("https://thedarkcolour.github.io/KotlinForForge/") {
         name = "KotlinForForge"
-        content { includeGroup("thedarkcolour") }
+        content {
+            includeGroup("thedarkcolour")
+        }
     }
     exclusiveContent {
         forRepository {
