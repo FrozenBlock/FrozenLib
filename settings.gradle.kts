@@ -7,9 +7,6 @@ pluginManagement {
         maven("https://maven.fabricmc.net") {
             name = "Fabric"
         }
-        maven("https://maven.architectury.dev/") {
-            name = "Architectury"
-        }
         maven("https://maven.neoforged.net/releases") {
             name = "NeoForged"
         }
@@ -47,7 +44,7 @@ includeBuild("build-logic")
 
 object Constants {
     const val FABRIC: Boolean = true
-    const val NEOFORGE: Boolean = true
+    const val NEOFORGE: Boolean = false
 }
 
 include("flib-common")

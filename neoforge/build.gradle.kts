@@ -2,8 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("flib-multiloader-loader")
-    id("dev.architectury.loom-no-remap")
+    id("com.possible-triangle.neoforge")
     id("com.gradleup.shadow")
     id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
@@ -49,7 +48,12 @@ repositories {
     }
 }
 
-loom {
+neoForge {
+    //dependOn(project(":flib-common"))
+    //accessWidener(project(":flib-common"))
+}
+
+/*loom {
     accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
     enableTransitiveAccessWideners = true
 
@@ -76,7 +80,7 @@ loom {
 
 extensions.getByType<net.fabricmc.loom.api.LoomGradleExtensionAPI>().neoForge.run {
     accessTransformer(file("src/main/resources/META-INF/neo/accesstransformer.cfg"))
-}
+}*/
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
@@ -123,8 +127,7 @@ val relocApi: Configuration by configurations.creating {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraft_version")
-    "neoForge"("net.neoforged:neoforge:$neoforge_version")
+    //"neoForge"("net.neoforged:neoforge:$neoforge_version")
 
     // Toml
     api("com.moandjiezana.toml:toml4j:$toml4j_version")
@@ -198,7 +201,7 @@ tasks {
 
     withType(KotlinCompile::class) {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
+            //todo jvmTarget = JvmTarget.JVM_25
         }
     }
 }

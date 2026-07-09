@@ -9,8 +9,7 @@ import java.nio.file.Files
 import java.util.*
 
 plugins {
-    id("flib-multiloader-loader")
-    id("dev.architectury.loom-no-remap")
+    id("com.possible-triangle.fabric")
     id("org.ajoberstar.grgit")
     id("org.quiltmc.gradle.licenser")
     id("me.modmuss50.mod-publish-plugin")
@@ -66,7 +65,7 @@ val datagen by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
 }
 
-loom {
+/*loom {
     runtimeOnlyLog4j.set(true)
 
     runs {
@@ -125,7 +124,7 @@ loom {
             ideConfigGenerated(true)
         }
     }
-}
+}*/
 
 val includeImplementation: Configuration by configurations.creating
 
@@ -201,7 +200,6 @@ sourceSets.configureEach {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft("com.mojang:minecraft:$minecraft_version")
     implementation("net.fabricmc:fabric-loader:$loader_version")
     testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
 
@@ -305,7 +303,7 @@ tasks {
 
     withType(KotlinCompile::class) {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
+            //jvmTarget = JvmTarget.JVM_25
             //apiVersion = KotlinVersion.KOTLIN_2_1
             //languageVersion = KotlinVersion.KOTLIN_2_1
         }
@@ -520,6 +518,6 @@ publishMods {
 }
 
 val publishMod by tasks.register("publishMod") {
-    dependsOn(tasks.publish)
-    dependsOn(tasks.publishMods)
+//    dependsOn(tasks.publish)
+//    dependsOn(tasks.publishMods)
 }

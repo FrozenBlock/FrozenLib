@@ -1,5 +1,4 @@
 plugins {
-    id("flib-multiloader-common")
     id("com.possible-triangle.common")
     id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
@@ -23,7 +22,7 @@ val licenseChecks: Boolean = githubActions
 val applyLicenses: Task by tasks
 
 common {
-    accessWidener()
+    accessWidener(file("src/main/resources/frozenlib.classtweaker"))
 }
 
 tasks {
@@ -39,7 +38,6 @@ tasks {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraft_version")
 
     // only for @Environment
     api("net.fabricmc:fabric-loader:${loader_version}")
@@ -89,30 +87,5 @@ configurations {
     create("commonResources") {
         isCanBeResolved = false
         isCanBeConsumed = true
-    }
-}
-
-artifacts {
-    add("commonJava", sourceSets.main.get().java.sourceDirectories.singleFile)
-    add("commonResources", mergeCommonResources.map { it.destinationDir }) {
-        builtBy(mergeCommonResources)
-    }
-}
-
-val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
-listOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { variant ->
-    configurations.named(variant) {
-        attributes {
-            attribute(loaderAttribute, "common")
-        }
-    }
-}
-sourceSets.configureEach {
-    listOf(compileClasspathConfigurationName, runtimeClasspathConfigurationName).forEach { variant ->
-        configurations.named(variant) {
-            attributes {
-                attribute(loaderAttribute, "common")
-            }
-        }
     }
 }
