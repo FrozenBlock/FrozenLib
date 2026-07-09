@@ -21,4 +21,6 @@ import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 
 public interface DataAttachmentHelper {
 	<T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder);
+
+	String getAttachmentsNBTKey();
 }

@@ -28,6 +28,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -79,6 +80,11 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 			initializer,
 			builder.isCopyOnDeath()
 		);
+	}
+
+	@Override
+	public String getAttachmentsNBTKey() {
+		return AttachmentHolder.ATTACHMENTS_NBT_KEY;
 	}
 
 	private static final class NeoDataAttachmentType<T> implements DataAttachmentType<T> {

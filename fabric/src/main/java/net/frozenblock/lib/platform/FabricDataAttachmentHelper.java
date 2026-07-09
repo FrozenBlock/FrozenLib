@@ -48,6 +48,11 @@ public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 		return new FabricDataAttachmentType<>(attachmentType);
 	}
 
+	@Override
+	public String getAttachmentsNBTKey() {
+		return AttachmentTarget.NBT_ATTACHMENT_KEY;
+	}
+
 	private record FabricDataAttachmentType<T>(AttachmentType<T> type) implements DataAttachmentType<T> {
 
 		@Override
