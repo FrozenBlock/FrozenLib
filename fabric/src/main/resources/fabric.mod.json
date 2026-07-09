@@ -33,7 +33,7 @@
         "net.frozenblock.lib.FrozenLibClientFabric"
 	  ],
     "server": [
-      "net.frozenblock.lib.FrozenLibServer"
+      "net.frozenblock.lib.FrozenLibServerFabric"
     ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"

@@ -25,7 +25,7 @@ import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 
 @Environment(EnvType.SERVER)
-public class FrozenLibServer implements DedicatedServerModInitializer {
+public class FrozenLibServerFabric implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
