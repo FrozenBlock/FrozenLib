@@ -47,7 +47,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.1.0")
+        compileOnly("net.mehvahdjukaar:candlelight:+")
     }
 
     java {
