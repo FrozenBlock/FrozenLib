@@ -17,14 +17,14 @@
 
 package net.frozenblock.lib.platform;
 
-import lombok.experimental.UtilityClass;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
-import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.frozenblock.lib.platform.service.GameHelper;
+import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
-/**
- * Services that DO NOT reference any {@code Minecraft} classes.
- */
-@UtilityClass
-public class FrozenLibEarlyPlatformUtils {
-	public static final LoaderHelper LOADER = load(LoaderHelper.class);
+public class NeoGameHelper implements GameHelper {
+
+	@Override
+	public Object getGameObject() {
+		return FrozenLibEarlyPlatformUtils.LOADER.isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();
+	}
 }

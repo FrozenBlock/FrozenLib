@@ -19,12 +19,12 @@ package net.frozenblock.lib.platform;
 
 import lombok.experimental.UtilityClass;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
-import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.frozenblock.lib.platform.service.MobCategoryHelper;
 
 /**
- * Services that DO NOT reference any {@code Minecraft} classes.
+ * Services related to Mixin functionality.
  */
 @UtilityClass
-public class FrozenLibEarlyPlatformUtils {
-	public static final LoaderHelper LOADER = load(LoaderHelper.class);
+public class FrozenLibMixinPlatformUtils {
+	public static final MobCategoryHelper MOB_CATEGORY = load(MobCategoryHelper.class);
 }
