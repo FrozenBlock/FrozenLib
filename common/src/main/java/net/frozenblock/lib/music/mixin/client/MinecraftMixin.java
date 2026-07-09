@@ -42,7 +42,6 @@ public class MinecraftMixin {
 	@Nullable
 	public ClientLevel level;
 
-	// TODO: why the F*CK DOES NEOFORGE BLOCK ALL MIXINS ON MINECRAFT??!?!?!?!
 	@ModifyExpressionValue(
 		method = "getSituationalMusic",
 		at = @At(

@@ -112,6 +112,7 @@ public class NeoLoaderHelper implements LoaderHelper {
 		};
 	}
 
+	// FIXME
 	@Override
 	public Object getGameObject() {
 		return isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();

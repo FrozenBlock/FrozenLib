@@ -38,6 +38,7 @@ public abstract class MinecraftServerMixin {
 	@Final
 	private LayeredRegistryAccess<RegistryLayer> registries;
 
+	// TODO: work on fixing services to NOT load minecraft classes early UNTIL I DONT CRASH.
 	@Inject(method = "createLevels", at = @At("TAIL"))
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
 		throw new AssertionError();
