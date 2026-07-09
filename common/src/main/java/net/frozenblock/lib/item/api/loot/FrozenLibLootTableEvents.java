@@ -36,9 +36,10 @@ import org.jetbrains.annotations.Nullable;
  * A class containing events related to loot tables.
  * <p>
  * On Fabric, {@link #REPLACE}, {@link #MODIFY}, {@link #ALL_LOADED}, and {@link #MODIFY_DROPS} redirect to the
- * matching events in {@code net.fabricmc.fabric.api.loot.v3.LootTableEvents}. On NeoForge, {@link #REPLACE} and
- * {@link #MODIFY} are driven by {@code net.neoforged.neoforge.event.LootTableLoadEvent}, while
- * {@link #ALL_LOADED} and {@link #MODIFY_DROPS} (which have no NeoForge equivalent) are implemented via mixin.
+ * matching events in {@code net.fabricmc.fabric.api.loot.v3.LootTableEvents}.
+ * <p>
+ * On NeoForge, {@link #REPLACE} and {@link #MODIFY} are driven by {@code net.neoforged.neoforge.event.LootTableLoadEvent},
+ * while {@link #ALL_LOADED} and {@link #MODIFY_DROPS} (which have no NeoForge equivalent) are implemented via mixin.
  */
 public class FrozenLibLootTableEvents {
 

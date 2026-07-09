@@ -49,8 +49,6 @@ public interface LoaderHelper {
 
 	Env getEnv();
 
-	Object getGameObject();
-
 	String[] getLaunchArgs();
 
 	/**

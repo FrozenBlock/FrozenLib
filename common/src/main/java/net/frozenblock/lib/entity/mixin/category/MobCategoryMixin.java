@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import net.frozenblock.lib.entity.api.category.FrozenMobCategories;
 import net.frozenblock.lib.entity.impl.category.FrozenMobCategory;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibMixinPlatformUtils;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -74,7 +74,7 @@ public class MobCategoryMixin {
 		final ArrayList<String> internalIds = new ArrayList<>();
 		for (MobCategory category : categories) internalIds.add(category.name());
 
-		final var newCategories = FrozenLibEarlyPlatformUtils.MOB_CATEGORY.gatherMobCategories();
+		final var newCategories = FrozenLibMixinPlatformUtils.MOB_CATEGORY.gatherMobCategories();
 
 		for (FrozenMobCategory category : newCategories) {
 			final String namespace = category.key().getNamespace();

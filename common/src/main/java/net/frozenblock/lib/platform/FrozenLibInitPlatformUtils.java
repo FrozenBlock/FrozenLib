@@ -29,6 +29,7 @@ import net.frozenblock.lib.platform.service.DefaultAttributeRegistryHelper;
 import net.frozenblock.lib.platform.service.EntityRendererHelper;
 import net.frozenblock.lib.platform.service.EventHelper;
 import net.frozenblock.lib.platform.service.FlammableBlockRegistryHelper;
+import net.frozenblock.lib.platform.service.GameHelper;
 import net.frozenblock.lib.platform.service.HudElementHelper;
 import net.frozenblock.lib.platform.service.ModelLayerHelper;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
@@ -39,6 +40,7 @@ import net.frozenblock.lib.platform.service.StrippableBlockRegistryHelper;
 
 @UtilityClass
 public class FrozenLibInitPlatformUtils {
+	public static final GameHelper GAME = load(GameHelper.class);
 	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
 	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
 	public static final DefaultAttributeRegistryHelper DEFAULT_ATTRIBUTE_REGISTRY = load(DefaultAttributeRegistryHelper.class);

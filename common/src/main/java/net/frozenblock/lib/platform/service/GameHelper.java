@@ -15,16 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.service;
 
-import lombok.experimental.UtilityClass;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
-import net.frozenblock.lib.platform.service.LoaderHelper;
-
-/**
- * Services that DO NOT reference any {@code Minecraft} classes.
- */
-@UtilityClass
-public class FrozenLibEarlyPlatformUtils {
-	public static final LoaderHelper LOADER = load(LoaderHelper.class);
+public interface GameHelper {
+	Object getGameObject();
 }

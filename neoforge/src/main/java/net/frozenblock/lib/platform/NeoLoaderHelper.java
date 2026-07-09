@@ -33,11 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import net.frozenblock.lib.platform.api.Env;
 import net.frozenblock.lib.platform.service.LoaderHelper;
-import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jspecify.annotations.Nullable;
 
 public class NeoLoaderHelper implements LoaderHelper {
@@ -110,11 +108,6 @@ public class NeoLoaderHelper implements LoaderHelper {
 			case CLIENT -> Env.CLIENT;
 			case DEDICATED_SERVER -> Env.SERVER;
 		};
-	}
-
-	@Override
-	public Object getGameObject() {
-		return isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();
 	}
 
 	@Override

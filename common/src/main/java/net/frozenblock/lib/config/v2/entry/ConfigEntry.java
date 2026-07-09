@@ -35,6 +35,7 @@ import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.PlayerLookup;
 import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -113,7 +114,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 		if (this.syncedValue.isPresent() && this.syncedValue.get() == value) return;
 
 		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) {
-			final MinecraftServer server = (MinecraftServer) FrozenLibEarlyPlatformUtils.LOADER.getGameObject();
+			final MinecraftServer server = (MinecraftServer) FrozenLibInitPlatformUtils.GAME.getGameObject();
 			if (server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
 				ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));

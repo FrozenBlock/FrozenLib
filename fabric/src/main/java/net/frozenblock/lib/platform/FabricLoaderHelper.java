@@ -96,11 +96,6 @@ public class FabricLoaderHelper implements LoaderHelper {
 	}
 
 	@Override
-	public Object getGameObject() {
-		return FabricLoader.getInstance().getGameInstance();
-	}
-
-	@Override
 	public String[] getLaunchArgs() {
 		return FabricLoader.getInstance().getLaunchArguments(true);
 	}

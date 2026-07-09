@@ -141,7 +141,6 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 			: Optional.of(Pair.of(target, disturbances));
 	}
 
-
 	public WindDisturbances add(WindDisturbance<?> windDisturbance) {
 		final List<WindDisturbance<?>> newDisturbances = new ArrayList<>(this.windDisturbances);
 		newDisturbances.add(windDisturbance);
