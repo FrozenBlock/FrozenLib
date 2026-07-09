@@ -19,7 +19,7 @@ pluginManagement {
         maven("https://maven.muon.rip/releases") { // MixinMCP
             name = "MounR"
         }
-        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight
+        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
             name = "SomethingCatchy (MehVahdJukaar)"
         }
         mavenCentral()
