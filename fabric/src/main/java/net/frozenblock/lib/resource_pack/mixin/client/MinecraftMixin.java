@@ -40,7 +40,7 @@ public class MinecraftMixin {
 	private DirectoryValidator directoryValidator;
 
 	/**
-	 * @reason NeoForge seems extremely weird with Mixins on Minecraft, but luckily provides an event for this.
+	 * NeoForge has a separate event for adding {@link PackRepository}s.
 	 */
 	@ModifyExpressionValue(
 		method = "<init>",

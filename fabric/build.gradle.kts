@@ -181,6 +181,7 @@ repositories {
     flatDir {
         dirs("libs")
     }
+    mavenCentral()
 }
 
 val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
@@ -235,6 +236,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks {
@@ -328,8 +330,6 @@ val sourcesJar: Jar by tasks
 val javadocJar: Jar by tasks
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
 }
 
 artifacts {

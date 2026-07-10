@@ -45,7 +45,6 @@ tasks {
 }
 
 dependencies {
-
     // only for @Environment
     api("net.fabricmc:fabric-loader:${fabric_loader_version}")
 
@@ -70,14 +69,6 @@ dependencies {
     compileOnly("com.personthecat:fresult:$fresult_version")
 
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/generated")
-        }
-    }
 }
 
 val mergeCommonResources by tasks.registering(Sync::class) {
