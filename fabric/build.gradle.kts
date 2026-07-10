@@ -58,14 +58,15 @@ val testmod by sourceSets.registering {
     compileClasspath += sourceSets.main.get().compileClasspath
 }
 
-val datagen by sourceSets.registering {
-    compileClasspath += sourceSets.main.get().compileClasspath
-    runtimeClasspath += sourceSets.main.get().runtimeClasspath
-}
+
 
 fabric {
     dependOn(project(":flib-common"))
     accessWidener(project(":flib-common"))
+    dataGen {
+        owner = project(":flib-common")
+        splitSourceSet("datagen")
+    }
 }
 
 /*loom {
