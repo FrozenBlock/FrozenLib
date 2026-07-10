@@ -146,13 +146,9 @@ transitive-accessible method net/minecraft/world/damagesource/DamageSources sour
 transitive-accessible method net/minecraft/world/level/block/Block registerDefaultState (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/CompoundContainer container1 Lnet/minecraft/world/Container;
 transitive-accessible field net/minecraft/world/CompoundContainer container2 Lnet/minecraft/world/Container;
-<<<<<<< Updated upstream
-#transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
-=======
 transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible method net/minecraft/world/level/block/CauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible method net/minecraft/world/level/block/LayeredCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
->>>>>>> Stashed changes
 transitive-accessible class net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo
 transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
@@ -255,26 +251,6 @@ transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 
 # Biomes
-<<<<<<< Updated upstream
-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
-accessible method net/minecraft/world/level/biome/Biome$ClimateSettings <init> (ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V
-accessible field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
-mutable field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings featureSet Ljava/util/function/Supplier;
-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings featureSet Ljava/util/function/Supplier;
-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings boneMealFeatures Ljava/util/function/Supplier;
-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings boneMealFeatures Ljava/util/function/Supplier;
-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
-accessible field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
-mutable field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
-accessible field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
-mutable field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
-accessible field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
-mutable field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
-=======
 transitive-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 transitive-accessible method net/minecraft/world/level/biome/Biome$ClimateSettings <init> (ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V
 transitive-accessible field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
@@ -293,7 +269,6 @@ transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings mob
 transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
 transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
 transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
->>>>>>> Stashed changes
 transitive-accessible method net/minecraft/data/worldgen/biome/OverworldBiomes calculateSkyColor (F)I
 transitive-accessible method net/minecraft/world/level/biome/OverworldBiomeBuilder addBiomes (Ljava/util/function/Consumer;)V
 
@@ -399,11 +374,6 @@ transitive-accessible class net/minecraft/core/RegistrySetBuilder$BuildState
 transitive-accessible method net/minecraft/core/RegistrySetBuilder$BuildState <init> (Lnet/minecraft/core/RegistrySetBuilder$UniversalOwner;Lnet/minecraft/core/RegistrySetBuilder$UniversalLookup;Ljava/util/Map;Ljava/util/Map;Ljava/util/List;)V
 
 #transitive-inject-interface net/minecraft/core/MappedRegistry org/quiltmc/qsl/frozenblock/core/registry/api/event/RegistryEventStorage
-<<<<<<< Updated upstream
-accessible class net/minecraft/core/RegistrySetBuilder$BuildState
-accessible method net/minecraft/core/RegistrySetBuilder$BuildState <init> (Lnet/minecraft/core/RegistrySetBuilder$UniversalOwner;Lnet/minecraft/core/RegistrySetBuilder$UniversalLookup;Ljava/util/Map;Ljava/util/Map;Ljava/util/List;)V
-=======
->>>>>>> Stashed changes
 
 # Sounds
 transitive-accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;
