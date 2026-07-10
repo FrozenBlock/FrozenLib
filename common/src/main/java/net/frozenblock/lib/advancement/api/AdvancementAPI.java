@@ -34,6 +34,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
 
+// TODO: NeoForge does not support widening access to record fields, and neither loader supports this via accessor mixins.
+// The Advancement API needs to be completely rewritten so it *replaces* the entire advancement, instead of modifying it.
 @UtilityClass
 public final class AdvancementAPI {
 
