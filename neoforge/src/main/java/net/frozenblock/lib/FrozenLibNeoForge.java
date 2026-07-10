@@ -23,6 +23,7 @@ import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
 import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
@@ -127,10 +128,10 @@ public final class FrozenLibNeoForge {
 		NeoForge.EVENT_BUS.addListener(LevelTickEvent.Post.class, event -> {
 			Level level = event.getLevel();
 			if (!(level instanceof ServerLevel serverLevel)) return;
-			ScreenShakes.tick(serverLevel, serverLevel);
+			ScreenShakes.tick(serverLevel, (DataAttachmentTarget) serverLevel);
 			for (Entity entity : serverLevel.getAllEntities()) {
 				if (entity.isRemoved()) continue;
-				ScreenShakes.tick(serverLevel, entity);
+				ScreenShakes.tick(serverLevel, (DataAttachmentTarget) entity);
 			}
 		});
 	}

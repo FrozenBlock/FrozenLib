@@ -47,10 +47,10 @@ public class NeoAttachmentSyncMixin {
 		final DataAttachmentTarget target;
 		if (holder instanceof Entity entity) {
 			level = entity.level();
-			target = entity;
+			target = (DataAttachmentTarget) entity;
 		} else if (holder instanceof BlockEntity blockEntity) {
 			level = blockEntity.getLevel();
-			target = blockEntity;
+			target = (DataAttachmentTarget) blockEntity;
 		} else {
 			return;
 		}
