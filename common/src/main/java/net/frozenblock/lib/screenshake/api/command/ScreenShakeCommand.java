@@ -23,6 +23,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.commands.CommandSourceStack;
@@ -63,7 +64,7 @@ public class ScreenShakeCommand {
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
 		ScreenShakes.add(
-			source.getLevel(),
+			((DataAttachmentTarget) source.getLevel()),
 			ScreenShake.builder(source.getLevel(), vec3)
 				.intensity(intensity)
 				.duration(duration)
@@ -90,7 +91,7 @@ public class ScreenShakeCommand {
 	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		for (Entity entity : entities) {
 			ScreenShakes.add(
-				entity,
+				((DataAttachmentTarget) entity),
 				ScreenShake.builder(entity)
 					.intensity(intensity)
 					.duration(duration)
@@ -118,13 +119,13 @@ public class ScreenShakeCommand {
 
 	private static int removeLevelScreenShakes(CommandSourceStack source) {
 		final Level level = source.getLevel();
-		final ScreenShakes screenShakes = ScreenShakes.get(level);
+		final ScreenShakes screenShakes = ScreenShakes.get(((DataAttachmentTarget) level));
 		if (screenShakes.isEmpty()) {
 			source.sendFailure(Component.translatable("commands.screenshake.remove.level.fail"));
 			return 0;
 		}
 
-		ScreenShakes.removeAttachment(level);
+		ScreenShakes.removeAttachment(((DataAttachmentTarget) level));
 
 		final int screenShakeCount = screenShakes.screenShakes().size();
 		final boolean oneScreenShake = screenShakeCount == 1;
@@ -141,11 +142,11 @@ public class ScreenShakeCommand {
 	private static int removeEntityScreenShakes(CommandSourceStack source, Collection<? extends Entity> entities) {
 		final List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			final ScreenShakes screenShakes = ScreenShakes.get(entity);
+			final ScreenShakes screenShakes = ScreenShakes.get(((DataAttachmentTarget) entity));
 			if (screenShakes.isEmpty()) continue;
 
 			affectedEntities.add(entity);
-			ScreenShakes.removeAttachment(entity);
+			ScreenShakes.removeAttachment(((DataAttachmentTarget) entity));
 		}
 
 		final int entityCount = affectedEntities.size();

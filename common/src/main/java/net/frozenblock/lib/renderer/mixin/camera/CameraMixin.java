@@ -20,6 +20,7 @@ package net.frozenblock.lib.renderer.mixin.camera;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.renderer.impl.CameraRenderStateInterface;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.Mth;
@@ -43,8 +44,7 @@ public class CameraMixin {
 		)
 	)
 	public Quaternionf frozenLib$extractHorizontalOrientation(Quaternionf original, CameraRenderState cameraState) {
-		cameraState.frozenLib$setHorizontalOrientation(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, original, new Quaternionf()));
+		((CameraRenderStateInterface) cameraState).frozenLib$setHorizontalOrientation(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, original, new Quaternionf()));
 		return original;
 	}
-
 }

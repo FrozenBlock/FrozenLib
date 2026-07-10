@@ -25,6 +25,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -60,7 +61,7 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 		minecraft.level.entitiesForRendering().forEach(entities::add);
 		entities.sort(Comparator.comparingDouble(e -> -e.position().distanceTo(cameraPos)));
 		for (Entity entity : entities) {
-			final SpottingIcons icons = SpottingIcons.ATTACHMENT_TYPE.getAttachedOrGet(entity, () -> SpottingIcons.EMPTY);
+			final SpottingIcons icons = SpottingIcons.ATTACHMENT_TYPE.getAttachedOrGet((DataAttachmentTarget) entity, () -> SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
 			final BlockPos blockPos = entity.blockPosition();

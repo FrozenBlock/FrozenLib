@@ -22,6 +22,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -46,7 +47,7 @@ public class DebugEntryStructureStatuses implements DebugScreenEntry {
 		final Entity entity = minecraft.getCameraEntity();
 		if (entity == null) return;
 
-		StructureStatus.ATTACHMENT_TYPE.getAttachedOrGet(entity, ImmutableList::of).forEach(structureStatus -> {
+		StructureStatus.ATTACHMENT_TYPE.getAttachedOrGet((DataAttachmentTarget) entity, ImmutableList::of).forEach(structureStatus -> {
 			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
 		});
 	}

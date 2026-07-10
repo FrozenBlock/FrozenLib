@@ -22,6 +22,7 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.monster.skeleton.WitherSkeleton;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
@@ -45,7 +46,7 @@ public class WitherSkeletonMixin {
 		ItemStack projectile, float power, ItemStack firingWeapon, CallbackInfoReturnable<AbstractArrow> info,
 		@Local(name = "arrow") AbstractArrow arrow
 	) {
-		final FireData fireData = FireData.ATTACHMENT.get(WitherSkeleton.class.cast(this));
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) WitherSkeleton.class.cast(this));
 		if (fireData == null || !fireData.type().value().spreadSettings().spreadsFromIgniteEnchantments()) return;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(

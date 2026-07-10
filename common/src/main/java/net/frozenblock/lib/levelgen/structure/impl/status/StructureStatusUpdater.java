@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.networking.PlayerLookup;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -57,8 +58,8 @@ public class StructureStatusUpdater {
 			newStructureStatuses.add(new StructureStatus(structureRegistry.getKey(structure), insidePiece));
 		}
 
-		if (!newStructureStatuses.equals(StructureStatus.ATTACHMENT_TYPE.get(player))) {
-			StructureStatus.ATTACHMENT_TYPE.set(player, newStructureStatuses);
+		if (!newStructureStatuses.equals(StructureStatus.ATTACHMENT_TYPE.get((DataAttachmentTarget) player))) {
+			StructureStatus.ATTACHMENT_TYPE.set((DataAttachmentTarget) player, newStructureStatuses);
 		}
 	}
 }

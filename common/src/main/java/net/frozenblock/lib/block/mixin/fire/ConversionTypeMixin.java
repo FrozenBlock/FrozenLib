@@ -18,6 +18,7 @@
 package net.frozenblock.lib.block.mixin.fire;
 
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.ConversionType;
 import net.minecraft.world.entity.Mob;
@@ -31,8 +32,8 @@ public class ConversionTypeMixin {
 
 	@Inject(method = "convertCommon", at = @At("HEAD"))
 	private static void frozenLib$setFireTypeOnConversion(Mob from, Mob to, ConversionParams params, CallbackInfo info) {
-		final FireData fireData = FireData.ATTACHMENT.get(from);
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) from);
 		if (fireData == null) return;
-		FireData.ATTACHMENT.set(to, new FireData(fireData.type()));
+		FireData.ATTACHMENT.set((DataAttachmentTarget) to, new FireData(fireData.type()));
 	}
 }

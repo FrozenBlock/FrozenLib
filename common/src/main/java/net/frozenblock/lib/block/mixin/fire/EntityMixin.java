@@ -23,6 +23,7 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
@@ -78,7 +79,7 @@ public class EntityMixin {
 		)
 	)
 	public void frozenLib$setSharedFlagOnFire(Entity instance, int flag, boolean value, Operation<Void> original) {
-		if (!instance.level().isClientSide() && !value) FireData.ATTACHMENT.remove(instance);
+		if (!instance.level().isClientSide() && !value) FireData.ATTACHMENT.remove((DataAttachmentTarget) instance);
 		original.call(instance, flag, value);
 	}
 }

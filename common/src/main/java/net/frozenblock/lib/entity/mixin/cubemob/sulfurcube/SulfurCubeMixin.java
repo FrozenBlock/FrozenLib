@@ -24,6 +24,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.Map;
 import java.util.Optional;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -74,9 +75,9 @@ public class SulfurCubeMixin {
 		final SulfurCube sulfurCube = SulfurCube.class.cast(this);
 		if (!(sulfurCube.level() instanceof ServerLevel level)) return;
 
-		final boolean wasPowered = SulfurCubeEvents.POWERED.getOrDefault(sulfurCube, false);
+		final boolean wasPowered = SulfurCubeEvents.POWERED.getOrDefault((DataAttachmentTarget) sulfurCube, false);
 		final boolean isPowered = level.getBestOwnOrNeighbourSignal(BlockPos.containing(sulfurCube.position())) != 0;
-		SulfurCubeEvents.POWERED.set(sulfurCube, isPowered);
+		SulfurCubeEvents.POWERED.set((DataAttachmentTarget) sulfurCube, isPowered);
 		if (!wasPowered && isPowered) {
 			SulfurCubeEvents.ON_POWER_CHANGED.invoker().onPowerChanged(sulfurCube, true);
 		} else if (wasPowered && !isPowered) {

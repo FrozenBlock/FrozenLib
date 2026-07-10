@@ -21,6 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Holder;
@@ -69,13 +70,13 @@ public final class FireTypes {
 	}
 
 	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {
-		final FireData fireData = FireData.ATTACHMENT.get(entity);
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) entity);
 		if (fireData != null) return fireData.type().unwrapKey();
 		return Optional.empty();
 	}
 
 	public static Optional<Holder<FireType>> getFromEntityOrDefault(Entity entity) {
-		return getFromDataOrDefault(entity.registryAccess(), FireData.ATTACHMENT.get(entity));
+		return getFromDataOrDefault(entity.registryAccess(), FireData.ATTACHMENT.get((DataAttachmentTarget) entity));
 	}
 
 	public static Optional<Holder<FireType>> getFromDataOrDefault(RegistryAccess registryAccess, @Nullable FireData data) {

@@ -86,8 +86,8 @@ public class SaveableItemCooldowns {
 		).apply(instance, SaveableCooldownInstance::new));
 
 		public static SaveableCooldownInstance makeFromCooldownInstance(Identifier cooldownGroup, ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
-			int cooldownLeft = cooldownInstance.endTime - tickCount;
-			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;
+			int cooldownLeft = cooldownInstance.endTime() - tickCount;
+			int totalCooldownTime = cooldownInstance.endTime() - cooldownInstance.startTime();
 			return new SaveableCooldownInstance(cooldownGroup, cooldownLeft, totalCooldownTime);
 		}
 	}

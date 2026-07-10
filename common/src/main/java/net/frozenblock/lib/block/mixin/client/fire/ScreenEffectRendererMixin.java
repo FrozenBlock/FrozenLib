@@ -23,6 +23,7 @@ import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.Sheets;
@@ -53,7 +54,7 @@ public class ScreenEffectRendererMixin {
 	public TextureAtlasSprite frozenLib$submitFireType(
 		SpriteGetter instance, SpriteId spriteId, Operation<TextureAtlasSprite> original
 	) {
-		final FireData fireData = FireData.ATTACHMENT.get(this.minecraft.player);
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) this.minecraft.player);
 		if (fireData == null) return original.call(instance, spriteId);
 
 		final Optional<Identifier> optionalTexture = fireData.type().value().textures().texture1();

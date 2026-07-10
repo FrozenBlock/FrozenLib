@@ -55,17 +55,17 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 
 	public static void init() {
 		EntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> {
-			WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity);
-			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
-			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
+			WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) entity);
+			addIf(level, (DataAttachmentTarget) entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
+			addIf(level, (DataAttachmentTarget) entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
 		});
-		EntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
+		EntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder((DataAttachmentTarget) entity));
 
-		BlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
-		BlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
+		BlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) blockEntity));
+		BlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder((DataAttachmentTarget) blockEntity));
 
-		ChunkLifecycleEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceHolder(chunk));
-		ChunkLifecycleEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder(chunk));
+		ChunkLifecycleEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) chunk));
+		ChunkLifecycleEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder((DataAttachmentTarget) chunk));
 	}
 
 	public static void set(Level level, DataAttachmentTarget target, WindDisturbances windDisturbances) {

@@ -22,6 +22,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -45,7 +46,7 @@ public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> 
 		T entity, S state
 	) {
 		if (original) {
-			final FireData fireData = FireData.ATTACHMENT.get(entity);
+			final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) entity);
 			if (fireData != null) ((FrozenLibRenderState) state).frozenLib$setData(FrozenLibRenderStateDataKeys.FIRE_TYPE, fireData.type().value());
 		}
 		return original;

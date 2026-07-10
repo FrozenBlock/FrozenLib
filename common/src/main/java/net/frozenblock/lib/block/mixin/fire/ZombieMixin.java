@@ -21,6 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -41,7 +42,7 @@ public class ZombieMixin {
 		)
 	)
 	public void frozenLib$setFireType(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> info) {
-		final FireData fireData = FireData.ATTACHMENT.get(Zombie.class.cast(this));
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) Zombie.class.cast(this));
 		if (fireData == null || !fireData.type().value().spreadSettings().spreadsFromZombieAttack()) return;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(

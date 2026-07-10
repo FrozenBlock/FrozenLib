@@ -41,7 +41,7 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
     public void frozenLib$changeCooldown(Identifier cooldownGroup, int additional) {
 		this.cooldowns.computeIfPresent(cooldownGroup, (foundCooldownGroup, cooldown) -> {
             this.frozenLib$onCooldownChanged(foundCooldownGroup, additional);
-			return new CooldownInstance(cooldown.startTime, cooldown.endTime + additional);
+			return new CooldownInstance(cooldown.startTime(), cooldown.endTime() + additional);
         });
     }
 

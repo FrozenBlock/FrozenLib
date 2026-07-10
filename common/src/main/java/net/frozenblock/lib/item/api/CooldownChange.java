@@ -33,9 +33,8 @@ public class CooldownChange {
 		final ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(cooldownGroup);
 		if (entry == null) return;
 
-		final int between = entry.endTime - entry.startTime;
+		final int between = entry.endTime() - entry.startTime();
 		if ((between + additionalCooldown) <= min) return;
 		CooldownInterface.class.cast(player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
 	}
-
 }

@@ -20,6 +20,7 @@ package net.frozenblock.lib.screenshake.api.client;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.client.Minecraft;
@@ -57,7 +58,7 @@ public class ClientScreenShaker {
 		float totalIntensity = 0;
 		int count = 0;
 
-		for (ScreenShake screenShake : ScreenShakes.get(level).screenShakes()) {
+		for (ScreenShake screenShake : ScreenShakes.get(((DataAttachmentTarget) level)).screenShakes()) {
 			final float shakeIntensity = screenShake.calculateIntensityAt(cameraPos, gameTime);
 			if (shakeIntensity <= 0) continue;
 			totalIntensity += shakeIntensity;
@@ -66,7 +67,7 @@ public class ClientScreenShaker {
 		}
 
 		for (Entity entity : level.entitiesForRendering()) {
-			for (ScreenShake screenShake : ScreenShakes.get(entity).screenShakes()) {
+			for (ScreenShake screenShake : ScreenShakes.get(((DataAttachmentTarget) entity)).screenShakes()) {
 				final float shakeIntensity = screenShake.calculateIntensityAt(cameraPos, gameTime, entity);
 				if (shakeIntensity <= 0) continue;
 				totalIntensity += shakeIntensity;

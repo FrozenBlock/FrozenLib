@@ -21,6 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -54,6 +55,6 @@ public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPa
 
 	public static void handle(CapeCustomizePacket packet, ServerPlayer player) {
 		final boolean empty = packet.cape().isEmpty() || packet.cape.get().dummy() || !CapeUtil.canPlayerUserCape(player.getUUID(), packet.cape().get());
-		Cape.ATTACHMENT_TYPE.set(player, empty ? Optional.empty() : packet.cape());
+		Cape.ATTACHMENT_TYPE.set((DataAttachmentTarget) player, empty ? Optional.empty() : packet.cape());
 	}
 }

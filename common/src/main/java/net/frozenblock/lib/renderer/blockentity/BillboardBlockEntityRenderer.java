@@ -21,6 +21,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderTypes;
+import net.frozenblock.lib.renderer.impl.CameraRenderStateInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -68,10 +69,10 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		S renderState,
 		PoseStack poseStack,
 		SubmitNodeCollector collector,
-		CameraRenderState cameraState
+		CameraRenderState camera
 	) {
 		poseStack.translate(0.5F, 0F, 0.5F);
-		poseStack.mulPose(cameraState.frozenLib$horizontalOrientation());
+		poseStack.mulPose(((CameraRenderStateInterface) camera).frozenLib$horizontalOrientation());
 		final TextureAtlasSprite sprite = this.getSprite(renderState);
 		collector.submitModelPart(
 			this.base,

@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
@@ -68,7 +69,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 		if (texture == null) throw new IllegalArgumentException("Texture cannot be null!");
 
 		return register(key, clazz, texture, renderState -> {
-			final String entityName = renderState.frozenLib$getData(FrozenLibRenderStateDataKeys.ENTITY_NAME);
+			final String entityName = ((FrozenLibRenderState) renderState).frozenLib$getData(FrozenLibRenderStateDataKeys.ENTITY_NAME);
 			if (entityName == null) return false;
 
 			final AtomicBoolean isNameCorrect = new AtomicBoolean(false);

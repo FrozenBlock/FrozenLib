@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -45,7 +46,7 @@ public record StructureStatus(Identifier structure, boolean insidePiece) {
 
 	public static Optional<StructureStatus> getProminentStructureStatus(Player player) {
 		if (player == null) return Optional.empty();
-		final List<StructureStatus> statuses = ATTACHMENT_TYPE.getAttachedOrGet(player, ImmutableList::of);
+		final List<StructureStatus> statuses = ATTACHMENT_TYPE.getAttachedOrGet((DataAttachmentTarget) player, ImmutableList::of);
 		return Optional.ofNullable(statuses.stream()
 			.filter(StructureStatus::insidePiece)
 			.findFirst()

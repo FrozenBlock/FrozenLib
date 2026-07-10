@@ -23,6 +23,7 @@ import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -43,7 +44,7 @@ public class LivingEntityMixin {
 		if (!source.is(DamageTypes.ON_FIRE)) return;
 
 		final LivingEntity entity = LivingEntity.class.cast(this);
-		final FireData fireData = FireData.ATTACHMENT.get(entity);
+		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) entity);
 		if (damage != 1F || fireData == null) return;
 
 		final FireType fireType = fireData.type().value();

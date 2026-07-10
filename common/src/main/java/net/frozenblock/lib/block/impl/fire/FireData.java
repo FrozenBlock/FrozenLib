@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -47,7 +48,7 @@ public record FireData(Holder<FireType> type) {
 
 	public static boolean canFireDataBeReplaced(Entity entity, Holder<FireType> newType) {
 		if (!newType.value().isEnabled()) return false;
-		final FireData fireData = ATTACHMENT.get(entity);
+		final FireData fireData = ATTACHMENT.get((DataAttachmentTarget) entity);
 		return fireData == null || fireData.type().value().spreadSettings().replaceableByOtherFireTypes();
 	}
 
@@ -60,7 +61,7 @@ public record FireData(Holder<FireType> type) {
 	public static void trySet(Entity entity, Holder<FireType> type) {
 		if (entity == null || !canFireDataBeReplaced(entity, type) || entity.is(type.value().spreadSettings().cannotApplyToEntityTypes())) return;
 
-		ATTACHMENT.set(entity, new FireData(type));
+		ATTACHMENT.set((DataAttachmentTarget) entity, new FireData(type));
 		FireEvents.AFTER_FIRE_TYPE_SET.invoker().onEntityFireTypeSet(entity, type);
 	}
 }
