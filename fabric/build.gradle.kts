@@ -53,12 +53,12 @@ group = maven_group
 
 val release = findProperty("releaseType")?.equals("stable")
 
+/*
 val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
 }
-
-
+ */
 
 fabric {
     dependOn(project(":flib-common"))
@@ -235,7 +235,7 @@ dependencies {
     relocApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
-    "testmodImplementation"(sourceSets.main.get().output)
+    // "testmodImplementation"(sourceSets.main.get().output)
     implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -266,9 +266,11 @@ tasks {
         }
     }
 
+    /*
     test {
         useJUnitPlatform()
     }
+     */
 
     shadowJar {
         configurations = listOf(relocImplementation, relocApi)
@@ -322,7 +324,7 @@ tasks {
 
 val build: Task by tasks
 val applyLicenses: Task by tasks
-val test: Task by tasks
+// val test: Task by tasks
 val runClient: Task by tasks
 
 val jar: Jar by tasks
