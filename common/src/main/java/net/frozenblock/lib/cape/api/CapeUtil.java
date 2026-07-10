@@ -86,7 +86,7 @@ public class CapeUtil {
 
 	public static boolean canPlayerUserCape(UUID uuid, Cape cape) {
 		if (ModLoader.isDevelopmentEnvironment()) return true;
-		
+
  		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
