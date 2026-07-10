@@ -50,6 +50,7 @@ repositories {
 neoforge {
     dependOn(project(":flib-common"))
     accessWidener(project(":flib-common"))
+    injectInterfaces(rootProject.file("common/src/main/resources/interfaces.json"))
 }
 
 /*loom {
