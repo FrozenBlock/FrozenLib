@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.renderer.mixin;
 
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
@@ -58,13 +57,13 @@ public interface RenderStateDataKeyMixin extends FrozenLibRenderState { // in co
 
 	@Unique
 	@Override
-	public default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
+	default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
 		this.setData(getOrCreateFabricKey(key), value);
 	}
 
 	@Unique
 	@Override
-	public default void frozenLib$clearExtraData() {
+	default void frozenLib$clearExtraData() {
 		this.clearExtraData();
 	}
 
