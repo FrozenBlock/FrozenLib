@@ -152,7 +152,8 @@ transitive-accessible method net/minecraft/world/level/block/Block registerDefau
 transitive-accessible field net/minecraft/world/CompoundContainer container1 Lnet/minecraft/world/Container;
 transitive-accessible field net/minecraft/world/CompoundContainer container2 Lnet/minecraft/world/Container;
 #transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
-#transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible class net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo
+transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible class net/minecraft/data/BlockFamilies
 transitive-accessible method net/minecraft/data/BlockFamilies familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
@@ -255,7 +256,8 @@ transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 
 # Biomes
-#accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+accessible method net/minecraft/world/level/biome/Biome$ClimateSettings <init> (ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V
 accessible field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
 mutable field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
 accessible field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
@@ -371,7 +373,8 @@ transitive-accessible method net/minecraft/core/registries/BuiltInRegistries fre
 transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
 transitive-accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
 #transitive-inject-interface net/minecraft/core/MappedRegistry org/quiltmc/qsl/frozenblock/core/registry/api/event/RegistryEventStorage
-#accessible class net/minecraft/core/RegistrySetBuilder$BuildState
+accessible class net/minecraft/core/RegistrySetBuilder$BuildState
+accessible method net/minecraft/core/RegistrySetBuilder$BuildState <init> (Lnet/minecraft/core/RegistrySetBuilder$UniversalOwner;Lnet/minecraft/core/RegistrySetBuilder$UniversalLookup;Ljava/util/Map;Ljava/util/Map;Ljava/util/List;)V
 
 # Sounds
 transitive-accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;
