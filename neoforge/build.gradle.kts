@@ -48,9 +48,9 @@ repositories {
     }
 }
 
-neoForge {
-    //dependOn(project(":flib-common"))
-    //accessWidener(project(":flib-common"))
+neoforge {
+    dependOn(project(":flib-common"))
+    accessWidener(project(":flib-common"))
 }
 
 /*loom {

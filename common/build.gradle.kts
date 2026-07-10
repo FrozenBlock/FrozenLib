@@ -22,7 +22,8 @@ val licenseChecks: Boolean = githubActions
 val applyLicenses: Task by tasks
 
 common {
-    accessWidener(file("src/main/resources/frozenlib.classtweaker"))
+    accessWidener()
+    //injectInterfaces(file("src/main/resources/frozenlib.classtweaker"))
 }
 
 tasks {

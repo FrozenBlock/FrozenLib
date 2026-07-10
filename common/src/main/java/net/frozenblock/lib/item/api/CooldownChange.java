@@ -35,7 +35,7 @@ public class CooldownChange {
 
 		final int between = entry.endTime - entry.startTime;
 		if ((between + additionalCooldown) <= min) return;
-		((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
+		CooldownInterface.class.cast(player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
 	}
 
 }

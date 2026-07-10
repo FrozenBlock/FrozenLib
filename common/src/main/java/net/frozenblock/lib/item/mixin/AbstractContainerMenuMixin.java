@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,11 +36,11 @@ public class AbstractContainerMenuMixin {
 		)
 	)
 	private boolean frozenLib$fixIsSameItemSameComponents(ItemStack a, ItemStack b, Operation<Boolean> original) {
-		a.frozenLib$setCanRemoveTags(true);
-		b.frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(a).frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(b).frozenLib$setCanRemoveTags(true);
 		final boolean retValue = original.call(a, b);
-		a.frozenLib$setCanRemoveTags(false);
-		b.frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(a).frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(b).frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 
@@ -51,11 +52,11 @@ public class AbstractContainerMenuMixin {
 		)
 	)
 	private boolean frozenLib$fixMoveItemStackTo(ItemStack a, ItemStack b, Operation<Boolean> original) {
-		a.frozenLib$setCanRemoveTags(true);
-		b.frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(a).frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(b).frozenLib$setCanRemoveTags(true);
 		final boolean retValue = original.call(a, b);
-		a.frozenLib$setCanRemoveTags(false);
-		b.frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(a).frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(b).frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 }

@@ -65,6 +65,11 @@ val datagen by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
 }
 
+fabric {
+    dependOn(project(":flib-common"))
+    accessWidener(project(":flib-common"))
+}
+
 /*loom {
     runtimeOnlyLog4j.set(true)
 
