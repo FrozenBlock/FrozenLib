@@ -28,6 +28,7 @@ val applyLicenses: Task by tasks
 
 common {
     accessWidener()
+    injectInterfaces(file("src/main/resources/interfaces.json"))
     //injectInterfaces(file("src/main/resources/frozenlib.classtweaker"))
 }
 
