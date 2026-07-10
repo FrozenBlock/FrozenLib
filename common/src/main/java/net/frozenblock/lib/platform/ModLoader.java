@@ -15,57 +15,98 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.service;
+package net.frozenblock.lib.platform;
 
 import com.google.gson.JsonElement;
+import net.frozenblock.lib.platform.api.Env;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.frozenblock.lib.platform.api.Env;
-import org.jetbrains.annotations.Nullable;
 
-public interface LoaderHelper {
-	boolean isDevelopmentEnvironment();
+public class ModLoader {
 
-	Path getGameDir();
+	@PlatformImpl
+	public static boolean isDevelopmentEnvironment() {
+		throw new AssertionError();
+	}
 
-	Path getConfigDir();
+	@PlatformImpl
+	public static Path getGameDir() {
+		throw new AssertionError();
+	}
 
-	boolean isModLoaded(String modId);
+	@PlatformImpl
+	public static Path getConfigDir() {
+		throw new AssertionError();
+	}
 
-	boolean isFabric();
+	@PlatformImpl
+	public static boolean isModLoaded(String modId) {
+		throw new AssertionError();
+	}
 
-	boolean isNeoForge();
+	@PlatformImpl
+	public static boolean isFabric() {
+		throw new AssertionError();
+	}
 
-	<T> @Nullable T ifFabric(Supplier<T> supplier);
+	@PlatformImpl
+	public static boolean isNeoForge() {
+		throw new AssertionError();
+	}
 
-	<T> @Nullable T ifNeoForge(Supplier<T> supplier);
+	@PlatformImpl
+	public static <T> @Nullable T ifFabric(Supplier<T> supplier) {
+		throw new AssertionError();
+	}
 
-	boolean isClient();
+	@PlatformImpl
+	public static <T> @Nullable T ifNeoForge(Supplier<T> supplier) {
+		throw new AssertionError();
+	}
 
-	boolean isServer();
+	@PlatformImpl
+	public static boolean isClient() {
+		throw new AssertionError();
+	}
 
-	Env getEnv();
+	@PlatformImpl
+	public static boolean isServer() {
+		throw new AssertionError();
+	}
 
-	String[] getLaunchArgs();
+	@PlatformImpl
+	public static Env getEnv() {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static String[] getLaunchArgs() {
+		throw new AssertionError();
+	}
 
 	/**
 	 * Returns metadata for every loaded mod.
 	 * On Fabric, custom data is read from {@code fabric.mod.json}'s {@code custom} block.
 	 * On NeoForge, custom data is unavailable ({@link ModEntry#getCustomData} returns empty).
 	 */
-	List<ModEntry> getAllMods();
+	@PlatformImpl
+	public static List<ModEntry> getAllMods() {
+		throw new AssertionError();
+	}
 
 	/**
 	 * Returns the {@link ModEntry} for the mod with the given id, or empty if not loaded.
 	 */
-	default Optional<ModEntry> getModById(String modId) {
+	public static Optional<ModEntry> getModById(String modId) {
 		return getAllMods().stream().filter(e -> e.getId().equals(modId)).findFirst();
 	}
 
-	interface ModEntry {
+	public interface ModEntry {
 		String getId();
 
 		String getName();

@@ -41,8 +41,8 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -85,9 +85,8 @@ public class CapeUtil {
 	}
 
 	public static boolean canPlayerUserCape(UUID uuid, Cape cape) {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment()) {
-			return true;
-		}
+		if (ModLoader.isDevelopmentEnvironment()) return true;
+		
  		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
@@ -150,7 +149,7 @@ public class CapeUtil {
 			if (capeLocation == null) return;
 
 			final Identifier capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
-			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
+			if (ModLoader.isClient()) ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
 
 			if (!whitelisted) {
 				registerCape(capeLocation, capeName);

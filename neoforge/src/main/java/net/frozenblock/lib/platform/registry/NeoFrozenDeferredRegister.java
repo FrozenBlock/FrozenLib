@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredItem;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -118,7 +118,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 				FrozenLibLogUtils.logError(
 					"Failed to register FrozenLib Deferred Register for registry" + this.inner.getRegistry() + ", postponing register event."
 					+ "\nThis is NOT acceptable implementation, please try to alleviate this issue the best you can if viable.",
-					FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment()
+					ModLoader.isDevelopmentEnvironment()
 				);
 			}
 		}

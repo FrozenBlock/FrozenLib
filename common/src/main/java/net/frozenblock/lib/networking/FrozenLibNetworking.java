@@ -34,8 +34,8 @@ import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
@@ -144,12 +144,12 @@ public final class FrozenLibNetworking {
 	}
 
 	public static boolean isLocalPlayer(Player player) {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return false;
+		if (ModLoader.isServer()) return false;
 		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().id());
 	}
 
 	public static boolean connectedToIntegratedServer() {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return false;
+		if (ModLoader.isServer()) return false;
 		final Minecraft minecraft = Minecraft.getInstance();
 		return minecraft.hasSingleplayerServer();
 	}
@@ -158,7 +158,7 @@ public final class FrozenLibNetworking {
 	 * @return if the client is connected to any server
 	 */
 	public static boolean connectedToServer() {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return false;
+		if (ModLoader.isServer()) return false;
 
 		final Minecraft minecraft = Minecraft.getInstance();
 		final ClientPacketListener listener = minecraft.getConnection();
@@ -171,7 +171,7 @@ public final class FrozenLibNetworking {
 	 * @return if the current server is multiplayer (LAN/dedicated) or not (singleplayer)
 	 */
 	public static boolean isMultiplayer() {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return true;
+		if (ModLoader.isServer()) return true;
 		return !Minecraft.getInstance().hasSingleplayerServer();
 	}
 }

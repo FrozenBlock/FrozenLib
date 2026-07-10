@@ -19,7 +19,7 @@ package net.frozenblock.lib.integration.api;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -41,7 +41,7 @@ public abstract class ModIntegration {
 	public ModIntegration(String modID, String modRegistryID) {
 		this.modID = modID;
 		this.modRegistryID = modRegistryID;
-		this.isModLoaded = FrozenLibEarlyPlatformUtils.LOADER.isModLoaded(this.modID);
+		this.isModLoaded = ModLoader.isModLoaded(this.modID);
 	}
 
     public ModIntegration(String modID) {

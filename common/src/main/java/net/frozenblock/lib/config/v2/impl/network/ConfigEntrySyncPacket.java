@@ -29,8 +29,8 @@ import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
 import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -70,7 +70,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
 		if (player == null) return false;
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		if (ModLoader.isServer()) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 		if (!FrozenLibNetworking.connectedToServer()) return false;
 
 		final boolean isHost = serverSide && FrozenLibNetworking.isLocalPlayer(player);

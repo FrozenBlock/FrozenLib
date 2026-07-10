@@ -34,8 +34,8 @@ import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -113,7 +113,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 		if (!this.isSyncable()) return;
 		if (this.syncedValue.isPresent() && this.syncedValue.get() == value) return;
 
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) {
+		if (ModLoader.isServer()) {
 			final MinecraftServer server = (MinecraftServer) FrozenLibInitPlatformUtils.GAME.getGameObject();
 			if (server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.platform;
 
 import com.google.gson.JsonElement;
 import java.io.IOException;
@@ -31,14 +31,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.Env;
-import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
 import org.jspecify.annotations.Nullable;
 
-public class NeoLoaderHelper implements LoaderHelper {
+public class ModLoaderImpl {
 	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();
 
 	private static FileSystem openOrGetFileSystem(Path jarPath) {
@@ -51,78 +51,65 @@ public class NeoLoaderHelper implements LoaderHelper {
 		});
 	}
 
-	@Override
-	public boolean isDevelopmentEnvironment() {
+	public static boolean isDevelopmentEnvironment() {
 		return !FMLLoader.getCurrent().isProduction();
 	}
 
-	@Override
-	public Path getGameDir() {
+	public static Path getGameDir() {
 		return FMLLoader.getCurrent().getGameDir();
 	}
 
-	@Override
-	public Path getConfigDir() {
+	public static Path getConfigDir() {
 		return FMLPaths.CONFIGDIR.get();
 	}
 
-	@Override
-	public boolean isModLoaded(String modId) {
+	public static boolean isModLoaded(String modId) {
 		final var modList = ModList.get();
 		return modList != null && modList.isLoaded(modId);
 	}
 
-	@Override
-	public boolean isFabric() {
+	public static boolean isFabric() {
 		return false;
 	}
 
-	@Override
-	public boolean isNeoForge() {
+	public static boolean isNeoForge() {
 		return true;
 	}
 
-	@Override
-	public @Nullable <T> T ifFabric(Supplier<T> supplier) {
+	public static @Nullable <T> T ifFabric(Supplier<T> supplier) {
 		return null;
 	}
 
-	@Override
-	public @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
+	public static @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
 		return supplier.get();
 	}
 
-	@Override
-	public boolean isClient() {
+	public static boolean isClient() {
 		return FMLLoader.getCurrent().getDist().isClient();
 	}
 
-	@Override
-	public boolean isServer() {
+	public static boolean isServer() {
 		return FMLLoader.getCurrent().getDist().isDedicatedServer();
 	}
 
-	@Override
-	public Env getEnv() {
+	public static Env getEnv() {
 		return switch (FMLLoader.getCurrent().getDist()) {
 			case CLIENT -> Env.CLIENT;
 			case DEDICATED_SERVER -> Env.SERVER;
 		};
 	}
 
-	@Override
-	public String[] getLaunchArgs() {
+	public static String[] getLaunchArgs() {
 		return FMLLoader.getCurrent().getProgramArgs().getArguments();
 	}
 
-	@Override
-	public List<ModEntry> getAllMods() {
+	public static List<ModLoader.ModEntry> getAllMods() {
 		final ModList modList = ModList.get();
 		if (modList == null) return List.of();
 
-		final List<ModEntry> result = new ArrayList<>();
+		final List<ModLoader.ModEntry> result = new ArrayList<>();
 		for (var modInfo : modList.getMods()) {
-			result.add(new ModEntry() {
+			result.add(new ModLoader.ModEntry() {
 				@Override
 				public String getId() {
 					return modInfo.getModId();

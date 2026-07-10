@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib;
 
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public final class FrozenLibLogUtils {
 	 * <p>
 	 * It's smart to use this for at least registries.
 	 */
-	public static boolean UNSTABLE_LOGGING = FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment();
+	public static boolean UNSTABLE_LOGGING = ModLoader.isDevelopmentEnvironment();
 
 	public static void log(Object string, boolean should) {
 		if (should) FrozenLibConstants.LOGGER.info(string.toString());

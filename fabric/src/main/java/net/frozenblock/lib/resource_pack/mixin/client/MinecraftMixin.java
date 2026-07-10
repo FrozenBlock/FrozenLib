@@ -20,7 +20,7 @@ package net.frozenblock.lib.resource_pack.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.resource_pack.impl.client.PackRepositoryInterface;
 import net.minecraft.client.Minecraft;
@@ -51,7 +51,7 @@ public class MinecraftMixin {
 	)
 	public PackRepository frozenLib$addFrozenLibRepositorySource(PackRepository original) {
 		if (!(original instanceof PackRepositoryInterface packRepositoryInterface)) {
-			if (FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment()) {
+			if (ModLoader.isDevelopmentEnvironment()) {
 				throw new AssertionError("BRUHHHH ITS NOT A FROZENLIB PACK REPOSITORY SOURCEEE BURHHHHHHGHGTY");
 			}
 			return original;

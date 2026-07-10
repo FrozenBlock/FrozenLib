@@ -22,7 +22,7 @@ import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.Contract;
 
 public abstract class Config<T> {
@@ -131,7 +131,7 @@ public abstract class Config<T> {
 		String formatted = this.formattedName();
 		try {
 			ConfigSaveEvent.EVENT.invoker().onSave(this);
-			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
+			if (ModLoader.isClient()) ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error in config save events for " + formatted, e);
 		}
@@ -141,7 +141,7 @@ public abstract class Config<T> {
 		String formatted = this.formattedName();
 		try {
 			ConfigLoadEvent.EVENT.invoker().onLoad(this);
-			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
+			if (ModLoader.isClient()) ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error in config load events for " + formatted, e);
 		}

@@ -25,6 +25,6 @@ public class NeoGameHelper implements GameHelper {
 
 	@Override
 	public Object getGameObject() {
-		return FrozenLibEarlyPlatformUtils.LOADER.isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();
+		return ModLoader.isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();
 	}
 }

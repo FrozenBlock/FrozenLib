@@ -28,7 +28,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -481,7 +481,7 @@ public class WindManager {
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
 			FrozenLibNetworking.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
-		} else if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
+		} else if (ModLoader.isClient()) {
 			ClientWindUtil.Debug.addAccessedPosition(target);
 		}
 

@@ -29,7 +29,7 @@ import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 
 public class ConfigData<T> {
 	private final ID id;
@@ -51,13 +51,13 @@ public class ConfigData<T> {
 			ConfigV2Registry.allConfigData().forEach(ConfigData::optimizeConfigMap);
 		});
 
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) {
+		if (ModLoader.isServer()) {
 			LifecycleEvents.SERVER_STOPPING.register(server -> {
 				ConfigV2Registry.allConfigData().forEach(ConfigData::save);
 			});
 		}
 
-		if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
+		if (ModLoader.isClient()) {
 			ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
 				ConfigV2Registry.allConfigData().forEach(ConfigData::save);
 			});
