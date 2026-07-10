@@ -104,6 +104,7 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 	@Override
 	public void register() {
+		// TODO: figure out why this crashes
 		final var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 		this.inner.register(bus);
 		bus.addListener(this::runCallbacks);
