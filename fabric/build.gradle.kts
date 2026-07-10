@@ -1,6 +1,5 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -23,8 +22,8 @@ checkstyle {
 }
 
 val minecraft_version: String by project
-val loader_version: String by project
-val min_loader_version: String by project
+val fabric_loader_version: String by project
+val min_fabric_loader_version: String by project
 
 val mod_version: String by project
 val maven_group: String by project
@@ -204,8 +203,8 @@ sourceSets.configureEach {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    implementation("net.fabricmc:fabric-loader:$loader_version")
-    testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
+    implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
+    testImplementation("net.fabricmc:fabric-loader-junit:$fabric_loader_version")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
@@ -243,7 +242,7 @@ tasks {
         properties["version"] = project.version
         properties["minecraft_version"] = "~26.2-"//minecraft_version
 
-        properties["fabric_loader_version"] = ">=$min_loader_version"
+        properties["fabric_loader_version"] = ">=$min_fabric_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 

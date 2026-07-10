@@ -37,7 +37,7 @@ public class PushableBlockEntityUtil {
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
 		final CompoundTag blockEntityTag = blockEntity.saveWithFullMetadata(level.registryAccess());
-		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(blockEntityTag);
+		((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$setPushedBlockEntityTag(blockEntityTag);
 		return true;
 	}
 
@@ -45,7 +45,7 @@ public class PushableBlockEntityUtil {
 		if (tag == null) return true;
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
-		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(tag);
+		((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$setPushedBlockEntityTag(tag);
 		return true;
 	}
 
@@ -58,7 +58,7 @@ public class PushableBlockEntityUtil {
 	) {
 		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return setBlock;
 
-		final CompoundTag blockEntityTag = pistonMovingBlock.frozenLib$getPushedBlockEntityTag();
+		final CompoundTag blockEntityTag = ((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$getPushedBlockEntityTag();
 		if (blockEntityTag == null) return setBlock;
 
 		final BlockEntity blockEntity = BlockEntity.loadStatic(pos, state, blockEntityTag, level.registryAccess());
@@ -69,7 +69,7 @@ public class PushableBlockEntityUtil {
 
 	public static BlockEntity getFakeBlockEntity(BlockEntity pistonEntity) {
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return null;
-		return pistonMovingBlock.frozenLib$getPushedFakeBlockEntity();
+		return ((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$getPushedFakeBlockEntity();
 	}
 
 	public static boolean canChestsStick(BlockState state1, BlockState state2, Direction direction) {

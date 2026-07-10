@@ -10,7 +10,7 @@ checkstyle {
 }
 
 val minecraft_version: String by project
-val loader_version: String by project
+val fabric_loader_version: String by project
 val asm_version: String by project
 
 val cloth_config_version: String by project
@@ -47,7 +47,7 @@ tasks {
 dependencies {
 
     // only for @Environment
-    api("net.fabricmc:fabric-loader:${loader_version}")
+    api("net.fabricmc:fabric-loader:${fabric_loader_version}")
 
     compileOnlyApi("org.ow2.asm:asm:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")

@@ -17,10 +17,9 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
-// From Polytone, what does this do?
-// MehVahd told me this replaces parts of neo's mods.toml.
-// We should test and see if this takes things from Fabric's and puts it into Neo's automatically.
 mod {
+    additional.add("fabric_loader_version")
+    additional.add("fabric_kotlin_version")
     additional.add("mod_description")
     additional.add("mod_credits")
     additional.add("mod_license")
