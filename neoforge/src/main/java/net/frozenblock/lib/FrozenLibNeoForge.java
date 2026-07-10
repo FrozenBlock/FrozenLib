@@ -27,6 +27,7 @@ import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
 import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
+import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
 import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
 import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -79,6 +80,7 @@ public final class FrozenLibNeoForge {
 		modBus.addListener(AddPackFindersEvent.class, NeoResourceLoaderHelper::flushPackFinders);
 		modBus.addListener(EntityAttributeCreationEvent.class, NeoDefaultAttributeRegistryHelper::flush);
 
+		NeoFrozenDeferredRegister.tryRegisterFailedRegisters();
 		FrozenLibMain.preQuiltInit();
 		FrozenLibMain.quiltInit();
 		FrozenLibMain.setup();
