@@ -14,7 +14,6 @@ plugins {
     id("org.quiltmc.gradle.licenser")
     id("me.modmuss50.mod-publish-plugin")
     id("com.gradleup.shadow")
-    kotlin("jvm")
     checkstyle
 }
 

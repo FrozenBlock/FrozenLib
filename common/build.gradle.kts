@@ -1,7 +1,12 @@
 plugins {
     id("com.possible-triangle.common")
     id("org.quiltmc.gradle.licenser")
-    kotlin("jvm")
+    checkstyle
+}
+
+checkstyle {
+    configFile = rootProject.file("checkstyle.xml")
+    toolVersion = "10.20.2"
 }
 
 val minecraft_version: String by project
