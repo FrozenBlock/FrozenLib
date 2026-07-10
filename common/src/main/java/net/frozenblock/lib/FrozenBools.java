@@ -33,10 +33,12 @@ public class FrozenBools {
 	public static final boolean IS_DATAGEN = isDatagen();
 
 	private static boolean isDatagen() {
-		return Arrays.stream(FrozenLibEarlyPlatformUtils.LOADER.getLaunchArgs())
+		final boolean isDatagen = Arrays.stream(FrozenLibEarlyPlatformUtils.LOADER.getLaunchArgs())
 			.toList()
 			.stream()
-			.anyMatch(string -> string.contains("datagen"));
+			.anyMatch(string -> string.contains("run/data"));
+		if (FrozenLibEarlyPlatformUtils.LOADER.isDevelopmentEnvironment()) FrozenLibLogUtils.log("Datagen " + (isDatagen ? "enabled" : "disabled") + "!");
+		return isDatagen;
 	}
 
     // EXTERNAL MODS
