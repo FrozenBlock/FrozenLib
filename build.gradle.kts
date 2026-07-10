@@ -63,16 +63,14 @@ subprojects {
         maven("https://maven.shedaniel.me/")
         exclusiveContent {
             forRepository {
-                maven {
+                maven("https://repo.spongepowered.org/repository/maven-public") {
                     name = "Sponge"
-                    url = uri("https://repo.spongepowered.org/repository/maven-public")
                 }
             }
             filter { includeGroupAndSubgroups("org.spongepowered") }
         }
-        maven {
+        maven("https://maven.blamejared.com") {
             name = "BlameJared"
-            url = uri("https://maven.blamejared.com")
         }
         mavenCentral()
         maven("https://jitpack.io")
@@ -92,6 +90,8 @@ subprojects {
                 includeGroup("maven.modrinth")
             }
         }
-        maven { url = uri("https://registry.somethingcatchy.net/repository/maven-releases/") }
+        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
+            name = "SomethingCatchy (MehVahdJukaar)"
+        }
     }
 }
