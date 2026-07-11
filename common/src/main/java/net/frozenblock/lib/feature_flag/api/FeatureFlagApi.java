@@ -19,12 +19,13 @@ package net.frozenblock.lib.feature_flag.api;
 
 import com.google.common.base.Preconditions;
 import lombok.experimental.UtilityClass;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.flag.FeatureFlagRegistry;
 import net.minecraft.world.flag.FeatureFlags;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Used to help with custom {@link net.minecraft.world.flag.FeatureFlag}s.
+ * Used to help with custom {@link FeatureFlag}s.
  */
 @UtilityClass
 public class FeatureFlagApi {
@@ -35,5 +36,9 @@ public class FeatureFlagApi {
 		Preconditions.checkArgument(builder != null, new NullPointerException("Feature flags rebuilt before builder exists"));
 		FeatureFlags.REGISTRY = builder.build();
 		FeatureFlags.CODEC = FeatureFlags.REGISTRY.codec();
+	}
+
+	public static FeatureFlagRegistry.Builder builder() {
+		return builder;
 	}
 }

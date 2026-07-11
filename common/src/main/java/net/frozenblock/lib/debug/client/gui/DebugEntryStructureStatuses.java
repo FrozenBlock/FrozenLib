@@ -29,8 +29,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
+@ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class DebugEntryStructureStatuses implements DebugScreenEntry {
 	private static final Identifier GROUP = FrozenLibConstants.id("structure_status");

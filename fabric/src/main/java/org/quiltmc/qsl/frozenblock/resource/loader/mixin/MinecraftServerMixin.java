@@ -40,7 +40,7 @@ public abstract class MinecraftServerMixin {
 	public abstract ResourceManager getResourceManager();
 
 	@Inject(method = "reloadResources", at = @At("HEAD"))
-	private void onReloadResourcesStart(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> info) {
+	private void onReloadResourcesStart(Collection<String> packsToEnable, CallbackInfoReturnable<CompletableFuture<Void>> info) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload((MinecraftServer) (Object) this,
 			this.getResourceManager());
 	}

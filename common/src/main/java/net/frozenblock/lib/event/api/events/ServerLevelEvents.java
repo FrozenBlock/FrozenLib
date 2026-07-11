@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.api.events;
 
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 
@@ -27,7 +27,7 @@ public class ServerLevelEvents {
 	/**
 	 * Called just after a level is loaded by a Minecraft server.
 	 */
-	public static final Event<Load> LOAD = FrozenEvents.createEnvironmentEvent(Load.class, callbacks -> (server, level) -> {
+	public static final Event<Load> LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (server, level) -> {
 		for (Load callback : callbacks) {
 			callback.onLevelLoad(server, level);
 		}
@@ -36,7 +36,7 @@ public class ServerLevelEvents {
 	/**
 	 * Called before a level is unloaded by a Minecraft server.
 	 */
-	public static final Event<Unload> UNLOAD = FrozenEvents.createEnvironmentEvent(Unload.class, callbacks -> (server, level) -> {
+	public static final Event<Unload> UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (server, level) -> {
 		for (Unload callback : callbacks) {
 			callback.onLevelUnload(server, level);
 		}

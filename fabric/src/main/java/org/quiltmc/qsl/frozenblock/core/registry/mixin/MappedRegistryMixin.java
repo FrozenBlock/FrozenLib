@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
@@ -52,9 +52,9 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 
 	// HACK TODO for some reason initializing this like normal doesnt work. i dont care to figure out why - glitch
 	@Inject(method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
-	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo info) {
+	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle initialLifecycle, boolean intrusiveHolders, CallbackInfo info) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
-		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
+		this.frozenLib_quilt$entryAddedEvent = EventRegistry.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
 			for (var callback : callbacks) callback.onAdded(context);
 		});
 	}
@@ -81,10 +81,10 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 		at = @At("RETURN")
 	)
 	private void frozenLib_quilt$$invokeEntryAddEvent(
-		ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> info,
+		ResourceKey<V> key, V value, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> info,
 		@Local int i
 	) {
-		this.frozenLib_quilt$entryContext.set(key.identifier(), entry, i);
+		this.frozenLib_quilt$entryContext.set(key.identifier(), value, i);
 		RegistryEventStorage.as((MappedRegistry<V>) (Object) this).frozenLib_quilt$getEntryAddedEvent().invoker().onAdded(this.frozenLib_quilt$entryContext);
 	}
 

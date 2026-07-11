@@ -29,7 +29,7 @@ import net.frozenblock.lib.platform.client.platform.ModelLayerRegistryImpl;
 import net.frozenblock.lib.platform.client.platform.ParticleProviderRegistryImpl;
 import net.frozenblock.lib.platform.client.platform.BlockEntityRendererRegistryImpl;
 import net.frozenblock.lib.platform.client.platform.EntityRendererRegistryImpl;
-import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.resource_pack.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
 import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -60,7 +60,7 @@ public final class FrozenLibClientNeoForge {
 
 		NeoEventBridge.initClientModStage();
 
-		modBus.addListener(AddClientReloadListenersEvent.class, NeoResourceLoaderHelper::flushClientListeners);
+		modBus.addListener(AddClientReloadListenersEvent.class, ResourceLoaderHelperImpl::flushClientListeners);
 		modBus.addListener(RegisterGuiLayersEvent.class, HudElementRegistryImpl::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, ModelLayerRegistryImpl::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, BlockEntityRendererRegistryImpl::flush);

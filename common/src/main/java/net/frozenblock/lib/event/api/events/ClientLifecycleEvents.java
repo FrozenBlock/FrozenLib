@@ -20,19 +20,19 @@ package net.frozenblock.lib.event.api.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.client.Minecraft;
 
 @Environment(EnvType.CLIENT)
 public class ClientLifecycleEvents {
 
-	public static final Event<ClientStarted> CLIENT_STARTED = FrozenEvents.createEnvironmentEvent(ClientStarted.class, callbacks -> client -> {
+	public static final Event<ClientStarted> CLIENT_STARTED = EventRegistry.createEnvironmentEvent(ClientStarted.class, callbacks -> client -> {
 		for (ClientStarted callback : callbacks) {
 			callback.onClientStarted(client);
 		}
 	});
 
-	public static final Event<ClientStopping> CLIENT_STOPPING = FrozenEvents.createEnvironmentEvent(ClientStopping.class, callbacks -> client -> {
+	public static final Event<ClientStopping> CLIENT_STOPPING = EventRegistry.createEnvironmentEvent(ClientStopping.class, callbacks -> client -> {
 		for (ClientStopping callback : callbacks) {
 			callback.onClientStopping(client);
 		}

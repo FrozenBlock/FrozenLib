@@ -60,11 +60,11 @@ public abstract class CreateWorldScreenMixin {
 	)
 	private static void onDataPackLoadStart(
 		Minecraft minecraft,
-		Runnable runnable,
-		Function<WorldLoader.DataLoadContext, WorldGenSettings> function,
-		WorldCreationContextMapper worldCreationContextMapper,
-		ResourceKey<WorldPreset> resourceKey,
-		CreateWorldCallback createWorldCallback,
+		Runnable onClose,
+		Function<WorldLoader.DataLoadContext, WorldGenSettings> worldGenSettings,
+		WorldCreationContextMapper worldCreationContext,
+		ResourceKey<WorldPreset> worldPreset,
+		CreateWorldCallback createWorld,
 		CallbackInfo info
 	) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
@@ -75,14 +75,14 @@ public abstract class CreateWorldScreenMixin {
 		at = @At("HEAD")
 	)
 	private static void onCreateDataPackLoadEnd(
-		WorldCreationContextMapper worldCreationContextMapper,
-		CloseableResourceManager resourceManager,
-		ReloadableServerResources resources,
-		LayeredRegistryAccess<?> layeredRegistryAccess,
-		DataPackReloadCookie dataPackReloadCookie,
+		WorldCreationContextMapper worldCreationContext,
+		CloseableResourceManager resources,
+		ReloadableServerResources managers,
+		LayeredRegistryAccess<?> registries,
+		DataPackReloadCookie cookie,
 		CallbackInfoReturnable<WorldCreationContext> info
 	) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resources, null);
 	}
 
 	@Inject(
@@ -90,13 +90,13 @@ public abstract class CreateWorldScreenMixin {
 		at = @At("HEAD")
 	)
 	private static void onCreateDataPackLoadEnd(
-		CloseableResourceManager resourceManager,
+		CloseableResourceManager resources,
 		ReloadableServerResources managers,
 		LayeredRegistryAccess<?> registries,
 		DataPackReloadCookie cookie,
-		CallbackInfoReturnable<WorldCreationContext> cir
+		CallbackInfoReturnable<WorldCreationContext> info
 	) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resources, null);
 	}
 
 	@Inject(
@@ -108,8 +108,8 @@ public abstract class CreateWorldScreenMixin {
 	)
 	private void onDataPackLoadStart(
 		PackRepository packRepository,
-		WorldDataConfiguration worldDataConfiguration,
-		Consumer<WorldDataConfiguration> consumer,
+		WorldDataConfiguration newConfig,
+		Consumer<WorldDataConfiguration> onAbort,
 		CallbackInfo info
 	) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
@@ -125,8 +125,8 @@ public abstract class CreateWorldScreenMixin {
 		)
 	)
 	private void onFailDataPackLoading(
-		Consumer<WorldDataConfiguration> consumer,
-		Void unused,
+		Consumer<WorldDataConfiguration> onAbort,
+		Void nothing,
 		Throwable throwable,
 		CallbackInfoReturnable<Object> info
 	) {

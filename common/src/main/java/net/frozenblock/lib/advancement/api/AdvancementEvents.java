@@ -19,7 +19,7 @@ package net.frozenblock.lib.advancement.api;
 
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 
@@ -33,7 +33,7 @@ public final class AdvancementEvents {
 	 * Invoked for each AdvancementHolder registered on the server.
 	 * Allows modifications to them
 	 * */
-	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(
+	public static final Event<AdvancementInit> INIT = EventRegistry.createEnvironmentEvent(
 		AdvancementInit.class,
 		callbacks -> (holder, registries) -> {
 			for (AdvancementInit callback : callbacks) callback.onInit(holder, registries);

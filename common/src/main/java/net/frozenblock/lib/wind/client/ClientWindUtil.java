@@ -28,7 +28,7 @@ import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;

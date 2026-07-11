@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.api.creative;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -34,29 +34,24 @@ import net.minecraft.world.level.ItemLike;
  * ITEMS MUST BE REGISTERED BEFORE THEY ARE ADDED HERE.
  */
 @UtilityClass
-public class CreativeModeTabSorter {
+public final class CreativeModeTabSorter {
 
-	public static void insert(
-		ItemLike item,
-		ResourceKey<CreativeModeTab> ... tabs
-	) {
+	public static void insert(ItemLike item, ResourceKey<CreativeModeTab> ... tabs) {
 		if (item == null) return;
-		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.insert(tab, item);
-		}
+		for (ResourceKey<CreativeModeTab> tab : tabs) insert(tab, item);
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertBefore(ItemLike comparedItem, ItemLike item, ResourceKey<CreativeModeTab>... tabs) {
 		insertBefore(comparedItem, item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertBefore(
 		ItemLike comparedItem,
@@ -66,13 +61,13 @@ public class CreativeModeTabSorter {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertBefore(tab, comparedItem, item, tabVisibility);
+			insertBefore(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertBefore(
 		ItemLike comparedItem,
@@ -84,13 +79,13 @@ public class CreativeModeTabSorter {
 		if (comparedItem == null || item == null) return;
 		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertBefore(tab, comparedItem, item, tabVisibility);
+			insertBefore(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertAfter(
 		ItemLike comparedItem,
@@ -101,8 +96,8 @@ public class CreativeModeTabSorter {
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertAfter(
 		ItemLike comparedItem,
@@ -112,13 +107,13 @@ public class CreativeModeTabSorter {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertAfter(tab, comparedItem, item, tabVisibility);
+			insertAfter(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param item	The item that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param item The item that is going to be added
 	 */
 	public static void insertAfter(
 		ItemLike comparedItem,
@@ -130,7 +125,7 @@ public class CreativeModeTabSorter {
 		if (comparedItem == null || item == null) return;
 		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertAfter(tab, comparedItem, item, tabVisibility);
+			insertAfter(tab, comparedItem, item, tabVisibility);
 		}
 	}
 
@@ -142,13 +137,13 @@ public class CreativeModeTabSorter {
 	) {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrument(tab, instrument, tagKey, tabVisibility);
+			addInstrument(tab, instrument, tagKey, tabVisibility);
 		}
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param instrument	The instrument that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param instrument The instrument that is going to be added
 	 */
 	public static void addInstrumentBefore(
 		ItemLike comparedItem,
@@ -159,13 +154,13 @@ public class CreativeModeTabSorter {
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrumentBefore(tab, comparedItem, instrument, tagKey, tabVisibility);
+			addInstrumentBefore(tab, comparedItem, instrument, tagKey, tabVisibility);
 		}
 	}
 
 	/**
-	 * @param comparedItem	The item that the added item is compared to
-	 * @param instrument	The instrument that is going to be added
+	 * @param comparedItem The item that the added item is compared to
+	 * @param instrument The instrument that is going to be added
 	 */
 	public static void addInstrumentAfter(
 		Item comparedItem,
@@ -176,7 +171,64 @@ public class CreativeModeTabSorter {
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			FrozenLibInitPlatformUtils.CREATIVE_TAB.addInstrumentAfter(tab, comparedItem, instrument, tagKey, tabVisibility);
+			addInstrumentAfter(tab, comparedItem, instrument, tagKey, tabVisibility);
 		}
+	}
+
+	@PlatformImpl
+	public static void insert(ResourceKey<CreativeModeTab> tab, ItemLike item) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void insertBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void insertAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addInstrument(
+		ResourceKey<CreativeModeTab> tab,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addInstrumentBefore(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addInstrumentAfter(
+		ResourceKey<CreativeModeTab> tab,
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
+		throw new AssertionError();
 	}
 }

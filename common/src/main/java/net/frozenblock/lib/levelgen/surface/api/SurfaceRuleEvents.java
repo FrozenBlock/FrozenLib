@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.surface.api;
 import java.util.List;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -37,35 +37,35 @@ public class SurfaceRuleEvents {
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets.
 	 */
-	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class,callbacks -> (biomes, context) -> {
+	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = EventRegistry.createEnvironmentEvent(OverworldSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
 		for (var callback : callbacks) callback.addOverworldSurfaceRules(biomes, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets without checking the preliminary surface.
 	 */
-	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> (biomes, context) -> {
+	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = EventRegistry.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> (biomes, context) -> {
 		for (var callback : callbacks) callback.addOverworldNoPrelimSurfaceRules(biomes, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Nether-based world presets.
 	 */
-	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
+	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = EventRegistry.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
 		for (var callback : callbacks) callback.addNetherSurfaceRules(biomes, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of End-based world presets.
 	 */
-	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
+	public static final Event<EndSurfaceRuleCallback> MODIFY_END = EventRegistry.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
 		for (var callback : callbacks) callback.addEndSurfaceRules(biomes, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of custom world presets.
 	 */
-	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
+	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = EventRegistry.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
 		for (var callback : callbacks) callback.addGenericSurfaceRules(biomes, context);
 	});
 

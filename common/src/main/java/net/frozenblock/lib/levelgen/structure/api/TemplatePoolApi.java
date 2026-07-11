@@ -27,8 +27,7 @@ import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.levelgen.structure.impl.StructureTemplatePoolInterface;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -42,7 +41,7 @@ public class TemplatePoolApi {
 	/**
 	 * An event used to add new {@link StructurePoolElement}s to {@link StructureTemplatePool}s.
 	 */
-	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
+	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = EventRegistry.createEnvironmentEvent(AddAdditionalTemplatePools.class,
 		callbacks -> (registry, context) -> {
 			for (var callback : callbacks) callback.addAdditionalTemplatePools(registry, context);
 	});

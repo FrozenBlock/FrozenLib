@@ -469,6 +469,7 @@ transitive-inject-interface net/minecraft/server/packs/repository/PackRepository
 # Debug
 transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z
 transitive-accessible field net/minecraft/SharedConstants DEBUG_PRINT_PROPERTIES Z
+transitive-accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/Identifier;
 
 # Registry API
 transitive-accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;

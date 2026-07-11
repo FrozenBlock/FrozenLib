@@ -20,7 +20,7 @@ package net.frozenblock.lib.event.api.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
@@ -32,7 +32,7 @@ public class ClientLevelEvents {
 	 *
 	 * <p>The provided level is the new level. This event is not called when the level becomes {@code null}.
 	 */
-	public static final Event<AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE = FrozenEvents.createEnvironmentEvent(AfterClientLevelChange.class, callbacks -> (client, level) -> {
+	public static final Event<AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE = EventRegistry.createEnvironmentEvent(AfterClientLevelChange.class, callbacks -> (client, level) -> {
 		for (AfterClientLevelChange callback : callbacks) {
 			callback.afterLevelChange(client, level);
 		}

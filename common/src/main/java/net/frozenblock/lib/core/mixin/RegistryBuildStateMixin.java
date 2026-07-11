@@ -31,6 +31,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(RegistrySetBuilder.BuildState.class)
 public class RegistryBuildStateMixin {
 
+	/**
+	 * This is meant to fix {@code VanillaRegistries} lookup crashes we have.
+	 */
 	@WrapOperation(
 		method = "reportNotCollectedHolders",
 		at = @At(

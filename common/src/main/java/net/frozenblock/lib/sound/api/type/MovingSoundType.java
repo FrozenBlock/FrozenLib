@@ -20,7 +20,7 @@ package net.frozenblock.lib.sound.api.type;
 import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.platform.api.data.DataAttachmentType;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;

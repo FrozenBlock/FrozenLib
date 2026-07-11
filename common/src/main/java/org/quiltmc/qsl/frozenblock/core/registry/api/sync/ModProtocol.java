@@ -29,12 +29,12 @@ import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.frozenblock.lib.platform.ModLoader;
 import org.slf4j.Logger;
 
 public class ModProtocol {
-	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = FrozenEvents.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
+	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = EventRegistry.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
 		for (var callback : callbacks) callback.load();
 	});
 	public static final List<ModProtocolDef> REQUIRED = new ArrayList<>();

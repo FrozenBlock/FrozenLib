@@ -23,13 +23,13 @@ import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
-import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
-import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
+import net.frozenblock.lib.entity.api.attribute.platform.DefaultAttributeRegistryImpl;
+import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
 import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
 import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
 import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
-import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.resource_pack.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
@@ -77,15 +77,15 @@ public final class FrozenLibNeoForge {
 			neoNetworking.flush(registrar);
 			neoNetworking.flushConfig(registrar);
 		});
-		modBus.addListener(AddPackFindersEvent.class, NeoResourceLoaderHelper::flushPackFinders);
-		modBus.addListener(EntityAttributeCreationEvent.class, NeoDefaultAttributeRegistryHelper::flush);
+		modBus.addListener(AddPackFindersEvent.class, ResourceLoaderHelperImpl::flushPackFinders);
+		modBus.addListener(EntityAttributeCreationEvent.class, DefaultAttributeRegistryImpl::flush);
 
 		NeoFrozenDeferredRegister.tryRegisterFailedRegisters();
 		FrozenLibMain.preQuiltSetup();
 		FrozenLibMain.quiltSetup();
 		FrozenLibMain.setup();
 
-		NeoDataAttachmentHelper.register(modBus);
+		DataAttachmentHelperImpl.register(modBus);
 		NeoEventBridge.initModStage(modBus);
 
 		modBus.addListener(RegisterConfigurationTasksEvent.class, event -> {
@@ -125,7 +125,7 @@ public final class FrozenLibNeoForge {
 			FrozenLibCommand.register(event.getDispatcher())
 		);
 
-		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, NeoResourceLoaderHelper::flushServerListeners);
+		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, ResourceLoaderHelperImpl::flushServerListeners);
 
 		NeoForge.EVENT_BUS.addListener(LevelTickEvent.Post.class, event -> {
 			Level level = event.getLevel();

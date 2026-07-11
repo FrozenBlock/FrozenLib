@@ -23,6 +23,9 @@ requiredMods=["cloth_config"]
 config="mixin/frozenlib.core.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.debug.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.data_attachment.mixins.json"
 
 [[mixins]]

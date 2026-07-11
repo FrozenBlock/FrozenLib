@@ -21,7 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireEvents;
-import net.frozenblock.lib.platform.api.data.DataAttachmentType;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;

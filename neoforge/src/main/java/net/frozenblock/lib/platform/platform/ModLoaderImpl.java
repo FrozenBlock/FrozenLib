@@ -38,7 +38,7 @@ import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
 import org.jspecify.annotations.Nullable;
 
-public class ModLoaderImpl {
+public final class ModLoaderImpl {
 	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();
 
 	private static FileSystem openOrGetFileSystem(Path jarPath) {

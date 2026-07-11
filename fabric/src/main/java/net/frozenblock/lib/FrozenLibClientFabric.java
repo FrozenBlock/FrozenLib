@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
-import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
@@ -69,8 +68,6 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 				}
 			);
 		});
-
-		FrozenLibDebugScreenEntries.init();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}

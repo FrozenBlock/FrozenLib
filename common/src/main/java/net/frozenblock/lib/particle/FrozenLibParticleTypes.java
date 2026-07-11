@@ -25,7 +25,7 @@ import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
-import net.frozenblock.lib.platform.api.registry.FrozenParticleTypes;
+import net.frozenblock.lib.platform.api.registry.ParticleTypeHelper;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -82,7 +82,7 @@ public class FrozenLibParticleTypes {
 	public static void init() {}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name, boolean alwaysShow) {
-		return REGISTER.register(name, () -> FrozenParticleTypes.simple(alwaysShow));
+		return REGISTER.register(name, () -> ParticleTypeHelper.simple(alwaysShow));
 	}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name) {
@@ -90,11 +90,11 @@ public class FrozenLibParticleTypes {
 	}
 
 	private static <T extends ParticleOptions> FrozenHolder<ParticleType<?>, ParticleType<T>> register(
-		String id,
+		String name,
 		boolean alwaysShow,
 		Function<ParticleType<T>, MapCodec<T>> codec,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return REGISTER.register(id, () -> FrozenParticleTypes.complex(alwaysShow, codec, streamCodec));
+		return REGISTER.register(name, () -> ParticleTypeHelper.complex(alwaysShow, codec, streamCodec));
 	}
 }

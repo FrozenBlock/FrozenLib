@@ -21,10 +21,7 @@ package org.quiltmc.qsl.frozenblock.resource.loader.mixin.server;
 import net.minecraft.server.Main;
 import net.minecraft.server.WorldStem;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
-import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -36,9 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Main.class)
 public class MainMixin {
-	@Shadow
-	@Final
-	private static Logger LOGGER;
 
 	@Inject(
 		method = "main",
@@ -49,7 +43,7 @@ public class MainMixin {
 		),
 		remap = false
 	)
-	private static void onStartReloadResources(String[] strings, CallbackInfo info) {
+	private static void onStartReloadResources(String[] args, CallbackInfo info) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null); // First reload
 	}
 

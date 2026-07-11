@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.disturbance;
 import com.mojang.serialization.Codec;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

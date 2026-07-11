@@ -21,11 +21,11 @@ package org.quiltmc.qsl.frozenblock.resource.loader.api;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
-
+// TODO: multiloader
 /**
  * Events related to the resource loader.
  * <p>
@@ -40,7 +40,7 @@ public class ResourceLoaderEvents {
 	 * This event should not be used to load resources.
 	 *//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
 	 */
-	public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(StartDataPackReload.class,
+	public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD = EventRegistry.createEnvironmentEvent(StartDataPackReload.class,
 		callbacks -> (server, resourceManager) -> {
 			for (var callback : callbacks) {
 				callback.onStartDataPackReload(server, resourceManager);
@@ -51,9 +51,8 @@ public class ResourceLoaderEvents {
 	 * An event indicating the end of the reloading of data packs on a Minecraft server.
 	 * <p>
 	 * This event should not be used to load resources.
-	 *//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
 	 */
-	public static final Event<EndDataPackReload> END_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(EndDataPackReload.class,
+	public static final Event<EndDataPackReload> END_DATA_PACK_RELOAD = EventRegistry.createEnvironmentEvent(EndDataPackReload.class,
 		callbacks -> (server, resourceManager, error) -> {
 			for (var callback : callbacks) {
 				callback.onEndDataPackReload(server, resourceManager, error);

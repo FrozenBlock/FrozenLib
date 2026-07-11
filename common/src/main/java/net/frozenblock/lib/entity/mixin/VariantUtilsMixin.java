@@ -18,7 +18,7 @@
 package net.frozenblock.lib.entity.mixin;
 
 import java.util.Optional;
-import net.frozenblock.lib.entity.api.WolfVariantBiomeRegistry;
+import net.frozenblock.lib.entity.api.variant.WolfVariantBiomeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

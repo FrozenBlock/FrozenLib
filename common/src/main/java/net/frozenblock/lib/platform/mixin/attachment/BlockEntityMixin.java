@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.mixin.attachment;
 
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 

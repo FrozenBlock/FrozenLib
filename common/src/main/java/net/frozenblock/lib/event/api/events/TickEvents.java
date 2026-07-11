@@ -19,7 +19,7 @@ package net.frozenblock.lib.event.api.events;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 
@@ -30,7 +30,7 @@ public class TickEvents {
 	 *
 	 * <p>When the dedicated server is "paused", this event is not invoked.
 	 */
-	public static final Event<StartTick> START_SERVER_TICK = FrozenEvents.createEnvironmentEvent(StartTick.class, callbacks -> server -> {
+	public static final Event<StartTick> START_SERVER_TICK = EventRegistry.createEnvironmentEvent(StartTick.class, callbacks -> server -> {
 		for (StartTick event : callbacks) {
 			event.onStartTick(server);
 		}
@@ -41,7 +41,7 @@ public class TickEvents {
 	 *
 	 * <p>When the dedicated server is "paused", this event is not invoked.
 	 */
-	public static final Event<EndTick> END_SERVER_TICK = FrozenEvents.createEnvironmentEvent(EndTick.class, callbacks -> server -> {
+	public static final Event<EndTick> END_SERVER_TICK = EventRegistry.createEnvironmentEvent(EndTick.class, callbacks -> server -> {
 		for (EndTick event : callbacks) {
 			event.onEndTick(server);
 		}
@@ -52,7 +52,7 @@ public class TickEvents {
 	 *
 	 * <p>When the dedicated server is "paused", this event is not invoked.
 	 */
-	public static final Event<StartLevelTick> START_LEVEL_TICK = FrozenEvents.createEnvironmentEvent(StartLevelTick.class, callbacks -> level -> {
+	public static final Event<StartLevelTick> START_LEVEL_TICK = EventRegistry.createEnvironmentEvent(StartLevelTick.class, callbacks -> level -> {
 		for (StartLevelTick callback : callbacks) {
 			callback.onStartTick(level);
 		}
@@ -65,7 +65,7 @@ public class TickEvents {
 	 *
 	 * <p>When the dedicated server is "paused", this event is not invoked.
 	 */
-	public static final Event<EndLevelTick> END_LEVEL_TICK = FrozenEvents.createEnvironmentEvent(EndLevelTick.class, callbacks -> level -> {
+	public static final Event<EndLevelTick> END_LEVEL_TICK = EventRegistry.createEnvironmentEvent(EndLevelTick.class, callbacks -> level -> {
 		for (EndLevelTick callback : callbacks) {
 			callback.onEndTick(level);
 		}

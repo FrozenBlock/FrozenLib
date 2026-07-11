@@ -20,7 +20,7 @@ package net.frozenblock.lib.item.api.loot;
 import java.util.List;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -45,7 +45,7 @@ public class FrozenLibLootTableEvents {
 	/**
 	 * The event that is triggered when an item is generated in a {@link net.minecraft.world.Container}.
 	 */
-	public static final Event<ItemGeneratedInContainer> ON_ITEM_GENERATED_IN_CONTAINER = FrozenEvents.createEnvironmentEvent(
+	public static final Event<ItemGeneratedInContainer> ON_ITEM_GENERATED_IN_CONTAINER = EventRegistry.createEnvironmentEvent(
 		ItemGeneratedInContainer.class,
 		callbacks -> (server, player) -> {
 			for (var callback : callbacks) callback.onItemGeneratedInContainer(server, player);
@@ -55,7 +55,7 @@ public class FrozenLibLootTableEvents {
 	 * This event can be used to replace loot tables.
 	 * If a loot table is replaced, the iteration will stop for that loot table.
 	 */
-	public static final Event<Replace> REPLACE = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Replace> REPLACE = EventRegistry.createEnvironmentEvent(
 		Replace.class,
 		callbacks -> (key, original, source, registries) -> {
 			for (var callback : callbacks) {
@@ -69,7 +69,7 @@ public class FrozenLibLootTableEvents {
 	 * This event can be used to modify loot tables.
 	 * The main use case is to add items to vanilla or mod loot tables (e.g. modded seeds to grass).
 	 */
-	public static final Event<Modify> MODIFY = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Modify> MODIFY = EventRegistry.createEnvironmentEvent(
 		Modify.class,
 		callbacks -> (key, builder, source, registries) -> {
 			for (var callback : callbacks) callback.modifyLootTable(key, builder, source, registries);
@@ -78,7 +78,7 @@ public class FrozenLibLootTableEvents {
 	/**
 	 * This event can be used for post-processing after all loot tables have been loaded and modified.
 	 */
-	public static final Event<Loaded> ALL_LOADED = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Loaded> ALL_LOADED = EventRegistry.createEnvironmentEvent(
 		Loaded.class,
 		callbacks -> (resourceManager, lootRegistry) -> {
 			for (var callback : callbacks) callback.onLootTablesLoaded(resourceManager, lootRegistry);
@@ -89,7 +89,7 @@ public class FrozenLibLootTableEvents {
 	 * modifying the result of many loot tables that are unknown, and not wishing to add a custom loot function to
 	 * every table.
 	 */
-	public static final Event<ModifyDrops> MODIFY_DROPS = FrozenEvents.createEnvironmentEvent(
+	public static final Event<ModifyDrops> MODIFY_DROPS = EventRegistry.createEnvironmentEvent(
 		ModifyDrops.class,
 		callbacks -> (holder, context, drops) -> {
 			for (var callback : callbacks) callback.modifyLootTableDrops(holder, context, drops);

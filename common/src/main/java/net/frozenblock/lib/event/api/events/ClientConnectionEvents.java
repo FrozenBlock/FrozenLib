@@ -20,7 +20,7 @@ package net.frozenblock.lib.event.api.events;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.jetbrains.annotations.Nullable;
@@ -28,13 +28,13 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class ClientConnectionEvents {
 
-	public static final Event<Join> JOIN = FrozenEvents.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
+	public static final Event<Join> JOIN = EventRegistry.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
 		for (Join callback : callbacks) {
 			callback.onJoin(handler, client);
 		}
 	});
 
-	public static final Event<Disconnect> DISCONNECT = FrozenEvents.createEnvironmentEvent(Disconnect.class, callbacks -> (handler, client) -> {
+	public static final Event<Disconnect> DISCONNECT = EventRegistry.createEnvironmentEvent(Disconnect.class, callbacks -> (handler, client) -> {
 		for (Disconnect callback : callbacks) {
 			callback.onDisconnect(handler, client);
 		}

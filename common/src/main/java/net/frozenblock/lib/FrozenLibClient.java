@@ -18,6 +18,7 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.EnvType;import net.fabricmc.api.Environment;import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
+import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
@@ -54,6 +55,7 @@ public final class FrozenLibClient {
 		FrozenLibModelLayers.init();
 		FrozenLibModResourcePackApi.init();
 		ClientWindUtil.init();
+		FrozenLibDebugScreenEntries.init();
 
 		HudElementRegistry.attachElementAfter(
 			VanillaHudAnchor.MISC_OVERLAYS,

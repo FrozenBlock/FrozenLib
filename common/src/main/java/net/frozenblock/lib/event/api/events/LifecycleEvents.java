@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.api.events;
 
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.PlayerList;
 
@@ -26,7 +26,7 @@ public class LifecycleEvents {
 	/**
 	 * Called upon NeoForge's {@code ServerAboutToStartEvent} or Fabric's {@code SERVER_STARTING} event.
 	 */
-	public static final Event<ServerAboutToStart> SERVER_ABOUT_TO_START_OR_STARTING = FrozenEvents.createEnvironmentEvent(ServerAboutToStart.class, callbacks -> server -> {
+	public static final Event<ServerAboutToStart> SERVER_ABOUT_TO_START_OR_STARTING = EventRegistry.createEnvironmentEvent(ServerAboutToStart.class, callbacks -> server -> {
 		for (ServerAboutToStart callback : callbacks) {
 			callback.onServerAboutToStart(server);
 		}
@@ -37,7 +37,7 @@ public class LifecycleEvents {
 	 *
 	 * <p>This occurs before the {@link PlayerList player list} and any levels are loaded.
 	 */
-	public static final Event<ServerStarting> SERVER_STARTING = FrozenEvents.createEnvironmentEvent(ServerStarting.class, callbacks -> server -> {
+	public static final Event<ServerStarting> SERVER_STARTING = EventRegistry.createEnvironmentEvent(ServerStarting.class, callbacks -> server -> {
 		for (ServerStarting callback : callbacks) {
 			callback.onServerStarting(server);
 		}
@@ -48,7 +48,7 @@ public class LifecycleEvents {
 	 *
 	 * <p>At this stage, all levels are live.
 	 */
-	public static final Event<ServerStarted> SERVER_STARTED = FrozenEvents.createEnvironmentEvent(ServerStarted.class, (callbacks) -> (server) -> {
+	public static final Event<ServerStarted> SERVER_STARTED = EventRegistry.createEnvironmentEvent(ServerStarted.class, (callbacks) -> (server) -> {
 		for (ServerStarted callback : callbacks) {
 			callback.onServerStarted(server);
 		}
@@ -62,7 +62,7 @@ public class LifecycleEvents {
 	 *
 	 * <p>All levels are still present and can be modified.
 	 */
-	public static final Event<ServerStopping> SERVER_STOPPING = FrozenEvents.createEnvironmentEvent(ServerStopping.class, (callbacks) -> (server) -> {
+	public static final Event<ServerStopping> SERVER_STOPPING = EventRegistry.createEnvironmentEvent(ServerStopping.class, (callbacks) -> (server) -> {
 		for (ServerStopping callback : callbacks) {
 			callback.onServerStopping(server);
 		}
@@ -72,7 +72,7 @@ public class LifecycleEvents {
 	 * Called when a Minecraft server has stopped.
 	 * All levels have been closed and all (block)entities and players have been unloaded.
 	 */
-	public static final Event<ServerStopped> SERVER_STOPPED = FrozenEvents.createEnvironmentEvent(ServerStopped.class, callbacks -> server -> {
+	public static final Event<ServerStopped> SERVER_STOPPED = EventRegistry.createEnvironmentEvent(ServerStopped.class, callbacks -> server -> {
 		for (ServerStopped callback : callbacks) {
 			callback.onServerStopped(server);
 		}

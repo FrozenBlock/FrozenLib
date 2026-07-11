@@ -36,7 +36,7 @@ import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.Env;
 import org.jspecify.annotations.Nullable;
 
-public class ModLoaderImpl {
+public final class ModLoaderImpl {
 
 	public static boolean isDevelopmentEnvironment() {
 		return FabricLoader.getInstance().isDevelopmentEnvironment();
