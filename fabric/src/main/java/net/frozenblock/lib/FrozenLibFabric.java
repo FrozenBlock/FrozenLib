@@ -37,12 +37,12 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
 		DelayedRegistry.setFactory(FabricDelayedRegistry::new);
-		FrozenLibMain.preQuiltInit();
+		FrozenLibMain.preQuiltSetup();
 		FrozenLibRegistries.setup();
 		FabricEventBridge.initModStage();
 
 		// QUILT INIT
-		FrozenLibMain.quiltInit();
+		FrozenLibMain.quiltSetup();
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibMain.setup();

@@ -99,6 +99,7 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		CustomPacketPayload.Type<P> type,
 		ClientPayloadHandler<P> handler
 	) {
+		// FIXME: referencing Minecraft and LocalPlayer crash servers, silly!
 		this.clientHandlers.put(type, (payload, context) ->
 			handler.receive((P) payload, Minecraft.getInstance(), (LocalPlayer) context.player())
 		);

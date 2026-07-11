@@ -15,19 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.model;
+package net.frozenblock.lib.platform.client.platform;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.client.ModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenLibModelLayers {
-	public static final ModelLayerLocation NO_MODEL = new ModelLayerLocation(FrozenLibConstants.id("no_model"), "main");
+public final class ModelLayerRegistryImpl {
+	private static final List<Entry> LAYERS = new ArrayList<>();
 
-	public static void init() {
-		ModelLayerRegistry.register(NO_MODEL, NoOpModel::createEmptyLayer);
+	public static void register(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {
+		LAYERS.add(new Entry(layer, provider));
 	}
+
+	public static void flush(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		for (Entry entry : LAYERS) event.registerLayerDefinition(entry.layer(), entry.provider());
+	}
+
+	private record Entry(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {}
 }

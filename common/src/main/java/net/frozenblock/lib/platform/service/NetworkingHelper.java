@@ -103,6 +103,7 @@ public interface NetworkingHelper {
 		void receive(P payload, MinecraftServer server, ServerPlayer player);
 	}
 
+	// FIXME: referencing Minecraft and LocalPlayer crash servers, silly! Also, env doesnt seem to be applying to neo.
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	interface ClientPayloadHandler<P extends CustomPacketPayload> {

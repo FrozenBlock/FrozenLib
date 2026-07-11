@@ -15,19 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.model;
+package net.frozenblock.lib.platform.client;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.client.ModelLayerRegistry;
-import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenLibModelLayers {
-	public static final ModelLayerLocation NO_MODEL = new ModelLayerLocation(FrozenLibConstants.id("no_model"), "main");
+@UtilityClass
+public final class BlockEntityRendererRegistry {
 
-	public static void init() {
-		ModelLayerRegistry.register(NO_MODEL, NoOpModel::createEmptyLayer);
+	@PlatformImpl
+	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
+		BlockEntityType<? extends T> blockEntityType,
+		BlockEntityRendererProvider<T, S> provider
+	) {
+		throw new AssertionError();
 	}
 }

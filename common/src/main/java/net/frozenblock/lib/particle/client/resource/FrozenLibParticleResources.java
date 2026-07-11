@@ -25,18 +25,18 @@ import net.frozenblock.lib.particle.ColoredSmokeParticle;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.provider.FrozenLibParticleProviders;
-import net.frozenblock.lib.platform.api.client.particle.FrozenParticleProviderRegistry;
+import net.frozenblock.lib.platform.client.ParticleProviderRegistry;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibParticleResources {
 
 	public static void init() {
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED, ColoredSmokeParticle.Provider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED, ColoredLargeSmokeParticle.Provider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED, ColoredCampfireSmokeParticle.CosyProvider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED, ColoredCampfireSmokeParticle.SignalProvider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
-		FrozenParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED, ColoredSmokeParticle.Provider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED, ColoredLargeSmokeParticle.Provider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED, ColoredCampfireSmokeParticle.CosyProvider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED, ColoredCampfireSmokeParticle.SignalProvider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
+		ParticleProviderRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
 	}
 }

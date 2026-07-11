@@ -64,12 +64,12 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenLibMain {
 
-	public static void preQuiltInit() {
+	public static void preQuiltSetup() {
 		FireData.init();
 		SoundTypeOverrides.init();
 	}
 
-	public static void quiltInit() {
+	public static void quiltSetup() {
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
 		ServerRegistrySync.registerHandlers();

@@ -33,7 +33,7 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.api.resource.FrozenResourceLoader;
+import net.frozenblock.lib.platform.api.resource.FrozenLibResourceLoader;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -64,7 +64,7 @@ public class ClientCapeUtil {
 	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {
 		if (REGISTERED_CAPE_LISTENERS.contains(capeID)) return;
 
-		FrozenResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, (ResourceManagerReloadListener) resourceManager ->
+		FrozenLibResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, (ResourceManagerReloadListener) resourceManager ->
 			Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
 				texture,
 				CAPE_CACHE_PATH.resolve(capeID.getNamespace()).resolve(capeID.getPath() + ".png"),

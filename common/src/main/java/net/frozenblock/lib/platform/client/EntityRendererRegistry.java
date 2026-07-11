@@ -15,17 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.client;
 
-import net.frozenblock.lib.platform.service.GameHelper;
-import net.minecraft.client.Minecraft;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 
-public class NeoGameHelper implements GameHelper {
+@Environment(EnvType.CLIENT)
+public final class EntityRendererRegistry {
 
-	@Override
-	public Object getGameObject() {
-		if (ModLoader.isClient()) return Minecraft.getInstance();
-		return ServerLifecycleHooks.getCurrentServer();
+	@PlatformImpl
+	public static <T extends Entity> void register(EntityType<? extends T> entityType, EntityRendererProvider<T> provider) {
+		throw new AssertionError();
 	}
 }

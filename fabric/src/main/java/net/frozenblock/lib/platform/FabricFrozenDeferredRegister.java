@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.Nullable;
 
+// FIXME: Everything should be registered instantly. Fabric class loading isn't as deterministic as NeoForge.
 public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	protected final ResourceKey<? extends Registry<T>> registryKey;
 	protected final String namespace;

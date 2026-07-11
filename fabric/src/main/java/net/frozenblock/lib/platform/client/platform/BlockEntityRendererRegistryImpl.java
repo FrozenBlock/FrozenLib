@@ -15,19 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.model;
+package net.frozenblock.lib.platform.client.platform;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.client.ModelLayerRegistry;
-import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenLibModelLayers {
-	public static final ModelLayerLocation NO_MODEL = new ModelLayerLocation(FrozenLibConstants.id("no_model"), "main");
+public final class BlockEntityRendererRegistryImpl {
 
-	public static void init() {
-		ModelLayerRegistry.register(NO_MODEL, NoOpModel::createEmptyLayer);
+	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
+		BlockEntityType<? extends T> blockEntityType,
+		BlockEntityRendererProvider<T, S> provider
+	) {
+		BlockEntityRenderers.register(blockEntityType, provider);
 	}
 }

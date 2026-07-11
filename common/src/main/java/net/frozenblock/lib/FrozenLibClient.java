@@ -23,7 +23,7 @@ import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
-import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
+import net.frozenblock.lib.platform.client.HudElementRegistry;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
@@ -55,7 +55,7 @@ public final class FrozenLibClient {
 		FrozenLibModResourcePackApi.init();
 		ClientWindUtil.init();
 
-		FrozenHudElements.attachElementAfter(
+		HudElementRegistry.attachElementAfter(
 			VanillaHudAnchor.MISC_OVERLAYS,
 			FrozenLibConstants.id("spotting_icons"),
 			new SpottingIconHudElement()

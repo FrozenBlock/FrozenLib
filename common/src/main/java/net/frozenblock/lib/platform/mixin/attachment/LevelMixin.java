@@ -15,17 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.mixin.attachment;
 
-import net.frozenblock.lib.platform.service.GameHelper;
-import net.minecraft.client.Minecraft;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.minecraft.world.level.Level;
+import org.spongepowered.asm.mixin.Mixin;
 
-public class NeoGameHelper implements GameHelper {
-
-	@Override
-	public Object getGameObject() {
-		if (ModLoader.isClient()) return Minecraft.getInstance();
-		return ServerLifecycleHooks.getCurrentServer();
-	}
+@Mixin(Level.class)
+public abstract class LevelMixin implements DataAttachmentTarget {
 }

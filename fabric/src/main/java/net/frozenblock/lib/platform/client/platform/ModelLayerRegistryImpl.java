@@ -15,17 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.client.platform;
 
-import net.frozenblock.lib.platform.service.GameHelper;
-import net.minecraft.client.Minecraft;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 
-public class NeoGameHelper implements GameHelper {
+@Environment(EnvType.CLIENT)
+public final class ModelLayerRegistryImpl {
 
-	@Override
-	public Object getGameObject() {
-		if (ModLoader.isClient()) return Minecraft.getInstance();
-		return ServerLifecycleHooks.getCurrentServer();
+	public static void register(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {
+		net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry.registerModelLayer(layer, provider::get);
 	}
 }
