@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.levelgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;

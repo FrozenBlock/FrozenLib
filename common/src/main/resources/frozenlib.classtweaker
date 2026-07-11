@@ -347,10 +347,10 @@ transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootP
 transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
 
 # Data Attachment
-transitive-inject-interface net/minecraft/world/level/block/entity/BlockEntity net/frozenblock/lib/platform/api/data/DataAttachmentTarget
-transitive-inject-interface net/minecraft/world/level/chunk/ChunkAccess net/frozenblock/lib/platform/api/data/DataAttachmentTarget
-transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/platform/api/data/DataAttachmentTarget
-transitive-inject-interface net/minecraft/world/level/Level net/frozenblock/lib/platform/api/data/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/level/block/entity/BlockEntity net/frozenblock/lib/platform/api/attachment/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/level/chunk/ChunkAccess net/frozenblock/lib/platform/api/attachment/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/platform/api/attachment/DataAttachmentTarget
+transitive-inject-interface net/minecraft/world/level/Level net/frozenblock/lib/platform/api/attachment/DataAttachmentTarget
 
 # QuiltMC Resource Reloaders
 transitive-accessible class net/minecraft/resources/RegistryDataLoader$LoaderFactory
@@ -405,6 +405,7 @@ transitive-extendable class net/minecraft/data/DataGenerator$PackGenerator
 transitive-accessible class net/minecraft/data/DataGenerator$PackGenerator
 transitive-extendable method net/minecraft/data/DataGenerator$PackGenerator <init> (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 transitive-accessible method net/minecraft/data/DataGenerator$PackGenerator <init> (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators modelOutput Ljava/util/function/BiConsumer;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_1_SEGMENT_CONDITION Ljava/util/function/Function;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_2_SEGMENT_CONDITION Ljava/util/function/Function;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_3_SEGMENT_CONDITION Ljava/util/function/Function;
@@ -419,6 +420,11 @@ transitive-accessible field net/minecraft/client/data/models/BlockModelGenerator
 transitive-accessible field net/minecraft/client/data/models/ItemModelGenerators itemModelOutput Lnet/minecraft/client/data/models/ItemModelOutput;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators$BlockFamilyProvider skipGeneratingModelsFor Ljava/util/Set;
 transitive-accessible class net/minecraft/client/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
+transitive-accessible method net/minecraft/client/data/models/model/TexturedModel createDefault (Ljava/util/function/Function;Lnet/minecraft/client/data/models/model/ModelTemplate;)Lnet/minecraft/client/data/models/model/TexturedModel$Provider;
+transitive-accessible method net/minecraft/client/data/models/BlockModelGenerators createFlatItemModel (Lnet/minecraft/world/item/Item;)Lnet/minecraft/resources/Identifier;
+transitive-accessible method net/minecraft/client/data/models/BlockModelGenerators registerSimpleTintedItemModel (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/color/item/ItemTintSource;)V
+transitive-accessible method net/minecraft/client/data/models/BlockModelGenerators plainVariant (Lnet/minecraft/resources/Identifier;)Lnet/minecraft/client/data/models/MultiVariant;
+transitive-accessible method net/minecraft/client/data/models/BlockModelGenerators createSegmentedBlock (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/client/data/models/MultiVariant;Ljava/util/function/Function;Lnet/minecraft/client/data/models/MultiVariant;Ljava/util/function/Function;Lnet/minecraft/client/data/models/MultiVariant;Ljava/util/function/Function;Lnet/minecraft/client/data/models/MultiVariant;Ljava/util/function/Function;)V
 
 # Particle
 transitive-accessible field net/minecraft/client/particle/Particle x D
