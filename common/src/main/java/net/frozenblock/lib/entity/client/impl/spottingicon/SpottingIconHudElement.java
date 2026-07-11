@@ -25,7 +25,6 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

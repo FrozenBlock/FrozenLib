@@ -18,7 +18,6 @@
 package net.frozenblock.lib.block.mixin.fire;
 
 import net.frozenblock.lib.block.impl.fire.FireData;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.world.entity.ConversionParams;
 import net.minecraft.world.entity.ConversionType;
 import net.minecraft.world.entity.Mob;

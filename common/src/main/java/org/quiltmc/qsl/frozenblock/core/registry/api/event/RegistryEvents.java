@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
@@ -29,7 +30,6 @@ import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
-import java.util.List;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.

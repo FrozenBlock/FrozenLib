@@ -18,14 +18,14 @@
 package net.frozenblock.lib.platform;
 
 import com.google.gson.JsonElement;
-import net.frozenblock.lib.platform.api.Env;
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
-import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import net.frozenblock.lib.platform.api.Env;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import org.jetbrains.annotations.Nullable;
 
 public class ModLoader {
 

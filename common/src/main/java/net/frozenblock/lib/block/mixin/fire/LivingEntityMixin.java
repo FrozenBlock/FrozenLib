@@ -23,7 +23,6 @@ import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;

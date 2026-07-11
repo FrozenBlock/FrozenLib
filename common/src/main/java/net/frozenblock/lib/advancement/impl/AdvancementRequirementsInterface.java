@@ -20,6 +20,12 @@ package net.frozenblock.lib.advancement.impl;
 import java.util.List;
 
 public interface AdvancementRequirementsInterface {
-	List<List<String>> frozenLib$getRequirements();
-	void frozenLib$setRequirements(List<List<String>> requirements);
+
+	default List<List<String>> frozenLib$getRequirements() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setRequirements(List<List<String>> requirements) {
+		throw new AssertionError();
+	}
 }

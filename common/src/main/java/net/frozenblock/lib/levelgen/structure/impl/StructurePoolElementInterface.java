@@ -21,5 +21,7 @@ import java.util.List;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public interface StructurePoolElementInterface {
-	void frozenLib$addProcessors(List<StructureProcessor> processors);
+	default void frozenLib$addProcessors(List<StructureProcessor> processors) {
+		throw new AssertionError();
+	}
 }

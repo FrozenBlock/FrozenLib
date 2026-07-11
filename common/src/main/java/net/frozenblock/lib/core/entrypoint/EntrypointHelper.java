@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.core.entrypoint;
 
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import java.util.function.Consumer;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 public class EntrypointHelper {
 

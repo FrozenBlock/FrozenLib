@@ -20,6 +20,12 @@ package net.frozenblock.lib.levelgen.structure.impl;
 import net.minecraft.resources.Identifier;
 
 public interface StructureStartInterface {
-	Identifier frozenLib$getId();
-	void frozenLib$setId(Identifier id);
+
+	default Identifier frozenLib$getId() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setId(Identifier id) {
+		throw new AssertionError();
+	}
 }

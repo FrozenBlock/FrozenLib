@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

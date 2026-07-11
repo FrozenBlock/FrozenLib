@@ -21,7 +21,6 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Holder;

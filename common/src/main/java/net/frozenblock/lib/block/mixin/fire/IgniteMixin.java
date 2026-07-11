@@ -21,7 +21,6 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

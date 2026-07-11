@@ -24,7 +24,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.Map;
 import java.util.Optional;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;

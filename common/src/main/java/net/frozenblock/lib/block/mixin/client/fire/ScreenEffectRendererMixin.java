@@ -23,7 +23,6 @@ import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireData;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.Sheets;
