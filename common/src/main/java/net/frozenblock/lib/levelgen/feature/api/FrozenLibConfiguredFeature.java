@@ -36,7 +36,6 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
-z
 	/**
 	 * Can be used for setting all bootstrap contexts on 1.19.3+.
 	 */
