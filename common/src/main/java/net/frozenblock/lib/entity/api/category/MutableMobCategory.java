@@ -63,18 +63,22 @@ public class MutableMobCategory {
 		this(modId, Optional.empty());
 	}
 
-	/**
-	 * @return A mutable view of the given {@link MobCategory}.
-	 */
 	@ApiStatus.Internal
-	public static MutableMobCategory of(MobCategory category) {
+	public static MutableMobCategory forVanillaMutation(
+		String name,
+		String debugAbbreviation,
+		int max,
+		boolean isFriendly,
+		boolean isPersistent,
+		int despawnDistance
+	) {
 		final MutableMobCategory mutable = new MutableMobCategory(Optional.empty());
-		mutable.name = category.getName();
-		mutable.debugAbbreviation = category.getDebugAbbreviation();
-		mutable.max = category.getMaxInstancesPerChunk();
-		mutable.isFriendly = category.isFriendly();
-		mutable.isPersistent = category.isPersistent();
-		mutable.despawnDistance = category.getDespawnDistance();
+		mutable.name = name;
+		mutable.debugAbbreviation = debugAbbreviation;
+		mutable.max = max;
+		mutable.isFriendly = isFriendly;
+		mutable.isPersistent = isPersistent;
+		mutable.despawnDistance = despawnDistance;
 		return mutable;
 	}
 

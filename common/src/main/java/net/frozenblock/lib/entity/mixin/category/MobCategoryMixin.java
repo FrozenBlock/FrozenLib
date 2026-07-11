@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.entity.mixin.category;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,19 +60,30 @@ public class MobCategoryMixin {
 	@Mutable
 	private static MobCategory[] $VALUES;
 
-	@ModifyExpressionValue(
+	@WrapOperation(
 		method = "<clinit>",
 		at = @At(
 			value = "NEW",
 			target = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;IZZI)Lnet/minecraft/world/entity/MobCategory;"
 		)
 	)
-	private static MobCategory frozenLib$modifyMobCategories(MobCategory original) {
-		final MutableMobCategory mutable = MutableMobCategory.of(original);
+	private static MobCategory frozenLib$modifyMobCategories(
+		String internalName,
+		int ordinal,
+		String name,
+		String debugAbbreviation,
+		int max,
+		boolean isFriendly,
+		boolean isPersistent,
+		int despawnDistance,
+		Operation<MobCategory> original
+	) {
+		final MutableMobCategory mutable = MutableMobCategory.forVanillaMutation(name, debugAbbreviation, max, isFriendly, isPersistent, despawnDistance);
 		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.modify(mutable));
-		return frozenLib$newMobCategory(
-			original.name(),
-			original.ordinal(),
+
+		return original.call(
+			internalName,
+			ordinal,
 			mutable.name(),
 			mutable.debugAbbreviation(),
 			mutable.max(),
