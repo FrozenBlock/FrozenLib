@@ -1,3 +1,5 @@
+import com.possible_triangle.gradle.features.enableKotlin
+
 plugins {
     id("com.possible-triangle.common") version("1.4-CUSTOM-SNAPSHOT")
     id("org.quiltmc.gradle.licenser")
@@ -28,6 +30,7 @@ val applyLicenses: Task by tasks
 
 common {
     accessWidener()
+    enableKotlin()
 }
 
 tasks {
