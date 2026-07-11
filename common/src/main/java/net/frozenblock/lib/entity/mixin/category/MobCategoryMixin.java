@@ -89,7 +89,7 @@ public class MobCategoryMixin {
 			final MobCategory newMobCategory = frozenLib$newMobCategory(
 				internalName,
 				currentOrdinal.incrementAndGet(),
-				mobCategory.createNameWithModId("_").toLowerCase(),
+				mobCategory.createNameWithModId(":").toLowerCase(),
 				mobCategory.debugAbbreviation(),
 				mobCategory.max(),
 				mobCategory.isFriendly(),
