@@ -74,11 +74,11 @@ public class FrozenLibConfiguredTreeFeature {
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getKey() {
-		return this.feature.key();
+		return this.feature.getKey();
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getLitterVariantKey() {
-		return this.featureWithLitter.key();
+		return this.featureWithLitter.getKey();
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder() {
