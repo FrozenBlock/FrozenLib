@@ -10,11 +10,11 @@ import org.jetbrains.annotations.ApiStatus;
 
 public class MutableMobCategory {
 	/**
-	 * Only used when creating a new {@link MobCategory} and throws an exception if empty.
+	 * The id of the mod creating the {@link MobCategory}. Throws an exception if empty.
 	 * <p>
-	 * If modifying an existing {@link MobCategory}, will be empty and is not referenced.
+	 * The new Enum's internal name will be {@code {modId}${name}} in uppercase.
 	 */
-	private final Optional<String> modId;
+	private final String modId;
 	/**
 	 * Only used when creating a new {@link MobCategory} and is called upon the new {@link MobCategory} being created.
 	 * <p>
@@ -22,9 +22,9 @@ public class MutableMobCategory {
 	 */
 	private final Optional<Consumer<MobCategory>> creationCallback;
 	/**
-	 * The name of the {@link MobCategory}.
+	 * The name of the {@link MobCategory}. Throws an exception if empty.
 	 * <p>
-	 * If creating a new {@link MobCategory}, the new Enum's internal name will be {@code {modId}${name}} in uppercase.
+	 * The new Enum's internal name will be {@code {modId}${name}} in uppercase.
 	 */
 	private String name;
 	/**
@@ -54,32 +54,9 @@ public class MutableMobCategory {
 	 */
 	private int despawnDistance;
 
-	private MutableMobCategory(Optional<String> modId, Optional<Consumer<MobCategory>> creationCallback) {
+	private MutableMobCategory(String modId, Optional<Consumer<MobCategory>> creationCallback) {
 		this.modId = modId;
 		this.creationCallback = creationCallback;
-	}
-
-	private MutableMobCategory(Optional<String> modId) {
-		this(modId, Optional.empty());
-	}
-
-	@ApiStatus.Internal
-	public static MutableMobCategory forVanillaMutation(
-		String name,
-		String debugAbbreviation,
-		int max,
-		boolean isFriendly,
-		boolean isPersistent,
-		int despawnDistance
-	) {
-		final MutableMobCategory mutable = new MutableMobCategory(Optional.empty());
-		mutable.name = name;
-		mutable.debugAbbreviation = debugAbbreviation;
-		mutable.max = max;
-		mutable.isFriendly = isFriendly;
-		mutable.isPersistent = isPersistent;
-		mutable.despawnDistance = despawnDistance;
-		return mutable;
 	}
 
 	/**
@@ -99,7 +76,7 @@ public class MutableMobCategory {
 		if (StringUtil.isNullOrEmpty(name)) throw new IllegalArgumentException("Custom Mob Category's name cannot be empty!");
 		if (StringUtil.isNullOrEmpty(debugAbbreviation)) throw new IllegalArgumentException("Custom Mob Category's debug abbreviation cannot be null!");
 
-		final MutableMobCategory mutable = new MutableMobCategory(Optional.of(modId), Optional.of(creationCallback));
+		final MutableMobCategory mutable = new MutableMobCategory(modId, Optional.of(creationCallback));
 		mutable.name = name;
 		mutable.debugAbbreviation = debugAbbreviation;
 		mutable.max = max;
@@ -109,18 +86,9 @@ public class MutableMobCategory {
 		return mutable;
 	}
 
-	public boolean isVanilla() {
-		return this.modId.isEmpty();
-	}
-
-	public boolean isMod() {
-		return this.modId.isPresent();
-	}
-
 	@ApiStatus.Internal
 	public String createInternalName() {
-		if (this.modId.isEmpty() || this.name.isEmpty()) throw new IllegalStateException("Cannot create internal name for a Mob Category without a valid modId and name!");
-		return this.modId.map(modId -> modId.toUpperCase() + "$" + this.name.toUpperCase()).orElseThrow();
+		return this.modId.toUpperCase() + "$" + this.name.toUpperCase();
 	}
 
 	@ApiStatus.Internal

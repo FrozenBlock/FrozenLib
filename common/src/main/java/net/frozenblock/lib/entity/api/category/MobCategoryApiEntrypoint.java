@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 import net.frozenblock.lib.core.entrypoint.Entrypoint;
 import net.minecraft.world.entity.MobCategory;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Used to modify or create new {@link MobCategory}s.
@@ -29,8 +30,6 @@ import net.minecraft.world.entity.MobCategory;
  */
 @Entrypoint("frozenlib:mob_category")
 public interface MobCategoryApiEntrypoint {
-
-	void modify(MutableMobCategory mobCategory);
 
 	void add(Context context);
 
@@ -41,6 +40,7 @@ public interface MobCategoryApiEntrypoint {
 			this.newCategories.add(category);
 		}
 
+		@ApiStatus.Internal
 		public void forEach(Consumer<MutableMobCategory> consumer) {
 			this.newCategories.forEach(consumer);
 		}

@@ -17,14 +17,11 @@
 
 package net.frozenblock.lib.entity.mixin.category;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.frozenblock.lib.core.entrypoint.EntrypointHelper;
 import net.frozenblock.lib.entity.api.category.MobCategoryApiEntrypoint;
-import net.frozenblock.lib.entity.api.category.MutableMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -60,39 +57,6 @@ public class MobCategoryMixin {
 	@Mutable
 	private static MobCategory[] $VALUES;
 
-	@WrapOperation(
-		method = "<clinit>",
-		at = @At(
-			value = "NEW",
-			target = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;IZZI)Lnet/minecraft/world/entity/MobCategory;"
-		)
-	)
-	private static MobCategory frozenLib$modifyMobCategories(
-		String internalName,
-		int ordinal,
-		String name,
-		String debugAbbreviation,
-		int max,
-		boolean isFriendly,
-		boolean isPersistent,
-		int despawnDistance,
-		Operation<MobCategory> original
-	) {
-		final MutableMobCategory mutable = MutableMobCategory.forVanillaMutation(name, debugAbbreviation, max, isFriendly, isPersistent, despawnDistance);
-		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.modify(mutable));
-
-		return original.call(
-			internalName,
-			ordinal,
-			mutable.name(),
-			mutable.debugAbbreviation(),
-			mutable.max(),
-			mutable.isFriendly(),
-			mutable.isPersistent(),
-			mutable.despawnDistance()
-		);
-	}
-
 	@Inject(
 		method = "<clinit>",
 		at = @At(
@@ -111,16 +75,13 @@ public class MobCategoryMixin {
 		final ArrayList<String> allInternalNames = new ArrayList<>();
 		for (MobCategory category : categories) allInternalNames.add(category.name());
 
-		final MobCategoryApiEntrypoint.Context context = new MobCategoryApiEntrypoint.Context();
 		// Add new categories
+		final MobCategoryApiEntrypoint.Context context = new MobCategoryApiEntrypoint.Context();
 		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.add(context));
-		// Modify new categories
-		context.forEach(mobCategory -> {
-			EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.modify(mobCategory));
-		});
 
 		context.forEach(mobCategory -> {
 			final String internalName = mobCategory.createInternalName();
+			if (internalName.equals("$")) throw new IllegalStateException("Cannot add MobCategory with empty internal name!");
 			if (allInternalNames.stream().anyMatch(string -> string.equals(internalName))) {
 				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalName + "!");
 			}
