@@ -24,13 +24,21 @@ import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.object.boat.BoatModel;
 
 @Environment(EnvType.CLIENT)
 @UtilityClass
 public final class ModelLayerRegistry {
+	private static final LayerDefinition BOAT_MODEL_LAYER = BoatModel.createBoatModel();
+	private static final LayerDefinition CHEST_BOAT_MODEL_LAYER = BoatModel.createChestBoatModel();
 
 	@PlatformImpl
 	public static void register(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {
 		throw new AssertionError();
+	}
+
+	public static void registerBoats(ModelLayerLocation boat, ModelLayerLocation chestBoat) {
+		register(boat, () -> BOAT_MODEL_LAYER);
+		register(chestBoat, () -> CHEST_BOAT_MODEL_LAYER);
 	}
 }
