@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.structure.impl.status;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.event.api.events.TickEvents;
-import net.frozenblock.lib.networking.PlayerLookup;
+import net.frozenblock.lib.networking.api.PlayerLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

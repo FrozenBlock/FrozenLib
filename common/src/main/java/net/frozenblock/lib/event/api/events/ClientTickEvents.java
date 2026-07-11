@@ -17,16 +17,14 @@
 
 package net.frozenblock.lib.event.api.events;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ClientTickEvents {
-
 	public static final Event<StartTick> START_CLIENT_TICK = EventRegistry.createEnvironmentEvent(StartTick.class, callbacks -> client -> {
 		for (StartTick callback : callbacks) {
 			callback.onStartTick(client);
@@ -51,25 +49,21 @@ public class ClientTickEvents {
 		}
 	});
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface StartTick {
 		void onStartTick(Minecraft client);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface EndTick {
 		void onEndTick(Minecraft client);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface StartLevelTick {
 		void onStartTick(ClientLevel level);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface EndLevelTick {
 		void onEndTick(ClientLevel level);

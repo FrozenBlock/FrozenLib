@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.registry.api.PotionBrewingRegistry;
+import net.frozenblock.lib.item.api.registry.PotionBrewingRegistry;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 

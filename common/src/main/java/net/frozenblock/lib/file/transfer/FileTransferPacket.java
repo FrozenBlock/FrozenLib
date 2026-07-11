@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -109,7 +109,7 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
-		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, create(destPath, file));
+		NetworkingHelper.sendToPlayer(player, create(destPath, file));
 	}
 
 	@ApiStatus.Internal

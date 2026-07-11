@@ -19,9 +19,8 @@ package net.frozenblock.lib.block.mixin.client.piston;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.MovingBlockRenderState;
@@ -41,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // TODO: common
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(PistonHeadRenderer.class)
 public class PistonHeadRendererMixin {
 

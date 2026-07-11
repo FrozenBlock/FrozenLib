@@ -24,7 +24,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentSync;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
-import net.frozenblock.lib.networking.PlayerLookup;
+import net.frozenblock.lib.networking.api.PlayerLookup;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.minecraft.resources.Identifier;

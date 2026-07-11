@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.List;
-import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
+import net.frozenblock.lib.item.api.component.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.frozenblock.lib.tag.api.FrozenLibItemTags;

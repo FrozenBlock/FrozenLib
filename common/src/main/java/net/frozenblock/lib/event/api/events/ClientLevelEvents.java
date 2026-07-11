@@ -17,16 +17,15 @@
 
 package net.frozenblock.lib.event.api.events;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ClientLevelEvents {
-
+	// TODO: this is different between fabric and neo
 	/**
 	 * Called after the client level has been changed.
 	 *
@@ -38,7 +37,6 @@ public class ClientLevelEvents {
 		}
 	});
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface AfterClientLevelChange {
 		void afterLevelChange(Minecraft client, ClientLevel level);

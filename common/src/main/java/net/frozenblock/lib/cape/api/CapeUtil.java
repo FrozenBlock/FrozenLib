@@ -41,7 +41,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -62,7 +62,7 @@ public class CapeUtil {
 
 	@ApiStatus.Internal
 	public static void sendCapeReposToPlayer(ServerPlayer recipient) {
-		CapeUtil.getCapeRepos().forEach(repoURL -> FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(recipient, new LoadCapeRepoPacket(repoURL)));
+		CapeUtil.getCapeRepos().forEach(repoURL -> NetworkingHelper.sendToPlayer(recipient, new LoadCapeRepoPacket(repoURL)));
 	}
 
 	@Unmodifiable

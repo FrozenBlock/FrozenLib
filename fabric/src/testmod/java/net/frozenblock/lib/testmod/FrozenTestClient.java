@@ -28,7 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityTypes;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenTestClient implements ClientModInitializer {
 
     @Override

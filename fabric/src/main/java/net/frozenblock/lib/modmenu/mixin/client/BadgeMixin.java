@@ -20,12 +20,11 @@ package net.frozenblock.lib.modmenu.mixin.client;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.modmenu.api.FrozenModMenuEntrypoint;
 import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Pseudo
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(Mod.Badge.class)
 public class BadgeMixin {
 

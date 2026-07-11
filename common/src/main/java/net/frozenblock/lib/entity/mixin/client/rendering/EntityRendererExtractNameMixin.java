@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.entity.mixin.client.rendering;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.ChatFormatting;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(EntityRenderer.class)
 public class EntityRendererExtractNameMixin<T extends Entity, S extends EntityRenderState> {
 

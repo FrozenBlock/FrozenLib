@@ -17,15 +17,14 @@
 
 package net.frozenblock.lib.config.clothconfig.impl;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
 /**
  * Used to integrate config syncing with Cloth Config.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public interface DisableableWidgetInterface {
 	void frozenLib$addSyncData(ConfigEntry<?> configInstance);
 	boolean frozenLib$isSyncable();

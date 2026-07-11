@@ -17,10 +17,9 @@
 
 package net.frozenblock.lib.music.impl.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public enum MusicPitchDetectionType {
 	BIOME,
 	STRUCTURE,

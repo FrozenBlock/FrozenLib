@@ -18,6 +18,8 @@
     "loot.LootTableBuilderMixin",
     "loot.LootTableMixin",
     "recipe.RecipeBuilderMixin",
+    "registry.PotionBrewingBuilderMixin",
+    "sherd.DecoratedPotPatternsMixin",
     "shovel.ShovelItemMixin"
   ],
   "client": [

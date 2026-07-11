@@ -19,9 +19,8 @@ package net.frozenblock.lib.debug.client.renderer;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.Gizmos;
@@ -31,7 +30,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 
 	public WindDebugRenderer() {}

@@ -19,7 +19,7 @@ package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.registry.FabricPotionBrewingBuilder;
-import net.frozenblock.lib.registry.api.PotionBrewingRegistry;
+import net.frozenblock.lib.item.api.registry.PotionBrewingRegistry;
 
 @UtilityClass
 public class FabricPotionBrewingEventBridge {

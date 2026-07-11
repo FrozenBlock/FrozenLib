@@ -19,15 +19,14 @@ package net.frozenblock.lib.platform.client;
 
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @UtilityClass
 public class ParticleProviderRegistry {
 

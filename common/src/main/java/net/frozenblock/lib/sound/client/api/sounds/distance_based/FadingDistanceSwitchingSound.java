@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.sound.client.api.sounds.distance_based;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -26,7 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance {
     private final boolean isFarSound;
     private final double maxDist;

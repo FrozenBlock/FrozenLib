@@ -18,12 +18,11 @@
 package net.frozenblock.lib.platform.client.platform;
 
 import java.util.function.Supplier;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class ModelLayerRegistryImpl {
 
 	public static void register(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {

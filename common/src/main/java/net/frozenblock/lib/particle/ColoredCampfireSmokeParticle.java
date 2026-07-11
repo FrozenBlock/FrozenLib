@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CampfireSmokeParticle;
 import net.minecraft.client.particle.Particle;
@@ -29,7 +28,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ColoredCampfireSmokeParticle extends CampfireSmokeParticle {
 	private final float targetRColor;
 	private final float startRColor;

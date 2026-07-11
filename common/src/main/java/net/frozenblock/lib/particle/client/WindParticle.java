@@ -19,12 +19,11 @@ package net.frozenblock.lib.particle.client;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.api.client.CustomRotationalParticleHelper;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.wind.WindManager;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -44,7 +43,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Contract;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class WindParticle extends SingleQuadParticle {
 	protected final CustomRotationalParticleHelper rotationalHelper = new CustomRotationalParticleHelper();
 	private final SpriteSet spriteSet;

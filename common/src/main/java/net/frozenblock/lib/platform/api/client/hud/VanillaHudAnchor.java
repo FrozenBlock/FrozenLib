@@ -17,10 +17,9 @@
 
 package net.frozenblock.lib.platform.api.client.hud;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public enum VanillaHudAnchor {
 	MISC_OVERLAYS,
 	CROSSHAIR,

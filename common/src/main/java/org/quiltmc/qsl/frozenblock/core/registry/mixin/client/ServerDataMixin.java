@@ -20,14 +20,13 @@ package org.quiltmc.qsl.frozenblock.core.registry.mixin.client;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.Map;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ServerData;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(ServerData.class)
 public class ServerDataMixin implements ModProtocolContainer {
 	@Unique

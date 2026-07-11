@@ -17,6 +17,9 @@
 
 package net.frozenblock.lib.renderer.impl;
 
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
+
+@ClientOnly
 public interface ModelPartInvertInterface {
 	default void frozenLib$setInverted() {
 		throw new AssertionError();

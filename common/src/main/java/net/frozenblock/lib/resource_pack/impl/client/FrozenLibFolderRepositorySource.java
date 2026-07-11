@@ -19,9 +19,8 @@ package net.frozenblock.lib.resource_pack.impl.client;
 
 import java.nio.file.Path;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
@@ -35,7 +34,7 @@ import org.jetbrains.annotations.ApiStatus;
  * <p>
  * Resource packs loaded from this repository will be marked as built-in and will always be enabled, with no way to disable them.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
 	private final String suffix;
 

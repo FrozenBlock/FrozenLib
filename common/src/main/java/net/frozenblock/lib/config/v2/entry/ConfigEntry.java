@@ -33,7 +33,7 @@ import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.networking.PlayerLookup;
+import net.frozenblock.lib.networking.api.PlayerLookup;
 import net.frozenblock.lib.platform.Game;
 import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.client.Minecraft;

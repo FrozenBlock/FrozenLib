@@ -18,9 +18,8 @@
 package net.frozenblock.lib.music.api.client.pitch;
 
 import java.util.function.Function;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 
 // TODO: data-drive me
@@ -30,6 +29,6 @@ import net.minecraft.resources.Identifier;
  * @param id The {@link Identifier} of the in-game id that triggers the pitch change.
  * @param pitchFunction The target pitch to play backgroundMusic at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record MusicPitchInfo(MusicPitchDetectionType type, Identifier id, Function<Long, Float> pitchFunction) {
 }

@@ -17,8 +17,10 @@
 
 package net.frozenblock.lib.renderer.impl;
 
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.joml.Quaternionf;
 
+@ClientOnly
 public interface CameraRenderStateInterface {
 	default void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
 		throw new AssertionError();

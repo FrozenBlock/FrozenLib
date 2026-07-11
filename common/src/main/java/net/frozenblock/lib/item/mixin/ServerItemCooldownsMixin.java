@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.item.impl.cooldown.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemCooldowns;
@@ -48,6 +48,6 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
 	@Unique
 	@Override
     public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
-		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(this.player, new CooldownChangePacket(cooldownGroup, additional));
+		NetworkingHelper.sendToPlayer(this.player, new CooldownChangePacket(cooldownGroup, additional));
     }
 }

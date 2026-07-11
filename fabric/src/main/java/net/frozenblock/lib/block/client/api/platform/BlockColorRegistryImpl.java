@@ -19,14 +19,13 @@ package net.frozenblock.lib.block.client.api.platform;
 
 import java.util.Arrays;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class BlockColorRegistryImpl {
 
 	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {

@@ -22,10 +22,9 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.networking.ConfigPacketSender;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.impl.ConfigPacketSender;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
@@ -41,7 +40,7 @@ import org.slf4j.Logger;
 import net.minecraft.ChatFormatting;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class ClientRegistrySync {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -62,19 +61,19 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientConfigReceiver(
+		NetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.Handshake.PACKET_TYPE,
 			(payload, client, sender) -> handleHelloPacket(payload, sender)
 		);
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientConfigReceiver(
+		NetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.End.PACKET_TYPE,
 			(payload, client, sender) -> handleEndPacket(payload, sender)
 		);
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientConfigReceiver(
+		NetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.ErrorStyle.PACKET_TYPE,
 			(payload, client, sender) -> handleErrorStylePacket(payload)
 		);
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientConfigReceiver(
+		NetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.ModProtocol.PACKET_TYPE,
 			(payload, client, sender) -> handleModProtocol(payload, sender)
 		);

@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.event.api;
 
+import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
-import java.util.function.Function;
 
 @UtilityClass
 public final class EventRegistry {

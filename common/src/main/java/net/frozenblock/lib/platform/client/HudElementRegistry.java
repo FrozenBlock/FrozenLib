@@ -18,14 +18,13 @@
 package net.frozenblock.lib.platform.client;
 
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.resources.Identifier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @UtilityClass
 public final class HudElementRegistry {
 

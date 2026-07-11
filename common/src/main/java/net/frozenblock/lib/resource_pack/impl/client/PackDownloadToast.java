@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.networking.FrozenLibClientNetworking;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -37,7 +36,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class PackDownloadToast implements Toast {
 	private static final Identifier BACKGROUND_SPRITE = FrozenLibConstants.id("toast/resource_pack");
 	private static final int MAX_LINE_SIZE = 200;

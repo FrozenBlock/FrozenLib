@@ -17,8 +17,6 @@
 
 package net.frozenblock.lib.particle.client.resource;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.ColoredCampfireSmokeParticle;
 import net.frozenblock.lib.particle.ColoredLargeSmokeParticle;
 import net.frozenblock.lib.particle.ColoredSmokeParticle;
@@ -26,8 +24,9 @@ import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.provider.FrozenLibParticleProviders;
 import net.frozenblock.lib.platform.client.ParticleProviderRegistry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FrozenLibParticleResources {
 
 	public static void init() {

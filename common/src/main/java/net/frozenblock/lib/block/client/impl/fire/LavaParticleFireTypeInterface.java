@@ -17,11 +17,10 @@
 
 package net.frozenblock.lib.block.client.impl.fire;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public interface LavaParticleFireTypeInterface {
 	default void frozenLib$setFireType(FireType fireType) {
 		throw new AssertionError();

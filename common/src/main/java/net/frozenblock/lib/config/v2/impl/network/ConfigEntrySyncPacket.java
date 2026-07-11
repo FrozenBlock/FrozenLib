@@ -19,8 +19,6 @@ package net.frozenblock.lib.config.v2.impl.network;
 
 import java.util.Collection;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
@@ -28,9 +26,10 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
-import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.api.PlayerLookup;
 import net.frozenblock.lib.platform.ModLoader;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -121,7 +120,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
 			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.get());
-			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, packet);
+			NetworkingHelper.sendToPlayer(player, packet);
 		}
 
 		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
@@ -141,14 +140,14 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		sendEntryS2C(player, ConfigV2Registry.allConfigEntries());
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static void sendC2S(Iterable<ConfigEntry<?>> entries) {
 		if (!FrozenLibNetworking.connectedToServer()) return;
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
 			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.getActual());
-			FrozenLibInitPlatformUtils.NETWORKING.sendToServer(packet);
+			NetworkingHelper.sendToServer(packet);
 		}
 
 		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
@@ -164,17 +163,17 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static void sendC2S() {
 		sendC2S(ConfigV2Registry.allConfigEntries());
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
 		trySendC2S(List.of(config));
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
 		if (!hasPermissionsToSendSync(Minecraft.getInstance().player, false)) return;
 		sendC2S(entries);

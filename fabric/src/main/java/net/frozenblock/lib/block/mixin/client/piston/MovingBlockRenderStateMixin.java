@@ -17,15 +17,14 @@
 
 package net.frozenblock.lib.block.mixin.client.piston;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.piston.state.MovingBlockRenderStateInterface;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(MovingBlockRenderState.class)
 public class MovingBlockRenderStateMixin implements MovingBlockRenderStateInterface {
 

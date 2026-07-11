@@ -18,11 +18,10 @@
 package net.frozenblock.lib.debug.mixin.client;
 
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
 import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(DebugRenderer.class)
 public class DebugRendererMixin {
 

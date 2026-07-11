@@ -18,16 +18,15 @@
 package net.frozenblock.lib.renderer.mixin.invert;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.impl.ModelPartInvertInterface;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(PartDefinition.class)
 public class PartDefinitionMixin implements ModelPartInvertInterface {
 

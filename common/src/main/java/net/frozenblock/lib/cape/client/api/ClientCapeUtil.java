@@ -24,17 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.platform.api.resource.FrozenLibResourceLoader;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
@@ -44,7 +43,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ClientCapeUtil {
 	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
@@ -57,7 +56,7 @@ public class ClientCapeUtil {
 
 	public static void init() {
 		ClientConnectionEvents.JOIN.register((handler, client) ->
-			FrozenLibInitPlatformUtils.NETWORKING.sendToServer(CapeCustomizePacket.create(Identifier.parse(FrozenLibConfig.CAPE.get())))
+			NetworkingHelper.sendToServer(CapeCustomizePacket.create(Identifier.parse(FrozenLibConfig.CAPE.get())))
 		);
 	}
 

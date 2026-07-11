@@ -18,15 +18,14 @@
 package net.frozenblock.lib.platform.client;
 
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @UtilityClass
 public final class BlockEntityRendererRegistry {
 

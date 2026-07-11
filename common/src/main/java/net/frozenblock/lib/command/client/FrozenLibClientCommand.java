@@ -24,13 +24,12 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.impl.client.ClientConfigCommand;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibClientCommand {
 
 	public static void register(

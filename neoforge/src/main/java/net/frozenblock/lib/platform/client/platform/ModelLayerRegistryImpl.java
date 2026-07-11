@@ -20,13 +20,12 @@ package net.frozenblock.lib.platform.client.platform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class ModelLayerRegistryImpl {
 	private static final List<Entry> LAYERS = new ArrayList<>();
 

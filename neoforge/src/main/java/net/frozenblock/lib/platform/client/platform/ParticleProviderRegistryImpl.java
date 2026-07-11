@@ -20,15 +20,14 @@ package net.frozenblock.lib.platform.client.platform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class ParticleProviderRegistryImpl {
 	private static final List<SpecialEntry<?>> SPECIAL_ENTRIES = new ArrayList<>();
 	private static final List<SpriteEntry<?>> SPRITE_ENTRIES = new ArrayList<>();

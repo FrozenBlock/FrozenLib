@@ -21,8 +21,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -34,8 +33,8 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Lets you add custom behavior to be run each time {@link Block#animateTick(BlockState, Level, BlockPos, RandomSource)} is called.
  */
-@Environment(EnvType.CLIENT)
-public class BlockAnimateTicks {
+@ClientOnly
+public final class BlockAnimateTicks {
 	@ApiStatus.Internal
 	private static final List<Pair<Predicate<BlockState>, InjectedAnimateTick>> ANIMATE_TICKS = new ArrayList<>();
 

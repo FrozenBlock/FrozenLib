@@ -18,7 +18,7 @@
 package net.frozenblock.lib.item.mixin;
 
 import java.util.Map;
-import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.item.impl.cooldown.CooldownInterface;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemCooldowns;
 import org.spongepowered.asm.mixin.Final;

@@ -17,15 +17,13 @@
 
 package net.frozenblock.lib.event.api.events;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ClientLifecycleEvents {
-
 	public static final Event<ClientStarted> CLIENT_STARTED = EventRegistry.createEnvironmentEvent(ClientStarted.class, callbacks -> client -> {
 		for (ClientStarted callback : callbacks) {
 			callback.onClientStarted(client);
@@ -38,13 +36,11 @@ public class ClientLifecycleEvents {
 		}
 	});
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface ClientStarted {
 		void onClientStarted(Minecraft client);
 	}
 
-	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface ClientStopping {
 		void onClientStopping(Minecraft client);

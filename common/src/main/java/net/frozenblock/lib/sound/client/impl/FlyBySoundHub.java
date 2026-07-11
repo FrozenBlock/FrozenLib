@@ -19,8 +19,7 @@ package net.frozenblock.lib.sound.client.impl;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.sounds.SoundEvent;
@@ -30,7 +29,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FlyBySoundHub {
     private static final int PLAY_COOLDOWN = 40;
     private static final int MIN_DISTANCE_FOR_REMOVAL = 16;

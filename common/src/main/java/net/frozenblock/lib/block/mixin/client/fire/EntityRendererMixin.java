@@ -18,17 +18,16 @@
 package net.frozenblock.lib.block.mixin.client.fire;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(EntityRenderer.class)
 public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
 

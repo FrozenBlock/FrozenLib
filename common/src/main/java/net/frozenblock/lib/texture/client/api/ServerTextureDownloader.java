@@ -33,12 +33,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import javax.imageio.ImageIO;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;import net.minecraft.client.Minecraft;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import org.apache.commons.io.FilenameUtils;
@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ServerTextureDownloader {
 	private static final List<String> POSSIBLE_EXTENSIONS = ImmutableList.of("png", "jpeg", "mcphoto");
 	public static final Map<String, Identifier> WAITING_TEXTURES = new HashMap<>();
@@ -148,7 +148,7 @@ public class ServerTextureDownloader {
 		}
 
 		if (FrozenLibConfig.FILE_TRANSFER_CLIENT.get() && texture != null) {
-			FrozenLibInitPlatformUtils.NETWORKING.sendToServer(FileTransferPacket.createRequest(destPath, fileName, POSSIBLE_EXTENSIONS));
+			NetworkingHelper.sendToServer(FileTransferPacket.createRequest(destPath, fileName, POSSIBLE_EXTENSIONS));
 			WAITING_TEXTURES.put(makePathFromRootAndDest(destPath, fileName), texture);
 			if (FrozenLibConstants.UNSTABLE_LOGGING) LOGGER.debug("Requesting server texture {} from {}", fileName, path);
 		}

@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.RegistryHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -55,7 +55,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 public interface FrozenDeferredRegister<T> {
 
 	static <T> FrozenDeferredRegister<T> create(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredRegister(registryKey, namespace);
+		return RegistryHelper.createDeferredRegister(registryKey, namespace);
 	}
 
 	static <T> FrozenDeferredRegister<T> create(Registry<T> registry, String namespace) {
@@ -63,19 +63,19 @@ public interface FrozenDeferredRegister<T> {
 	}
 
 	static Items createItems(String namespace) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredItemsRegister(namespace);
+		return RegistryHelper.createDeferredItemsRegister(namespace);
 	}
 
 	static Blocks createBlocks(String namespace) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredBlocksRegister(namespace);
+		return RegistryHelper.createDeferredBlocksRegister(namespace);
 	}
 
 	static DataComponents createDataComponents(String namespace) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredDataComponentsRegister(namespace);
+		return RegistryHelper.createDeferredDataComponentsRegister(namespace);
 	}
 
 	static Entities createEntities(String namespace) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredEntitiesRegister(namespace);
+		return RegistryHelper.createDeferredEntitiesRegister(namespace);
 	}
 
 	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier);

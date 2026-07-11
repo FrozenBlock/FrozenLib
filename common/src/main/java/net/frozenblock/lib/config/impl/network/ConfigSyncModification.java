@@ -17,12 +17,11 @@
 
 package net.frozenblock.lib.config.impl.network;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +37,7 @@ public class ConfigSyncModification {
 		config.removeSync();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	public static ConfigModification.EntryPermissionType canModify(@Nullable ConfigEntry<?> entry) {
 		if (entry == null || !entry.isSyncable()) return ConfigModification.EntryPermissionType.CAN_MODIFY;
 
@@ -48,5 +47,4 @@ public class ConfigSyncModification {
 		if (entry.isSynced()) return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SERVER;
 		return ConfigModification.EntryPermissionType.CAN_MODIFY;
 	}
-
 }

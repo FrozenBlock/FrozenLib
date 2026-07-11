@@ -17,11 +17,10 @@
 
 package net.frozenblock.lib.debug.client.renderer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
@@ -35,7 +34,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private static final GizmoStyle WIND_DISTURBANCE_AREA_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(0.5F, 1F, 0.5F, 0.35F));
 	private static final GizmoStyle WIND_DISTURBANCE_CORE_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(1F, 1F, 1F, 1F));

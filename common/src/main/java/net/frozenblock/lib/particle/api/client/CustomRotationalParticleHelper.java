@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.particle.api.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.math.api.AdvancedMath;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
@@ -28,7 +27,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class CustomRotationalParticleHelper {
 	private static final Vector3f NORMALIZED_QUAT_VECTOR = new Vector3f(0.5F, 0.5F, 0.5F).normalize();
 
@@ -42,8 +41,7 @@ public class CustomRotationalParticleHelper {
 
 	private boolean flipped;
 
-	public CustomRotationalParticleHelper() {
-	}
+	public CustomRotationalParticleHelper() {}
 
 	public void setPrevRotationFromCurrent() {
 		this.prevYRot = this.yRot;

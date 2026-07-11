@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.particle.client.provider;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.NoteParticle;
 import net.minecraft.client.particle.Particle;
@@ -29,8 +28,8 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
-public class FrozenLibParticleProviders {
+@ClientOnly
+public final class FrozenLibParticleProviders {
 
 	public static class NoteProvider implements ParticleProvider<ControlledNoteParticleOptions> {
 		private final SpriteSet sprite;

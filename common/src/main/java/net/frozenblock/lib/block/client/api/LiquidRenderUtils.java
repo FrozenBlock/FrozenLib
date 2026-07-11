@@ -18,8 +18,7 @@
 package net.frozenblock.lib.block.client.api;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
@@ -35,8 +34,8 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-@Environment(EnvType.CLIENT)
-public class LiquidRenderUtils {
+@ClientOnly
+public final class LiquidRenderUtils {
 
 	/**
 	 * Renders a block as a fluid, with a single texture.

@@ -18,9 +18,8 @@
 package net.frozenblock.lib.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderTypes;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -43,7 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 /**
  * A {@link BlockEntityRenderer} that renders a given texture as a billboard, like a particle.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
 	private final ModelPart base;
 

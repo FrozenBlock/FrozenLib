@@ -22,19 +22,18 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.networking.FrozenLibClientNetworking;
 import net.frozenblock.lib.networking.FrozenLibNetworking;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(TooltipListEntry.class)
 public class TooltipListEntryMixin {
 

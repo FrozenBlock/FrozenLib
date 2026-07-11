@@ -18,8 +18,6 @@
 package net.frozenblock.lib.item.mixin.sherd;
 
 import java.util.function.BiConsumer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.item.impl.sherd.DecoratedPotPatternRegistryEntrypoint;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
@@ -31,11 +29,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+// TODO: Common
 @Mixin(DecoratedPotPatterns.class)
 public class DecoratedPotPatternsMixin {
 
 	@Inject(method = "itemToPatternMappings", at = @At("HEAD"))
 	private static void frozenLib$itemToPatternMappings(BiConsumer<ResourceKey<Item>, ResourceKey<DecoratedPotPattern>> itemToPattern, CallbackInfo info) {
+		/*
 		FabricLoader.getInstance()
 			.getEntrypointContainers("frozenlib:decorated_pot_patterns", DecoratedPotPatternRegistryEntrypoint.class)
 			.forEach(entrypoint -> {
@@ -43,10 +43,12 @@ public class DecoratedPotPatternsMixin {
 					entrypoint.getEntrypoint().itemToPatternMappings(itemToPattern);
 				} catch (Throwable ignored) {}
 			});
+		 */
 	}
 
 	@Inject(method = "bootstrap", at = @At("HEAD"))
 	private static void frozenLib$bootstrap(Registry<DecoratedPotPattern> registry, CallbackInfoReturnable<DecoratedPotPattern> info) {
+		/*
 		FabricLoader.getInstance()
 			.getEntrypointContainers("frozenlib:decorated_pot_patterns", DecoratedPotPatternRegistryEntrypoint.class)
 			.forEach(entrypoint -> {
@@ -54,5 +56,6 @@ public class DecoratedPotPatternsMixin {
 					entrypoint.getEntrypoint().bootstrap(registry);
 				} catch (Throwable ignored) {}
 			});
+		 */
 	}
 }

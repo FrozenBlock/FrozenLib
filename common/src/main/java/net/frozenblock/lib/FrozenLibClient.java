@@ -17,15 +17,15 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.api.EnvType;import net.fabricmc.api.Environment;import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
+import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
-import net.frozenblock.lib.platform.client.HudElementRegistry;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
+import net.frozenblock.lib.platform.client.HudElementRegistry;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
@@ -33,11 +33,12 @@ import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {

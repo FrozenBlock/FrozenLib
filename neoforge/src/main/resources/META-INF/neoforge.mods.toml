@@ -10,9 +10,6 @@ config="mixin/frozenlib.advancement.mixins.json"
 config="mixin/frozenlib.block.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.brewing.mixins.json"
-
-[[mixins]]
 config="mixin/frozenlib.cape.mixins.json"
 
 [[mixins]]

@@ -19,14 +19,13 @@ package net.frozenblock.lib.platform.client.platform;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class EntityRendererRegistryImpl {
 	private static final List<Entry<?>> ENTRIES = new ArrayList<>();
 

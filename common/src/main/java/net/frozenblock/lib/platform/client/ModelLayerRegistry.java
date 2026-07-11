@@ -19,14 +19,13 @@ package net.frozenblock.lib.platform.client;
 
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.object.boat.BoatModel;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @UtilityClass
 public final class ModelLayerRegistry {
 	private static final LayerDefinition BOAT_MODEL_LAYER = BoatModel.createBoatModel();

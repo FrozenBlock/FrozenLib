@@ -34,7 +34,7 @@ import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
@@ -60,8 +60,6 @@ public final class FrozenLibNetworking {
 
 	@ApiStatus.Internal
 	public static void registerNetworking() {
-		final var networking = FrozenLibInitPlatformUtils.NETWORKING;
-
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
 			ConfigEntrySyncPacket.sendS2C(player);
 		});
@@ -70,15 +68,15 @@ public final class FrozenLibNetworking {
 			CapeUtil.sendCapeReposToPlayer(player);
 		});
 
-		networking.registerC2SPayloadType(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
-		networking.registerS2CPayloadType(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
-		networking.registerGlobalServerReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, server, player) -> {
+		NetworkingHelper.registerC2SPayloadType(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
+		NetworkingHelper.registerGlobalServerReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, server, player) -> {
 			if (ConfigEntrySyncPacket.hasPermissionsToSendSync(player, true)) ConfigEntrySyncPacket.receive(packet, player, server);
 		});
 
-		networking.registerS2CLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
-		networking.registerC2SLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
-		networking.registerGlobalServerReceiver(FileTransferPacket.PACKET_TYPE, (packet, server, player) -> {
+		NetworkingHelper.registerS2CLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
+		NetworkingHelper.registerC2SLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
+		NetworkingHelper.registerGlobalServerReceiver(FileTransferPacket.PACKET_TYPE, (packet, server, player) -> {
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();
 				final String fileName = packet.fileName();
@@ -93,7 +91,7 @@ public final class FrozenLibNetworking {
 					if (!file.exists()) continue;
 
 					try {
-						networking.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
+						NetworkingHelper.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
 						return;
 					} catch (IOException ignored) {}
 				}
@@ -116,26 +114,26 @@ public final class FrozenLibNetworking {
 			}
 		});
 
-		networking.registerS2CPayloadType(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
-		networking.registerS2CPayloadType(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
-		networking.registerS2CPayloadType(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
 
-		networking.registerS2CPayloadType(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
-		networking.registerS2CPayloadType(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
-		networking.registerS2CPayloadType(RelativeMovingSoundPacket.PACKET_TYPE, RelativeMovingSoundPacket.CODEC);
-		networking.registerS2CPayloadType(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
-		networking.registerS2CPayloadType(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
-		networking.registerS2CPayloadType(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
-		networking.registerS2CPayloadType(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, FadingDistanceSwitchingSoundPacket.CODEC);
-		networking.registerS2CPayloadType(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(RelativeMovingSoundPacket.PACKET_TYPE, RelativeMovingSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, FadingDistanceSwitchingSoundPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
 
 		// CAPE
-		networking.registerC2SPayloadType(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
-		networking.registerGlobalServerReceiver(CapeCustomizePacket.TYPE, (packet, server, player) -> CapeCustomizePacket.handle(packet, player));
-		networking.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
+		NetworkingHelper.registerC2SPayloadType(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
+		NetworkingHelper.registerGlobalServerReceiver(CapeCustomizePacket.TYPE, (packet, server, player) -> CapeCustomizePacket.handle(packet, player));
+		NetworkingHelper.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 
 		// WIND
-		networking.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
+		NetworkingHelper.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
 	}
 
 	public static void sendPacketToAllPlayers(ServerLevel level, CustomPacketPayload payload) {

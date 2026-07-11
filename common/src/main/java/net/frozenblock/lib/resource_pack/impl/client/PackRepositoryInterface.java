@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.resource_pack.impl.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
 
@@ -27,7 +26,7 @@ import net.minecraft.server.packs.repository.RepositorySource;
  * <p>
  * Allows modders to add their own {@link RepositorySource}s for resource packs.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public interface PackRepositoryInterface {
 	default void frozenLib$addRepositorySource(RepositorySource source) {
 		throw new AssertionError();

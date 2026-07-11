@@ -27,8 +27,7 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.frozenblock.lib.platform.RegistryHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
@@ -78,11 +77,11 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 
 	public static void setup() {
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {
@@ -94,6 +93,6 @@ public class FrozenLibRegistries {
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, RegistryHelper.RegistryBootstrap<T> bootstrap) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createSimpleRegistry(key, lifecycle, synced, bootstrap);
+		return RegistryHelper.createSimpleRegistry(key, lifecycle, synced, bootstrap);
 	}
 }

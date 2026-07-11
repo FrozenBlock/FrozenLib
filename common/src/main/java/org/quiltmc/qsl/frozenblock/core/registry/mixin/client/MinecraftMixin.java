@@ -18,8 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 
@@ -35,5 +34,4 @@ public class MinecraftMixin {
 	private void quilt$restoreRegistries(CallbackInfo info) {
 		ClientRegistrySync.disconnectCleanup(Minecraft.class.cast(this));
 	}
-
 }

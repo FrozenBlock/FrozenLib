@@ -18,12 +18,11 @@
 package net.frozenblock.lib.entity.client.api.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.api.AbstractBlockLikeMob;
 import net.frozenblock.lib.entity.client.api.renderer.entity.state.BlockLikeMobRenderState;
 import net.frozenblock.lib.math.api.AdvancedMath;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelResolver;
@@ -40,7 +39,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public abstract class AbstractBlockLikeMobRenderer<T extends AbstractBlockLikeMob, S extends BlockLikeMobRenderState, M extends EntityModel<? super S>> extends MobRenderer<T, S, M> {
 	private static final BlockDisplayContext BLOCK_DISPLAY_CONTEXT = BlockDisplayContext.create();
 	private static final Identifier EMPTY_TEXTURE = FrozenLibConstants.id("empty");

@@ -17,14 +17,13 @@
 
 package net.frozenblock.lib.platform.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class EntityRendererRegistry {
 
 	@PlatformImpl

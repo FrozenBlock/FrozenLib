@@ -18,14 +18,13 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @ApiStatus.Internal
 public final class ClientFreezer {
 

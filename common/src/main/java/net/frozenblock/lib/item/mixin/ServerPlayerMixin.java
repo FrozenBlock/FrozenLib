@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.item.impl.SaveableItemCooldowns;
+import net.frozenblock.lib.item.impl.cooldown.SaveableItemCooldowns;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;

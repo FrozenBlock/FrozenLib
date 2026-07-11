@@ -18,8 +18,7 @@
 package net.frozenblock.lib.texture.client.api;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TickableTexture;
 
@@ -28,7 +27,7 @@ import net.minecraft.client.renderer.texture.TickableTexture;
  *
  * <p> Sends a file transfer request to the server if the needed texture file is not present on the client, unless the file transfer config is disabled.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class ServerTexture extends DynamicTexture implements TickableTexture {
 	private final String destPath;
 	private final String fileName;

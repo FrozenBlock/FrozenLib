@@ -46,9 +46,6 @@ tasks {
 }
 
 dependencies {
-    // only for @Environment
-    api("net.fabricmc:fabric-loader:${fabric_loader_version}")
-
     compileOnlyApi("org.ow2.asm:asm:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-commons:${asm_version}")

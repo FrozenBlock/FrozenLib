@@ -17,13 +17,12 @@
 
 package net.frozenblock.lib.renderer;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireType;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
-@Environment(EnvType.CLIENT)
-public class FrozenLibRenderStateDataKeys {
+@ClientOnly
+public final class FrozenLibRenderStateDataKeys {
 	public static final RenderStateDataKey<FireType> FIRE_TYPE = RenderStateDataKey.create(FrozenLibConstants.id("fire_type"));
 	public static final RenderStateDataKey<String> ENTITY_NAME = RenderStateDataKey.create(FrozenLibConstants.id("entity_name"));
 }

@@ -22,8 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
@@ -38,7 +36,7 @@ import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.client.api.sounds.RelativeMovingSoundInstance;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
@@ -59,6 +57,7 @@ import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundL
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -74,12 +73,12 @@ import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	public static void registerClientReceivers() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, minecraft, player) ->
+		NetworkingHelper.registerGlobalClientReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, minecraft, player) ->
 			ConfigEntrySyncPacket.receive(packet, null, null)
 		);
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> {
@@ -104,14 +103,14 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveWindDebugPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(WindAccessPacket.TYPE, (packet, minecraft, player) ->
+		NetworkingHelper.registerGlobalClientReceiver(WindAccessPacket.TYPE, (packet, minecraft, player) ->
 			ClientWindUtil.Debug.addAccessedPosition(packet.accessPos())
 		);
 	}
 
 	@ApiStatus.Internal
 	private static void receiveLocalPlayerSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			minecraft.getSoundManager().play(
 				new EntityBoundSoundInstance(
 					packet.sound().value(),
@@ -127,7 +126,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveLocalSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LocalSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(LocalSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
 			final Vec3 pos = packet.pos();
 			level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.source(), packet.volume(), packet.pitch(), packet.distanceDelay());
@@ -136,7 +135,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveRelativeMovingSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(RelativeMovingSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(RelativeMovingSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			if (player == null) return;
 			minecraft.getSoundManager().play(
 				new RelativeMovingSoundInstance(
@@ -154,7 +153,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
 			final T entity = (T) level.getEntity(packet.id());
 			if (entity == null) return;
@@ -171,7 +170,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
 			final T entity = (T) level.getEntity(packet.id());
 			if (entity == null) return;
@@ -186,7 +185,7 @@ public final class FrozenLibClientNetworking {
 	}
 
 	private static void receiveFadingDistanceSwitchingSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			minecraft.getSoundManager().play(new FadingDistanceSwitchingSound(packet.closeSound().value(), packet.source(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), false, packet.pos()));
 			minecraft.getSoundManager().play(new FadingDistanceSwitchingSound(packet.farSound().value(), packet.source(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), true, packet.pos()));
 		});
@@ -194,7 +193,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final SoundManager soundManager = minecraft.getSoundManager();
 			final ClientLevel level = minecraft.level;
 			final T entity = (T) level.getEntity(packet.id());
@@ -213,7 +212,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveFlyBySoundPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = (ClientLevel) player.level();
 			final Entity entity = level.getEntity(packet.id());
 			if (entity == null) return;
@@ -225,14 +224,14 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveCapeRepoPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			CapeUtil.registerCapesFromURL(packet.capeRepo());
 		});
 	}
 
 	@ApiStatus.Internal
 	private static void receiveFileTransferPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(FileTransferPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(FileTransferPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
 
 			if (packet.request()) {
@@ -256,7 +255,7 @@ public final class FrozenLibClientNetworking {
 						return;
 					} else {
 						try {
-							FrozenLibInitPlatformUtils.NETWORKING.sendToServer(FileTransferPacket.create(requestPath, sendingFile));
+							NetworkingHelper.sendToServer(FileTransferPacket.create(requestPath, sendingFile));
 							return;
 						} catch (IOException ignored) {}
 					}
@@ -282,7 +281,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveCooldownChangePacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(CooldownChangePacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(CooldownChangePacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final Identifier cooldownGroup = packet.cooldownGroup();
 			final int additional = packet.additional();
 			player.getCooldowns().frozenLib$changeCooldown(cooldownGroup, additional);
@@ -291,7 +290,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveForcedCooldownPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final Identifier cooldownGroup = packet.cooldownGroup();
 			final int startTime = packet.startTime();
 			final int endTime = packet.endTime();
@@ -301,7 +300,7 @@ public final class FrozenLibClientNetworking {
 
 	@ApiStatus.Internal
 	private static void receiveCooldownTickCountPacket() {
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+		NetworkingHelper.registerGlobalClientReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			if (player != null) player.getCooldowns().tickCount = packet.count();
 		});
 	}
