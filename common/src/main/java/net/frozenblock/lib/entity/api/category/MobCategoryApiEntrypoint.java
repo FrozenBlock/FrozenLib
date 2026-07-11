@@ -19,7 +19,7 @@ package net.frozenblock.lib.entity.api.category;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import net.frozenblock.lib.core.entrypoint.Entrypoint;
+import net.frozenblock.lib.entrypoint.api.Entrypoint;
 import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.ApiStatus;
 

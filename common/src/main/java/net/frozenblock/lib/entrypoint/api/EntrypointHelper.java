@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.core.entrypoint;
+package net.frozenblock.lib.entrypoint.api;
 
 import java.util.function.Consumer;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;

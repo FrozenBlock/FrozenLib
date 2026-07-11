@@ -15,15 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.core.entrypoint;
+package net.frozenblock.lib.entrypoint.api.platform;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.ServiceLoader;
+import java.util.function.Consumer;
+import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Entrypoint {
-	String value();
+public class EntrypointHelperImpl {
+
+	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
+		EntrypointHelper.validateEntrypoint(clazz);
+		ServiceLoader.load(clazz, EntrypointHelper.class.getClassLoader())
+			.forEach(consumer);
+	}
 }

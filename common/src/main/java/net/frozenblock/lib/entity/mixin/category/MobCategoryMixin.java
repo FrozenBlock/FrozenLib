@@ -20,7 +20,7 @@ package net.frozenblock.lib.entity.mixin.category;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.frozenblock.lib.core.entrypoint.EntrypointHelper;
+import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
 import net.frozenblock.lib.entity.api.category.MobCategoryApiEntrypoint;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
@@ -89,7 +89,7 @@ public class MobCategoryMixin {
 			final MobCategory newMobCategory = frozenLib$newMobCategory(
 				internalName,
 				currentOrdinal.incrementAndGet(),
-				mobCategory.createNameWithModId(":").toLowerCase(),
+				mobCategory.createNameWithModId("_").toLowerCase(),
 				mobCategory.debugAbbreviation(),
 				mobCategory.max(),
 				mobCategory.isFriendly(),

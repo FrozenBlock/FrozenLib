@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.core.entrypoint.platform;
+package net.frozenblock.lib.entrypoint.api.platform;
 
 import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.core.entrypoint.EntrypointHelper;
+import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
 
 public class EntrypointHelperImpl {
 
