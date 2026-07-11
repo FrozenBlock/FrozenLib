@@ -53,12 +53,10 @@ group = maven_group
 
 val release = findProperty("releaseType")?.equals("stable")
 
-/*
 val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
 }
- */
 
 fabric {
     dependOn(project(":flib-common"))
@@ -69,22 +67,26 @@ fabric {
     }
 }
 
-/*loom {
+loom {
     runtimeOnlyLog4j.set(true)
+
+    interfaceInjection {
+        enableDependencyInterfaceInjection.set(true)
+    }
 
     runs {
         register("testmodClient") {
             client()
-            ideConfigGenerated(project.rootProject == project.parent)
+            configName = "Testmod Client"
+            ideConfigGenerated(true)
             preferGradleTask = true
-            name("Testmod Client")
             source(testmod.get())
         }
         register("testmodServer") {
             server()
-            ideConfigGenerated(project.rootProject == project.parent)
+            configName = "Testmod Server"
+            ideConfigGenerated(true)
             preferGradleTask = true
-            name("Testmod Server")
             source(testmod.get())
         }
 
@@ -105,30 +107,6 @@ fabric {
         enableDependencyInterfaceInjection = true
     }
 }
-
-loom {
-    runs {
-        register("datagen") {
-            client()
-            name("Data Generation")
-            source(datagen.get())
-            vmArg("-Dfabric-api.datagen")
-            vmArg("-Dfabric-api.datagen.output-dir=${rootProject.file("common/src/main/generated")}")
-            //vmArg("-Dfabric-api.datagen.strict-validation")
-            vmArg("-Dfabric-api.datagen.modid=frozenlib")
-
-            ideConfigGenerated(true)
-            runDir = "build/datagen"
-        }
-
-        named("client") {
-            ideConfigGenerated(true)
-        }
-        named("server") {
-            ideConfigGenerated(true)
-        }
-    }
-}*/
 
 val includeImplementation: Configuration by configurations.creating
 
@@ -235,7 +213,7 @@ dependencies {
     relocApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
-    // "testmodImplementation"(sourceSets.main.get().output)
+    "testmodImplementation"(sourceSets.main.get().output)
     implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -266,11 +244,9 @@ tasks {
         }
     }
 
-    /*
     test {
         useJUnitPlatform()
     }
-     */
 
     shadowJar {
         configurations = listOf(relocImplementation, relocApi)
@@ -324,7 +300,7 @@ tasks {
 
 val build: Task by tasks
 val applyLicenses: Task by tasks
-// val test: Task by tasks
+val test: Task by tasks
 val runClient: Task by tasks
 
 val jar: Jar by tasks

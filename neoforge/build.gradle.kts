@@ -50,37 +50,7 @@ repositories {
 neoforge {
     dependOn(project(":flib-common"))
     accessWidener(project(":flib-common"))
-    injectInterfaces(rootProject.file("common/src/main/resources/interfaces.json"))
 }
-
-/*loom {
-    accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
-    enableTransitiveAccessWideners = true
-
-    interfaceInjection {
-        enableDependencyInterfaceInjection = true
-    }
-
-    runs {
-        named("client") {
-            client()
-            name("NeoForge Client")
-            ideConfigGenerated(true)
-            //gameDirectory.set(project.mkdir(project.file("runs/client")))
-        }
-        named("server") {
-            server()
-            name("NeoForge Server")
-            ideConfigGenerated(true)
-            project.file("runs/server").parentFile?.mkdirs()
-            //gameDirectory.set(project.mkdir(project.file("runs/server")))
-        }
-    }
-}
-
-extensions.getByType<net.fabricmc.loom.api.LoomGradleExtensionAPI>().neoForge.run {
-    accessTransformer(file("src/main/resources/META-INF/neo/accesstransformer.cfg"))
-}*/
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
@@ -145,7 +115,7 @@ dependencies {
     //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 
     // Cloth Config (NeoForge edition)
-    compileOnly("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
+    implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
         exclude(group = "net.neoforged")
     }
 }
@@ -209,4 +179,8 @@ tasks {
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+}
+
+upload.maven {
+    name.set("frozenlib-neoforge")
 }

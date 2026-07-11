@@ -1,5 +1,0 @@
-{
-  "net/minecraft/world/entity/Entity": [
-    "net/frozenblock/lib/block/impl/clipgroup/ClipGroupInterface"
-  ]
-}

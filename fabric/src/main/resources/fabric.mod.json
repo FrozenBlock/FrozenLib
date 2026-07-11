@@ -80,7 +80,7 @@
     "mixin/frozenlib_quiltmc_registry.mixins.json",
     "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
   ],
-  "accessWidener": "frozenlib.accesswidener",
+  "accessWidener": "frozenlib.classtweaker",
   "depends": {
     "fabricloader": "${fabric_loader_version}",
     "fabric-api": "*",
