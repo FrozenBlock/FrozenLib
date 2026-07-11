@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api;
+package net.frozenblock.lib.item.api.creative;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibLogUtils;
@@ -34,7 +34,7 @@ import net.minecraft.world.level.ItemLike;
  * ITEMS MUST BE REGISTERED BEFORE THEY ARE ADDED HERE.
  */
 @UtilityClass
-public class FrozenCreativeTabs {
+public class CreativeModeTabSorter {
 
 	public static void insert(
 		ItemLike item,
@@ -81,7 +81,7 @@ public class FrozenCreativeTabs {
 		CreativeModeTab.TabVisibility tabVisibility,
 		ResourceKey<CreativeModeTab> ... tabs
 	) {
-		if (comparedItem == null || item == null ) return;
+		if (comparedItem == null || item == null) return;
 		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			FrozenLibInitPlatformUtils.CREATIVE_TAB.insertBefore(tab, comparedItem, item, tabVisibility);
