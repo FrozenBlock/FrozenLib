@@ -80,16 +80,16 @@ public class MobCategoryMixin {
 		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.add(context));
 
 		context.forEach(mobCategory -> {
-			final String name = mobCategory.createName();
-			if (name.equals("$")) throw new IllegalStateException("Cannot add MobCategory with empty internal name!");
-			if (allInternalNames.stream().anyMatch(string -> string.equals(name))) {
-				throw new IllegalStateException("Cannot add duplicate MobCategory " + name + "!");
+			final String internalName = mobCategory.createNameWithModId("$").toUpperCase();
+			if (internalName.equals("$")) throw new IllegalStateException("Cannot add MobCategory with empty internal name!");
+			if (allInternalNames.stream().anyMatch(string -> string.equals(internalName))) {
+				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalName + "!");
 			}
 
 			final MobCategory newMobCategory = frozenLib$newMobCategory(
-				name,
+				internalName,
 				currentOrdinal.incrementAndGet(),
-				name.toLowerCase(),
+				mobCategory.createNameWithModId(":").toLowerCase(),
 				mobCategory.debugAbbreviation(),
 				mobCategory.max(),
 				mobCategory.isFriendly(),
