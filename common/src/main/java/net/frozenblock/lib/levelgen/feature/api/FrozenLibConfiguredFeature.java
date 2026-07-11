@@ -43,10 +43,9 @@ public record FrozenLibConfiguredFeature<FC extends FeatureConfiguration>(Resour
 	public static final List<FrozenLibConfiguredFeature<?>> FEATURES = new ArrayList<>();
 
 	public FrozenLibConfiguredFeature(Identifier key) {
-		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
+		this(ResourceKey.create(Registries.CONFIGURED_FEATURE, key));
 		FEATURES.add(this);
 	}
-
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
 		if (level == null)

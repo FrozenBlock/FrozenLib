@@ -104,7 +104,7 @@ public class MutableMobCategory {
 	}
 
 	@ApiStatus.Internal
-	public String createInternalName() {
+	public String createName() {
 		return this.modId.toUpperCase() + "$" + this.name.toUpperCase();
 	}
 
