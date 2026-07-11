@@ -21,7 +21,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.levelgen.structure.impl.StructurePoolElementInterface;
-import net.frozenblock.lib.levelgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -48,8 +47,7 @@ public class SinglePoolElementMixin implements StructurePoolElementInterface {
 		)
 	)
 	public StructureTemplate frozenLib$place(StructureTemplate original) {
-		if (original instanceof StructureTemplateInterface structureTemplateInterface) structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
+		original.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
 		return original;
 	}
-
 }

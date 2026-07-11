@@ -116,9 +116,6 @@ transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/li
 transitive-inject-interface net/minecraft/world/entity/player/Player net/frozenblock/lib/block/impl/waterlike/PlayerInWaterLikeInterface
 
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/gravity/impl/EntityGravityInterface
-transitive-inject-interface net/minecraft/world/entity/LivingEntity net/frozenblock/lib/gravity/impl/EntityGravityInterface
-transitive-inject-interface net/minecraft/world/entity/vehicle/boat/AbstractBoat net/frozenblock/lib/gravity/impl/EntityGravityInterface
-transitive-inject-interface net/minecraft/world/entity/projectile/ThrowableProjectile net/frozenblock/lib/gravity/impl/EntityGravityInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/entity/impl/EntityStepOnBlockInterface
 
 # Entity Models

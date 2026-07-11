@@ -46,7 +46,7 @@ public class PackDownloadToast implements Toast {
 	private static final int DOUBLE_MARGIN = MARGIN * 2;
 	private static final int WIDTH_BUFFER = MARGIN * 3;
 	private final PackDownloadToast.PackDownloadToastId id;
-	private Component title;
+	private final Component title;
 	private final Optional<Supplier<Component>> bottomText;
 	private final List<FrozenLibModResourcePackApi.PackDownloadStatusProvider> messageProviders = new ArrayList<>();
 	private final List<FormattedCharSequence> messageLines = new ArrayList<>();

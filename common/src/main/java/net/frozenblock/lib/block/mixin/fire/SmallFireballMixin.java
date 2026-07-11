@@ -41,7 +41,7 @@ public class SmallFireballMixin {
 		)
 	)
 	public void frozenLib$setFireType(EntityHitResult hitResult, CallbackInfo info) {
-		if (FireData.ATTACHMENT.get((DataAttachmentTarget) SmallFireball.class.cast(this)) == null) return;
+		if (FireData.ATTACHMENT.get(SmallFireball.class.cast(this)) == null) return;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
 			hitResult.getEntity(),

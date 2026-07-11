@@ -45,7 +45,7 @@ public class IgniteMixin {
 	)
 	public void frozenLib$setFireType(ServerLevel serverLevel, int enchantmentLevel, EnchantedItemInUse item, Entity entity, Vec3 position, CallbackInfo info) {
 		boolean includeOwner = false;
-		final FireData fireData = item.owner() != null ? FireData.ATTACHMENT.get((DataAttachmentTarget) item.owner()) : null;
+		final FireData fireData = item.owner() != null ? FireData.ATTACHMENT.get(item.owner()) : null;
 		if (fireData != null && fireData.type().value().spreadSettings().spreadsFromIgniteEnchantments()) includeOwner = true;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(

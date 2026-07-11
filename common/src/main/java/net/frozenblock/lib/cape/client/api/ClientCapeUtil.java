@@ -35,7 +35,6 @@ import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.resource.FrozenResourceLoader;
-import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -84,11 +83,11 @@ public class ClientCapeUtil {
 	}
 
 	public static void extractCapeToRenderState(Entity entity, EntityRenderState state) {
-		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(Cape.ATTACHMENT_TYPE.get((DataAttachmentTarget) entity));
+		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(Cape.ATTACHMENT_TYPE.get(entity));
 		if (capeAttachment.isEmpty() || capeAttachment.get().isEmpty() || capeAttachment.get().get().dummy()) {
-			((FrozenLibRenderState) state).frozenLib$setData(CAPE_TEXTURE_DATA_KEY, null);
+			state.frozenLib$setData(CAPE_TEXTURE_DATA_KEY, null);
 		} else {
-			((FrozenLibRenderState) state).frozenLib$setData(CAPE_TEXTURE_DATA_KEY, capeAttachment.get().get().texture());
+			state.frozenLib$setData(CAPE_TEXTURE_DATA_KEY, capeAttachment.get().get().texture());
 		}
 	}
 

@@ -135,11 +135,11 @@ public class WindManager {
 	 */
 	public static WindManager getOrCreate(Level level) {
 		WindManager windManager = level instanceof ServerLevel
-			? ((DataAttachmentTarget)level).frozenLib$getAttached(ATTACHMENT_TYPE)
+			? level.frozenLib$getAttached(ATTACHMENT_TYPE)
 			: INSTANCE;
 		if (windManager == null) {
 			windManager = new WindManager((ServerLevel) level);
-			((DataAttachmentTarget)level).frozenLib$setAttached(ATTACHMENT_TYPE, windManager);
+			level.frozenLib$setAttached(ATTACHMENT_TYPE, windManager);
 		} else {
 			windManager.setLevel(level);
 		}
@@ -390,7 +390,7 @@ public class WindManager {
 
 	public void trySync(Level level) {
 		if (!(level instanceof ServerLevel serverLevel)) return;
-		ATTACHMENT_TYPE.sync((DataAttachmentTarget) serverLevel);
+		ATTACHMENT_TYPE.sync(serverLevel);
 	}
 
 	/**

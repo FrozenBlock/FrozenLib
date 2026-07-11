@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
-import net.frozenblock.lib.block.impl.waterlike.InWaterLikeInterface;
 import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.minecraft.sounds.SoundEvent;
@@ -41,7 +40,7 @@ public class PlayerMixin implements PlayerInWaterLikeInterface {
 	@Inject(method = "updateIsUnderwater", at = @At(value = "HEAD"))
 	public void frozenLib$updateIsInWaterLike(CallbackInfoReturnable<Boolean> info) {
 		this.frozenLib$playerWaterLikesInside.clear();
-		this.frozenLib$playerWaterLikesInside.addAll(((InWaterLikeInterface) this).frozenLib$waterLikesInside());
+		this.frozenLib$playerWaterLikesInside.addAll(Player.class.cast(this).frozenLib$waterLikesInside());
 	}
 
 	@Unique

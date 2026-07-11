@@ -23,7 +23,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.renderer.FrozenLibRenderState;import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
@@ -49,7 +49,7 @@ public class FlameFeatureRendererMixin {
 		FeatureFrameContext context
 	) {
 		final EntityRenderState entityRenderState = submit.entityRenderState();
-		final FireType fireType = ((FrozenLibRenderState) entityRenderState).frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
+		final FireType fireType = entityRenderState.frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
 		if (fireType != null) {
 			final AtlasManager atlasManager = context.atlasManager();
 			final FireType.TextureSettings textures = fireType.textures();

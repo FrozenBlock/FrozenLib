@@ -19,7 +19,6 @@ package net.frozenblock.lib.entity.mixin.client.rendering;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -38,6 +37,6 @@ public class EntityRendererExtractNameMixin<T extends Entity, S extends EntityRe
 	private void frozenLib$storeEntityName(T entity, S state, float partialTicks, CallbackInfo info) {
 		if (entity == null) return;
 		final String name = ChatFormatting.stripFormatting(entity.getDisplayName().getString());
-		((FrozenLibRenderState) state).frozenLib$setData(FrozenLibRenderStateDataKeys.ENTITY_NAME, name);
+		state.frozenLib$setData(FrozenLibRenderStateDataKeys.ENTITY_NAME, name);
 	}
 }

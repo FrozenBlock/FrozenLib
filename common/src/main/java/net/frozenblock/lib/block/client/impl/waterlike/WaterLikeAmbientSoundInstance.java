@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.impl.waterlike;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -50,7 +50,7 @@ public class WaterLikeAmbientSoundInstance extends AbstractTickableSoundInstance
 			return;
 		}
 
-		if (this.player.isUnderWater() && ((PlayerInWaterLikeInterface) this.player).frozenLib$wasPlayerInWaterLike(this.type)) {
+		if (this.player.isUnderWater() && this.player.frozenLib$wasPlayerInWaterLike(this.type)) {
 			this.fade++;
 		} else {
 			this.fade -= 2;

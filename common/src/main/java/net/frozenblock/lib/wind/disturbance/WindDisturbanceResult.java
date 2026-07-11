@@ -22,13 +22,13 @@ import net.minecraft.world.phys.Vec3;
 public sealed interface WindDisturbanceResult {
 	Pass PASS = new Pass();
 
-	public static Success success(double strength, double weight, Vec3 vector) {
+	static Success success(double strength, double weight, Vec3 vector) {
 		return new Success(strength, weight, vector);
 	}
 
-	public static record Success(double strength, double weight, Vec3 vector) implements WindDisturbanceResult {}
+	record Success(double strength, double weight, Vec3 vector) implements WindDisturbanceResult {}
 
-	public static record Pass() implements WindDisturbanceResult {
+	record Pass() implements WindDisturbanceResult {
 		public Pass() {}
 	}
 }

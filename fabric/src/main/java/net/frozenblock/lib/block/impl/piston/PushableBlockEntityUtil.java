@@ -31,13 +31,14 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: common
 public class PushableBlockEntityUtil {
 
 	public static boolean saveBlockEntity(Level level, BlockEntity blockEntity, BlockEntity pistonEntity) {
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
 		final CompoundTag blockEntityTag = blockEntity.saveWithFullMetadata(level.registryAccess());
-		((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$setPushedBlockEntityTag(blockEntityTag);
+		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(blockEntityTag);
 		return true;
 	}
 
@@ -45,7 +46,7 @@ public class PushableBlockEntityUtil {
 		if (tag == null) return true;
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
-		((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$setPushedBlockEntityTag(tag);
+		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(tag);
 		return true;
 	}
 
@@ -58,7 +59,7 @@ public class PushableBlockEntityUtil {
 	) {
 		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return setBlock;
 
-		final CompoundTag blockEntityTag = ((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$getPushedBlockEntityTag();
+		final CompoundTag blockEntityTag = pistonMovingBlock.frozenLib$getPushedBlockEntityTag();
 		if (blockEntityTag == null) return setBlock;
 
 		final BlockEntity blockEntity = BlockEntity.loadStatic(pos, state, blockEntityTag, level.registryAccess());
@@ -69,7 +70,7 @@ public class PushableBlockEntityUtil {
 
 	public static BlockEntity getFakeBlockEntity(BlockEntity pistonEntity) {
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return null;
-		return ((PistonMovingBlockEntityInterface) pistonMovingBlock).frozenLib$getPushedFakeBlockEntity();
+		return pistonMovingBlock.frozenLib$getPushedFakeBlockEntity();
 	}
 
 	public static boolean canChestsStick(BlockState state1, BlockState state2, Direction direction) {
@@ -90,5 +91,4 @@ public class PushableBlockEntityUtil {
 		final Direction connectedDirection2 = ChestBlock.getConnectedDirection(state2);
 		return connectedDirection1 == connectedDirection2.getOpposite();
 	}
-
 }

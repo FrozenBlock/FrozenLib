@@ -45,7 +45,7 @@ public class StructureMixin {
 		ResourceKey<Level> key,
 		RegistryAccess registryAccess
 	) {
-		StructureStartInterface.class.cast(original).frozenLib$setId(registryAccess.lookupOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));
+		((StructureStartInterface) original).frozenLib$setId(registryAccess.lookupOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));
 		return original;
 	}
 

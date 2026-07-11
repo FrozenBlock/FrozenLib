@@ -44,7 +44,7 @@ public class CameraMixin {
 		)
 	)
 	public Quaternionf frozenLib$extractHorizontalOrientation(Quaternionf original, CameraRenderState cameraState) {
-		((CameraRenderStateInterface) cameraState).frozenLib$setHorizontalOrientation(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, original, new Quaternionf()));
+		cameraState.frozenLib$setHorizontalOrientation(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, original, new Quaternionf()));
 		return original;
 	}
 }

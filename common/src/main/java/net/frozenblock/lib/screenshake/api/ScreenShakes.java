@@ -63,10 +63,10 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 
 	public static void init() {
 		TickEvents.START_LEVEL_TICK.register(serverLevel -> {
-			tick(serverLevel, ((DataAttachmentTarget) serverLevel));
+			tick(serverLevel, serverLevel);
 			for (Entity entity : serverLevel.getAllEntities()) {
 				if (entity.isRemoved()) continue;
-				tick(serverLevel, ((DataAttachmentTarget) entity));
+				tick(serverLevel, entity);
 			}
 		});
 	}

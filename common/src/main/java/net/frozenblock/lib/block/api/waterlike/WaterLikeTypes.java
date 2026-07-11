@@ -19,8 +19,7 @@ package net.frozenblock.lib.block.api.waterlike;
 
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.block.impl.waterlike.InWaterLikeInterface;
-import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -41,7 +40,7 @@ public final class WaterLikeTypes {
 	}
 
 	public static List<WaterLikeType> getAllInside(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(((InWaterLikeInterface) entity)::frozenLib$wasInWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasInWaterLike).toList();
 	}
 
 	public static Optional<WaterLikeType> getRandomInside(Entity entity) {
@@ -49,7 +48,7 @@ public final class WaterLikeTypes {
 	}
 
 	public static List<WaterLikeType> getPlayerAllInside(Player player) {
-		return getAll(player.registryAccess()).stream().filter(((PlayerInWaterLikeInterface) player)::frozenLib$wasPlayerInWaterLike).toList();
+		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerInWaterLike).toList();
 	}
 
 	public static Optional<WaterLikeType> getPlayerRandomInside(Player player) {
@@ -57,7 +56,7 @@ public final class WaterLikeTypes {
 	}
 
 	public static List<WaterLikeType> getAllTouching(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(((InWaterLikeInterface) entity)::frozenLib$wasTouchingWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasTouchingWaterLike).toList();
 	}
 
 	public static Optional<WaterLikeType> getRandomTouching(Entity entity) {
@@ -65,7 +64,7 @@ public final class WaterLikeTypes {
 	}
 
 	public static List<WaterLikeType> getAllTouchingOrUnderWaterAndWaterLike(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(((InWaterLikeInterface) entity)::frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike).toList();
 	}
 
 	public static Optional<WaterLikeType> getRandomTouchingOrUnderWaterAndWaterLike(Entity entity) {

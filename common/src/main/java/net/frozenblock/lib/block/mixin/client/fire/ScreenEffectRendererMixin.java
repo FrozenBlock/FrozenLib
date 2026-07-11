@@ -54,7 +54,7 @@ public class ScreenEffectRendererMixin {
 	public TextureAtlasSprite frozenLib$submitFireType(
 		SpriteGetter instance, SpriteId spriteId, Operation<TextureAtlasSprite> original
 	) {
-		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) this.minecraft.player);
+		final FireData fireData = FireData.ATTACHMENT.get(this.minecraft.player);
 		if (fireData == null) return original.call(instance, spriteId);
 
 		final Optional<Identifier> optionalTexture = fireData.type().value().textures().texture1();

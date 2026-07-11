@@ -70,13 +70,13 @@ public final class FireTypes {
 	}
 
 	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {
-		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) entity);
+		final FireData fireData = FireData.ATTACHMENT.get(entity);
 		if (fireData != null) return fireData.type().unwrapKey();
 		return Optional.empty();
 	}
 
 	public static Optional<Holder<FireType>> getFromEntityOrDefault(Entity entity) {
-		return getFromDataOrDefault(entity.registryAccess(), FireData.ATTACHMENT.get((DataAttachmentTarget) entity));
+		return getFromDataOrDefault(entity.registryAccess(), FireData.ATTACHMENT.get(entity));
 	}
 
 	public static Optional<Holder<FireType>> getFromDataOrDefault(RegistryAccess registryAccess, @Nullable FireData data) {

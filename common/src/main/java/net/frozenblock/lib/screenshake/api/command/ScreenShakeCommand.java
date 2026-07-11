@@ -64,7 +64,7 @@ public class ScreenShakeCommand {
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
 		ScreenShakes.add(
-			((DataAttachmentTarget) source.getLevel()),
+			source.getLevel(),
 			ScreenShake.builder(source.getLevel(), vec3)
 				.intensity(intensity)
 				.duration(duration)
@@ -91,7 +91,7 @@ public class ScreenShakeCommand {
 	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		for (Entity entity : entities) {
 			ScreenShakes.add(
-				((DataAttachmentTarget) entity),
+				entity,
 				ScreenShake.builder(entity)
 					.intensity(intensity)
 					.duration(duration)
@@ -119,13 +119,13 @@ public class ScreenShakeCommand {
 
 	private static int removeLevelScreenShakes(CommandSourceStack source) {
 		final Level level = source.getLevel();
-		final ScreenShakes screenShakes = ScreenShakes.get(((DataAttachmentTarget) level));
+		final ScreenShakes screenShakes = ScreenShakes.get(level);
 		if (screenShakes.isEmpty()) {
 			source.sendFailure(Component.translatable("commands.screenshake.remove.level.fail"));
 			return 0;
 		}
 
-		ScreenShakes.removeAttachment(((DataAttachmentTarget) level));
+		ScreenShakes.removeAttachment(level);
 
 		final int screenShakeCount = screenShakes.screenShakes().size();
 		final boolean oneScreenShake = screenShakeCount == 1;
@@ -142,11 +142,11 @@ public class ScreenShakeCommand {
 	private static int removeEntityScreenShakes(CommandSourceStack source, Collection<? extends Entity> entities) {
 		final List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			final ScreenShakes screenShakes = ScreenShakes.get(((DataAttachmentTarget) entity));
+			final ScreenShakes screenShakes = ScreenShakes.get(entity);
 			if (screenShakes.isEmpty()) continue;
 
 			affectedEntities.add(entity);
-			ScreenShakes.removeAttachment(((DataAttachmentTarget) entity));
+			ScreenShakes.removeAttachment(entity);
 		}
 
 		final int entityCount = affectedEntities.size();

@@ -169,7 +169,7 @@ public class JanksonOps implements DynamicOps<JsonElement> {
 			final var object = (JsonObject) map;
 			output.putAll(object);
 		}
-		output.put(((JsonPrimitive) key).asString(), value);
+		output.put(primitive.asString(), value);
 
 		return DataResult.success(output);
 	}
@@ -193,7 +193,7 @@ public class JanksonOps implements DynamicOps<JsonElement> {
 				missed.add(key);
 				return;
 			}
-			output.put(((JsonPrimitive) key).asString(), entry.getSecond());
+			output.put(primitive.asString(), entry.getSecond());
 		});
 
 		if (!missed.isEmpty()) {

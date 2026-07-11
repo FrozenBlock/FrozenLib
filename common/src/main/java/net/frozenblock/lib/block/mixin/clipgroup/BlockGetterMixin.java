@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.block.api.clipgroup.ClipGroups;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
-import net.frozenblock.lib.block.impl.clipgroup.ClipGroupInterface;import net.minecraft.core.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
@@ -50,9 +50,9 @@ public interface BlockGetterMixin {
 		final Entity entity = entityCollisionContext.getEntity();
 		final BlockState eyeState = this.getBlockState(BlockPos.containing(entity.getEyePosition()));
 
-		((ClipGroupInterface) entity).frozenLib$resetClipGroups();
+		entity.frozenLib$resetClipGroups();
 		for (ClipGroup group : ClipGroups.getAll(entity.registryAccess())) {
-			if (eyeState != null && group.contains(eyeState)) ((ClipGroupInterface) entity).frozenLib$addClipInGroup(group);
+			if (eyeState != null && group.contains(eyeState)) entity.frozenLib$addClipInGroup(group);
 		}
 	}
 
@@ -69,7 +69,7 @@ public interface BlockGetterMixin {
 	) {
 		if (context.collisionContext instanceof EntityCollisionContext entityCollisionContext
 			&& entityCollisionContext.getEntity() != null
-			&& ((ClipGroupInterface) entityCollisionContext.getEntity()).frozenLib$wasClipInGroup(blockState)
+			&& entityCollisionContext.getEntity().frozenLib$wasClipInGroup(blockState)
 		) {
 			blockShape = Shapes.empty();
 		}

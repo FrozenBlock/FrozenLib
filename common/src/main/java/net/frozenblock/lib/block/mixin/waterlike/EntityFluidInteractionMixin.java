@@ -25,7 +25,6 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.frozenblock.lib.block.impl.waterlike.InWaterLikeInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityFluidInteraction;
@@ -48,10 +47,9 @@ public class EntityFluidInteractionMixin {
 		@Share("frozenLib$closestPosDistance") LocalDoubleRef closestPosDistanceRef
 	) {
 		closestPosDistanceRef.set(Double.MAX_VALUE);
-		var waterlike = (InWaterLikeInterface) entity;
-		waterlike.frozenLib$setWaterReplacementParticlesFromBlock(null);
-		waterlike.frozenLib$clearInWaterLikes();
-		waterlike.frozenLib$clearTouchingWaterLikes();
+		entity.frozenLib$setWaterReplacementParticlesFromBlock(null);
+		entity.frozenLib$clearInWaterLikes();
+		entity.frozenLib$clearTouchingWaterLikes();
 	}
 
 	@WrapOperation(
@@ -86,12 +84,12 @@ public class EntityFluidInteractionMixin {
 	) {
 		if (!(blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock)) return original;
 
-		((InWaterLikeInterface) entity).frozenLib$addTouchingWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
+		entity.frozenLib$addTouchingWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
 		final double distance = entity.distanceToSqr(Vec3.atCenterOf(mutablePos));
 		if (distance >= closestPosDistanceRef.get()) return original;
 
 		closestPosDistanceRef.set(distance);
-		((InWaterLikeInterface) entity).frozenLib$setWaterReplacementParticlesFromBlock(waterLikeBlock);
+		entity.frozenLib$setWaterReplacementParticlesFromBlock(waterLikeBlock);
 
 		return original;
 	}
@@ -109,7 +107,7 @@ public class EntityFluidInteractionMixin {
 		@Share("frozenLib$blockState") LocalRef<BlockState> blockStateRef
 	) {
 		if (blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock) {
-			((InWaterLikeInterface) entity).frozenLib$addInWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
+			entity.frozenLib$addInWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
 		}
 	}
 }

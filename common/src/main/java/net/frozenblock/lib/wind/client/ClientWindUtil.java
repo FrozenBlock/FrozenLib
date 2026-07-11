@@ -53,14 +53,14 @@ public class ClientWindUtil {
 
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> WindManager.INSTANCE.reset());
 
-		ClientEntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) entity));
-		ClientEntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder((DataAttachmentTarget) entity));
+		ClientEntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
+		ClientEntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
-		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) blockEntity));
-		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder((DataAttachmentTarget) blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
 
-		ClientChunkLifecycleEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder((DataAttachmentTarget) chunk));
-		ClientChunkLifecycleEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder((DataAttachmentTarget) chunk));
+		ClientChunkLifecycleEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder(chunk));
+		ClientChunkLifecycleEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder(chunk));
 	}
 
 	@VisibleForDebug

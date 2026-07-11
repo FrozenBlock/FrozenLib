@@ -21,7 +21,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.ClientAsset;
@@ -51,7 +50,7 @@ public class WingsLayerMixin {
 	) {
 		if (!playerState.showCape) return;
 
-		final ClientAsset.Texture newCapeAsset = ((FrozenLibRenderState) playerState).frozenLib$getData(ClientCapeUtil.CAPE_TEXTURE_DATA_KEY);
+		final ClientAsset.Texture newCapeAsset = playerState.frozenLib$getData(ClientCapeUtil.CAPE_TEXTURE_DATA_KEY);
 		if (newCapeAsset != null) info.setReturnValue(newCapeAsset.texturePath());
 	}
 }

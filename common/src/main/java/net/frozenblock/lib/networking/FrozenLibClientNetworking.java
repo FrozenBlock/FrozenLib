@@ -35,7 +35,6 @@ import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
@@ -286,7 +285,7 @@ public final class FrozenLibClientNetworking {
 		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalClientReceiver(CooldownChangePacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final Identifier cooldownGroup = packet.cooldownGroup();
 			final int additional = packet.additional();
-			CooldownInterface.class.cast(player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additional);
+			player.getCooldowns().frozenLib$changeCooldown(cooldownGroup, additional);
 		});
 	}
 

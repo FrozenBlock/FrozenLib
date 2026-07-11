@@ -27,7 +27,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.waterlike.UnderWaterAmbientSoundInstanceHandler;
-import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -57,7 +57,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> wasPlayerInWaterLikeStatuses
 	) {
-		wasPlayerInWaterLikeStatuses.set(((PlayerInWaterLikeInterface) this).frozenLib$playerWaterLikesInside());
+		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 		UnderWaterAmbientSoundInstanceHandler.tick();
 	}
 
@@ -73,7 +73,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
-		isPlayerInWaterLikeStatuses.set(((PlayerInWaterLikeInterface) this).frozenLib$playerWaterLikesInside());
+		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 	}
 
 	@ModifyExpressionValue(

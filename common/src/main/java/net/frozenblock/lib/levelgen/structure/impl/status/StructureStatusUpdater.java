@@ -58,8 +58,8 @@ public class StructureStatusUpdater {
 			newStructureStatuses.add(new StructureStatus(structureRegistry.getKey(structure), insidePiece));
 		}
 
-		if (!newStructureStatuses.equals(StructureStatus.ATTACHMENT_TYPE.get((DataAttachmentTarget) player))) {
-			StructureStatus.ATTACHMENT_TYPE.set((DataAttachmentTarget) player, newStructureStatuses);
+		if (!newStructureStatuses.equals(StructureStatus.ATTACHMENT_TYPE.get(player))) {
+			StructureStatus.ATTACHMENT_TYPE.set(player, newStructureStatuses);
 		}
 	}
 }

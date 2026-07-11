@@ -47,7 +47,7 @@ public class DebugEntryStructureStatuses implements DebugScreenEntry {
 		final Entity entity = minecraft.getCameraEntity();
 		if (entity == null) return;
 
-		StructureStatus.ATTACHMENT_TYPE.getAttachedOrGet((DataAttachmentTarget) entity, ImmutableList::of).forEach(structureStatus -> {
+		StructureStatus.ATTACHMENT_TYPE.getAttachedOrGet(entity, ImmutableList::of).forEach(structureStatus -> {
 			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
 		});
 	}

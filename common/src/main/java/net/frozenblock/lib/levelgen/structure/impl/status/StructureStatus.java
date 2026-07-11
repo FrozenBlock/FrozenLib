@@ -46,7 +46,7 @@ public record StructureStatus(Identifier structure, boolean insidePiece) {
 
 	public static Optional<StructureStatus> getProminentStructureStatus(Player player) {
 		if (player == null) return Optional.empty();
-		final List<StructureStatus> statuses = ATTACHMENT_TYPE.getAttachedOrGet((DataAttachmentTarget) player, ImmutableList::of);
+		final List<StructureStatus> statuses = ATTACHMENT_TYPE.getAttachedOrGet(player, ImmutableList::of);
 		return Optional.ofNullable(statuses.stream()
 			.filter(StructureStatus::insidePiece)
 			.findFirst()

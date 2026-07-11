@@ -41,10 +41,10 @@ public abstract class MovingSoundType<D> {
 	}
 
 	public void addSound(Entity entity, D data) {
-		final List<D> current = ((DataAttachmentTarget) entity).frozenLib$getAttached(this.attachmentType);
+		final List<D> current = entity.frozenLib$getAttached(this.attachmentType);
 		final List<D> next = current == null ? new ArrayList<>() : new ArrayList<>(current);
 		next.add(data);
-		((DataAttachmentTarget) entity).frozenLib$setAttached(this.attachmentType, next);
+		entity.frozenLib$setAttached(this.attachmentType, next);
 		this.onAdd(entity, data);
 	}
 
@@ -55,13 +55,13 @@ public abstract class MovingSoundType<D> {
 	protected abstract void syncWithPlayer(Entity entity, ServerPlayer player, List<D> sounds);
 
 	public final void tickSounds(Entity entity) {
-		final List<D> sounds = ((DataAttachmentTarget) entity).frozenLib$getAttached(this.attachmentType);
+		final List<D> sounds = entity.frozenLib$getAttached(this.attachmentType);
 		if (sounds == null || sounds.isEmpty()) return;
-		((DataAttachmentTarget) entity).frozenLib$setAttached(this.attachmentType, this.tick(entity, sounds));
+		entity.frozenLib$setAttached(this.attachmentType, this.tick(entity, sounds));
 	}
 
 	public final void syncSounds(Entity entity, ServerPlayer player) {
-		final List<D> sounds = ((DataAttachmentTarget) entity).frozenLib$getAttached(this.attachmentType);
+		final List<D> sounds = entity.frozenLib$getAttached(this.attachmentType);
 		if (sounds == null || sounds.isEmpty()) return;
 		this.syncWithPlayer(entity, player, sounds);
 	}

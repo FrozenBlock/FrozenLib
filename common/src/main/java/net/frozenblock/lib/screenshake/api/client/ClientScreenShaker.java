@@ -58,7 +58,7 @@ public class ClientScreenShaker {
 		float totalIntensity = 0;
 		int count = 0;
 
-		for (ScreenShake screenShake : ScreenShakes.get(((DataAttachmentTarget) level)).screenShakes()) {
+		for (ScreenShake screenShake : ScreenShakes.get(level).screenShakes()) {
 			final float shakeIntensity = screenShake.calculateIntensityAt(cameraPos, gameTime);
 			if (shakeIntensity <= 0) continue;
 			totalIntensity += shakeIntensity;
@@ -67,7 +67,7 @@ public class ClientScreenShaker {
 		}
 
 		for (Entity entity : level.entitiesForRendering()) {
-			for (ScreenShake screenShake : ScreenShakes.get(((DataAttachmentTarget) entity)).screenShakes()) {
+			for (ScreenShake screenShake : ScreenShakes.get(entity).screenShakes()) {
 				final float shakeIntensity = screenShake.calculateIntensityAt(cameraPos, gameTime, entity);
 				if (shakeIntensity <= 0) continue;
 				totalIntensity += shakeIntensity;

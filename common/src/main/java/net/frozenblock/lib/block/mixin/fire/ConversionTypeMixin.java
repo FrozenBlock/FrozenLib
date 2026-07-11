@@ -32,8 +32,8 @@ public class ConversionTypeMixin {
 
 	@Inject(method = "convertCommon", at = @At("HEAD"))
 	private static void frozenLib$setFireTypeOnConversion(Mob from, Mob to, ConversionParams params, CallbackInfo info) {
-		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) from);
+		final FireData fireData = FireData.ATTACHMENT.get(from);
 		if (fireData == null) return;
-		FireData.ATTACHMENT.set((DataAttachmentTarget) to, new FireData(fireData.type()));
+		FireData.ATTACHMENT.set(to, new FireData(fireData.type()));
 	}
 }

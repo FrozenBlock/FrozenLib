@@ -95,9 +95,8 @@ public final class DeepCopyUtils {
             }
 
             // Collections
-            if (source instanceof Collection) {
-                Collection<?> col = (Collection<?>) source;
-                Collection<Object> newCol = instantiateCollection(col);
+            if (source instanceof Collection<?> col) {
+				Collection<Object> newCol = instantiateCollection(col);
                 seen.put(source, newCol);
                 for (Object elem : col) {
                     Object copied = deepCopyInternal(elem, seen);
@@ -107,9 +106,8 @@ public final class DeepCopyUtils {
             }
 
             // Maps
-            if (source instanceof Map) {
-                Map<?, ?> map = (Map<?, ?>) source;
-                Map<Object, Object> newMap = instantiateMap(map);
+            if (source instanceof Map<?, ?> map) {
+				Map<Object, Object> newMap = instantiateMap(map);
                 seen.put(source, newMap);
                 for (Map.Entry<?, ?> e : map.entrySet()) {
                     Object k = deepCopyInternal(e.getKey(), seen);

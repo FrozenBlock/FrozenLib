@@ -44,7 +44,7 @@ public class LivingEntityMixin {
 		if (!source.is(DamageTypes.ON_FIRE)) return;
 
 		final LivingEntity entity = LivingEntity.class.cast(this);
-		final FireData fireData = FireData.ATTACHMENT.get((DataAttachmentTarget) entity);
+		final FireData fireData = FireData.ATTACHMENT.get(entity);
 		if (damage != 1F || fireData == null) return;
 
 		final FireType fireType = fireData.type().value();

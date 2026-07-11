@@ -77,8 +77,8 @@ public abstract class ItemStackMixin implements TypedInstance<Item>, ItemStackEx
 		Object a, Object b, Operation<Boolean> original,
 		ItemStack left, ItemStack right
 	) {
-		if (ItemStackExtension.class.cast(left).frozenLib$canRemoveTags()) RemovableDataComponents.fixEmptyComponentsAndTags(left);
-		if (ItemStackExtension.class.cast(right).frozenLib$canRemoveTags()) RemovableDataComponents.fixEmptyComponentsAndTags(right);
+		if (left.frozenLib$canRemoveTags()) RemovableDataComponents.fixEmptyComponentsAndTags(left);
+		if (right.frozenLib$canRemoveTags()) RemovableDataComponents.fixEmptyComponentsAndTags(right);
 		return original.call(a, b);
 	}
 

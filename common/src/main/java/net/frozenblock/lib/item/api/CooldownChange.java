@@ -18,7 +18,6 @@
 package net.frozenblock.lib.item.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
@@ -35,6 +34,6 @@ public class CooldownChange {
 
 		final int between = entry.endTime() - entry.startTime();
 		if ((between + additionalCooldown) <= min) return;
-		CooldownInterface.class.cast(player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
+		player.getCooldowns().frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
 	}
 }

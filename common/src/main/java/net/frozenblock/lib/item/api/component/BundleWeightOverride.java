@@ -48,11 +48,11 @@ public final class BundleWeightOverride {
 		return this.fraction;
 	}
 
-	protected int numerator() {
+	private int numerator() {
 		return this.numerator;
 	}
 
-	protected int denominator() {
+	private int denominator() {
 		return this.denominator;
 	}
 }

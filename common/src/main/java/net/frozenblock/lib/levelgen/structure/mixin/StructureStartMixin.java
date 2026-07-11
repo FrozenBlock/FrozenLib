@@ -76,7 +76,7 @@ public class StructureStartMixin implements StructureStartInterface {
 	private static StructureStart frozenLib$loadStaticStartB(
 		StructureStart structureStart, @Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
 	) {
-		StructureStartInterface.class.cast(structureStart).frozenLib$setId(identifierRef.get());
+		structureStart.frozenLib$setId(identifierRef.get());
 		return structureStart;
 	}
 
@@ -87,8 +87,14 @@ public class StructureStartMixin implements StructureStartInterface {
 			target = "Lnet/minecraft/world/level/levelgen/structure/BoundingBox;getCenter()Lnet/minecraft/core/BlockPos;"
 		)
 	)
-	public void frozenLib$placeInChunkA(
-		WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo info,
+	public void frozenLib$collectProcessors(
+		WorldGenLevel level,
+		StructureManager structureManager,
+		ChunkGenerator generator,
+		RandomSource random,
+		BoundingBox chunkBB,
+		ChunkPos chunkPos,
+		CallbackInfo info,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
 		additionalProcessors.set(StructureProcessorApi.getAdditionalProcessors(this.frozenLib$id));
@@ -101,7 +107,7 @@ public class StructureStartMixin implements StructureStartInterface {
 			target = "Lnet/minecraft/world/level/levelgen/structure/StructurePiece;postProcess(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/core/BlockPos;)V"
 		)
 	)
-	public void frozenLib$placeInChunkB(
+	public void frozenLib$injectProcessors(
 		StructurePiece instance,
 		WorldGenLevel level,
 		StructureManager structureManager,

@@ -79,7 +79,7 @@ public class EntityMixin {
 		)
 	)
 	public void frozenLib$setSharedFlagOnFire(Entity instance, int flag, boolean value, Operation<Void> original) {
-		if (!instance.level().isClientSide() && !value) FireData.ATTACHMENT.remove((DataAttachmentTarget) instance);
+		if (!instance.level().isClientSide() && !value) FireData.ATTACHMENT.remove(instance);
 		original.call(instance, flag, value);
 	}
 }
