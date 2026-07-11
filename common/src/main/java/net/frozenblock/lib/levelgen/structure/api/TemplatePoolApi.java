@@ -57,9 +57,8 @@ public class TemplatePoolApi {
 
 			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
 				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
-					if (!((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface)) return;
 					final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().identifier());
-					if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
+					if (!additionalElements.isEmpty()) templatePoolEntry.getValue().frozenlib$addTemplatePools(additionalElements);
 				});
 			});
 		});

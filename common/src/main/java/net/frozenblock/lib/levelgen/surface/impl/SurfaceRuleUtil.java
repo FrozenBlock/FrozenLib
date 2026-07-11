@@ -37,9 +37,8 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 public class SurfaceRuleUtil {
 
 	public static void injectSurfaceRules(NoiseGeneratorSettings settings, HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
-		final NoiseGeneratorInterface noiseGenerator = (NoiseGeneratorInterface) settings;
 		final SurfaceRules.RuleSource newRules = FrozenLibSurfaceRules.getSurfaceRules(biomes, dimension);
-		if (newRules != null) noiseGenerator.frozenLib$writeSurfaceRules(newRules);
+		if (newRules != null) settings.frozenLib$writeSurfaceRules(newRules);
 	}
 
 	public static void init() {

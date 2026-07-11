@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.possible-triangle.neoforge")
+    id("com.possible-triangle.neoforge") version("1.4-CUSTOM-SNAPSHOT")
     id("com.gradleup.shadow")
     id("org.quiltmc.gradle.licenser")
     checkstyle
@@ -12,6 +12,8 @@ checkstyle {
     configFile = rootProject.file("checkstyle.xml")
     toolVersion = "10.20.2"
 }
+
+withKotlin()
 
 val mod_id: String by project
 val mod_version: String by project
@@ -171,7 +173,7 @@ tasks {
 
     withType(KotlinCompile::class) {
         compilerOptions {
-            //todo jvmTarget = JvmTarget.JVM_25
+            jvmTarget = JvmTarget.JVM_25
         }
     }
 }

@@ -25,7 +25,15 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public interface StructureSetAndPlacementInterface {
-	void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions);
-	List<Supplier<Boolean>> frozenLib$getGenerationConditions();
-	void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets);
+	default void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
+		throw new AssertionError();
+	}
+
+	default List<Supplier<Boolean>> frozenLib$getGenerationConditions() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets) {
+		throw new AssertionError();
+	}
 }

@@ -35,7 +35,7 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version("+")
-    id("com.possible-triangle.helper") version("+")
+    id("com.possible-triangle.helper") version("1.4-CUSTOM")
 }
 
 rootProject.name = "FrozenLib"
@@ -62,7 +62,15 @@ if (Constants.NEOFORGE) {
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
 
-fun localRepository(repo: String, dependencySub: String, prefix: String = "", multi: Boolean = true, kotlin: Boolean = true, enabled: Boolean) {
+fun localRepository(
+    repo: String,
+    dependencySub: String,
+    prefix: String = "",
+    multi: Boolean = true,
+    kotlin: Boolean = true,
+    candlelight: Boolean = false,
+    enabled: Boolean
+) {
     if (!enabled) return
     println("Attempting to include local repo $repo")
 
@@ -80,6 +88,10 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
     var path = "../$repo"
     var file = File(path)
 
+    val allSuffixes = mutableListOf("common")
+    if (Constants.FABRIC) allSuffixes.add("fabric")
+    if (Constants.NEOFORGE) allSuffixes.add("neoforge")
+
     if (allowLocalRepoUse && (isIDE || allowLocalRepoInConsoleMode)) {
         if (github) {
             path = repo
@@ -89,9 +101,6 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
         if (file.exists()) {
             includeBuild(path) {
                 dependencySubstitution {
-                    val allSuffixes = mutableListOf("common")
-                    if (Constants.FABRIC) allSuffixes.add("fabric")
-                    if (Constants.NEOFORGE) allSuffixes.add("neoforge")
                     if (multi && allSuffixes.isNotEmpty()) {
                         for (suffix in allSuffixes) {
                             substitute(module("$dependencySub-$suffix")).using(project(":$prefix-$suffix"))
@@ -104,10 +113,30 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
                     }
                 }
             }
+
+            // candlelight rewrites compiled classes into build/classes/java/main via its own
+            // candleLightTransform task, which isn't wired as a producer of the "classes" variant.
+            // Composite-build dependency substitution only pulls in the included build's compileJava,
+            // so without this, edits there compile stale here until its own classes/jar/build task
+            // is run once to trigger candleLightTransform.
+            if (multi && candlelight) {
+                gradle.rootProject {
+                    subprojects {
+                        val suffix = allSuffixes.find { project.name.endsWith("-$it") }
+                        if (suffix != null) {
+                            afterEvaluate {
+                                tasks.findByName("compileJava")?.dependsOn(
+                                    gradle.includedBuild(repo).task(":$prefix-$suffix:candleLightTransform")
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             println("Included local repo $repo")
         } else {
             println("Local repo $repo not found")
         }
     }
 }
-

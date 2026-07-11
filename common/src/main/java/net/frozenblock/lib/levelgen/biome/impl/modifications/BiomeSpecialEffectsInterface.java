@@ -22,13 +22,23 @@ import net.minecraft.world.level.biome.BiomeSpecialEffects;
 
 public interface BiomeSpecialEffectsInterface {
 
-	void frozenLib$setWaterColor(int color);
+	default void frozenLib$setWaterColor(int color) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$setFoliageColorOverride(Optional<Integer> color);
+	default void frozenLib$setFoliageColorOverride(Optional<Integer> color) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$setDryFoliageColorOverride(Optional<Integer> color);
+	default void frozenLib$setDryFoliageColorOverride(Optional<Integer> color) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$setGrassColorOverride(Optional<Integer> color);
+	default void frozenLib$setGrassColorOverride(Optional<Integer> color) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$setGrassColorModifier(BiomeSpecialEffects.GrassColorModifier colorModifier);
+	default void frozenLib$setGrassColorModifier(BiomeSpecialEffects.GrassColorModifier colorModifier) {
+		throw new AssertionError();
+	}
 }

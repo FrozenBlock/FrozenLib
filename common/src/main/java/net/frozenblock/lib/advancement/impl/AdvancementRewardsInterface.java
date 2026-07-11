@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public interface AdvancementRewardsInterface {
-
 	default List<ResourceKey<LootTable>> frozenLib$getLoot() {
 		throw new AssertionError();
 	}
@@ -37,6 +36,14 @@ public interface AdvancementRewardsInterface {
 	}
 
 	default void frozenLib$setRecipes(List<ResourceKey<Recipe<?>>> recipes) {
+		throw new AssertionError();
+	}
+
+	default int frozenLib$getExperience() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setExperience(int experience) {
 		throw new AssertionError();
 	}
 }

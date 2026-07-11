@@ -1,5 +1,5 @@
 plugins {
-    id("com.possible-triangle.common")
+    id("com.possible-triangle.common") version("1.4-CUSTOM-SNAPSHOT")
     id("org.quiltmc.gradle.licenser")
     checkstyle
 }

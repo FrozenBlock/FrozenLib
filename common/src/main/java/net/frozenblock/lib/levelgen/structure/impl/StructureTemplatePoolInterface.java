@@ -22,5 +22,7 @@ import java.util.List;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 
 public interface StructureTemplatePoolInterface {
-	void frozenlib$addTemplatePools(List<Pair<StructurePoolElement, Integer>> elements);
+	default void frozenlib$addTemplatePools(List<Pair<StructurePoolElement, Integer>> elements) {
+		throw new AssertionError();
+	}
 }

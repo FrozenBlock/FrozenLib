@@ -1,5 +1,6 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -8,7 +9,7 @@ import java.nio.file.Files
 import java.util.*
 
 plugins {
-    id("com.possible-triangle.fabric")
+    id("com.possible-triangle.fabric") version("1.4-CUSTOM-SNAPSHOT")
     id("org.ajoberstar.grgit")
     id("org.quiltmc.gradle.licenser")
     id("me.modmuss50.mod-publish-plugin")
@@ -20,6 +21,8 @@ checkstyle {
     configFile = rootProject.file("checkstyle.xml")
     toolVersion = "10.20.2"
 }
+
+withKotlin()
 
 val minecraft_version: String by project
 val fabric_loader_version: String by project
@@ -287,7 +290,7 @@ tasks {
 
     withType(KotlinCompile::class) {
         compilerOptions {
-            //jvmTarget = JvmTarget.JVM_25
+            jvmTarget = JvmTarget.JVM_25
             //apiVersion = KotlinVersion.KOTLIN_2_1
             //languageVersion = KotlinVersion.KOTLIN_2_1
         }
@@ -308,6 +311,8 @@ val sourcesJar: Jar by tasks
 val javadocJar: Jar by tasks
 
 java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 artifacts {

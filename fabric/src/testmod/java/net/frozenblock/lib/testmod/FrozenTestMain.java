@@ -85,7 +85,7 @@ public final class FrozenTestMain implements ModInitializer {
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
           AdvancementAPI.addLootTables(advancement, List.of(BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY));
-					advancement.rewards.experience = 100;
+					advancement.frozenLib$getRewards().frozenLib$setExperience(100);
 				}
 				case "minecraft:story/upgrade_tools" -> {
 					AdvancementAPI.addLootTables(advancement, List.of(ResourceKey.create(Registries.LOOT_TABLE, id("test_loottable"))));
@@ -97,7 +97,7 @@ public final class FrozenTestMain implements ModInitializer {
 						)
 					);
 					AdvancementAPI.addRequirementsAsNewList(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
-					advancement.rewards.experience = 1000;
+					advancement.frozenLib$getRewards().frozenLib$setExperience(1000);
 				}
 				default -> {}
 			}

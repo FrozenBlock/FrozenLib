@@ -25,11 +25,19 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 public interface FrozenPotionBrewingBuilder {
 
-	void frozenLib$registerItemRecipe(Item input, Ingredient ingredient, Item output);
+	default void frozenLib$registerItemRecipe(Item input, Ingredient ingredient, Item output) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$registerPotionRecipe(Holder<Potion> input, Ingredient ingredient, Holder<Potion> output);
+	default void frozenLib$registerPotionRecipe(Holder<Potion> input, Ingredient ingredient, Holder<Potion> output) {
+		throw new AssertionError();
+	}
 
-	void frozenLib$registerRecipes(Ingredient ingredient, Holder<Potion> potion);
+	default void frozenLib$registerRecipes(Ingredient ingredient, Holder<Potion> potion) {
+		throw new AssertionError();
+	}
 
-	FeatureFlagSet frozenLib$getEnabledFeatures();
+	default FeatureFlagSet frozenLib$getEnabledFeatures() {
+		throw new AssertionError();
+	}
 }

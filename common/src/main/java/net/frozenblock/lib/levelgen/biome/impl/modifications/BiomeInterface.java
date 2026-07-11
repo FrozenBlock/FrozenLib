@@ -21,9 +21,19 @@ import net.frozenblock.lib.levelgen.biome.impl.FrozenLibGrassColorModifier;
 import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeInterface {
-	Biome.ClimateSettings frozenLib$getClimateSettings();
-	void frozenLib$setClimateSettings(Biome.ClimateSettings settings);
+	default Biome.ClimateSettings frozenLib$getClimateSettings() {
+		throw new AssertionError();
+	}
 
-	void frozenLib$setFrozenLibGrassColorModifier(FrozenLibGrassColorModifier modifier);
-	FrozenLibGrassColorModifier frozenLib$getFrozenLibGrassColorModifier();
+	default void frozenLib$setClimateSettings(Biome.ClimateSettings settings) {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setFrozenLibGrassColorModifier(FrozenLibGrassColorModifier modifier) {
+		throw new AssertionError();
+	}
+
+	default FrozenLibGrassColorModifier frozenLib$getFrozenLibGrassColorModifier() {
+		throw new AssertionError();
+	}
 }
