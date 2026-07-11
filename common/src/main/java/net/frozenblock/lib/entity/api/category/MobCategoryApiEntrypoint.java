@@ -17,20 +17,32 @@
 
 package net.frozenblock.lib.entity.api.category;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import lombok.experimental.UtilityClass;
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import net.frozenblock.lib.core.entrypoint.Entrypoint;
 import net.minecraft.world.entity.MobCategory;
 
-@UtilityClass
-public class FrozenMobCategories {
-	private static final Map<String, MobCategory> NEW_MOB_CATEGORIES = new LinkedHashMap<>();
+/**
+ * Used to modify or create new {@link MobCategory}s.
+ * <p>
+ * If creating new {@link MobCategory}s, see {@link MutableMobCategory#create(String, String, String, int, boolean, boolean, int, Consumer)}.
+ */
+@Entrypoint("frozenlib:mob_category")
+public interface MobCategoryApiEntrypoint {
 
-	public static void addMobCategory(String id, MobCategory category) {
-		NEW_MOB_CATEGORIES.put(id, category);
-	}
+	void modify(MutableMobCategory mobCategory);
 
-	public static MobCategory getCategory(String modId, String name) {
-		return NEW_MOB_CATEGORIES.get(modId.toUpperCase() + name.toUpperCase());
+	void add(Context context);
+
+	final class Context {
+		private final ArrayList<MutableMobCategory> newCategories = new ArrayList<>();
+
+		public void add(MutableMobCategory category) {
+			this.newCategories.add(category);
+		}
+
+		public void forEach(Consumer<MutableMobCategory> consumer) {
+			this.newCategories.forEach(consumer);
+		}
 	}
 }

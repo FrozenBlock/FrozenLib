@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.entity.mixin.category;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import java.util.ArrayList;
 import java.util.Arrays;
-import net.frozenblock.lib.entity.api.category.FrozenMobCategories;
-import net.frozenblock.lib.entity.impl.category.FrozenMobCategory;
-import net.frozenblock.lib.platform.FrozenLibMixinPlatformUtils;
+import java.util.concurrent.atomic.AtomicInteger;
+import net.frozenblock.lib.core.entrypoint.EntrypointHelper;
+import net.frozenblock.lib.entity.api.category.MobCategoryApiEntrypoint;
+import net.frozenblock.lib.entity.api.category.MutableMobCategory;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -38,9 +40,9 @@ public class MobCategoryMixin {
 
 	@SuppressWarnings("InvokerTarget")
 	@Invoker("<init>")
-	private static MobCategory newType(
+	private static MobCategory frozenLib$newMobCategory(
 		String internalName,
-		int internalId,
+		int ordinal,
 		String name,
 		String debugAbbreviation,
 		int max,
@@ -57,6 +59,28 @@ public class MobCategoryMixin {
 	@Mutable
 	private static MobCategory[] $VALUES;
 
+	@ModifyExpressionValue(
+		method = "<clinit>",
+		at = @At(
+			value = "NEW",
+			target = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;IZZI)Lnet/minecraft/world/entity/MobCategory;"
+		)
+	)
+	private static MobCategory frozenLib$modifyMobCategories(MobCategory original) {
+		final MutableMobCategory mutable = MutableMobCategory.of(original);
+		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.modify(mutable));
+		return frozenLib$newMobCategory(
+			original.name(),
+			original.ordinal(),
+			mutable.name(),
+			mutable.debugAbbreviation(),
+			mutable.max(),
+			mutable.isFriendly(),
+			mutable.isPersistent(),
+			mutable.despawnDistance()
+		);
+	}
+
 	@Inject(
 		method = "<clinit>",
 		at = @At(
@@ -69,34 +93,39 @@ public class MobCategoryMixin {
 	private static void frozenLib$addCustomCategories(CallbackInfo info) {
 		final var categories = new ArrayList<>(Arrays.asList($VALUES));
 		final var last = categories.getLast();
-		int currentOrdinal = last.ordinal();
+		final AtomicInteger currentOrdinal = new AtomicInteger(last.ordinal());
 
-		final ArrayList<String> internalIds = new ArrayList<>();
-		for (MobCategory category : categories) internalIds.add(category.name());
+		// Store all internal names to check for duplicates later
+		final ArrayList<String> allInternalNames = new ArrayList<>();
+		for (MobCategory category : categories) allInternalNames.add(category.name());
 
-		final var newCategories = FrozenLibMixinPlatformUtils.MOB_CATEGORY.gatherMobCategories();
+		final MobCategoryApiEntrypoint.Context context = new MobCategoryApiEntrypoint.Context();
+		// Add new categories
+		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.add(context));
+		// Modify new categories
+		context.forEach(mobCategory -> {
+			EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.modify(mobCategory));
+		});
 
-		for (FrozenMobCategory category : newCategories) {
-			final String namespace = category.key().getNamespace();
-			final String path = category.key().getPath();
-			final StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
-			internalId.append(path.toUpperCase());
-			if (internalIds.contains(internalId.toString())) throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
+		context.forEach(mobCategory -> {
+			final String internalName = mobCategory.createInternalName();
+			if (allInternalNames.stream().anyMatch(string -> string.equals(internalName))) {
+				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalName + "!");
+			}
 
-			currentOrdinal += 1;
-			final MobCategory addedCategory = newType(
-				internalId.toString(),
-				currentOrdinal,
-				namespace + path,
-				category.debugAbbreviation(),
-				category.max(),
-				category.isFriendly(),
-				category.isPersistent(),
-				category.despawnDistance()
+			final MobCategory newMobCategory = frozenLib$newMobCategory(
+				internalName,
+				currentOrdinal.incrementAndGet(),
+				mobCategory.name(),
+				mobCategory.debugAbbreviation(),
+				mobCategory.max(),
+				mobCategory.isFriendly(),
+				mobCategory.isPersistent(),
+				mobCategory.despawnDistance()
 			);
-			categories.add(addedCategory);
-			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
-		}
+			mobCategory.onCreated(newMobCategory);
+			categories.add(newMobCategory);
+		});
 
 		$VALUES = categories.toArray(new MobCategory[0]);
 	}
