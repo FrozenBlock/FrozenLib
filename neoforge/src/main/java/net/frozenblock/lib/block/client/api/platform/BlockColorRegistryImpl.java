@@ -15,21 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.block;
+package net.frozenblock.lib.block.client.api.platform;
 
 import java.util.Arrays;
 import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
-import net.frozenblock.lib.platform.service.BlockColorHelper;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
-public class NeoBlockColorHelper implements BlockColorHelper {
+@Environment(EnvType.CLIENT)
+public final class BlockColorRegistryImpl {
 
-	@Override
-	public void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
+	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
 		ModLoadingContext.get().getActiveContainer().getEventBus().addListener((RegisterColorHandlersEvent.BlockTintSources event) -> {
 			event.register(tintSources, Arrays.stream(blocks).map(FrozenDeferredBlock::get).toArray(Block[]::new));
 		});

@@ -22,15 +22,29 @@ import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 public class EntrypointHelper {
 
+	/**
+	 * Executes a {@link Consumer} for each {@link Entrypoint} instance found.
+	 * <p>
+	 * Fabric: Uses Fabric's entrypoint system.
+	 * <p>
+	 * NeoForge: Uses Java Services.
+	 */
 	@PlatformImpl
 	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
 		throw new AssertionError();
 	}
 
+	/**
+	 * @throws IllegalStateException If the given class is not an {@link Entrypoint}.
+	 */
 	public static void validateEntrypoint(Class<?> clazz) {
-		if (!clazz.isAnnotationPresent(Entrypoint.class)) throw new IllegalArgumentException("Class " + clazz.getName() + " is not an entrypoint!");
+		if (!clazz.isAnnotationPresent(Entrypoint.class)) throw new IllegalStateException("Class " + clazz.getName() + " is not an entrypoint!");
 	}
 
+	/**
+	 * @return The {@link Entrypoint} annotation of the given class.
+	 * @throws IllegalStateException If the given class is not an {@link Entrypoint}.
+	 */
 	public static Entrypoint getEntrypointInformation(Class<?> clazz) {
 		validateEntrypoint(clazz);
 		return clazz.getAnnotation(Entrypoint.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.block;
+package net.frozenblock.lib.platform.client;
 
-import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
-import net.frozenblock.lib.platform.service.BlockColorHelper;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.color.block.BlockTintSource;
-import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
-public class FabricBlockColorHelper implements BlockColorHelper {
+public final class BlockColorRegistry {
 
-	@Override
-	public void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
-		BlockColorRegistry.register(tintSources, Arrays.stream(blocks).map(FrozenDeferredBlock::get).toArray(Block[]::new));
-	}
+
 }

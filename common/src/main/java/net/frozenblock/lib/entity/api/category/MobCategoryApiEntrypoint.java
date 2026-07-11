@@ -40,6 +40,19 @@ public interface MobCategoryApiEntrypoint {
 			this.newCategories.add(category);
 		}
 
+		public void add(
+			String modId,
+			String name,
+			String debugAbbreviation,
+			int max,
+			boolean isFriendly,
+			boolean isPersistent,
+			int despawnDistance,
+			Consumer<MobCategory> creationCallback
+		) {
+			this.add(MutableMobCategory.create(modId, name, debugAbbreviation, max, isFriendly, isPersistent, despawnDistance, creationCallback));
+		}
+
 		@ApiStatus.Internal
 		public void forEach(Consumer<MutableMobCategory> consumer) {
 			this.newCategories.forEach(consumer);

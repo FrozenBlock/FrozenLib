@@ -20,17 +20,18 @@ package net.frozenblock.lib.block.client.api;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.world.level.FoliageColor;
 
 @Environment(EnvType.CLIENT)
-public class BlockColorRegistry {
+public final class BlockColorRegistry {
 
+	@PlatformImpl
 	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
-		FrozenLibInitPlatformUtils.BLOCK_COLOR.register(tintSources, blocks);
+		throw new AssertionError();
 	}
 
 	public static void registerAverageFoliageTint(FrozenDeferredBlock<?>... blocks) {

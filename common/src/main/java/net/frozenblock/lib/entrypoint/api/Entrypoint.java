@@ -22,8 +22,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Defines a class as an entrypoint (see {@link EntrypointHelper} for usage).
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Entrypoint {
+	/**
+	 * The name of this entrypoint on {@code Fabric}.
+	 */
 	String value();
 }

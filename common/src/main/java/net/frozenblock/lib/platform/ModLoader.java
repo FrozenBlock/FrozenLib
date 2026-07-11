@@ -27,7 +27,7 @@ import net.frozenblock.lib.platform.api.Env;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import org.jetbrains.annotations.Nullable;
 
-public class ModLoader {
+public final class ModLoader {
 
 	@PlatformImpl
 	public static boolean isDevelopmentEnvironment() {

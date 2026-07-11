@@ -20,7 +20,7 @@ package net.frozenblock.lib;
 import java.util.Arrays;
 import net.frozenblock.lib.platform.ModLoader;
 
-public class FrozenBools {
+public final class FrozenBools {
 	/**
 	 * This is set to true when Bootstrap.bootStrap() is finished.
 	 */
