@@ -24,7 +24,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import xjs.data.JsonObject;
 import xjs.data.serialization.JsonContext;
 
-public class ConfigEntryByteBufUtil {
+// TODO: Is this even used? Can this be removed?
+public final class ConfigEntryByteBufUtil {
 
 	public static <T> T readUbjson(FriendlyByteBuf buf, ID entryId, String className) throws Exception {
 		final Class<T> clazz = (Class<T>) Class.forName(className);

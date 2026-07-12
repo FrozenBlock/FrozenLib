@@ -28,8 +28,8 @@ import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import static net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper.*;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.networking.api.NetworkingHelper;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
+import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,7 +47,7 @@ public final class FrozenLibConfigGui {
 
 		category.addEntry(
 			syncedEntry(
-				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
+				entryBuilder.startEnumSelector(text("pack_downloading"), ModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
 					.setEnumNameProvider(downloadSetting -> enumNameProvider(downloadSetting.toString()))
 					.setTooltip(tooltip("pack_downloading")),
 				FrozenLibConfig.PACK_DOWNLOADING
@@ -78,7 +78,7 @@ public final class FrozenLibConfigGui {
 						final Identifier capeId = Identifier.parse((String) newValue);
 						FrozenLibConfig.CAPE.setValue((String) newValue);
 						if (Minecraft.getInstance().getConnection() != null)
-							NetworkingHelper.sendToServer(CapeCustomizePacket.create(capeId));
+							ClientNetworkingHelper.sendToServer(CapeCustomizePacket.create(capeId));
 					})
 					.setTooltip(tooltip("cape"))
 					.build()

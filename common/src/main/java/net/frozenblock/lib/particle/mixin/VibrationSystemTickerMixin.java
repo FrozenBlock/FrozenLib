@@ -39,23 +39,23 @@ public interface VibrationSystemTickerMixin {
 	)
 	private static int frozenLib$removeParticleIfTestFails(
 		ServerLevel usedLevel,
-		ParticleOptions vibrationParticleOption,
+		ParticleOptions particle,
 		double x,
 		double y,
 		double z,
 		int count,
-		double xOffset,
-		double yOffset,
-		double zOffset,
+		double xDist,
+		double yDist,
+		double zDist,
 		double speed,
 		Operation<Integer> operation,
 		VibrationSystem.Data data,
 		VibrationSystem.User user,
-		ServerLevel level,
-		VibrationInfo vibrationInfo
+		ServerLevel serverLevel,
+		VibrationInfo context
 	) {
 		if (!VibrationParticleVisibilityApi.isVisible(data, user)) return 0;
-		return operation.call(usedLevel, vibrationParticleOption, x, y, z, count, xOffset, yOffset, zOffset, speed);
+		return operation.call(usedLevel, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
 
 	@WrapOperation(
@@ -67,14 +67,14 @@ public interface VibrationSystemTickerMixin {
 	)
 	private static int frozenLib$removeParticleReloadIfTestFails(
 		ServerLevel usedLevel,
-		ParticleOptions vibrationParticleOption,
+		ParticleOptions particle,
 		double x,
 		double y,
 		double z,
 		int count,
-		double xOffset,
-		double yOffset,
-		double zOffset,
+		double xDist,
+		double yDist,
+		double zDist,
 		double speed,
 		Operation<Integer> operation,
 		ServerLevel level,
@@ -82,7 +82,7 @@ public interface VibrationSystemTickerMixin {
 		VibrationSystem.User user
 	) {
 		if (!VibrationParticleVisibilityApi.isVisible(data, user)) return 1;
-		return operation.call(usedLevel, vibrationParticleOption, x, y, z, count, xOffset, yOffset, zOffset, speed);
+		return operation.call(usedLevel, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
 
 }

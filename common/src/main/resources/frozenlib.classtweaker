@@ -470,7 +470,7 @@ transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityC
 transitive-inject-interface net/minecraft/client/sounds/SoundEngine net/frozenblock/lib/music/impl/client/SoundEngineInterface
 
 # Resource Packs
-transitive-inject-interface net/minecraft/server/packs/repository/PackRepository net/frozenblock/lib/resource_pack/impl/client/PackRepositoryInterface
+transitive-inject-interface net/minecraft/server/packs/repository/PackRepository net/frozenblock/lib/resource/client/impl/pack/PackRepositoryInterface
 
 # Debug
 transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z

@@ -25,6 +25,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TagValueInput.class)
 public class TagValueInputMixin implements ValueInputExtension {
@@ -33,21 +34,25 @@ public class TagValueInputMixin implements ValueInputExtension {
 	@Final
 	private CompoundTag input;
 
+	@Unique
 	@Override
 	public Collection<String> frozenLib$keySet() {
 		return this.input.keySet();
 	}
 
+	@Unique
 	@Override
 	public boolean frozenLib$contains(String key) {
 		return this.input.contains(key);
 	}
 
+	@Unique
 	@Override
 	public Optional<byte[]> frozenLib$getOptionalByteArray(String key) {
 		return this.input.getByteArray(key);
 	}
 
+	@Unique
 	@Override
 	public Optional<long[]> frozenLib$getOptionalLongArray(String key) {
 		return this.input.getLongArray(key);

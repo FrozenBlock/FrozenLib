@@ -29,7 +29,7 @@ import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.networking.FrozenLibClientNetworking;
+import net.frozenblock.lib.networking.impl.FrozenLibClientNetworking;
 import net.minecraft.client.Minecraft;
 
 public final class FrozenLibClientFabric implements ClientModInitializer {

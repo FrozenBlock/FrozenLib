@@ -23,12 +23,12 @@ import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElemen
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.ClientTickEvents;
-import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
+import net.frozenblock.lib.particle.client.impl.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
-import net.frozenblock.lib.platform.client.HudElementRegistry;
+import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.WindManager;
@@ -54,7 +54,7 @@ public final class FrozenLibClient {
 		ClientCapeUtil.init();
 		FrozenLibParticleResources.init();
 		FrozenLibModelLayers.init();
-		FrozenLibModResourcePackApi.init();
+		ModResourcePackApi.init();
 		ClientWindUtil.init();
 		FrozenLibDebugScreenEntries.init();
 

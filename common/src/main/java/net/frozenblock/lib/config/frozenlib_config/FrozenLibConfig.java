@@ -23,7 +23,7 @@ import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 
 public class FrozenLibConfig {
 	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(FrozenLibConstants.config("main"), ConfigSettings.JSON5_UNQUOTED_KEYS);
@@ -32,10 +32,10 @@ public class FrozenLibConfig {
 	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = CONFIG.entry("removeExperimentalWarning", EntryType.BOOL, false);
 	public static final ConfigEntry<Boolean> FILE_TRANSFER_SERVER = CONFIG.entry("fileTransferServer", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> FILE_TRANSFER_CLIENT = CONFIG.unsyncableEntry("fileTransferClient", EntryType.BOOL, true);
-	public static final ConfigEntry<FrozenLibModResourcePackApi.PackDownloadSetting> PACK_DOWNLOADING = CONFIG.unsyncableEntry(
+	public static final ConfigEntry<ModResourcePackApi.PackDownloadSetting> PACK_DOWNLOADING = CONFIG.unsyncableEntry(
 		"packDownloading",
-		FrozenLibModResourcePackApi.PackDownloadSetting.ENTRY_TYPE,
-		FrozenLibModResourcePackApi.PackDownloadSetting.ENABLED
+		ModResourcePackApi.PackDownloadSetting.ENTRY_TYPE,
+		ModResourcePackApi.PackDownloadSetting.ENABLED
 	);
 	public static final ConfigEntry<String> CAPE = CONFIG.unsyncableEntry("cape", EntryType.STRING, FrozenLibConstants.string("dummy"));
 

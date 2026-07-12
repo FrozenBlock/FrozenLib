@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -40,15 +37,15 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
 public final class NetworkingHelperImpl {
-	private static final List<PayloadEntry<?>> S2C_ENTRIES = new ArrayList<>();
-	private static final List<PayloadEntry<?>> C2S_ENTRIES = new ArrayList<>();
-	private static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> SERVER_HANDLERS = new HashMap<>();
-	private static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> CLIENT_HANDLERS = new HashMap<>();
+	static final List<PayloadEntry<?>> S2C_ENTRIES = new ArrayList<>();
+	static final List<PayloadEntry<?>> C2S_ENTRIES = new ArrayList<>();
+	static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> SERVER_HANDLERS = new HashMap<>();
+	static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> CLIENT_HANDLERS = new HashMap<>();
 
-	private static final List<ConfigPayloadEntry<?>> S2C_CONFIG_ENTRIES = new ArrayList<>();
-	private static final List<ConfigPayloadEntry<?>> C2S_CONFIG_ENTRIES = new ArrayList<>();
-	private static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> SERVER_CONFIG_HANDLERS = new HashMap<>();
-	private static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> CLIENT_CONFIG_HANDLERS = new HashMap<>();
+	static final List<ConfigPayloadEntry<?>> S2C_CONFIG_ENTRIES = new ArrayList<>();
+	static final List<ConfigPayloadEntry<?>> C2S_CONFIG_ENTRIES = new ArrayList<>();
+	static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> SERVER_CONFIG_HANDLERS = new HashMap<>();
+	static final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> CLIENT_CONFIG_HANDLERS = new HashMap<>();
 
 	public static <P extends CustomPacketPayload> void registerS2CPayloadType(
 		CustomPacketPayload.Type<P> type,
@@ -89,24 +86,8 @@ public final class NetworkingHelperImpl {
 		);
 	}
 
-	@ClientOnly
-	public static <P extends CustomPacketPayload> void registerGlobalClientReceiver(
-		CustomPacketPayload.Type<P> type,
-		NetworkingHelper.ClientPayloadHandler<P> handler
-	) {
-		// FIXME: referencing Minecraft and LocalPlayer crash servers, silly!
-		CLIENT_HANDLERS.put(type, (payload, context) ->
-			handler.receive((P) payload, Minecraft.getInstance(), (LocalPlayer) context.player())
-		);
-	}
-
 	public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
 		player.connection.send(payload);
-	}
-
-	@ClientOnly
-	public static void sendToServer(CustomPacketPayload payload) {
-		Minecraft.getInstance().getConnection().send(payload);
 	}
 
 	public static <P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
@@ -133,16 +114,6 @@ public final class NetworkingHelperImpl {
 		});
 	}
 
-	@ClientOnly
-	public static <P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
-		CustomPacketPayload.Type<P> type,
-		NetworkingHelper.ClientConfigPayloadHandler<P> handler
-	) {
-		CLIENT_CONFIG_HANDLERS.put(type, (payload, context) ->
-			handler.receive((P) payload, Minecraft.getInstance(), wrapNeoSender(context.listener()))
-		);
-	}
-
 	public static boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type) {
 		return handler.hasChannel(type);
 	}
@@ -155,7 +126,7 @@ public final class NetworkingHelperImpl {
 		handler.finishCurrentTask(type);
 	}
 
-	private static ConfigPacketSender wrapNeoSender(Object listener) {
+	static ConfigPacketSender wrapNeoSender(Object listener) {
 		ICommonPacketListener neo = (ICommonPacketListener) listener;
 		return new ConfigPacketSender() {
 			@Override

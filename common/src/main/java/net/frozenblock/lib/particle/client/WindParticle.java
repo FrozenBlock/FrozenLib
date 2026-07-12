@@ -19,7 +19,7 @@ package net.frozenblock.lib.particle.client;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
-import net.frozenblock.lib.particle.api.client.CustomRotationalParticleHelper;
+import net.frozenblock.lib.particle.client.api.CustomRotationalParticleHelper;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.wind.WindManager;

@@ -18,18 +18,22 @@
 package net.frozenblock.lib.networking.api;
 
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.ModLoader;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
+import net.minecraft.world.entity.player.Player;
 
 public final class NetworkingHelper {
 
@@ -75,23 +79,8 @@ public final class NetworkingHelper {
 		throw new AssertionError();
 	}
 
-	@ClientOnly
-	@PlatformImpl
-	public static <P extends CustomPacketPayload> void registerGlobalClientReceiver(
-		CustomPacketPayload.Type<P> type,
-		ClientPayloadHandler<P> handler
-	) {
-		throw new AssertionError();
-	}
-
 	@PlatformImpl
 	public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
-		throw new AssertionError();
-	}
-
-	@ClientOnly
-	@PlatformImpl
-	public static void sendToServer(CustomPacketPayload payload) {
 		throw new AssertionError();
 	}
 
@@ -119,15 +108,6 @@ public final class NetworkingHelper {
 		throw new AssertionError();
 	}
 
-	@ClientOnly
-	@PlatformImpl
-	public static <P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
-		CustomPacketPayload.Type<P> type,
-		ClientConfigPayloadHandler<P> handler
-	) {
-		throw new AssertionError();
-	}
-
 	@PlatformImpl
 	public static boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type) {
 		throw new AssertionError();
@@ -143,26 +123,50 @@ public final class NetworkingHelper {
 		throw new AssertionError();
 	}
 
+	public static void sendPacketToAllPlayers(ServerLevel level, CustomPacketPayload payload) {
+		final Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
+		for (ServerPlayer serverPlayer : level.players()) serverPlayer.connection.send(packet);
+	}
+
+	public static boolean isLocalPlayer(Player player) {
+		if (ModLoader.isServer()) return false;
+		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().id());
+	}
+
+	public static boolean connectedToIntegratedServer() {
+		if (ModLoader.isServer()) return false;
+		final Minecraft minecraft = Minecraft.getInstance();
+		return minecraft.hasSingleplayerServer();
+	}
+
+	/**
+	 * @return if the client is connected to any server
+	 */
+	public static boolean connectedToServer() {
+		if (ModLoader.isServer()) return false;
+
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientPacketListener listener = minecraft.getConnection();
+		if (listener == null) return false;
+
+		return listener.getConnection().isConnected();
+	}
+
+	/**
+	 * @return if the current server is multiplayer (LAN/dedicated) or not (singleplayer)
+	 */
+	public static boolean isMultiplayer() {
+		if (ModLoader.isServer()) return true;
+		return !Minecraft.getInstance().hasSingleplayerServer();
+	}
+
 	@FunctionalInterface
 	public interface ServerPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, MinecraftServer server, ServerPlayer player);
 	}
 
-	// FIXME: referencing Minecraft and LocalPlayer crash servers, silly! Also, env doesnt seem to be applying to neo.
-	@ClientOnly
-	@FunctionalInterface
-	public interface ClientPayloadHandler<P extends CustomPacketPayload> {
-		void receive(P payload, Minecraft minecraft, LocalPlayer player);
-	}
-
 	@FunctionalInterface
 	public interface ServerConfigPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, ServerConfigurationPacketListenerImpl listener, ConfigPacketSender sender);
-	}
-
-	@ClientOnly
-	@FunctionalInterface
-	public interface ClientConfigPayloadHandler<P extends CustomPacketPayload> {
-		void receive(P payload, Minecraft client, ConfigPacketSender sender);
 	}
 }

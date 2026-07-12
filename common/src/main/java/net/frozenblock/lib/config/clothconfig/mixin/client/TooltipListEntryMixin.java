@@ -25,8 +25,8 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
-import net.frozenblock.lib.networking.FrozenLibClientNetworking;
-import net.frozenblock.lib.networking.FrozenLibNetworking;
+import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -42,7 +42,7 @@ public class TooltipListEntryMixin {
 		final DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 
 		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
-			final Optional<Component> optionalComponent = FrozenLibClientNetworking.connectedToLan()
+			final Optional<Component> optionalComponent = ClientNetworkingHelper.connectedToLan()
 				? disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
 				: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
 
@@ -52,7 +52,7 @@ public class TooltipListEntryMixin {
 		} else if (
 			disableableWidgetInterface.frozenLib$hasValidData()
 			&& disableableWidgetInterface.frozenLib$isSyncable()
-			&& FrozenLibNetworking.isMultiplayer()
+			&& NetworkingHelper.isMultiplayer()
 			&& ConfigEntrySyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
 		) {
 			final Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");

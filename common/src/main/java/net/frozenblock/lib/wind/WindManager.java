@@ -27,7 +27,7 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
-import net.frozenblock.lib.networking.FrozenLibNetworking;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
@@ -480,7 +480,7 @@ public class WindManager {
 		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
-			FrozenLibNetworking.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
+			NetworkingHelper.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
 		} else if (ModLoader.isClient()) {
 			ClientWindUtil.Debug.addAccessedPosition(target);
 		}

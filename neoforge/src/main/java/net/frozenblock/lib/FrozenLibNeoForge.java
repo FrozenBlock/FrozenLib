@@ -28,7 +28,7 @@ import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelper
 import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
 import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.resource_pack.api.platform.ResourceLoaderHelperImpl;
+import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;

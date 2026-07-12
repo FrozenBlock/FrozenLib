@@ -22,7 +22,7 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
-import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
@@ -61,19 +61,19 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		NetworkingHelper.registerGlobalClientConfigReceiver(
+		ClientNetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.Handshake.PACKET_TYPE,
 			(payload, client, sender) -> handleHelloPacket(payload, sender)
 		);
-		NetworkingHelper.registerGlobalClientConfigReceiver(
+		ClientNetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.End.PACKET_TYPE,
 			(payload, client, sender) -> handleEndPacket(payload, sender)
 		);
-		NetworkingHelper.registerGlobalClientConfigReceiver(
+		ClientNetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.ErrorStyle.PACKET_TYPE,
 			(payload, client, sender) -> handleErrorStylePacket(payload)
 		);
-		NetworkingHelper.registerGlobalClientConfigReceiver(
+		ClientNetworkingHelper.registerGlobalClientConfigReceiver(
 			ServerPackets.ModProtocol.PACKET_TYPE,
 			(payload, client, sender) -> handleModProtocol(payload, sender)
 		);

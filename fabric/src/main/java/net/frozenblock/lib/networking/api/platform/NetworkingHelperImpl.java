@@ -17,15 +17,12 @@
 
 package net.frozenblock.lib.networking.api.platform;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -76,23 +73,8 @@ public final class NetworkingHelperImpl {
 		);
 	}
 
-	@ClientOnly
-	public static <P extends CustomPacketPayload> void registerGlobalClientReceiver(
-		CustomPacketPayload.Type<P> type,
-		NetworkingHelper.ClientPayloadHandler<P> handler
-	) {
-		ClientPlayNetworking.registerGlobalReceiver(type, (packet, ctx) ->
-			handler.receive(packet, ctx.client(), ctx.player())
-		);
-	}
-
 	public static void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
 		ServerPlayNetworking.send(player, payload);
-	}
-
-	@ClientOnly
-	public static void sendToServer(CustomPacketPayload payload) {
-		ClientPlayNetworking.send(payload);
 	}
 
 	public static <P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
@@ -118,16 +100,6 @@ public final class NetworkingHelperImpl {
 		);
 	}
 
-	@ClientOnly
-	public static <P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
-		CustomPacketPayload.Type<P> type,
-		NetworkingHelper.ClientConfigPayloadHandler<P> handler
-	) {
-		ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, ctx) ->
-			handler.receive(payload, ctx.client(), wrapFabricSender(ctx.responseSender()))
-		);
-	}
-
 	public static boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type) {
 		return ServerConfigurationNetworking.canSend(handler, type);
 	}
@@ -140,7 +112,7 @@ public final class NetworkingHelperImpl {
 		handler.completeTask(type);
 	}
 
-	private static ConfigPacketSender wrapFabricSender(PacketSender fabricSender) {
+	static ConfigPacketSender wrapFabricSender(PacketSender fabricSender) {
 		return new ConfigPacketSender() {
 			@Override
 			public void sendPacket(CustomPacketPayload payload) {

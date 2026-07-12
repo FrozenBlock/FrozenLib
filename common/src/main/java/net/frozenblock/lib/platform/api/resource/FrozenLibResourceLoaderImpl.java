@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.api.resource;
 
-import net.frozenblock.lib.resource_pack.api.ResourceLoaderHelper;
+import net.frozenblock.lib.resource.api.ResourceLoaderHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.PreparableReloadListener;

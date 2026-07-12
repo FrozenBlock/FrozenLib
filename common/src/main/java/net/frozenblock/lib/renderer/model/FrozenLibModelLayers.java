@@ -18,7 +18,6 @@
 package net.frozenblock.lib.renderer.model;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.client.ModelLayerRegistry;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 

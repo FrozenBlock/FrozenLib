@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncClientUtil;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
@@ -121,7 +122,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 			}
 		} else {
 			//noinspection ConstantValue
-			if (Minecraft.getInstance() != null) ConfigEntrySyncPacket.trySendC2S(this);
+			if (Minecraft.getInstance() != null) ConfigEntrySyncClientUtil.trySendC2S(this);
 		}
 	}
 
