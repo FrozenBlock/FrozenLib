@@ -40,6 +40,14 @@ public class ConfigEntryGetter<T> {
 		this.entry = entry;
 	}
 
+	public ID id() {
+		return this.id;
+	}
+
+	public Class<T> type() {
+		return entry.entryClass();
+	}
+
 	public T get() {
 		return this.entry.get();
 	}
