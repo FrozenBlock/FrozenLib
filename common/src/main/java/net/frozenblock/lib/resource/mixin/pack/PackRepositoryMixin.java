@@ -15,12 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource.mixin.client.pack;
+package net.frozenblock.lib.resource.mixin.pack;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import net.frozenblock.lib.resource.client.impl.pack.PackRepositoryInterface;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
 import org.spongepowered.asm.mixin.Final;
@@ -29,7 +28,6 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@ClientOnly
 @Mixin(PackRepository.class)
 public class PackRepositoryMixin implements PackRepositoryInterface {
 

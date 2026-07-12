@@ -6,10 +6,12 @@
   "injectors": {
     "defaultRequire": 1
   },
+  "mixins": [
+    "pack.PackRepositoryMixin"
+  ],
   "client": [
     "client.pack.ClientPackSourceMixin",
     "client.pack.FolderRepositorySourceMixin",
-    "client.pack.PackRepositoryMixin",
     "client.pack.PackSelectionModelMixin",
     "client.texture.TextureManagerMixin"
   ]
