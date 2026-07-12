@@ -1,0 +1,126 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0"
+issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
+
+[[mixins]]
+config="mixin/frozenlib.advancement.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.block.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.cape.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.clothconfig.mixins.json"
+requiredMods=["cloth_config"]
+
+[[mixins]]
+config="mixin/frozenlib.core.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.debug.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.data_attachment.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.entity.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.event.neoforge.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.feature_flag.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.gravity.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.item.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.item.neoforge.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.levelgen.biome.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.levelgen.structure.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.levelgen.surface.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.loot.neoforge.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.menu.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.music.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.networking.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.particle.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib_quiltmc_datafixerupper.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib_quiltmc_registry.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.registry.neoforge.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.renderer.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.resource.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.screenshake.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.sound.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.storage.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.tag.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.wind.neoforge.mixins.json"
+
+[[mods]]
+    modId="frozenlib"
+    version="${mod_version}"
+    displayName="FrozenLib"
+    displayURL="https://www.modrinth.com/mod/FrozenLib"
+    logoFile="assets/frozenlib/icon.png"
+    authors="AViewFromTheTop/Lunade, Ethan Stokes"
+    description='''
+A library that contains many tools for modders.
+Includes advanced math operations, noise sampling, advanced sounds, entity texture overrides,
+structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!
+Provides a NeoForge implementation of QuiltMC's DataFixerUpper API.
+    '''
+
+[[ dependencies.frozenlib ]]
+    modId="neoforge"
+    type="required"
+    versionRange="[~26.2-,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[ dependencies.frozenlib ]]
+    modId="minecraft"
+    type="required"
+    versionRange="[~26.2-,)"
+    ordering="NONE"
+    side="BOTH"

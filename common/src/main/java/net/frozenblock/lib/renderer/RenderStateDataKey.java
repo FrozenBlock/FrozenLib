@@ -1,0 +1,84 @@
+/*
+ * Copyright (C) 2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.renderer;
+
+/*
+ * Copyright (c) 2016, 2017, 2018, 2019 FabricMC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextKey;
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * A unique key representing extra data to attach to a render state.
+ * @param <T> The type of the render state data.
+ */
+@ClientOnly
+public final class RenderStateDataKey<T> {
+	private final ContextKey<T> key;
+	private Object fabricKey = null;
+
+	private RenderStateDataKey(ContextKey<T> key) {
+		this.key = key;
+	}
+
+	/**
+	 * Creates a new unique data key.
+	 * @param <T> The type of the render state data.
+	 * @return The newly created data key.
+	 */
+	public static <T> RenderStateDataKey<T> create(Identifier id) {
+		return new RenderStateDataKey<>(new ContextKey<>(id));
+	}
+
+	/**
+	 * @return This as a {@link ContextKey}.
+	 */
+	public ContextKey<T> asContextKey() {
+		return this.key;
+	}
+
+	@ApiStatus.Internal
+	public void setFabricKey(Object key) {
+		this.fabricKey = key;
+	}
+
+	@ApiStatus.Internal
+	public Object getFabricKey() {
+		return this.fabricKey;
+	}
+
+	@Override
+	public String toString() {
+		return "RenderStateDataKey(" +  this.key.name() + ")";
+	}
+}

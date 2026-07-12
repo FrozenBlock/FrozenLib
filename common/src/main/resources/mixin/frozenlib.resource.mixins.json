@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.resource.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "pack.PackRepositoryMixin"
+  ],
+  "client": [
+    "client.pack.ClientPackSourceMixin",
+    "client.pack.FolderRepositorySourceMixin",
+    "client.pack.PackSelectionModelMixin",
+    "client.texture.TextureManagerMixin"
+  ]
+}

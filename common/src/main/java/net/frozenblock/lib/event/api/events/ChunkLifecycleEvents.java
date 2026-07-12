@@ -1,0 +1,48 @@
+/*
+ * Copyright (C) 2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.event.api.events;
+
+import net.frozenblock.lib.event.api.Event;
+import net.frozenblock.lib.event.api.EventRegistry;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.chunk.LevelChunk;
+
+public class ChunkLifecycleEvents {
+
+	public static final Event<Load> CHUNK_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (level, chunk, newChunk) -> {
+		for (Load callback : callbacks) {
+			callback.onChunkLoad(level, chunk, newChunk);
+		}
+	});
+
+	public static final Event<Unload> CHUNK_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (level, chunk) -> {
+		for (Unload callback : callbacks) {
+			callback.onChunkUnload(level, chunk);
+		}
+	});
+
+	@FunctionalInterface
+	public interface Load {
+		void onChunkLoad(ServerLevel level, LevelChunk chunk, boolean newChunk);
+	}
+
+	@FunctionalInterface
+	public interface Unload {
+		void onChunkUnload(ServerLevel level, LevelChunk chunk);
+	}
+}

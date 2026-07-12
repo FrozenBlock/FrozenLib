@@ -1,0 +1,188 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id("com.possible-triangle.neoforge") version("1.4-CUSTOM-SNAPSHOT")
+    id("com.gradleup.shadow")
+    id("org.quiltmc.gradle.licenser")
+    checkstyle
+}
+
+checkstyle {
+    configFile = rootProject.file("checkstyle.xml")
+    toolVersion = "10.20.2"
+}
+
+withKotlin()
+
+val mod_id: String by project
+val mod_version: String by project
+val minecraft_version: String by project
+val maven_group: String by project
+val archives_base_name: String by project
+
+val neoforge_version: String by project
+val neoforge_loader_version_range: String by project
+
+val toml4j_version: String by project
+val jankson_version: String by project
+val xjs_data_version: String by project
+val xjs_compat_version: String by project
+val fresult_version: String by project
+
+val cloth_config_version: String by project
+val kotlinforforge_version: String by project
+
+val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
+
+base {
+    archivesName.set("$archives_base_name-neoforge")
+}
+
+version = getModVersion()
+group = maven_group
+
+repositories {
+    maven("https://maven.neoforged.net/releases") { name = "NeoForged" }
+    if (!neoforgeSnapshotMaven.isNullOrBlank()) {
+        maven(neoforgeSnapshotMaven) { name = "NeoForge Snapshots" }
+    }
+}
+
+neoforge {
+    dependOn(project(":flib-common"))
+    accessWidener(project(":flib-common"))
+}
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
+
+val applyLicenses: Task by tasks
+
+tasks {
+    license {
+        if (licenseChecks) {
+            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(rootProject.file("codeformat/HEADER"))
+
+            include("**//*.java")
+            include("**//*.kt")
+        }
+    }
+}
+
+val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
+val loaderVariants = setOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements")
+configurations.all {
+    if (name in loaderVariants) {
+        attributes {
+            attribute(loaderAttribute, "neoforge")
+        }
+    }
+}
+sourceSets.configureEach {
+    listOf(compileClasspathConfigurationName, runtimeClasspathConfigurationName).forEach { variant ->
+        configurations.named(variant) {
+            attributes {
+                attribute(loaderAttribute, "neoforge")
+            }
+        }
+    }
+}
+
+val relocImplementation: Configuration by configurations.creating {
+    configurations.implementation.get().extendsFrom(this)
+}
+
+val relocApi: Configuration by configurations.creating {
+    configurations.api.get().extendsFrom(this)
+}
+
+dependencies {
+    //"neoForge"("net.neoforged:neoforge:$neoforge_version")
+
+    // Toml
+    api("com.moandjiezana.toml:toml4j:$toml4j_version")
+
+    // Jankson
+    relocApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+
+    // ExJson
+    relocApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
+    relocApi("org.exjson:xjs-compat:$xjs_compat_version")
+    relocApi("com.personthecat:fresult:$fresult_version")
+    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
+
+    // Kotlin for NeoForge
+    //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
+
+    // Cloth Config (NeoForge edition)
+    implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
+        exclude(group = "net.neoforged")
+    }
+}
+
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
+
+    return version
+}
+
+tasks {
+    processResources {
+        val properties = HashMap<String, Any>()
+        properties["mod_version"] = getModVersion()
+
+        properties.forEach { (a, b) -> inputs.property(a, b) }
+
+        filesMatching("META-INF/neoforge.mods.toml") {
+            expand(properties)
+        }
+    }
+
+    shadowJar {
+        configurations = listOf(relocImplementation, relocApi)
+        enableAutoRelocation = true
+        relocationPrefix = "net.frozenblock.lib.shadow"
+        archiveClassifier = ""
+        dependencies {
+            exclude {
+                it.moduleGroup.contains("neoforged")
+            }
+            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
+            exclude {
+                it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")
+                    || it.moduleGroup.contains("checkerframework") || it.moduleGroup.contains("slf4j")
+                    || it.moduleGroup.contains("unimi") || it.moduleGroup.contains("javax")
+                    || it.moduleGroup.contains("intellij") || it.moduleGroup.contains("jetbrains")
+            }
+        }
+        relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
+    }
+
+    named<Jar>("sourcesJar") {
+        from(sourceSets.main.get().allSource)
+    }
+
+    withType(JavaCompile::class) {
+        options.encoding = "UTF-8"
+        options.release = 25
+        options.isFork = true
+        options.isIncremental = true
+    }
+
+    withType(KotlinCompile::class) {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_25
+        }
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+upload.maven {
+    name.set("frozenlib-neoforge")
+}

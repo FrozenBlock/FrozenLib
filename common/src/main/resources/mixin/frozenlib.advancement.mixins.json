@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.advancement.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AdvancementMixin",
+    "AdvancementRequirementsMixin",
+    "AdvancementRewardsMixin",
+    "MobEffectsPredicateAccessor",
+    "ServerAdvancementManagerMixin"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.platform.mixin.attachment",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "BlockEntityMixin",
+    "ChunkAccessMixin",
+    "EntityMixin",
+    "LevelMixin"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.event.mixin.neoforge",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "BlockEntityLifecycleMixin",
+    "QuiltSyncTaskMixin"
+  ],
+  "client": [
+    "client.MinecraftMixin"
+  ]
+}

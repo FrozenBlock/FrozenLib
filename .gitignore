@@ -39,8 +39,8 @@ run/
 runclient/
 runserver/
 /remappedSrc/
-/src/main/generated/.cache
-/src/testmod/generated/.cache
+/common/src/main/generated/.cache
+/fabric/src/testmod/generated/.cache
 /config/
 /fabric/run
 /neoforge/runs

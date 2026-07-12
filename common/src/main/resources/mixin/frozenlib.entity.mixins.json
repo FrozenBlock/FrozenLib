@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.entity.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AbstractFishMixin",
+    "EntityMixin",
+    "VariantUtilsMixin",
+    "behavior.BehaviorMixin",
+    "category.MobCategoryMixin",
+    "cubemob.sulfurcube.AbstractCubeMobMixin",
+    "cubemob.sulfurcube.SulfurCubeMixin"
+  ],
+  "client": [
+    "client.rendering.EntityRendererExtractNameMixin",
+    "client.rendering.LivingEntityRendererMixin"
+  ]
+}

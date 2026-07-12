@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.item.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AbstractContainerMenuMixin",
+    "ItemCooldownsMixin",
+    "ItemStackMixin",
+    "ServerItemCooldownsMixin",
+    "ServerPlayerMixin",
+    "axe.AxeItemMixin",
+    "bonemeal.BoneMealItemMixin",
+    "bundle.BundleContentsMixin",
+    "loot.LootTableBuilderMixin",
+    "loot.LootTableMixin",
+    "recipe.RecipeBuilderMixin",
+    "registry.PotionBrewingBuilderMixin",
+    "sherd.DecoratedPotPatternsMixin",
+    "shovel.ShovelItemMixin"
+  ],
+  "client": [
+    "client.LevelExtractorMixin"
+  ]
+}
