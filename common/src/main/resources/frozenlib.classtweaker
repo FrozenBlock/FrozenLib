@@ -283,6 +283,7 @@ transitive-accessible field net/minecraft/client/renderer/entity/AgeableMobRende
 transitive-mutable field net/minecraft/client/renderer/entity/AgeableMobRenderer babyModel Lnet/minecraft/client/model/EntityModel;
 
 # Rendering
+transitive-accessible method net/minecraft/client/renderer/entity/EntityRenderers register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/client/renderer/entity/EntityRendererProvider;)V
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 
