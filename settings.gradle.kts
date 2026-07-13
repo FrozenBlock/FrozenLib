@@ -40,8 +40,6 @@ plugins {
 
 rootProject.name = "FrozenLib"
 
-includeBuild("build-logic")
-
 object Constants {
     const val FABRIC: Boolean = true
     const val NEOFORGE: Boolean = true
