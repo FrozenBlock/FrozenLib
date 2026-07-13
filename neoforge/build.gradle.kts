@@ -36,8 +36,10 @@ val kotlinforforge_version: String by project
 val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
 
 base {
-    archivesName.set("$archives_base_name-neoforge")
+    archivesName.set(archives_base_name)
 }
+
+val release = findProperty("releaseType") == "stable"
 
 version = getModVersion()
 group = maven_group
@@ -122,12 +124,6 @@ dependencies {
     }
 }
 
-fun getModVersion(): String {
-    var version = "$mod_version-mc$minecraft_version"
-
-    return version
-}
-
 tasks {
     processResources {
         val properties = HashMap<String, Any>()
@@ -145,6 +141,7 @@ tasks {
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
+        archiveFileName.set("$archives_base_name-${getModVersion()}-neoforge.jar")
         dependencies {
             exclude {
                 it.moduleGroup.contains("neoforged")
@@ -183,6 +180,40 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-upload.maven {
-    name.set("frozenlib-neoforge")
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
+
+    if (!release) {
+        version += "-unstable"
+    }
+
+    return version
+}
+
+val changelogText = run {
+    val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
+    check(split.size == 2) { "Malformed changelog" }
+    split[1].trim()
+}
+
+upload {
+    maven {
+        name.set("frozenlib-neoforge")
+    }
+
+    forEach {
+        changelog.set(changelogText)
+    }
+
+    curseforge {
+        dependencies {
+            optional("cloth-config")
+        }
+    }
+
+    modrinth {
+        dependencies {
+            optional("cloth-config")
+        }
+    }
 }

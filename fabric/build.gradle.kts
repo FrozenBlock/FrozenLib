@@ -1,18 +1,9 @@
-import groovy.xml.XmlSlurper
-import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.net.URI
-import java.nio.file.Files
-import java.util.*
 
 plugins {
     id("com.possible-triangle.fabric") version("1.4-CUSTOM-SNAPSHOT")
-    id("org.ajoberstar.grgit")
     id("org.quiltmc.gradle.licenser")
-    id("me.modmuss50.mod-publish-plugin")
     id("com.gradleup.shadow")
     checkstyle
 }
@@ -24,11 +15,11 @@ checkstyle {
 
 withKotlin()
 
-val minecraft_version: String by project
 val fabric_loader_version: String by project
 val min_fabric_loader_version: String by project
 
 val mod_version: String by project
+val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
@@ -51,10 +42,10 @@ base {
     archivesName.set(archives_base_name)
 }
 
+val release = findProperty("releaseType") == "stable"
+
 version = getModVersion()
 group = maven_group
-
-val release = findProperty("releaseType")?.equals("stable")
 
 val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
@@ -256,6 +247,7 @@ tasks {
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
+        archiveFileName.set("$archives_base_name-${getModVersion()}-fabric.jar")
         dependencies {
             exclude {
                 it.moduleGroup.contains("fabric")
@@ -323,7 +315,7 @@ artifacts {
 fun getModVersion(): String {
     var version = "$mod_version-mc$minecraft_version"
 
-    if (release != null && !release) {
+    if (!release) {
         version += "-unstable"
     }
 
@@ -343,168 +335,34 @@ tasks {
     }
 }
 
-val env: MutableMap<String, String> = System.getenv()
-
-publishing {
-    val mavenUrl = env["MAVEN_URL"]
-    val mavenUsername = env["MAVEN_USERNAME"]
-    val mavenPassword = env["MAVEN_PASSWORD"]
-
-    //val release = mavenUrl?.contains("release")
-    val snapshot = mavenUrl?.contains("snapshot")
-
-    val publishingValid = project.name == "flib-fabric" && !mavenUrl.isNullOrEmpty() && !mavenUsername.isNullOrEmpty() && !mavenPassword.isNullOrEmpty()
-
-    val publishVersion = makeModrinthVersion(mod_version)
-    val snapshotPublishVersion = publishVersion + if (snapshot == true) "-SNAPSHOT" else ""
-
-    val publishGroup = rootProject.group.toString().trim(' ')
-
-    val hash = if (grgit.branch != null && grgit.branch.current() != null) grgit.branch.current().fullName else ""
-
-    publications {
-        var publish = true
-        try {
-            if (publishingValid) {
-                try {
-                    val xml = ResourceGroovyMethods.getText(
-                        URI.create("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom").toURL()
-                    )
-                    val metadata = XmlSlurper().parseText(xml)
-
-                    if (metadata.getProperty("hash").equals(hash)) {
-                        publish = false
-                    }
-                } catch (ignored: FileNotFoundException) {
-                    // No existing version was published, so we can publish
-                }
-            } else {
-                publish = false
-            }
-        } catch (e: Exception) {
-            publish = false
-            println("Unable to publish to maven. The maven server may be offline.")
-        }
-
-        if (publish) {
-            create<MavenPublication>("mavenJava") {
-                from(components["java"])
-
-                artifact(javadocJar)
-
-                pom {
-                    groupId = publishGroup
-                    artifactId = rootProject.base.archivesName.get().lowercase()
-                    version = snapshotPublishVersion
-                    withXml {
-                        asNode().appendNode("properties").appendNode("hash", hash)
-                    }
-                }
-            }
-        }
-    }
-    repositories {
-
-        if (publishingValid) {
-            maven {
-                url = uri(mavenUrl!!)
-
-                credentials {
-                    username = mavenUsername
-                    password = mavenPassword
-                }
-            }
-        } else {
-            mavenLocal()
-        }
-    }
+val changelogText = run {
+    val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
+    check(split.size == 2) { "Malformed changelog" }
+    split[1].trim()
 }
 
-extra {
-    val properties = Properties()
-    properties.load(FileInputStream(rootProject.file("gradle/publishing.properties")))
-    properties.forEach { (a, b) ->
-        project.extra[a as String] = b as String
-    }
-}
-
-val modrinth_id: String by extra
-val curseforge_id: String by extra
-val release_type: String by extra
-val changelog_file: String by extra
-
-val modrinth_version = makeModrinthVersion(mod_version)
-val display_name = makeName(mod_version)
-val changelog_text = getChangelog(rootProject.file(changelog_file))
-
-fun makeName(version: String): String {
-    return "$version (${minecraft_version})"
-}
-
-fun makeModrinthVersion(version: String): String {
-    return "$version-mc${minecraft_version}"
-}
-
-fun getChangelog(changelogFile: File): String {
-    val text = Files.readString(changelogFile.toPath())
-    val split = text.split("-----------------")
-    if (split.size != 2)
-        throw IllegalStateException("Malformed changelog")
-    return split[1].trim()
-}
-
-fun getBranch(): String {
-    val env = System.getenv()
-    var branch = env["GITHUB_REF"]
-    if (branch != null && branch != "") {
-        return branch.substring(branch.lastIndexOf("/") + 1)
+upload {
+    maven {
+        name.set("frozenlib-fabric")
     }
 
-    if (grgit == null) {
-        return "unknown"
+    forEach {
+        changelog.set(changelogText)
     }
-
-    branch = grgit.branch.current().name
-    return branch.substring(branch.lastIndexOf("/") + 1)
-}
-
-publishMods {
-    version.set(modrinth_version)
-    file.set(jar.archiveFile)
-    changelog.set(changelog_text)
-    type.set(STABLE)
-    modLoaders.add("fabric")
-    //additionalFiles.from(sourcesJar.archiveFile, javadocJar.archiveFile)
 
     curseforge {
-        version.set(modrinth_version)
-        projectId.set(curseforge_id)
-        projectSlug.set("frozenlib")
-        accessToken.set(providers.environmentVariable("CURSEFORGE_TOKEN"))
-        minecraftVersions.add(minecraft_version)
-        requires("fabric-api")
-        optional("modmenu")
-        optional("cloth-config")
+        dependencies {
+            required("fabric-api")
+            optional("modmenu")
+            optional("cloth-config")
+        }
     }
-    modrinth {
-        version.set(modrinth_version)
-        projectId.set(modrinth_id)
-        accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
-        minecraftVersions.add(minecraft_version)
-        requires("fabric-api")
-        optional("modmenu")
-        optional("cloth-config")
-    }
-    github {
-        version.set(modrinth_version)
-        repository.set("FrozenBlock/FrozenLib")
-        accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
-        commitish.set(getBranch())
-        additionalFiles.from(sourcesJar.archiveFile.get().asFile, javadocJar.archiveFile.get().asFile)
-    }
-}
 
-val publishMod by tasks.register("publishMod") {
-//    dependsOn(tasks.publish)
-//    dependsOn(tasks.publishMods)
+    modrinth {
+        dependencies {
+            required("fabric-api")
+            optional("modmenu")
+            optional("cloth-config")
+        }
+    }
 }

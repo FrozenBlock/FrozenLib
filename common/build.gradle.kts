@@ -85,3 +85,7 @@ configurations {
         isCanBeConsumed = true
     }
 }
+
+upload.maven {
+    name.set("frozenlib-common")
+}
