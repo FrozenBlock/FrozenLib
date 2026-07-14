@@ -58,14 +58,13 @@ if (Constants.NEOFORGE) {
     project(":flib-neoforge").projectDir = file("neoforge")
 }
 
-localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
+localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
 
 fun localRepository(
     repo: String,
     dependencySub: String,
     prefix: String = "",
     multi: Boolean = true,
-    kotlin: Boolean = true,
     candlelight: Boolean = false,
     enabled: Boolean
 ) {
