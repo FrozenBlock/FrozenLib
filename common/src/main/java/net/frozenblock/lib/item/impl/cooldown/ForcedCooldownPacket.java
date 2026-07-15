@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.impl.network;
+package net.frozenblock.lib.item.impl.cooldown;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;

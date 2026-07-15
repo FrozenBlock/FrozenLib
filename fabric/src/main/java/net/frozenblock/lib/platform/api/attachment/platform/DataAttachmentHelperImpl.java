@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform.api.attachment.platform;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
@@ -61,6 +62,11 @@ public final class DataAttachmentHelperImpl {
 		@Override
 		public T getOrDefault(DataAttachmentTarget holder, T fallback) {
 			return ((AttachmentTarget) holder).getAttachedOrElse(this.type, fallback);
+		}
+
+		@Override
+		public Optional<T> getOptional(DataAttachmentTarget holder) {
+			return Optional.ofNullable(this.get(holder));
 		}
 
 		@Override

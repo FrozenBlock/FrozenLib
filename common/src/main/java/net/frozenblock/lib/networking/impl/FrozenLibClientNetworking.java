@@ -33,9 +33,10 @@ import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
-import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
-import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
+import net.frozenblock.lib.item.impl.cooldown.CooldownChangePacket;
+import net.frozenblock.lib.item.impl.cooldown.ForcedCooldownPacket;
+import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
+import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldownsSyncPacket;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.resource.client.api.texture.ServerTextureDownloader;
@@ -93,7 +94,7 @@ public final class FrozenLibClientNetworking {
 		receiveCapeRepoPacket();
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
-		receiveCooldownTickCountPacket();
+		receiveSerializableItemCooldownsSyncPacket();
 		receiveFileTransferPacket();
 		receiveWindDebugPacket();
 	}
@@ -283,9 +284,20 @@ public final class FrozenLibClientNetworking {
 		});
 	}
 
-	private static void receiveCooldownTickCountPacket() {
-		ClientNetworkingHelper.registerGlobalClientReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			if (player != null) player.getCooldowns().tickCount = packet.count();
+	private static void receiveSerializableItemCooldownsSyncPacket() {
+		ClientNetworkingHelper.registerGlobalClientReceiver(SerializableItemCooldownsSyncPacket.PACKET_TYPE, (packet, minecraft, player) -> {
+			if (player == null) return;
+
+			final int tickCount = packet.tickCount();
+			final ItemCooldowns itemCooldowns = player.getCooldowns();
+			itemCooldowns.tickCount = tickCount;
+
+			for (SerializableItemCooldowns.ItemCooldown cooldown : packet.serializableItemCooldowns().cooldowns()) {
+				final int cooldownLeft = cooldown.remainingTime();
+				final int startTime = tickCount - (cooldown.totalTime() - cooldownLeft);
+				final int endTime = tickCount + cooldownLeft;
+				itemCooldowns.cooldowns.put(cooldown.group(), new ItemCooldowns.CooldownInstance(startTime, endTime));
+			}
 		});
 	}
 }

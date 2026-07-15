@@ -31,9 +31,9 @@ import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.event.api.events.PlayerJoinEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
-import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
-import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
+import net.frozenblock.lib.item.impl.cooldown.CooldownChangePacket;
+import net.frozenblock.lib.item.impl.cooldown.ForcedCooldownPacket;
+import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldownsSyncPacket;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
@@ -107,7 +107,7 @@ public final class FrozenLibNetworking {
 
 		NetworkingHelper.registerS2CPayloadType(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		NetworkingHelper.registerS2CPayloadType(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
-		NetworkingHelper.registerS2CPayloadType(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
+		NetworkingHelper.registerS2CPayloadType(SerializableItemCooldownsSyncPacket.PACKET_TYPE, SerializableItemCooldownsSyncPacket.CODEC);
 
 		NetworkingHelper.registerS2CPayloadType(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
 		NetworkingHelper.registerS2CPayloadType(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);

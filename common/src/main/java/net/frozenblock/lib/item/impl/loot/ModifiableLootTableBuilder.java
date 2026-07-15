@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,13 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.removable;
+package net.frozenblock.lib.item.impl.loot;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.level.Level;
+import io.netty.util.internal.UnstableApi;
+import java.util.function.Consumer;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.ApiStatus;
 
-@FunctionalInterface
-public interface RemovalPredicate {
-	boolean shouldRemove(Level level, Entity entity, EquipmentSlot slot);
+@UnstableApi
+@ApiStatus.NonExtendable
+public interface ModifiableLootTableBuilder {
+
+	default LootTable.Builder frozenLib$modifyPools(Consumer<? super LootPool.Builder> modifier) {
+		throw new UnsupportedOperationException("Implemented via mixin");
+	}
 }

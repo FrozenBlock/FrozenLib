@@ -18,7 +18,7 @@
 package net.frozenblock.lib.loot.mixin.neoforge;
 
 import com.google.gson.JsonElement;
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import net.frozenblock.lib.loot.impl.NeoLootUtil;
 import net.minecraft.core.Registry;
@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Drives {@link FrozenLibLootTableEvents#ALL_LOADED}, which has no NeoForge equivalent.
+ * Drives {@link LootTableEvents#ALL_LOADED}, which has no NeoForge equivalent.
  * <p>NeoForge's own {@code LootTableLoadEvent} already drives {@code REPLACE}/{@code MODIFY} (see {@code NeoLootTableEventBridge}),
  * so this only needs to fire once the loot table registry has finished loading for this reload, and to give each
  * loaded {@link LootTable} its registry holder (for {@code MODIFY_DROPS}).
@@ -57,7 +57,7 @@ abstract class ReloadableServerRegistriesMixin {
 		lootTables.listElements().forEach(reference ->
 			((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
 
-		FrozenLibLootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(manager, lootTables);
+		LootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(manager, lootTables);
 		NeoLootUtil.SOURCES.remove();
 	}
 }

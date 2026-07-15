@@ -15,39 +15,34 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.mixin;
+package net.frozenblock.lib.item.mixin.cooldown;
 
+import java.util.Map;
 import net.frozenblock.lib.item.impl.cooldown.CooldownInterface;
-import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
-import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemCooldowns;
-import net.minecraft.world.item.ServerItemCooldowns;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(ServerItemCooldowns.class)
-public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownInterface {
+@Mixin(ItemCooldowns.class)
+public class ItemCooldownsMixin implements CooldownInterface {
 
-	@Shadow
-	@Final
-    private ServerPlayer player;
+    @Final
+    @Shadow
+    public Map<Identifier, ItemCooldowns.CooldownInstance> cooldowns;
 
 	@Unique
 	@Override
     public void frozenLib$changeCooldown(Identifier cooldownGroup, int additional) {
 		this.cooldowns.computeIfPresent(cooldownGroup, (foundCooldownGroup, cooldown) -> {
             this.frozenLib$onCooldownChanged(foundCooldownGroup, additional);
-			return new CooldownInstance(cooldown.startTime(), cooldown.endTime() + additional);
+			return new ItemCooldowns.CooldownInstance(cooldown.startTime(), cooldown.endTime() + additional);
         });
     }
 
 	@Unique
 	@Override
-    public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
-		NetworkingHelper.sendToPlayer(this.player, new CooldownChangePacket(cooldownGroup, additional));
-    }
+    public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {}
 }

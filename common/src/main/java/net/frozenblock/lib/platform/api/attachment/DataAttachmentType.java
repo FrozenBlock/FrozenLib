@@ -19,6 +19,7 @@ package net.frozenblock.lib.platform.api.attachment;
 
 import com.mojang.serialization.Codec;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -58,6 +59,8 @@ public interface DataAttachmentType<T> {
 	T get(DataAttachmentTarget holder);
 
 	T getOrDefault(DataAttachmentTarget holder, T fallback);
+
+	Optional<T> getOptional(DataAttachmentTarget holder);
 
 	void set(DataAttachmentTarget holder, T value);
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.removable;
+package net.frozenblock.lib.item.api.component.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;

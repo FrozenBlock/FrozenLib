@@ -23,17 +23,17 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 @UnstableApi
-public class LootTableModificationApi {
+public class LootTableModification {
 
 	public static void editTable(ResourceKey<LootTable> targetLootTable, boolean requiresBuiltIn, Edit listener) {
-		FrozenLibLootTableEvents.Replace modification = (id, lootTable, source, registries) -> {
+		LootTableEvents.Replace modification = (id, lootTable, source, registries) -> {
 			if ((requiresBuiltIn && !source.isBuiltin()) || !targetLootTable.equals(id)) return null;
 			final MutableLootTable mutableLootTable = new MutableLootTable(lootTable);
 			listener.editLootTable(id, mutableLootTable);
 			return mutableLootTable.build();
 		};
 
-		FrozenLibLootTableEvents.REPLACE.register(modification);
+		LootTableEvents.REPLACE.register(modification);
 	}
 
 	@FunctionalInterface

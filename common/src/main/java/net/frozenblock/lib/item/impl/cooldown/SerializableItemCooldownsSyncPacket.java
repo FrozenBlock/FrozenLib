@@ -15,25 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.impl.network;
+package net.frozenblock.lib.item.impl.cooldown;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 
-public record CooldownChangePacket(Identifier cooldownGroup, int additional) implements CustomPacketPayload {
-	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
+public record SerializableItemCooldownsSyncPacket(int tickCount, SerializableItemCooldowns serializableItemCooldowns) implements CustomPacketPayload {
+	public static final Type<SerializableItemCooldownsSyncPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("serializable_item_cooldowns_sync"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SerializableItemCooldownsSyncPacket> CODEC = StreamCodec.ofMember(SerializableItemCooldownsSyncPacket::write, SerializableItemCooldownsSyncPacket::new);
 
-	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {
-		this(buf.readIdentifier(), buf.readVarInt());
+	public SerializableItemCooldownsSyncPacket(RegistryFriendlyByteBuf buf) {
+		this(buf.readVarInt(), SerializableItemCooldowns.STREAM_CODEC.decode(buf));
 	}
 
 	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeIdentifier(this.cooldownGroup);
-		buf.writeVarInt(this.additional());
+		buf.writeVarInt(this.tickCount());
+		SerializableItemCooldowns.STREAM_CODEC.encode(buf, this.serializableItemCooldowns());
 	}
 
 	@Override

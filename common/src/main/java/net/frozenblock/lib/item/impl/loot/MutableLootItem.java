@@ -59,7 +59,7 @@ public class MutableLootItem {
 	}
 
 	public LootItem build() {
-		return new LootItem(item, weight, quality, conditions, functions);
+		return new LootItem(this.item, this.weight, this.quality, this.conditions, this.functions);
 	}
 
 	public int getWeight() {

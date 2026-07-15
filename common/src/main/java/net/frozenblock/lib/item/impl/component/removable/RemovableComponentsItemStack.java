@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.loot;
+package net.frozenblock.lib.item.impl.component.removable;
 
-public enum FrozenLibLootTableSource {
-	VANILLA(true),
-	MOD(true),
-	DATA_PACK(false),
-	REPLACED(false);
+public interface RemovableComponentsItemStack {
 
-	private final boolean builtin;
-
-	FrozenLibLootTableSource(boolean builtin) {
-		this.builtin = builtin;
+	default boolean frozenLib$canRemoveTags() {
+		throw new AssertionError();
 	}
 
-	public boolean isBuiltin() {
-		return this.builtin;
+	default void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
+		throw new AssertionError();
 	}
 }

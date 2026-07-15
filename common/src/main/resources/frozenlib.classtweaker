@@ -303,7 +303,7 @@ transitive-accessible field net/minecraft/world/item/alchemy/PotionBrewing$Build
 transitive-accessible method net/minecraft/world/item/alchemy/PotionBrewing$Builder expectPotion (Lnet/minecraft/world/item/Item;)V
 
 transitive-inject-interface net/minecraft/world/item/alchemy/PotionBrewing$Builder net/frozenblock/lib/item/impl/registry/FrozenLibPotionBrewingBuilder
-transitive-inject-interface net/minecraft/world/item/ItemStack net/frozenblock/lib/item/impl/ItemStackExtension
+transitive-inject-interface net/minecraft/world/item/ItemStack net/frozenblock/lib/item/impl/component/removable/RemovableComponentsItemStack
 
 # Damage
 ####################################################################################

@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.mixin.loot;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -38,7 +38,7 @@ public class LootTableMixin {
 		)
 	)
 	public void frozenLib$triggerItemGeneratedInContainer(Container instance, int i, ItemStack stack, Operation<Void> original) {
-		FrozenLibLootTableEvents.ON_ITEM_GENERATED_IN_CONTAINER.invoker().onItemGeneratedInContainer(instance, stack);
+		LootTableEvents.ON_ITEM_GENERATED_IN_CONTAINER.invoker().onItemGeneratedInContainer(instance, stack);
 		original.call(instance, i, stack);
 	}
 }

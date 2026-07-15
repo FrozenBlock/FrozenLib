@@ -18,6 +18,7 @@
 package net.frozenblock.lib.platform.api.attachment.platform;
 
 import com.mojang.serialization.Codec;
+import java.util.Optional;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentSyncPredicate;
@@ -119,6 +120,11 @@ public final class DataAttachmentHelperImpl {
 		@Override
 		public T getOrDefault(DataAttachmentTarget holder, T fallback) {
 			return ((IAttachmentHolder) holder).getExistingData(this.holder.get()).orElse(fallback);
+		}
+
+		@Override
+		public Optional<T> getOptional(DataAttachmentTarget holder) {
+			return Optional.ofNullable(this.get(holder));
 		}
 
 		@Override

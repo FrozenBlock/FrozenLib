@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableSource;
+import net.frozenblock.lib.item.api.loot.LootTableSource;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.repository.KnownPack;
@@ -31,20 +31,20 @@ import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public final class NeoLootUtil {
-	public static final ThreadLocal<Map<Identifier, FrozenLibLootTableSource>> SOURCES = ThreadLocal.withInitial(HashMap::new);
+	public static final ThreadLocal<Map<Identifier, LootTableSource>> SOURCES = ThreadLocal.withInitial(HashMap::new);
 
-	public static FrozenLibLootTableSource determineSource(@Nullable Resource resource) {
+	public static LootTableSource determineSource(@Nullable Resource resource) {
 		if (resource != null) {
 			PackLocationInfo location = resource.source().location();
 
-			if (location.source() == PackSource.BUILT_IN) return FrozenLibLootTableSource.VANILLA;
+			if (location.source() == PackSource.BUILT_IN) return LootTableSource.VANILLA;
 
 			final Optional<KnownPack> knownPack = location.knownPackInfo();
 			// TODO test
-			if (knownPack.isPresent() && "neoforge".equals(knownPack.get().namespace())) return FrozenLibLootTableSource.MOD;
+			if (knownPack.isPresent() && "neoforge".equals(knownPack.get().namespace())) return LootTableSource.MOD;
 		}
 
 		// If not vanilla or a mod's own bundled pack, assume external data pack.
-		return FrozenLibLootTableSource.DATA_PACK;
+		return LootTableSource.DATA_PACK;
 	}
 }

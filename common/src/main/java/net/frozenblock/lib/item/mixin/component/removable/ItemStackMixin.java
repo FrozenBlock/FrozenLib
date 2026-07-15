@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.mixin;
+package net.frozenblock.lib.item.mixin.component.removable;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -23,8 +23,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.List;
 import net.frozenblock.lib.item.api.component.ItemTooltipAdditionAPI;
-import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
-import net.frozenblock.lib.item.impl.ItemStackExtension;
+import net.frozenblock.lib.item.api.component.removable.RemovableDataComponents;
+import net.frozenblock.lib.item.impl.component.removable.RemovableComponentsItemStack;
 import net.frozenblock.lib.tag.api.FrozenLibItemTags;
 import net.minecraft.core.TypedInstance;
 import net.minecraft.network.chat.Component;
@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements TypedInstance<Item>, ItemStackExtension {
+public abstract class ItemStackMixin implements TypedInstance<Item>, RemovableComponentsItemStack {
 
 	@Shadow
 	public abstract Item getItem();

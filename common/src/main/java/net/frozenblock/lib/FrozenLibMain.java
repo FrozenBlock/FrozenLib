@@ -29,6 +29,7 @@ import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
@@ -66,6 +67,7 @@ public final class FrozenLibMain {
 
 	public static void preQuiltSetup() {
 		FireData.init();
+		SerializableItemCooldowns.init();
 		SoundTypeOverrides.init();
 	}
 

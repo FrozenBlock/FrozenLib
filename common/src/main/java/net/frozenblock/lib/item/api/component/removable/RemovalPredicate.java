@@ -15,14 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.impl;
+package net.frozenblock.lib.item.api.component.removable;
 
-public interface ItemStackExtension {
-	default boolean frozenLib$canRemoveTags() {
-		throw new AssertionError();
-	}
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.level.Level;
 
-	default void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
-		throw new AssertionError();
-	}
+@FunctionalInterface
+public interface RemovalPredicate {
+	boolean shouldRemove(Level level, Entity entity, EquipmentSlot slot);
 }

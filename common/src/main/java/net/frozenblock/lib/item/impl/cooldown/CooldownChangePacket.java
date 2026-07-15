@@ -15,17 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.impl.network;
+package net.frozenblock.lib.item.impl.cooldown;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.Identifier;
 
-public record CooldownTickCountPacket(int count) implements CustomPacketPayload {
-	public static final Type<CooldownTickCountPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_tick_count_packet"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownTickCountPacket> CODEC = ByteBufCodecs.VAR_INT.map(CooldownTickCountPacket::new, CooldownTickCountPacket::count).cast();
+public record CooldownChangePacket(Identifier cooldownGroup, int additional) implements CustomPacketPayload {
+	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
+
+	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {
+		this(buf.readIdentifier(), buf.readVarInt());
+	}
+
+	public void write(RegistryFriendlyByteBuf buf) {
+		buf.writeIdentifier(this.cooldownGroup);
+		buf.writeVarInt(this.additional());
+	}
 
 	@Override
 	public Type<?> type() {
