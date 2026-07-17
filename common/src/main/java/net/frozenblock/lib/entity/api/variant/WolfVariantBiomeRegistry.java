@@ -31,10 +31,11 @@ import net.minecraft.world.entity.animal.wolf.WolfVariant;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: maybe datadrive this
 /**
  * A tool to easily add a {@link WolfVariant} to a biome without impacting data-driven content.
- *
- * <p> Multiple {@link WolfVariant}s can be added to a single biome, which will result in a random {@link WolfVariant} being picked each spawn.
+ * <p>
+ * Multiple {@link WolfVariant}s can be added to a single biome, which will result in a random {@link WolfVariant} being picked upon spawn.
  */
 public class WolfVariantBiomeRegistry {
 	private static final Map<ResourceKey<Biome>, List<ResourceKey<WolfVariant>>> WOLF_VARIANT_FROM_BIOME = new Object2ObjectOpenHashMap<>();
@@ -70,8 +71,8 @@ public class WolfVariantBiomeRegistry {
 	 * @param biome The biome to check for a registered {@link WolfVariant} in.
 	 * @return the found {@link WolfVariant}, if possible.
 	 */
-	public static Optional<WolfVariant> get(RegistryAccess registryManager, ResourceKey<Biome> biome) {
-		final Registry<WolfVariant> registry = registryManager.lookupOrThrow(Registries.WOLF_VARIANT);
+	public static Optional<WolfVariant> get(RegistryAccess registryAccess, ResourceKey<Biome> biome) {
+		final Registry<WolfVariant> registry = registryAccess.lookupOrThrow(Registries.WOLF_VARIANT);
 		return registry.getOptional(getVariantOrNull(biome));
 	}
 
@@ -90,5 +91,4 @@ public class WolfVariantBiomeRegistry {
 		}
 		return null;
 	}
-
 }

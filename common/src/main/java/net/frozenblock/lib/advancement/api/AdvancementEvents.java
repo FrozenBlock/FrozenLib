@@ -25,10 +25,6 @@ import net.minecraft.core.HolderLookup;
 
 public final class AdvancementEvents {
 
-	private AdvancementEvents() {
-		throw new UnsupportedOperationException("AdvancementEvents contains only static declarations.");
-	}
-
 	/**
 	 * Invoked for each AdvancementHolder registered on the server.
 	 * Allows modifications to them
