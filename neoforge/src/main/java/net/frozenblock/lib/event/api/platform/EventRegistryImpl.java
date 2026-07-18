@@ -18,17 +18,36 @@
 package net.frozenblock.lib.event.api.platform;
 
 import java.util.function.Function;
+import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 import net.frozenblock.lib.event.api.Event;
+import net.frozenblock.lib.event.impl.EventType;
 import net.frozenblock.lib.platform.event.NeoForgeEvent;
 
 public final class EventRegistryImpl{
 
 	@SuppressWarnings("unchecked")
 	public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-		return new NeoForgeEvent<>((Class<T>) type, invokerFactory);
+		final NeoForgeEvent<T> event = new NeoForgeEvent<>((Class<T>) type, invokerFactory);
+		autoRegister(event, type);
+		return event;
 	}
 
 	public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-		return new NeoForgeEvent<>(type, invokerFactory);
+		final NeoForgeEvent<T> event = new NeoForgeEvent<>(type, invokerFactory);
+		autoRegister(event, type);
+		return event;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> void autoRegister(Event<T> event, Class<? super T> type) {
+		for (var eventType : EventType.VALUES) {
+			if (!eventType.listener().isAssignableFrom(type)) continue;
+			FrozenLibEntrypoints.forEachDeclaredEntrypoint(eventType.entrypoint(), eventType.listener(), entrypoint -> {
+				if (type.isAssignableFrom(entrypoint.getClass())) {
+					event.register((T) entrypoint);
+				}
+			});
+			break;
+		}
 	}
 }

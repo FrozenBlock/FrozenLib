@@ -36,6 +36,7 @@ import net.frozenblock.lib.platform.api.Env;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.fml.loading.LoadingModList;
 import org.jspecify.annotations.Nullable;
 
 public final class ModLoaderImpl {
@@ -104,8 +105,13 @@ public final class ModLoaderImpl {
 	}
 
 	public static List<ModLoader.ModEntry> getAllMods() {
-		final ModList modList = ModList.get();
-		if (modList == null) return List.of();
+		final LoadingModList modList;
+		try {
+			modList = FMLLoader.getCurrent().getLoadingModList();
+		} catch (IllegalStateException e) {
+			// Called before mod discovery finished - nothing to report yet.
+			return List.of();
+		}
 
 		final List<ModLoader.ModEntry> result = new ArrayList<>();
 		for (var modInfo : modList.getMods()) {
@@ -130,32 +136,41 @@ public final class ModLoaderImpl {
 					final var contents = modInfo.getOwningFile().getFile().getContents();
 					if (!contents.containsFile(file)) return Optional.empty();
 
-					final Path primary = contents.getPrimaryPath();
-					try {
-						if (Files.isDirectory(primary)) return Optional.of(primary.resolve(file));
+					// A mod's contents may be a composite of multiple content roots (e.g. separate
+					// classes/resources output directories in a dev environment), so every root has
+					// to be checked - the primary root alone may not be the one containing the file.
+					for (Path root : contents.getContentRoots()) {
+						try {
+							if (Files.isDirectory(root)) {
+								final Path candidate = root.resolve(file);
+								if (Files.exists(candidate)) return Optional.of(candidate);
+								continue;
+							}
 
-						final FileSystem fs = openOrGetFileSystem(primary);
-						final Path result = fs.getPath("/" + file);
-						return Files.exists(result) ? Optional.of(result) : Optional.empty();
-					} catch (Exception e) {
-						return Optional.empty();
+							final FileSystem fs = openOrGetFileSystem(root);
+							final Path candidate = fs.getPath("/" + file);
+							if (Files.exists(candidate)) return Optional.of(candidate);
+						} catch (Exception ignored) {}
 					}
+					return Optional.empty();
 				}
 
 				@Override
 				public Collection<Path> getRootPaths() {
 					final var contents = modInfo.getOwningFile().getFile().getContents();
-					final Path primary = contents.getPrimaryPath();
-					try {
-						if (Files.isDirectory(primary)) return List.of(primary);
+					final List<Path> roots = new ArrayList<>();
+					for (Path root : contents.getContentRoots()) {
+						try {
+							if (Files.isDirectory(root)) {
+								roots.add(root);
+								continue;
+							}
 
-						final FileSystem fs = openOrGetFileSystem(primary);
-						final List<Path> roots = new ArrayList<>();
-						fs.getRootDirectories().forEach(roots::add);
-						return List.copyOf(roots);
-					} catch (Exception e) {
-						return List.of();
+							final FileSystem fs = openOrGetFileSystem(root);
+							fs.getRootDirectories().forEach(roots::add);
+						} catch (Exception ignored) {}
 					}
+					return List.copyOf(roots);
 				}
 			});
 		}

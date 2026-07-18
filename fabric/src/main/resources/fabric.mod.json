@@ -51,6 +51,7 @@
     "mixin/frozenlib.data_attachment.mixins.json",
     "mixin/frozenlib.debug.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
+    "mixin/frozenlib.entrypoint.mixins.json",
     "mixin/frozenlib.event.fabric.mixins.json",
     "mixin/frozenlib.feature_flag.mixins.json",
     "mixin/frozenlib.gravity.mixins.json",

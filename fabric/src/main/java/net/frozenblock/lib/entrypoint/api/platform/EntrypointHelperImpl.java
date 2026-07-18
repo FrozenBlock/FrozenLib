@@ -19,13 +19,18 @@ package net.frozenblock.lib.entrypoint.api.platform;
 
 import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
+import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 
 public class EntrypointHelperImpl {
 
-	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
+	public static <T> void forEachEntrypoint(String key, Class<T> clazz, Consumer<T> consumer) {
 		FabricLoader.getInstance()
-			.getEntrypointContainers(EntrypointHelper.getEntrypointInformation(clazz).value(), clazz)
+			.getEntrypointContainers(key, clazz)
 			.forEach(entrypoint -> consumer.accept(entrypoint.getEntrypoint()));
+
+		// todo uh maybe remove idk
+		if (!FrozenLibEntrypoints.isInjectedIntoNativeLoader()) {
+			FrozenLibEntrypoints.forEachDeclaredEntrypoint(key, clazz, consumer);
+		}
 	}
 }

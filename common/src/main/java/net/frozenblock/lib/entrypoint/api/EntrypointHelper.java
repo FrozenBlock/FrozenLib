@@ -23,14 +23,26 @@ import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 public class EntrypointHelper {
 
 	/**
-	 * Executes a {@link Consumer} for each {@link Entrypoint} instance found.
+	 * Executes a {@link Consumer} for each {@link Entrypoint} instance found, keyed by the class's
+	 * {@link Entrypoint#value()}.
+	 *
+	 * @see #forEachEntrypoint(String, Class, Consumer)
+	 */
+	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
+		validateEntrypoint(clazz);
+		forEachEntrypoint(getEntrypointInformation(clazz).value(), clazz, consumer);
+	}
+
+	/**
+	 * Executes a {@link Consumer} for each entrypoint instance declared under the given key.
 	 * <p>
-	 * Fabric: Uses Fabric's entrypoint system.
+	 * Fabric: Merges Fabric's native {@code fabric.mod.json} entrypoints with those declared by any
+	 * mod's {@code frozenlib.json}.
 	 * <p>
-	 * NeoForge: Uses Java Services.
+	 * NeoForge: Uses entrypoints declared by any mod's {@code frozenlib.json}.
 	 */
 	@PlatformImpl
-	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
+	public static <T> void forEachEntrypoint(String key, Class<T> clazz, Consumer<T> consumer) {
 		throw new AssertionError();
 	}
 

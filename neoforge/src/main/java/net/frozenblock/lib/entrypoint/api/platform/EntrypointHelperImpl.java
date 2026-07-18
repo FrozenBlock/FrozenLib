@@ -17,15 +17,12 @@
 
 package net.frozenblock.lib.entrypoint.api.platform;
 
-import java.util.ServiceLoader;
 import java.util.function.Consumer;
-import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
+import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 
 public class EntrypointHelperImpl {
 
-	public static <T> void forEachEntrypoint(Class<T> clazz, Consumer<T> consumer) {
-		EntrypointHelper.validateEntrypoint(clazz);
-		ServiceLoader.load(clazz, EntrypointHelper.class.getClassLoader())
-			.forEach(consumer);
+	public static <T> void forEachEntrypoint(String key, Class<T> clazz, Consumer<T> consumer) {
+		FrozenLibEntrypoints.forEachDeclaredEntrypoint(key, clazz, consumer);
 	}
 }

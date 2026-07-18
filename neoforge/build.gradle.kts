@@ -122,6 +122,8 @@ dependencies {
     implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
         exclude(group = "net.neoforged")
     }
+
+    implementation(project(":neoforge-locator"))
 }
 
 tasks {
@@ -146,7 +148,6 @@ tasks {
             exclude {
                 it.moduleGroup.contains("neoforged")
             }
-            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
             exclude {
                 it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")
                     || it.moduleGroup.contains("checkerframework") || it.moduleGroup.contains("slf4j")
@@ -154,6 +155,8 @@ tasks {
                     || it.moduleGroup.contains("intellij") || it.moduleGroup.contains("jetbrains")
             }
         }
+        exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
+
         relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
     }
 

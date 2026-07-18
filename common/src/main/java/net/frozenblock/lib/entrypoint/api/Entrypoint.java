@@ -29,7 +29,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Entrypoint {
 	/**
-	 * The name of this entrypoint on {@code Fabric}.
+	 * The key used to look up this entrypoint, shared by both a native {@code fabric.mod.json}
+	 * {@code entrypoints} declaration and any mod's {@code frozenlib.json} {@code entrypoints} declaration.
 	 */
 	String value();
 }

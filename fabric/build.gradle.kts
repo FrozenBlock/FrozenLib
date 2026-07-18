@@ -252,7 +252,7 @@ tasks {
             exclude {
                 it.moduleGroup.contains("fabric")
             }
-            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
+
 
             exclude {
                 it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")
@@ -261,6 +261,7 @@ tasks {
                     || it.moduleGroup.contains("intellij") || it.moduleGroup.contains("jetbrains")
             }
         }
+        exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
 
         relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
     }

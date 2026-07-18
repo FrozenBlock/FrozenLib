@@ -28,6 +28,6 @@ import org.jetbrains.annotations.ApiStatus;
 public interface ModifiableLootTableBuilder {
 
 	default LootTable.Builder frozenLib$modifyPools(Consumer<? super LootPool.Builder> modifier) {
-		throw new UnsupportedOperationException("Implemented via mixin");
+		throw new AssertionError("Implemented via mixin");
 	}
 }

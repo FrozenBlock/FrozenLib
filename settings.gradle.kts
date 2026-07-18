@@ -56,6 +56,9 @@ if (Constants.FABRIC) {
 if (Constants.NEOFORGE) {
     include("flib-neoforge")
     project(":flib-neoforge").projectDir = file("neoforge")
+
+    include("neoforge-locator")
+    project(":neoforge-locator").projectDir = file("neoforge/locator")
 }
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
