@@ -9,7 +9,7 @@
   "mixins": [
     "AbstractFishMixin",
     "EntityMixin",
-    "VariantUtilsMixin",
+    "PriorityProviderMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",

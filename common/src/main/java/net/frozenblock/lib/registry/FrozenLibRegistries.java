@@ -24,6 +24,7 @@ import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
+import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
@@ -75,6 +76,7 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
+	public static final ResourceKey<Registry<VariantSpawnInjection>> VARIANT_SPAWN_INJECTION = ResourceKey.createRegistryKey(FrozenLibConstants.id("variant_spawn_injection"));
 
 	public static void setup() {
 		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
@@ -82,6 +84,7 @@ public class FrozenLibRegistries {
 		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(VARIANT_SPAWN_INJECTION, VariantSpawnInjection.CODEC);
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {

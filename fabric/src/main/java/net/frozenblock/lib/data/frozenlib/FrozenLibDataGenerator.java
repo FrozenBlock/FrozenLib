@@ -40,6 +40,17 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
 		builder.add(FrozenLibRegistries.FIRE_TYPE, FireTypes::bootstrap);
+		/*
+		builder.add(FrozenLibRegistries.VARIANT_SPAWN_INJECTION, context -> {
+			VariantSpawnInjection.register(
+				context,
+				FrozenLibConstants.id("test"),
+				Registries.CHICKEN_VARIANT,
+				context.lookup(Registries.CHICKEN_VARIANT).getOrThrow(ChickenVariants.COLD),
+				SpawnPrioritySelectors.single(new BiomeCheck(context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_FOREST)), 5)
+			);
+		});
+		 */
 	}
 
 	@Override
