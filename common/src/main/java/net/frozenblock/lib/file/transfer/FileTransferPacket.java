@@ -33,7 +33,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * Used to both request and transfer files between both the client and server.
@@ -66,7 +65,6 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	 * @return A {@link List} of new file transfer packets.
 	 * @throws IOException if file reading fails.
 	 */
-	@Unmodifiable
 	public static FileTransferPacket create(String destPath, File file) throws IOException {
 		final byte[] data = readFile(file);
 		return new FileTransferPacket(destPath, file.getName(), List.of(), false, data);

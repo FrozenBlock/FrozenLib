@@ -28,7 +28,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Used to help with custom {@link FeatureFlag}s.
  */
 @UtilityClass
-public class FeatureFlagApi {
+public final class FeatureFlagApi {
 	@ApiStatus.Internal
 	public static FeatureFlagRegistry.Builder builder;
 
