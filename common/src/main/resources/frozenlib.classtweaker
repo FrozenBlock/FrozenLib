@@ -197,7 +197,6 @@ transitive-accessible field net/minecraft/world/CompoundContainer container2 Lne
 
 # Piston
 transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingBlockEntity net/frozenblock/lib/block/impl/piston/PistonMovingBlockEntityInterface
-transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/piston/state/MovingBlockRenderStateInterface
 
 transitive-accessible field net/minecraft/world/level/ClipContext collisionContext Lnet/minecraft/world/phys/shapes/CollisionContext;
 
@@ -288,6 +287,8 @@ transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 
 transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface net/minecraft/client/renderer/state/level/LevelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 
 # Mob Effect
 ####################################################################################

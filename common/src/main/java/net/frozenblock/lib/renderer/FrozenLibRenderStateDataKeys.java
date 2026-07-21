@@ -20,9 +20,11 @@ package net.frozenblock.lib.renderer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
 @ClientOnly
 public final class FrozenLibRenderStateDataKeys {
 	public static final RenderStateDataKey<FireType> FIRE_TYPE = RenderStateDataKey.create(FrozenLibConstants.id("fire_type"));
 	public static final RenderStateDataKey<String> ENTITY_NAME = RenderStateDataKey.create(FrozenLibConstants.id("entity_name"));
+	public static final RenderStateDataKey<BlockEntityRenderState> NESTED_BLOCK_ENTITY = RenderStateDataKey.create(FrozenLibConstants.id("nested_block_entity"));
 }

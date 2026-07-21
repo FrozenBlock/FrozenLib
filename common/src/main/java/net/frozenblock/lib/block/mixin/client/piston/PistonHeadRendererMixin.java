@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.mixin.client.piston;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
+import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -39,7 +40,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// TODO: common
 @ClientOnly
 @Mixin(PistonHeadRenderer.class)
 public class PistonHeadRendererMixin {
@@ -62,7 +62,7 @@ public class PistonHeadRendererMixin {
 
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
 			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTicks, breakProgress, false);
-			original.frozenLib$setBlockEntityRenderState(fakeRenderState);
+			original.frozenLib$setData(FrozenLibRenderStateDataKeys.NESTED_BLOCK_ENTITY, fakeRenderState);
 		} catch (Throwable ignored) {}
 
 		return original;
@@ -79,7 +79,7 @@ public class PistonHeadRendererMixin {
 	public void frozenLib$SubmitMovingBlockEntity(
 		PistonHeadRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, CallbackInfo info
 	) {
-		final BlockEntityRenderState fakeRenderState = state.block.frozenLib$getBlockEntityRenderState();
+		final BlockEntityRenderState fakeRenderState = state.block.frozenLib$getData(FrozenLibRenderStateDataKeys.NESTED_BLOCK_ENTITY);
 		if (fakeRenderState == null) return;
 
 		try {

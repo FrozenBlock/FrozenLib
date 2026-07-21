@@ -19,11 +19,17 @@ package net.frozenblock.lib.renderer.mixin;
 
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 
 @ClientOnly
-@Mixin(EntityRenderState.class)
+@Mixin({
+	EntityRenderState.class,
+	MovingBlockRenderState.class,
+	LevelRenderState.class
+})
 public abstract class FrozenLibRenderStateMixin implements FrozenLibRenderState {
 	// literally only here for interface injection
 }
