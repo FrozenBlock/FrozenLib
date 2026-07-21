@@ -25,7 +25,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 
 @ClientOnly
 public class ClientLevelEvents {
-	// TODO: this is different between fabric and neo
 	/**
 	 * Called after the client level has been changed.
 	 *
