@@ -375,6 +375,7 @@ transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Bui
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder paramSet Lnet/minecraft/util/context/ContextKeySet;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Ljava/util/Optional;
+
 transitive-inject-interface net/minecraft/world/level/storage/loot/LootTable$Builder net/frozenblock/lib/item/impl/loot/ModifiableLootTableBuilder
 
 # Loot Pool

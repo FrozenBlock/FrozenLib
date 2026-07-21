@@ -18,8 +18,8 @@
 package net.frozenblock.lib.item.mixin.cooldown;
 
 import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,8 +31,7 @@ public class EntityMixin {
 
 	@Inject(method = "saveWithoutId", at = @At("HEAD"))
 	public void frozenLib$appendSerializableItemCooldowns(ValueOutput output, CallbackInfo info) {
-		if (Entity.class.cast(this) instanceof ServerPlayer player) {
-			SerializableItemCooldowns.ATTACHMENT.set(player, SerializableItemCooldowns.of(player.getCooldowns()));
-		}
+		if (!(Entity.class.cast(this) instanceof Player player)) return;
+		SerializableItemCooldowns.ATTACHMENT.set(player, SerializableItemCooldowns.of(player.getCooldowns()));
 	}
 }
