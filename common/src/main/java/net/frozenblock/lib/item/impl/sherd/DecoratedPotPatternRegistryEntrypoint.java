@@ -18,12 +18,14 @@
 package net.frozenblock.lib.item.impl.sherd;
 
 import java.util.function.BiConsumer;
+import net.frozenblock.lib.entrypoint.api.Entrypoint;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 
+@Entrypoint("frozenlib:decorated_pot_patterns")
 public interface DecoratedPotPatternRegistryEntrypoint {
 
 	void itemToPatternMappings(BiConsumer<ResourceKey<Item>, ResourceKey<DecoratedPotPattern>> itemToPattern);
