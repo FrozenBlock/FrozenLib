@@ -10,3 +10,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Removed the `WolfVariantBiomeRegistry` class, as Variant Spawn Injections supercede its functionality.
 - Added the `frozenlib:config` Spawn Condition (used for selecting mob variants within the `spawn_conditions` field,) with the following format:
   - `predicate`: The config predicate to check.
+- Added the `frozenlib:visual/lightmap_brightness` Environment Attribute, controlling the brightness of the lightmap.
+  - Can be any value between 0 and 1.
