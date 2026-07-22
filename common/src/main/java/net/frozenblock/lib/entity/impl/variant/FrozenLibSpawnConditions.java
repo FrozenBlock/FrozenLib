@@ -2,6 +2,7 @@ package net.frozenblock.lib.entity.impl.variant;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.entity.api.variant.ConfigCheck;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.variant.SpawnCondition;

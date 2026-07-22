@@ -2,7 +2,7 @@ package net.frozenblock.lib.levelgen.attribute.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.levelgen.attribute.impl.FrozenLibEnvironmentAttributes;
+import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.LightmapRenderStateExtractor;

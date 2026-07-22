@@ -1,4 +1,4 @@
-package net.frozenblock.lib.entity.impl.variant;
+package net.frozenblock.lib.entity.api.variant;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

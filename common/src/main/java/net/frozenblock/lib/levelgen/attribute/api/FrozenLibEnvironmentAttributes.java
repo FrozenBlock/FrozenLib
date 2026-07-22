@@ -1,4 +1,4 @@
-package net.frozenblock.lib.levelgen.attribute.impl;
+package net.frozenblock.lib.levelgen.attribute.api;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
