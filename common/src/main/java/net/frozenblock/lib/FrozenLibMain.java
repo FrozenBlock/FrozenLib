@@ -26,6 +26,7 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
+import net.frozenblock.lib.entity.impl.variant.FrozenLibSpawnConditions;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
@@ -104,6 +105,7 @@ public final class FrozenLibMain {
 		FrozenLibDataComponents.init();
 		FrozenLibFeatures.init();
 		ConfigPredicateType.init();
+		FrozenLibSpawnConditions.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();

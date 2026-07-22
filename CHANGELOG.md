@@ -8,3 +8,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `variant`: The id of the variant to inject custom spawn conditions into.
   - `spawn_conditions`: The spawn conditions to inject into the variant, using the same format as the `spawn_conditions` field in other mob variants.
 - Removed the `WolfVariantBiomeRegistry` class, as Variant Spawn Injections supercede its functionality.
+- Added the `frozenlib:config` Spawn Condition (used for selecting mob variants within the `spawn_conditions` field,) with the following format:
+  - `predicate`: The config predicate to check.
