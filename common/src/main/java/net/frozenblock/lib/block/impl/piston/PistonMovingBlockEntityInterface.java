@@ -19,16 +19,19 @@ package net.frozenblock.lib.block.impl.piston;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 public interface PistonMovingBlockEntityInterface {
-	default void frozenLib$setPushedBlockEntityTag(CompoundTag tag) {
+	default void frozenLib$setPushedBlockEntityTag(@Nullable CompoundTag tag) {
 		throw new AssertionError();
 	}
 
+	@Nullable
 	default CompoundTag frozenLib$getPushedBlockEntityTag() {
 		throw new AssertionError();
 	}
 
+	@Nullable
 	default BlockEntity frozenLib$getPushedFakeBlockEntity() {
 		throw new AssertionError();
 	}

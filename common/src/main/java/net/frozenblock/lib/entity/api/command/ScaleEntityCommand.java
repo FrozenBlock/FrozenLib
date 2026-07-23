@@ -70,5 +70,4 @@ public class ScaleEntityCommand {
 			return 0;
 		}
 	}
-
 }

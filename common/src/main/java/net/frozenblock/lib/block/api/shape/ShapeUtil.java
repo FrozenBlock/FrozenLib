@@ -43,7 +43,6 @@ public final class ShapeUtil {
 	private static final VoxelShape EAST_PLANE = Block.box(15D, 0D, 0D, 16D, 16D, 16D);
 	private static final VoxelShape NORTH_PLANE = Block.box(0D, 0D, 0D, 16D, 16D, 1D);
 	private static final VoxelShape SOUTH_PLANE = Block.box(0D, 0D, 15D, 16D, 16D, 16D);
-
 	public static final Map<Direction, VoxelShape> PLANE_BY_DIRECTION = Util.make(Maps.newEnumMap(Direction.class), shapes -> {
 		shapes.put(Direction.NORTH, NORTH_PLANE);
 		shapes.put(Direction.EAST, EAST_PLANE);

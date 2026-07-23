@@ -22,3 +22,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `ON_PUSH_FAIL`: Triggers when Piston structure resolution fails.
 - Renamed `PushableBlockEntityUtil` to `PistonPushUtil` and added a few new methods to help with `PistonEvents` usage.
 - Updated and renamed `BooleanPropertySculkBehavior` to `BlockStatePropertySculkBehavior`, with the additional functionality of being able to use any Block State Property.
+- Added the `frozenlib:selector` Config Predicate, with the following format:
+  - `selector`: The Config Predicate used to determine which predicate to select.
+  - `when_true`: The Config Predicate to select when `selector` returns true.
+  - `when_false`: The Config Predicate to select when `selector` returns false.
+- Added the `frozenlib_with_fallback` Config Predicate, with the following format:
+  - `entry`: The required Config Entry's id.
+  - `predicate`: The Config Predicate to use if the required Config Entry is present.
+  - `fallback`: The fallback value to use if the required Config Entry is not present.

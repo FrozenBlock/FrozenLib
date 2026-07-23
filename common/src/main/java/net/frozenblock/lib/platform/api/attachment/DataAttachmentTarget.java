@@ -50,8 +50,12 @@ public interface DataAttachmentTarget {
 		return type.getAttachedOrSet(this, defaultValue);
 	}
 
-	default <T> T frozenLib$getAttachedOrElse(DataAttachmentType<T> type, Supplier<T> defaultValue) {
-		return type.getAttachedOrGet(this, defaultValue);
+	default <T> T frozenLib$getAttachedOrElseGet(DataAttachmentType<T> type, Supplier<T> defaultValue) {
+		return type.getAttachedOrElseGet(this, defaultValue);
+	}
+
+	default <T> T frozenLib$getAttachedOrElse(DataAttachmentType<T> type, @Nullable T defaultValue) {
+		return type.getAttachedOrElse(this, defaultValue);
 	}
 
 	default <T> void frozenLib$setAttached(DataAttachmentType<T> type, T value) {

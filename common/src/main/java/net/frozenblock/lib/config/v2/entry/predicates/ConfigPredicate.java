@@ -133,6 +133,18 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return exists(entry.id());
 	}
 
+	static ConfigPredicate selector(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
+		return new SelectorPredicate(selector, whenTrue, whenFalse);
+	}
+
+	static ConfigPredicate withFallback(ID id, ConfigPredicate predicate, ConfigPredicate fallback) {
+		return WithFallbackPredicate.of(id, predicate, fallback);
+	}
+
+	static ConfigPredicate withFallback(ConfigEntry<?> entry, ConfigPredicate predicate, ConfigPredicate fallback) {
+		return withFallback(entry.id(), predicate, fallback);
+	}
+
 	static ConfigPredicate not(ConfigPredicate predicate) {
 		return new NotPredicate(predicate);
 	}

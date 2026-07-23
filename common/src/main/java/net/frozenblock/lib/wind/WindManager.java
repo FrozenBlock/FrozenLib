@@ -135,11 +135,11 @@ public class WindManager {
 	 */
 	public static WindManager getOrCreate(Level level) {
 		WindManager windManager = level instanceof ServerLevel
-			? level.frozenLib$getAttached(ATTACHMENT_TYPE)
+			? ATTACHMENT_TYPE.get(level)
 			: INSTANCE;
 		if (windManager == null) {
 			windManager = new WindManager((ServerLevel) level);
-			level.frozenLib$setAttached(ATTACHMENT_TYPE, windManager);
+			ATTACHMENT_TYPE.set(level, windManager);
 		} else {
 			windManager.setLevel(level);
 		}

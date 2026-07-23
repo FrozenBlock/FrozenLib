@@ -23,7 +23,7 @@ import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.behavior.OneShot;
 
 @UtilityClass
-public class FrozenBehaviorUtils {
+public final class BehaviorUtil {
 	public static <E extends LivingEntity> OneShot<E> getOneShot(BehaviorControl<E> control) {
 		if (!(control instanceof OneShot<E> oneShot)) throw new IllegalStateException("Behavior control is not a OneShot");
 		return oneShot;

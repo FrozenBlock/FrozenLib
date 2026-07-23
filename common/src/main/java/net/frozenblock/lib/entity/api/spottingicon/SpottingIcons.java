@@ -50,46 +50,46 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 	public static void init() {}
 
 	public static void set(Entity target, SpottingIcon... icons) {
-		target.frozenLib$setAttached(ATTACHMENT_TYPE, new SpottingIcons(List.of(icons)));
+		ATTACHMENT_TYPE.set(target, new SpottingIcons(List.of(icons)));
 	}
 
 	public static void add(Entity target, SpottingIcon icon) {
-		final SpottingIcons icons = target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
+		final SpottingIcons icons = get(target);
 		if (icons.isEmpty()) {
 			set(target, icon);
 			return;
 		}
-		target.frozenLib$setAttached(ATTACHMENT_TYPE, icons.add(icon));
+		ATTACHMENT_TYPE.set(target, icons.add(icon));
 	}
 
 	public static void removeAttachment(Entity target) {
-		target.frozenLib$removeAttached(ATTACHMENT_TYPE);
+		ATTACHMENT_TYPE.remove(target);
 	}
 
 	public static void removeIf(Entity target, Predicate<SpottingIcon> removeIf) {
-		final SpottingIcons icons = target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
+		final SpottingIcons icons = get(target);
 		if (icons.isEmpty()) return;
-		target.frozenLib$setAttached(ATTACHMENT_TYPE, icons.removeIf(removeIf));
+		ATTACHMENT_TYPE.set(target, icons.removeIf(removeIf));
 	}
 
 	public static boolean anyMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).anyMatch(predicate);
+		return get(target).anyMatch(predicate);
 	}
 
 	public static boolean allMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).allMatch(predicate);
+		return get(target).allMatch(predicate);
 	}
 
 	public static boolean noneMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).noneMatch(predicate);
+		return get(target).noneMatch(predicate);
 	}
 
 	public static boolean has(Entity target) {
-		return !target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY).isEmpty();
+		return !get(target).isEmpty();
 	}
 
 	public static SpottingIcons get(Entity target) {
-		return target.frozenLib$getAttachedOrElse(ATTACHMENT_TYPE, () -> EMPTY);
+		return ATTACHMENT_TYPE.getAttachedOrElse(target, EMPTY);
 	}
 
 	public SpottingIcons add(SpottingIcon icon) {

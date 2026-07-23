@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,17 +53,19 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 
 	@Unique
 	@Override
-	public void frozenLib$setPushedBlockEntityTag(CompoundTag tag) {
+	public void frozenLib$setPushedBlockEntityTag(@Nullable CompoundTag tag) {
 		this.frozenLib$pushedBlockEntityTag = tag;
 	}
 
 	@Unique
+	@Nullable
 	@Override
 	public CompoundTag frozenLib$getPushedBlockEntityTag() {
 		return this.frozenLib$pushedBlockEntityTag;
 	}
 
 	@Unique
+	@Nullable
 	@Override
 	public BlockEntity frozenLib$getPushedFakeBlockEntity() {
 		if (this.frozenLib$pushedBlockEntityTag == null) {

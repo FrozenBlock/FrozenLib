@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenSpawnPlacementTypes {
+public class FrozenLibSpawnPlacementTypes {
 	/**
 	 * A {@link SpawnPlacementType} that spawns entities either on the ground or on the surface of Lava.
 	 */
@@ -62,5 +62,4 @@ public class FrozenSpawnPlacementTypes {
 			return level.getBlockState(belowPos).isPathfindable(PathComputationType.LAND) ? belowPos : pos;
 		}
 	};
-
 }

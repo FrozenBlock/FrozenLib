@@ -32,6 +32,8 @@ public interface ConfigPredicateType<P extends ConfigPredicate> {
 	ConfigPredicateType<AllOfPredicate> ALL_OF = register("all_of", AllOfPredicate.CODEC);
 	ConfigPredicateType<NotPredicate> NOT = register("not", NotPredicate.CODEC);
 	ConfigPredicateType<ExistsPredicate> EXISTS = register("exists", ExistsPredicate.CODEC);
+	ConfigPredicateType<SelectorPredicate> SELECTOR = register("selector", SelectorPredicate.CODEC);
+	ConfigPredicateType<WithFallbackPredicate> WITH_FALLBACK = register("with_fallback", WithFallbackPredicate.CODEC);
 	ConfigPredicateType<NotPredicate> TRUE = register("true", NotPredicate.CODEC);
 
 	MapCodec<P> codec();

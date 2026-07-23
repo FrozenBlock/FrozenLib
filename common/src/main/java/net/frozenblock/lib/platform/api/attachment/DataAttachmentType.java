@@ -87,31 +87,38 @@ public interface DataAttachmentType<T> {
 	}
 
 	default T getAttachedOrCreate(DataAttachmentTarget holder) {
-		Supplier<T> init = initializer();
+		final Supplier<T> init = initializer();
 		if (init == null) throw new IllegalArgumentException("getAttachedOrCreate() without supplier requires an initializer on the attachment type");
 		return getAttachedOrCreate(holder, init);
 	}
 
 	default T getAttachedOrCreate(DataAttachmentTarget holder, Supplier<T> initializer) {
-		T value = get(holder);
+		final T value = get(holder);
 		if (value != null) return value;
-		T initialized = Objects.requireNonNull(initializer.get(), "initializer result cannot be null");
+
+		final T initialized = Objects.requireNonNull(initializer.get(), "initializer result cannot be null");
 		set(holder, initialized);
 		return initialized;
 	}
 
 	default T getAttachedOrSet(DataAttachmentTarget holder, T defaultValue) {
 		Objects.requireNonNull(defaultValue, "default value cannot be null");
-		T value = get(holder);
+		final T value = get(holder);
 		if (value != null) return value;
+
 		set(holder, defaultValue);
 		return defaultValue;
 	}
 
-	default T getAttachedOrGet(DataAttachmentTarget holder, Supplier<T> defaultValue) {
+	default T getAttachedOrElseGet(DataAttachmentTarget holder, Supplier<T> defaultValue) {
 		Objects.requireNonNull(defaultValue, "default value supplier cannot be null");
-		T value = get(holder);
+		final T value = get(holder);
 		return value != null ? value : defaultValue.get();
+	}
+
+	default T getAttachedOrElse(DataAttachmentTarget holder, @Nullable T defaultValue) {
+		final T value = get(holder);
+		return value != null ? value : defaultValue;
 	}
 
 	@Nullable
