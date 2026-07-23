@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.mixin.client.piston;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
+import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
@@ -57,7 +57,7 @@ public class PistonHeadRendererMixin {
 		PistonMovingBlockEntity blockEntity, PistonHeadRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress
 	) {
 		try {
-			final BlockEntity fakeBlockEntity = PushableBlockEntityUtil.getFakeBlockEntity(blockEntity);
+			final BlockEntity fakeBlockEntity = PistonPushUtil.getFakeBlockEntity(blockEntity);
 			if (fakeBlockEntity == null) return original;
 
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();

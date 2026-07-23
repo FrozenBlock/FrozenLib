@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.impl.piston.PistonMovingBlockEntityInterface;
-import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
+import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -90,7 +90,7 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 	)
 	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos pos, BlockState state, int flags, Operation<Boolean> original) {
 		final boolean setBlock = original.call(level, pos, state, flags);
-		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, level, pos, state, PistonMovingBlockEntity.class.cast(this));
+		return PistonPushUtil.trySetBlockAndEntity(setBlock, level, pos, state, PistonMovingBlockEntity.class.cast(this));
 	}
 
 	@WrapOperation(
@@ -105,7 +105,7 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 		@Local(argsOnly = true) PistonMovingBlockEntity pistonEntity
 	) {
 		final boolean setBlock = original.call(level, pos, state, flags);
-		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, level, pos, state, pistonEntity);
+		return PistonPushUtil.trySetBlockAndEntity(setBlock, level, pos, state, pistonEntity);
 	}
 
 	@Inject(method = "loadAdditional", at = @At("TAIL"))

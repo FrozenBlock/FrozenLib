@@ -27,7 +27,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
+import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -52,10 +52,11 @@ public class PistonBaseBlockMixin {
 			target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"
 		)
 	)
-	private static boolean frozenLib$allowBlockEntityPushing(BlockState state, Operation<Boolean> original) {
-		final boolean hasBlockEntity = original.call(state);
-		if (hasBlockEntity && state.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return false;
-		return hasBlockEntity;
+	private static boolean frozenLib$allowBlockEntityPushing(
+		BlockState state, Operation<Boolean> original,
+		@Local(argsOnly = true, ordinal = 0) Direction direction
+	) {
+		return PistonPushUtil.cannotPushBlockEntity(original.call(state), state, direction);
 	}
 
 	// triggerEvent
@@ -75,13 +76,13 @@ public class PistonBaseBlockMixin {
 		)
 	)
 	public boolean frozenLib$captureBlockEntity(
-		Level instance, BlockPos pos, BlockState state, int flags, Operation<Boolean> original,
+		Level instance, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original,
 		@Share("frozenLib$blockEntityTag") LocalRef<CompoundTag> blockEntityTagRef
 	) {
 		blockEntityTagRef.set(null);
 		final BlockEntity blockEntity = instance.getBlockEntity(pos);
 		if (blockEntity != null) blockEntityTagRef.set(blockEntity.saveWithFullMetadata(instance.registryAccess()));
-		return original.call(instance, pos, state, flags);
+		return original.call(instance, pos, blockState, updateFlags);
 	}
 
 	@ModifyExpressionValue(
@@ -95,11 +96,11 @@ public class PistonBaseBlockMixin {
 		BlockEntity original,
 		@Share("frozenLib$blockEntityTag") LocalRef<CompoundTag> blockEntityTagRef
 	) {
-		PushableBlockEntityUtil.saveTag(blockEntityTagRef.get(), original);
+		PistonPushUtil.trySaveTag(blockEntityTagRef.get(), original);
 		return original;
 	}
 
-	//moveBlocks
+	// moveBlocks
 
 	@Inject(
 		method = "moveBlocks",
@@ -109,7 +110,7 @@ public class PistonBaseBlockMixin {
 		)
 	)
 	public void frozenLib$createBlockEntityList(
-		Level level, BlockPos pos, Direction direction, boolean bl, CallbackInfoReturnable<Boolean> info,
+		Level level, BlockPos pistonPos, Direction direction, boolean extending, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$blockEntityList") LocalRef<List<Optional<BlockEntity>>> blockEntityListRef
 	) {
 		final List<Optional<BlockEntity>> blockEntityList = Lists.newArrayList();
@@ -172,7 +173,7 @@ public class PistonBaseBlockMixin {
 		final List<Optional<BlockEntity>> blockEntityList = blockEntityListRef.get();
 		if (blockEntityList != null) {
 			final Optional<BlockEntity> optionalBlockEntity = blockEntityList.get(listIndexRef.get());
-			optionalBlockEntity.ifPresent(blockEntity -> PushableBlockEntityUtil.saveBlockEntity(level, blockEntity, original));
+			optionalBlockEntity.ifPresent(blockEntity -> PistonPushUtil.trySaveBlockEntity(level, blockEntity, original));
 		}
 		return original;
 	}
@@ -191,15 +192,14 @@ public class PistonBaseBlockMixin {
 			)
 		)
 	)
-	public boolean frozenLib$saveBlockEntityToMovingBlocks(Level instance, BlockPos pos, BlockState state, int flags, Operation<Boolean> original) {
+	public boolean frozenLib$saveBlockEntityToMovingBlocks(Level instance, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original) {
 		// The AND check for 256 dictates whether `BlockEntity$preRemoveSideEffects` is called.
 		// With 82, & 256 returns 0.
 		// Adding 256 makes this not return 0, while keeping all other calls intact.
 		final BlockState movingState = instance.getBlockState(pos);
-		if (movingState.hasBlockEntity() && movingState.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) && (flags & PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS) == 0) {
-			flags += PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+		if (movingState.hasBlockEntity() && movingState.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) && (updateFlags & PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS) == 0) {
+			updateFlags += PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
 		}
-		return original.call(instance, pos, state, flags);
+		return original.call(instance, pos, blockState, updateFlags);
 	}
-
 }

@@ -12,3 +12,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `predicate`: The config predicate to check.
 - Added the `frozenlib:visual/lightmap_brightness` Environment Attribute, controlling the brightness of the lightmap.
   - Can be any value between 0 and 1.
+- Added the `PistonEvents` class, containing the following events:
+  - `DETERMINE_BLOCK_ENTITY_PUSH_RESULT`: Determines whether a Block with a Block Entity can be pushed by a Piston.
+  - `DETERMINE_BLOCK_STICKINESS`: Determines whether a Block is considered sticky when pushed by a Piston.
+    - This will not enable any behavior on its own, and must be used in tandem with the `TRY_STICK_BLOCKS_TOGETHER` event to achieve the intended behavior.
+  - `TRY_STICK_BLOCKS_TOGETHER`: Determines whether two Blocks can stick together when pushed by a Piston.
+    - This will not enable any behavior on its own, and must be used in tandem with the `DETERMINE_BLOCK_STICKINESS` event to achieve the intended behavior.
+- Renamed `PushableBlockEntityUtil` to `PistonPushUtil` and added a few new methods to help with `PistonEvents` usage.

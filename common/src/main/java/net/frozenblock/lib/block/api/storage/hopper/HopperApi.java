@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.storage.api.hopper;
+package net.frozenblock.lib.block.api.storage.hopper;
 
 import java.util.ArrayList;
 import lombok.experimental.UtilityClass;
@@ -52,5 +52,4 @@ public class HopperApi {
 		if (doubleInventory.container2 instanceof BlockEntity block) return BLACKLISTED_TYPES.contains(block.getType());
         return false;
     }
-
 }
