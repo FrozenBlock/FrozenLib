@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.mixin.piston;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.frozenblock.lib.block.api.piston.PistonEvents;
 import net.frozenblock.lib.block.impl.piston.PistonMovingBlockEntityInterface;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.minecraft.core.BlockPos;
@@ -88,9 +89,11 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 			target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
 		)
 	)
-	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos pos, BlockState state, int flags, Operation<Boolean> original) {
-		final boolean setBlock = original.call(level, pos, state, flags);
-		return PistonPushUtil.trySetBlockAndEntity(setBlock, level, pos, state, PistonMovingBlockEntity.class.cast(this));
+	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original) {
+		final boolean setBlock = original.call(level, pos, blockState, updateFlags);
+		PistonPushUtil.trySetBlockAndEntity(level, pos, blockState, PistonMovingBlockEntity.class.cast(this));
+		PistonEvents.ON_MOVING_BLOCK_SET.invoker().onMovingBlockSet(level, pos, blockState, PistonMovingBlockEntity.class.cast(this));
+		return setBlock;
 	}
 
 	@WrapOperation(
@@ -101,11 +104,13 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 		)
 	)
 	private static boolean frozenLib$setBlockTick(
-		Level level, BlockPos pos, BlockState state, int flags, Operation<Boolean> original,
-		@Local(argsOnly = true) PistonMovingBlockEntity pistonEntity
+		Level level, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original,
+		@Local(argsOnly = true) PistonMovingBlockEntity entity
 	) {
-		final boolean setBlock = original.call(level, pos, state, flags);
-		return PistonPushUtil.trySetBlockAndEntity(setBlock, level, pos, state, pistonEntity);
+		final boolean setBlock = original.call(level, pos, blockState, updateFlags);
+		PistonPushUtil.trySetBlockAndEntity(level, pos, blockState, entity);
+		PistonEvents.ON_MOVING_BLOCK_SET.invoker().onMovingBlockSet(level, pos, entity.getMovedState(), entity);
+		return setBlock;
 	}
 
 	@Inject(method = "loadAdditional", at = @At("TAIL"))
@@ -117,5 +122,4 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 	public void frozenLib$saveAdditional(ValueOutput output, CallbackInfo info) {
 		output.storeNullable("frozenLib_PushedBlockEntity", CompoundTag.CODEC, this.frozenLib$pushedBlockEntityTag);
 	}
-
 }

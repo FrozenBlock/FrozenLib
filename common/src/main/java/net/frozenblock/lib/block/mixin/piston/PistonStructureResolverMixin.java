@@ -3,8 +3,11 @@ package net.frozenblock.lib.block.mixin.piston;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.frozenblock.lib.block.api.piston.PistonEvents;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
@@ -13,11 +16,28 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PistonStructureResolver.class)
-public class PistonStickingMixin {
+public class PistonStructureResolverMixin {
 
 	@Shadow
 	@Final
 	private Direction pushDirection;
+
+	@Shadow
+	@Final
+	private Level level;
+
+	@WrapOperation(
+		method = "resolve",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;addBlockLine(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z"
+		)
+	)
+	public boolean frozenLib$onPushFail(PistonStructureResolver instance, BlockPos start, Direction direction, Operation<Boolean> original) {
+		final boolean resolved = original.call(instance, start, direction);
+		if (!resolved) PistonEvents.ON_PUSH_FAIL.invoker().onPushFail(this.level, start, this.level.getBlockState(start), direction);
+		return resolved;
+	}
 
 	@WrapOperation(
 		method = {"resolve", "addBlockLine"},

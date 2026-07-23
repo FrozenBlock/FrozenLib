@@ -4,10 +4,16 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
+import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
@@ -55,6 +61,32 @@ public final class PistonEvents {
 				if (newResult != StickTogetherResult.PASS) return newResult;
 			}
 			return StickTogetherResult.PASS;
+		}
+	);
+
+	/**
+	 * The event that is triggered when a {@link PistonMovingBlockEntity} sets its held block in the level.
+	 */
+	public static final Event<OnMovingBlockSet> ON_MOVING_BLOCK_SET = EventRegistry.createEnvironmentEvent(
+		OnMovingBlockSet.class,
+		(callbacks) -> (level, pos, state, pistonMovingBlockEntity) -> {
+			for (var callback : callbacks) callback.onMovingBlockSet(level, pos, state, pistonMovingBlockEntity);
+		}
+	);
+
+	/**
+	 * The event that is triggered when {@code addBlockLine} returns {@code false} from the {@link PistonStructureResolver#resolve()} method.
+	 * <p>
+	 * Do note that this event will trigger every single time {@code checkIfExtend} in {@link  PistonBaseBlock} is run, which includes neighbor updates.
+	 * <p>
+	 * If the behavior you wish to run should not run each time this event is triggered, it is recommended to use a {@link Property} in your block to determine if it's already been triggered.
+	 * <p>
+	 * I do know this sounds confusing. An example of this can be found in the {@code Drill} {@link Block} from {@code Netherier Nether}.
+	 */
+	public static final Event<OnPushFail> ON_PUSH_FAIL = EventRegistry.createEnvironmentEvent(
+		OnPushFail.class,
+		(callbacks) -> (level, pos, state, direction) -> {
+			for (var callback : callbacks) callback.onPushFail(level, pos, state, direction);
 		}
 	);
 
@@ -121,6 +153,36 @@ public final class PistonEvents {
 		 * If {@code SUCCESS}, the {@link Block}s will stick together.
 		 */
 		StickTogetherResult tryStickBlocksTogether(BlockState previousState, BlockState nextState, Direction direction);
+	}
+
+	/**
+	 * A functional interface representing a Moving Block set event.
+	 */
+	@FunctionalInterface
+	public interface OnMovingBlockSet extends CommonEventEntrypoint {
+		/**
+		 * Runs when a {@link PistonMovingBlockEntity} sets its held block in the level.
+		 * @param level the {@link Level} the block is being set in
+		 * @param pos the {@link BlockPos} of the block being set
+		 * @param state the {@link BlockState} of the block being set
+		 * @param pistonMovingBlockEntity the {@link PistonMovingBlockEntity} containing the block
+		 */
+		void onMovingBlockSet(Level level, BlockPos pos, BlockState state, PistonMovingBlockEntity pistonMovingBlockEntity);
+	}
+
+	/**
+	 * A functional interface representing a push fail event.
+	 */
+	@FunctionalInterface
+	public interface OnPushFail extends CommonEventEntrypoint {
+		/**
+		 * Runs when {@code addBlockLine} returns {@code false} from the {@link PistonStructureResolver#resolve()} method.
+		 * @param level the current {@link Level}
+		 * @param pos the {@link BlockPos} of the block that failed to push
+		 * @param state the {@link BlockState} of the block that failed to push
+		 * @param direction the {@link Direction} of the attempted push
+		 */
+		void onPushFail(Level level, BlockPos pos, BlockState state, Direction direction);
 	}
 
 	public enum PushResult {

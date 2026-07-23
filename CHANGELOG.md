@@ -18,5 +18,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - This will not enable any behavior on its own, and must be used in tandem with the `TRY_STICK_BLOCKS_TOGETHER` event to achieve the intended behavior.
   - `TRY_STICK_BLOCKS_TOGETHER`: Determines whether two Blocks can stick together when pushed by a Piston.
     - This will not enable any behavior on its own, and must be used in tandem with the `DETERMINE_BLOCK_STICKINESS` event to achieve the intended behavior.
+  - `ON_MOVING_BLOCK_SET`: Triggers when a moved Block is placed.
+  - `ON_PUSH_FAIL`: Triggers when Piston structure resolution fails.
 - Renamed `PushableBlockEntityUtil` to `PistonPushUtil` and added a few new methods to help with `PistonEvents` usage.
 - Updated and renamed `BooleanPropertySculkBehavior` to `BlockStatePropertySculkBehavior`, with the additional functionality of being able to use any Block State Property.

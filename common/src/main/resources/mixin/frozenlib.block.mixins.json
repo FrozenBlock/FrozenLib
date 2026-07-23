@@ -28,7 +28,7 @@
     "piston.lectern.LecternBlockEntityMixin",
     "piston.shelf.ShelfBlockMixin",
     "piston.shelf.ShelfBlockUnpowerOnMoveMixin",
-    "piston.PistonStickingMixin",
+    "piston.PistonStructureResolverMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",

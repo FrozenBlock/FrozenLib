@@ -85,22 +85,19 @@ public class PistonPushUtil {
 		return true;
 	}
 
-	public static boolean trySetBlockAndEntity(
-		boolean setBlock,
+	public static void trySetBlockAndEntity(
 		Level level,
 		BlockPos pos,
 		BlockState state,
 		PistonMovingBlockEntity pistonEntity
 	) {
-		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return setBlock;
+		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return;
 
 		final CompoundTag blockEntityTag = pistonMovingBlock.frozenLib$getPushedBlockEntityTag();
-		if (blockEntityTag == null) return setBlock;
+		if (blockEntityTag == null) return;
 
 		final BlockEntity blockEntity = BlockEntity.loadStatic(pos, state, blockEntityTag, level.registryAccess());
 		if (blockEntity != null) level.setBlockEntity(blockEntity);
-
-		return setBlock;
 	}
 
 	@Nullable
