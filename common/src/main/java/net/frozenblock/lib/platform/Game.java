@@ -17,7 +17,9 @@
 
 package net.frozenblock.lib.platform;
 
+import com.mojang.datafixers.DataFixer;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.datafix.impl.DataFixerHoldingGameInstance;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 @UtilityClass
@@ -26,5 +28,10 @@ public final class Game {
 	@PlatformImpl
 	public static Object getInstance() {
 		throw new AssertionError();
+	}
+
+	public static DataFixer getDataFixer() {
+		if (getInstance() instanceof DataFixerHoldingGameInstance holder) return holder.frozenLib$getDataFixer();
+		throw new IllegalStateException("Game instance is not a DataFixerHoldingGameInstance!");
 	}
 }

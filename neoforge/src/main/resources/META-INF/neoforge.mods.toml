@@ -26,6 +26,9 @@ config="mixin/frozenlib.debug.mixins.json"
 config="mixin/frozenlib.data_attachment.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.datafix.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.entity.mixins.json"
 
 [[mixins]]

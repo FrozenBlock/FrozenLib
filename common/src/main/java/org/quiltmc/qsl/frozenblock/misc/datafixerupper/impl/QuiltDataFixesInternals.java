@@ -31,7 +31,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.slf4j.Logger;
@@ -105,7 +104,6 @@ public abstract class QuiltDataFixesInternals {
 	@Nullable
 	public abstract DataFixerEntry getMinecraftFixerEntry(String modId);
 
-    @Contract(value = "-> new", pure = true)
     public abstract Schema createBaseSchema();
 
 	public abstract void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function);
@@ -120,6 +118,5 @@ public abstract class QuiltDataFixesInternals {
 
     public abstract void freeze();
 
-    @Contract(pure = true)
     public abstract boolean isFrozen();
 }
