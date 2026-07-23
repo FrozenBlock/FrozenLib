@@ -20,17 +20,15 @@ package net.frozenblock.lib.block.mixin.piston;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.block.api.piston.PistonEvents;
 import net.frozenblock.lib.block.impl.piston.PistonMovingBlockEntityInterface;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
-import net.frozenblock.lib.platform.Game;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -126,16 +124,9 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 		CompoundTag blockEntityTag = input.read("frozenLib_PushedBlockEntity", CompoundTag.CODEC).orElse(null);
 		if (blockEntityTag == null) return;
 
-		final DataFixer dataFixer = Game.getDataFixer();
-		if (dataFixer == null) {
-			this.frozenLib$pushedBlockEntityTag = blockEntityTag;
-			FrozenLibLogUtils.logError("Could not find DataFixer while loading stored Block Entity!", FrozenLibLogUtils.UNSTABLE_LOGGING);
-			return;
-		}
-
 		// Casting the value to a CompoundTag can be seen in DataFixTypes.
 		// If this ever causes a crash, check if that class has changed and offers a new solution.
-		blockEntityTag = (CompoundTag) dataFixer.update(
+		blockEntityTag = (CompoundTag) DataFixers.getDataFixer().update(
 			References.BLOCK_ENTITY,
 			new Dynamic<>(NbtOps.INSTANCE, blockEntityTag),
 			NbtUtils.getDataVersion(blockEntityTag),
