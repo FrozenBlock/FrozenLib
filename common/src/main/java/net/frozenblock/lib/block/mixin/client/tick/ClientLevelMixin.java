@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.mixin.tick.client;
+package net.frozenblock.lib.block.mixin.client.tick;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -45,5 +45,4 @@ public class ClientLevelMixin {
 		BlockAnimateTicks.onAnimateTick(state, level, pos, random);
 		original.call(instance, state, level, pos, random);
 	}
-
 }

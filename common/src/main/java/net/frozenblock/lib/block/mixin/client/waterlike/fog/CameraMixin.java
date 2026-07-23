@@ -57,5 +57,4 @@ public abstract class CameraMixin {
 	private void frozenLib$resetWaterLikeFog(CallbackInfo info) {
 		WaterLikeFogUtil.reset(true);
 	}
-
 }

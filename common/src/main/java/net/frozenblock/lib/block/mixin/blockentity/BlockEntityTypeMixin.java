@@ -22,34 +22,24 @@ import java.util.Objects;
 import java.util.Set;
 import net.frozenblock.lib.block.api.blockentity.BlockEntityTypeExtension;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockEntityType.class)
-public abstract class BlockEntityTypeMixin<T extends BlockEntity> implements BlockEntityTypeExtension {
+public class BlockEntityTypeMixin implements BlockEntityTypeExtension {
 
 	@Mutable
 	@Shadow
 	@Final
 	private Set<Block> validBlocks;
 
-	@Inject(method = "<init>", at = @At("RETURN"))
-	private void mutableBlocks(BlockEntityType.BlockEntitySupplier<? extends T> factory, Set<Block> blocks, CallbackInfo ci) {
-		if (!(this.validBlocks instanceof HashSet)) {
-			this.validBlocks = new HashSet<>(this.validBlocks);
-		}
-	}
-
 	@Override
 	public void frozenLib$addValidBlock(Block block) {
-		Objects.requireNonNull(block, "block");
+		Objects.requireNonNull(block, "Block cannot be null");
+		if (!(this.validBlocks instanceof HashSet)) this.validBlocks = new HashSet<>(this.validBlocks);
 		this.validBlocks.add(block);
 	}
 }

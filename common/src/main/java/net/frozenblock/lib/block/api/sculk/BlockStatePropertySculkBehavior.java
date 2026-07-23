@@ -27,16 +27,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SculkBehaviour;
 import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * A {@link SculkBehaviour} that sets a specified {@link BooleanProperty} to a defined value.
+ * A {@link SculkBehaviour} that sets a {@link Property} to a defined value.
  *
- * @param changingProperty The {@link BooleanProperty} to change.
- * @param propertySetValue The value to set the {@link BooleanProperty} to.
+ * @param property The {@link Property} to change.
+ * @param value The value to set the {@link Property} to.
  */
-public record BooleanPropertySculkBehavior(BooleanProperty changingProperty, boolean propertySetValue) implements SculkBehaviour {
+public record BlockStatePropertySculkBehavior<T extends Comparable<T>>(Property<T> property, T value) implements SculkBehaviour {
 
 	@Override
 	public int attemptUseCharge(
@@ -50,9 +50,7 @@ public record BooleanPropertySculkBehavior(BooleanProperty changingProperty, boo
 		BlockState placementState = null;
 		final BlockPos cursorPos = cursor.getPos();
 		final BlockState currentState = level.getBlockState(cursorPos);
-		if (currentState.getValueOrElse(this.changingProperty, this.propertySetValue) != this.propertySetValue) {
-			placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
-		}
+		if (currentState.getValueOrElse(this.property, this.value) != this.value) placementState = currentState.setValue(this.property, this.value);
 
 		if (placementState == null) return random.nextInt(spreadManager.chargeDecayRate()) == 0 ? Mth.floor((float) cursor.getCharge() * 0.5F) : cursor.getCharge();
 		level.setBlock(cursorPos, placementState, Block.UPDATE_ALL);
@@ -69,9 +67,7 @@ public record BooleanPropertySculkBehavior(BooleanProperty changingProperty, boo
 	) {
 		BlockState placementState = null;
 		final BlockState currentState = level.getBlockState(pos);
-		if (currentState.getValueOrElse(this.changingProperty, this.propertySetValue) != this.propertySetValue) {
-			placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
-		}
+		if (currentState.getValueOrElse(this.property, this.value) != this.value) placementState = currentState.setValue(this.property, this.value);
 
 		if (placementState == null) return false;
 		level.setBlock(pos, placementState, Block.UPDATE_ALL);

@@ -33,9 +33,9 @@ public abstract class FaceBlock extends MultifaceBlock {
 	}
 
 	@Override
-	public boolean isValidStateForPlacement(BlockGetter level, BlockState state, BlockPos pos, Direction direction) {
-		if (!this.isFaceSupported(direction) || state.is(this)) return false;
-		final BlockPos connectPos = pos.relative(direction);
-		return canAttachTo(level, direction, connectPos, level.getBlockState(connectPos));
+	public boolean isValidStateForPlacement(BlockGetter level, BlockState oldState, BlockPos placementPos, Direction placementDirection) {
+		if (!this.isFaceSupported(placementDirection) || oldState.is(this)) return false;
+		final BlockPos connectPos = placementPos.relative(placementDirection);
+		return canAttachTo(level, placementDirection, connectPos, level.getBlockState(connectPos));
 	}
 }

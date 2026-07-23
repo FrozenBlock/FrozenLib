@@ -55,5 +55,4 @@ public class LavaParticleMixin implements LavaParticleFireTypeInterface {
 			: particle;
 		original.call(instance, particle, x, y, z, xd, yd, zd);
 	}
-
 }

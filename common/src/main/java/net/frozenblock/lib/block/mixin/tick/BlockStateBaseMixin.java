@@ -56,5 +56,4 @@ public class BlockStateBaseMixin {
 		BlockRandomTicks.runRandomTickIfPresent(state, level, pos, random);
 		original.call(instance, state, level, pos, random);
 	}
-
 }

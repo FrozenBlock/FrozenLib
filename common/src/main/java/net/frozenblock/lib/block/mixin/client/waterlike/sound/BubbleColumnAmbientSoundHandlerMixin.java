@@ -70,5 +70,4 @@ public class BubbleColumnAmbientSoundHandlerMixin {
 	private Comparable<Boolean> frozenLib$checkIfBubbleColumnOrWaterLikeAsBubbleColumnDraggingDown(BlockState state, Property<?> property, Operation<Comparable<Boolean>> operation) {
 		return state.hasProperty(BubbleColumnBlock.DRAG_DOWN) ? operation.call(state, property) : WaterLikeBlock.isDraggingDownAsBubbleColumn(state);
 	}
-
 }

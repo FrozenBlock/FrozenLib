@@ -35,5 +35,4 @@ public class FlowingFluidMixin {
 	public void frozenLib$stopWaterLikeFluidSpread(ServerLevel level, BlockPos pos, BlockState state, FluidState fluidState, CallbackInfo info) {
 		if (state.getBlock() instanceof WaterLikeBlock) info.cancel();
 	}
-
 }

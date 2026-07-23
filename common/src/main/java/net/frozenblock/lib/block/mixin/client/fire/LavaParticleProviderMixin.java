@@ -54,5 +54,4 @@ public class LavaParticleProviderMixin {
 
 		return original;
 	}
-
 }

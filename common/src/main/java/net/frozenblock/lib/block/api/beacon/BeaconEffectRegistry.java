@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
  * A helper class for adding new {@link MobEffect}s to the Beacon.
  */
 @UtilityClass
-public class BeaconEffectRegistry {
+public final class BeaconEffectRegistry {
 
 	/**
 	 * Adds a {@link MobEffect} to the Beacon.

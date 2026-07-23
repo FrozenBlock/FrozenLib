@@ -77,5 +77,4 @@ public class WaterFogEnvironmentMixin {
 	) {
 		return WaterLikeFogUtil.getModifiedFogColor(partialTicks, original);
 	}
-
 }

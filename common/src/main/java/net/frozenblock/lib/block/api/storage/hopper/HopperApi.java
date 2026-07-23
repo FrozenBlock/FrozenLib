@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 @UtilityClass
-public class HopperApi {
+public final class HopperApi {
     private static final ArrayList<BlockEntityType<?>> BLACKLISTED_TYPES = new ArrayList<>();
 
 	/**

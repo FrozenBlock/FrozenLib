@@ -46,5 +46,4 @@ public class UnderwaterAmbientSoundInstanceMixin {
 		if (WaterLikeTypes.getPlayerRandomInside(this.player).isPresent()) return false;
 		return original;
 	}
-
 }

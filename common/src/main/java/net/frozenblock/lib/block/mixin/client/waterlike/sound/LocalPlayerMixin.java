@@ -159,5 +159,4 @@ public class LocalPlayerMixin {
 		}
 		return original;
 	}
-
 }

@@ -55,5 +55,4 @@ public class SuspendedParticleUnderwaterProviderMixin {
 
 		original.call(instance, r, g, b);
 	}
-
 }

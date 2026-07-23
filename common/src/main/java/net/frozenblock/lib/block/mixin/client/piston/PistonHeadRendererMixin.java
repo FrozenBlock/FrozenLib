@@ -89,5 +89,4 @@ public class PistonHeadRendererMixin {
 			poseStack.popPose();
 		} catch (Throwable ignored) {}
 	}
-
 }

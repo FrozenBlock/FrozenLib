@@ -60,5 +60,4 @@ public class BubbleColumnBlockMixin {
 		if (!original) WaterLikeBlock.updateAsBubbleColumn(level, pos, level.getBlockState(pos.immutable().below()));
 		return original;
 	}
-
 }

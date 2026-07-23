@@ -47,5 +47,4 @@ public class EntityRendererMixin {
 	) {
 		if (belowState.getBlock() instanceof WaterLikeBlock) info.cancel();
 	}
-
 }

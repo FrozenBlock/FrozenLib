@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Unmodifiable;
  * A class that helps with making block shapes.
  */
 @UtilityClass
-public class FrozenShapes {
+public final class ShapeUtil {
 	private static final VoxelShape UP_PLANE = Block.box(0D, 15D, 0D, 16D, 16D, 16D);
 	private static final VoxelShape DOWN_PLANE = Block.box(0D, 0D, 0D, 16D, 1D, 16D);
 	private static final VoxelShape WEST_PLANE = Block.box(0D, 0D, 0D, 1D, 16D, 16D);

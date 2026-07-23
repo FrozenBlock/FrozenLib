@@ -76,5 +76,4 @@ public class BeaconBlockEntityMixin {
 	private static List<Holder<MobEffect>> wilderWild$addTier4Effects(List<Holder<MobEffect>> list) {
 		return new ArrayList<>(list);
 	}
-
 }

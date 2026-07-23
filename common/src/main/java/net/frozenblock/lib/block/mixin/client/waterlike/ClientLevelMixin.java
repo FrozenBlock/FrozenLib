@@ -103,5 +103,4 @@ public class ClientLevelMixin {
 
 		return original.call(instance, options, x, y, z, xa, ya, za);
 	}
-
 }

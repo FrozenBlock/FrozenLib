@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -32,7 +33,8 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Lets you add custom behavior to be run upon a block being ticked.
  */
-public class BlockScheduledTicks {
+@UtilityClass
+public final class BlockScheduledTicks {
 	@ApiStatus.Internal
 	private static final Map<Block, List<InjectedScheduledTick>> TICKS = new Object2ObjectOpenHashMap<>();
 	@ApiStatus.Internal
