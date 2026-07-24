@@ -175,5 +175,11 @@ subprojects {
         maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
             name = "SomethingCatchy (MehVahdJukaar)"
         }
+        maven("https://maven.terraformersmc.com/repository/maven-public") { // Biolith & ModMenu
+            name = "TerraformersMC"
+            content {
+                includeGroup("com.terraformersmc")
+            }
+        }
     }
 }
