@@ -1,0 +1,13 @@
+{
+  "mechanics": {
+    "air_behavior": "display_only",
+    "drain_time": 300,
+    "fill_time": 15,
+    "style": "drain"
+  },
+  "meter": {
+    "empty": "minecraft:hud/air_empty",
+    "full": "minecraft:hud/air",
+    "popping": "minecraft:hud/air_bursting"
+  }
+}

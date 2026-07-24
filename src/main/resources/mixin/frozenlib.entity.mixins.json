@@ -13,9 +13,11 @@
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
-    "cubemob.sulfurcube.SulfurCubeMixin"
+    "cubemob.sulfurcube.SulfurCubeMixin",
+    "suffocation.LivingEntityMixin"
   ],
   "client": [
-    "client.rendering.LivingEntityRendererMixin"
+    "client.rendering.LivingEntityRendererMixin",
+    "client.suffocation.HudMixin"
   ]
 }

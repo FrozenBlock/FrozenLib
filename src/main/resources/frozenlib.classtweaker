@@ -118,6 +118,7 @@ transitive-accessible method net/minecraft/world/entity/EntityTypes chestRaftFac
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/clipgroup/ClipGroupInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/waterlike/InWaterLikeInterface
 transitive-inject-interface net/minecraft/world/entity/player/Player net/frozenblock/lib/block/impl/waterlike/PlayerInWaterLikeInterface
+transitive-inject-interface net/minecraft/world/entity/LivingEntity net/frozenblock/lib/entity/impl/suffocation/SuffocationStateInterface
 
 # Entity Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
@@ -238,6 +239,9 @@ transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRende
 
 # Render Types
 accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+
+# Suffocation post-process shaders (apply a screen post effect via the vanilla GameRenderer chain)
+accessible method net/minecraft/client/renderer/GameRenderer setPostEffect (Lnet/minecraft/resources/Identifier;)V
 transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 
 # Biomes

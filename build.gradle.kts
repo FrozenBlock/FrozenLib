@@ -290,11 +290,13 @@ tasks {
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
+        // File-pattern excludes belong on the task (AbstractCopyTask), not the DependencyFilter block below; newer Loom
+        // (1.17-SNAPSHOT -> 1.17.16) rejects the implicit-receiver resolution that let this compile from inside dependencies {}.
+        exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
         dependencies {
             exclude {
                 it.moduleGroup.contains("fabric")
             }
-            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
 
             exclude {
                 it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")

@@ -31,6 +31,9 @@ import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
+import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationOverlayRenderer;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationPostEffectManager;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
@@ -84,6 +87,12 @@ public final class FrozenLibClient implements ClientModInitializer {
 			new SpottingIconHudElement()
 		);
 
+		HudElementRegistry.attachElementBefore(
+			VanillaHudElements.MISC_OVERLAYS,
+			FrozenLibConstants.id("suffocation_overlays"),
+			new SuffocationOverlayRenderer()
+		);
+
 		FrozenLibModResourcePackApi.init();
 		FrozenLibDebugScreenEntries.init();
 		ClientWindUtil.init();
@@ -98,6 +107,8 @@ public final class FrozenLibClient implements ClientModInitializer {
 				WindManager.getOrCreate(level).tick(level);
 				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
+				if (minecraft.player != null) ClientSuffocationState.clientTick(minecraft.player);
+				SuffocationPostEffectManager.tick(minecraft);
 			}
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearStaticClientData());
@@ -106,5 +117,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 	private static void clearStaticClientData() {
 		ClientScreenShaker.reset();
+		ClientSuffocationState.reset();
+		SuffocationPostEffectManager.reset();
 	}
 }
