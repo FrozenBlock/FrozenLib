@@ -143,8 +143,7 @@ repositories {
             includeGroup("maven.modrinth")
         }
     }
-    maven("https://maven.terraformersmc.com/repository/maven-public") {
-        name = "TerraformersMC"
+    maven("https://maven.terraformersmc.com") {
         content {
             includeGroup("com.terraformersmc")
         }
