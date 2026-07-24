@@ -19,6 +19,7 @@ package net.frozenblock.lib.levelgen.structure.impl.status;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.networking.api.PlayerLookup;
 import net.minecraft.core.BlockPos;
@@ -32,7 +33,8 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class StructureStatusUpdater {
+@UtilityClass
+public final class StructureStatusUpdater {
 
 	public static void init() {
 		TickEvents.START_LEVEL_TICK.register(StructureStatusUpdater::updatePlayerStructureStatusesForLevel);

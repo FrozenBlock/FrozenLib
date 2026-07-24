@@ -45,7 +45,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
-public class FrozenLibFeatures {
+public final class FrozenLibFeatures {
 	private static final FrozenDeferredRegister<Feature<?>> REGISTER = FrozenDeferredRegister.create(
 		Registries.FEATURE,
 		FrozenLibConstants.MOD_ID

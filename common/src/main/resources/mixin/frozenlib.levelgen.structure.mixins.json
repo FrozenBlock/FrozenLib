@@ -7,17 +7,17 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "ChunkGeneratorStructureStateMixin",
-    "ListPoolElementMixin",
-    "PoolElementStructurePieceMixin",
-    "RandomPoolAliasMixin",
-    "SinglePoolElementMixin",
-    "StructureMixin",
-    "StructurePlacementMixin",
-    "StructureSetMixin",
-    "StructureStartMixin",
-    "StructureTemplateMixin",
-    "StructureTemplatePoolMixin",
-    "TemplateStructurePieceMixin"
+    "placement.ChunkGeneratorStructureStateMixin",
+    "processor.ListPoolElementMixin",
+    "processor.PoolElementStructurePieceMixin",
+    "pools.RandomPoolAliasMixin",
+    "processor.SinglePoolElementMixin",
+    "processor.StructureMixin",
+    "placement.StructurePlacementMixin",
+    "placement.StructureSetMixin",
+    "processor.StructureStartMixin",
+    "processor.StructureTemplateMixin",
+    "pools.StructureTemplatePoolMixin",
+    "processor.TemplateStructurePieceMixin"
   ]
 }
