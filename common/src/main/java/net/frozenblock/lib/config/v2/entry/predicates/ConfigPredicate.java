@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ID;
+import net.frozenblock.lib.entity.api.variant.ConfigCheck;
 import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
@@ -167,5 +169,9 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 
 	default SurfaceRules.ConditionSource asConditionSource() {
 		return new ConfigConditionSource(this);
+	}
+
+	default SpawnCondition asSpawnCondition() {
+		return new ConfigCheck(this);
 	}
 }
