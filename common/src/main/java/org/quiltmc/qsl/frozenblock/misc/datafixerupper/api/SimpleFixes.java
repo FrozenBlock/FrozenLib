@@ -26,13 +26,14 @@ import java.util.Map;
 import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import java.util.function.UnaryOperator;
-import net.frozenblock.lib.datafix.api.BlockStateRenameFix;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.StringUtil;
 import net.minecraft.util.Util;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.AdvancementsRenameFix;
 import net.minecraft.util.datafix.fixes.BlockEntityRenameFix;
+import net.minecraft.util.datafix.fixes.BlockPropertyRenameAndFix;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.CriteriaRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
@@ -218,28 +219,44 @@ public final class SimpleFixes {
 		builder.addFixer(BlockEntityRenameFix.create(schema, name, DataFixers.createRenamer(Map.of(oldIdStr, newIdStr))));
 	}
 
-    /**
-     * Adds a blockstate rename fix to the builder, in case a blockstate's name is changed.
-     *
-     * @param builder The builder
-     * @param name The fix's name
-     * @param blockId The block's identifier
-     * @param oldState The blockstate's old name
-     * @param defaultValue The blockstate's default value
-     * @param newState The blockstates's new name
-     * @param schema The schema this fixer should be a part of
-     * @see BlockStateRenameFix
-     */
-    public static void addBlockStateRenameFix(DataFixerBuilder builder, String name, Identifier blockId, String oldState, String defaultValue, String newState, Schema schema) {
-        requireNonNull(name, "Fix name cannot be null");
-        requireNonNull(oldState, "Old BlockState cannot be null");
-        requireNonNull(defaultValue, "Default value cannot be null");
-        requireNonNull(newState, "New BlockState cannot be null");
-        requireNonNull(schema, "Schema cannot be null");
+	/**
+	 * Adds a {@link BlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
+	 *
+	 * @param builder The builder
+	 * @param name The fix's name
+	 * @param blockId The block's identifier
+	 * @param oldPropertyName The property's old name
+	 * @param newPropertyName The property's new name
+	 * @param schema The schema this fixer should be a part of
+	 * @param valueFixer A {@link UnaryOperator} to fix the value's name
+	 * @see BlockPropertyRenameAndFix
+	 */
+	public static void addBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, UnaryOperator<String> valueFixer, Schema schema) {
+		requireNonNull(name, "Fix name cannot be null");
+		requireNonNull(oldPropertyName, "Old property cannot be null");
+		requireNonNull(newPropertyName, "New property cannot be null");
+		requireNonNull(valueFixer, "Value fixer cannot be null");
+		requireNonNull(schema, "Schema cannot be null");
 
-        final String blockIdStr = blockId.toString();
-        builder.addFixer(new BlockStateRenameFix(schema, name, blockIdStr, oldState, defaultValue, newState));
-    }
+		builder.addFixer(new BlockPropertyRenameAndFix(schema, name, blockId.toString(), oldPropertyName, newPropertyName, valueFixer));
+	}
+
+	/**
+	 * Adds a {@link BlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
+	 *
+	 * @param builder The builder
+	 * @param name The fix's name
+	 * @param blockId The block's identifier
+	 * @param oldPropertyName The property's old name
+	 * @param newPropertyName The property's new name
+	 * @param schema The schema this fixer should be a part of
+	 * @param defaultValue The property's default value, in case it is not found
+	 * @see BlockPropertyRenameAndFix
+	 */
+	public static void addBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, String defaultValue, Schema schema) {
+		requireNonNull(defaultValue, "Default value cannot be null");
+		addBlockPropertyRenameAndFix(builder, name, blockId, oldPropertyName, newPropertyName, string -> StringUtil.isNullOrEmpty(string) ? defaultValue : string, schema);
+	}
 
     /**
      * Adds a biome rename fix to the builder, in case biome identifiers are changed.
