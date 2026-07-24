@@ -2,6 +2,7 @@ package net.frozenblock.lib.entity.impl.variant;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.entity.api.variant.CompoundCheck;
 import net.frozenblock.lib.entity.api.variant.ConfigCheck;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
@@ -16,6 +17,7 @@ public final class FrozenLibSpawnConditions {
 	);
 
 	static {
+		REGISTER.register("compound", () -> CompoundCheck.MAP_CODEC);
 		REGISTER.register("config", () -> ConfigCheck.MAP_CODEC);
 		REGISTER.register();
 	}
