@@ -30,7 +30,7 @@ import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
-import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
+import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.cooldown.CooldownChangePacket;

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.event.api.events.ClientEntityLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.EntityLifecycleEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.level.ServerLevel;

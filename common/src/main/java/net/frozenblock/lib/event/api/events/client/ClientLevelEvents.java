@@ -15,34 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.level.chunk.LevelChunk;
 
-public class ClientChunkLifecycleEvents {
-
-	public static final Event<Load> CHUNK_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (level, chunk) -> {
-		for (Load callback : callbacks) {
-			callback.onChunkLoad(level, chunk);
-		}
-	});
-
-	public static final Event<Unload> CHUNK_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (level, chunk) -> {
-		for (Unload callback : callbacks) {
-			callback.onChunkUnload(level, chunk);
+@UtilityClass
+@ClientOnly
+public final class ClientLevelEvents {
+	/**
+	 * Called after the client level has been changed.
+	 *
+	 * <p>The provided level is the new level. This event is not called when the level becomes {@code null}.
+	 */
+	public static final Event<AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE = EventRegistry.createEnvironmentEvent(AfterClientLevelChange.class, callbacks -> (client, level) -> {
+		for (AfterClientLevelChange callback : callbacks) {
+			callback.afterLevelChange(client, level);
 		}
 	});
 
 	@FunctionalInterface
-	public interface Load {
-		void onChunkLoad(ClientLevel level, LevelChunk chunk);
-	}
-
-	@FunctionalInterface
-	public interface Unload {
-		void onChunkUnload(ClientLevel level, LevelChunk chunk);
+	public interface AfterClientLevelChange {
+		void afterLevelChange(Minecraft client, ClientLevel level);
 	}
 }

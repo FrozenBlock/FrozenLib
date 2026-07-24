@@ -24,7 +24,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 public class FabricClientLevelEventsBridge {
 	public static void init() {
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((client, level) ->
-			net.frozenblock.lib.event.api.events.ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.invoker().afterLevelChange(client, level)
+			net.frozenblock.lib.event.api.events.client.ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.invoker().afterLevelChange(client, level)
 		);
 	}
 }

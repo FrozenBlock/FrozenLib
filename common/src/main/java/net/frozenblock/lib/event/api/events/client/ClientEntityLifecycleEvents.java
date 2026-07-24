@@ -15,21 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.entity.Entity;
 
-public class ClientEntityLifecycleEvents {
-
+@UtilityClass
+public final class ClientEntityLifecycleEvents {
+	/**
+	 * The event that is triggered when an entity is loaded on the client.
+	 */
 	public static final Event<Load> ENTITY_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (entity, level) -> {
 		for (Load callback : callbacks) {
 			callback.onEntityLoad(entity, level);
 		}
 	});
 
+	/**
+	 * The event that is triggered when an entity is unloaded on the client.
+	 */
 	public static final Event<Unload> ENTITY_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (entity, level) -> {
 		for (Unload callback : callbacks) {
 			callback.onEntityUnload(entity, level);

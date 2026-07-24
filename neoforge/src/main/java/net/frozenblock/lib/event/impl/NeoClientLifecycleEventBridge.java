@@ -18,8 +18,8 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
-import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.minecraft.client.Minecraft;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;

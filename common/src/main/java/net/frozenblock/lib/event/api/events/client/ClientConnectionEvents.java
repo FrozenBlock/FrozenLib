@@ -15,8 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
@@ -24,14 +25,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import org.jetbrains.annotations.Nullable;
 
+@UtilityClass
 @ClientOnly
-public class ClientConnectionEvents {
+public final class ClientConnectionEvents {
+	/**
+	 * The event that is triggered when the client joins a server.
+	 */
 	public static final Event<Join> JOIN = EventRegistry.createEnvironmentEvent(Join.class, callbacks -> (handler, client) -> {
 		for (Join callback : callbacks) {
 			callback.onJoin(handler, client);
 		}
 	});
 
+	/**
+	 * The event that is triggered when the client disconnects from a server.
+	 */
 	public static final Event<Disconnect> DISCONNECT = EventRegistry.createEnvironmentEvent(Disconnect.class, callbacks -> (handler, client) -> {
 		for (Disconnect callback : callbacks) {
 			callback.onDisconnect(handler, client);

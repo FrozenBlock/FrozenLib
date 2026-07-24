@@ -15,34 +15,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
 
-public class ClientBlockEntityLifecycleEvents {
-
-	public static final Event<Load> BLOCK_ENTITY_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (blockEntity, level) -> {
+@UtilityClass
+public final class ClientChunkLifecycleEvents {
+	/**
+	 * The event that is triggered when a chunk is loaded on the client.
+	 */
+	public static final Event<Load> CHUNK_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (level, chunk) -> {
 		for (Load callback : callbacks) {
-			callback.onLoad(blockEntity, level);
+			callback.onChunkLoad(level, chunk);
 		}
 	});
 
-	public static final Event<Unload> BLOCK_ENTITY_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (blockEntity, level) -> {
+	/**
+	 * The event that is triggered when a chunk is unloaded on the client.
+	 */
+	public static final Event<Unload> CHUNK_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (level, chunk) -> {
 		for (Unload callback : callbacks) {
-			callback.onUnload(blockEntity, level);
+			callback.onChunkUnload(level, chunk);
 		}
 	});
 
 	@FunctionalInterface
 	public interface Load {
-		void onLoad(BlockEntity blockEntity, ClientLevel level);
+		void onChunkLoad(ClientLevel level, LevelChunk chunk);
 	}
 
 	@FunctionalInterface
 	public interface Unload {
-		void onUnload(BlockEntity blockEntity, ClientLevel level);
+		void onChunkUnload(ClientLevel level, LevelChunk chunk);
 	}
 }

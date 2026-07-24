@@ -17,12 +17,14 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.players.PlayerList;
 
-public class LifecycleEvents {
+@UtilityClass
+public final class LifecycleEvents {
 	/**
 	 * Called upon NeoForge's {@code ServerAboutToStartEvent} or Fabric's {@code SERVER_STARTING} event.
 	 */
@@ -35,7 +37,7 @@ public class LifecycleEvents {
 	/**
 	 * Called when a Minecraft server is starting.
 	 *
-	 * <p>This occurs before the {@link PlayerList player list} and any levels are loaded.
+	 * <p>This occurs before the {@link PlayerList} and any levels are loaded.
 	 */
 	public static final Event<ServerStarting> SERVER_STARTING = EventRegistry.createEnvironmentEvent(ServerStarting.class, callbacks -> server -> {
 		for (ServerStarting callback : callbacks) {

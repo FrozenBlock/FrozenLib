@@ -49,7 +49,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.EntryType;
-import net.frozenblock.lib.event.api.events.ClientTickEvents;
+import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.resource.client.impl.pack.PackDownloadToast;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;

@@ -15,41 +15,41 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 @UtilityClass
-public final class EntityLifecycleEvents {
+public final class ClientBlockEntityLifecycleEvents {
 	/**
-	 * The event that is triggered when an entity is loaded.
+	 * The event that is triggered when a block entity is loaded on the client.
 	 */
-	public static final Event<Load> ENTITY_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (entity, level) -> {
+	public static final Event<Load> BLOCK_ENTITY_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (blockEntity, level) -> {
 		for (Load callback : callbacks) {
-			callback.onEntityLoad(entity, level);
+			callback.onLoad(blockEntity, level);
 		}
 	});
 
 	/**
-	 * The event that is triggered when an entity is unloaded.
+	 * The event that is triggered when a block entity is unloaded on the client.
 	 */
-	public static final Event<Unload> ENTITY_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (entity, level) -> {
+	public static final Event<Unload> BLOCK_ENTITY_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (blockEntity, level) -> {
 		for (Unload callback : callbacks) {
-			callback.onEntityUnload(entity, level);
+			callback.onUnload(blockEntity, level);
 		}
 	});
 
 	@FunctionalInterface
 	public interface Load {
-		void onEntityLoad(Entity entity, ServerLevel level);
+		void onLoad(BlockEntity blockEntity, ClientLevel level);
 	}
 
 	@FunctionalInterface
 	public interface Unload {
-		void onEntityUnload(Entity entity, ServerLevel level);
+		void onUnload(BlockEntity blockEntity, ClientLevel level);
 	}
 }

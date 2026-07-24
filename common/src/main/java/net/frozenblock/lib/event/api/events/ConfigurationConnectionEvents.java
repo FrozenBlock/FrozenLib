@@ -18,13 +18,15 @@
 package net.frozenblock.lib.event.api.events;
 
 import java.util.function.Consumer;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 
-public class ConfigurationConnectionEvents {
+@UtilityClass
+public final class ConfigurationConnectionEvents {
 
 	public static final Event<ServerConfigure> SERVER_CONFIGURE = EventRegistry.createEnvironmentEvent(
 		ServerConfigure.class,

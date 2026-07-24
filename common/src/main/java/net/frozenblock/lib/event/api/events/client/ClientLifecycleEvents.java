@@ -15,29 +15,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api.events;
+package net.frozenblock.lib.event.api.events.client;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 
+@UtilityClass
 @ClientOnly
-public class ClientLevelEvents {
+public final class ClientLifecycleEvents {
 	/**
-	 * Called after the client level has been changed.
-	 *
-	 * <p>The provided level is the new level. This event is not called when the level becomes {@code null}.
+	 * Called when the client has started.
 	 */
-	public static final Event<AfterClientLevelChange> AFTER_CLIENT_LEVEL_CHANGE = EventRegistry.createEnvironmentEvent(AfterClientLevelChange.class, callbacks -> (client, level) -> {
-		for (AfterClientLevelChange callback : callbacks) {
-			callback.afterLevelChange(client, level);
+	public static final Event<ClientStarted> CLIENT_STARTED = EventRegistry.createEnvironmentEvent(ClientStarted.class, callbacks -> client -> {
+		for (ClientStarted callback : callbacks) {
+			callback.onClientStarted(client);
+		}
+	});
+
+	/**
+	 * Called when the client has begun shutting down.
+	 */
+	public static final Event<ClientStopping> CLIENT_STOPPING = EventRegistry.createEnvironmentEvent(ClientStopping.class, callbacks -> client -> {
+		for (ClientStopping callback : callbacks) {
+			callback.onClientStopping(client);
 		}
 	});
 
 	@FunctionalInterface
-	public interface AfterClientLevelChange {
-		void afterLevelChange(Minecraft client, ClientLevel level);
+	public interface ClientStarted {
+		void onClientStarted(Minecraft client);
+	}
+
+	@FunctionalInterface
+	public interface ClientStopping {
+		void onClientStopping(Minecraft client);
 	}
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.frozenblock.lib.event.api.events.ClientEntityLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientEntityLifecycleEvents;
 
 @UtilityClass
 public class FabricClientEntityLifecycleEventsBridge {

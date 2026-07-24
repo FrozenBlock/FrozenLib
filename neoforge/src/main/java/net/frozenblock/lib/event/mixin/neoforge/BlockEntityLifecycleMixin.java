@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.mixin.neoforge;
 
 import net.frozenblock.lib.event.api.events.BlockEntityLifecycleEvents;
-import net.frozenblock.lib.event.api.events.ClientBlockEntityLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientBlockEntityLifecycleEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;

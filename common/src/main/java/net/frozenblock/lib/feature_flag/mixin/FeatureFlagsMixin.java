@@ -37,7 +37,7 @@ public class FeatureFlagsMixin {
 			ordinal = 0
 		)
 	)
-	private static void frozenLib$save(
+	private static void frozenLib$captureFeatureFlagBuilder(
 		CallbackInfo info,
 		@Local FeatureFlagRegistry.Builder builder
 	) {

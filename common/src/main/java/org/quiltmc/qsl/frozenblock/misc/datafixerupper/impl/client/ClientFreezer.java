@@ -19,7 +19,7 @@
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client;
 
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;

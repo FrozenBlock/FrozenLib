@@ -26,7 +26,7 @@ import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.platform.ModLoader;

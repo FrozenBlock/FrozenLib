@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
@@ -24,19 +25,17 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
-/**
- * A class representing the player join event.
- */
-public class PlayerJoinEvents {
+@UtilityClass
+public final class PlayerJoinEvents {
 	/**
-	 * The event that is triggered when a player joins the server.
+	 * The event that is triggered when a {@link ServerPlayer} joins the {@link MinecraftServer}.
 	 */
 	public static final Event<PlayerJoin> ON_JOIN_SERVER = EventRegistry.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
 		for (var callback : callbacks) callback.onPlayerJoin(server, player);
 	});
 
 	/**
-	 * The event that is triggered when a player joins a world.
+	 * The event that is triggered when a {@link ServerPlayer} is added to a {@link ServerLevel}.
 	 */
 	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = EventRegistry.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, level, player) -> {
 		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, level, player);
@@ -48,7 +47,7 @@ public class PlayerJoinEvents {
 	@FunctionalInterface
 	public interface PlayerJoin extends CommonEventEntrypoint {
 		/**
-		 * Triggers the event when a player joins the server.
+		 * Triggers the event when a {@link ServerPlayer} joins the {@link MinecraftServer}.
 		 * @param server the Minecraft server instance
 		 * @param player the player joining the server
 		 */
@@ -61,7 +60,7 @@ public class PlayerJoinEvents {
 	@FunctionalInterface
 	public interface PlayerAddedToLevel extends CommonEventEntrypoint {
 		/**
-		 * Triggers the event when a player is added to a level.
+		 * Triggers the event when a {@link ServerPlayer} is added to a {@link ServerLevel}.
 		 * @param server the Minecraft server instance
 		 * @param level the server level the player has been added to
 		 * @param player the player added to the level

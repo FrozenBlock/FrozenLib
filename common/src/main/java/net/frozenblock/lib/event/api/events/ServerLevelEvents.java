@@ -17,15 +17,16 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 
-public class ServerLevelEvents {
-
+@UtilityClass
+public final class ServerLevelEvents {
 	/**
-	 * Called just after a level is loaded by a Minecraft server.
+	 * Called just after a {@link ServerLevel} is loaded by a {@link MinecraftServer}.
 	 */
 	public static final Event<Load> LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (server, level) -> {
 		for (Load callback : callbacks) {
@@ -34,7 +35,7 @@ public class ServerLevelEvents {
 	});
 
 	/**
-	 * Called before a level is unloaded by a Minecraft server.
+	 * Called before a {@link ServerLevel} is unloaded by a {@link MinecraftServer}.
 	 */
 	public static final Event<Unload> UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (server, level) -> {
 		for (Unload callback : callbacks) {

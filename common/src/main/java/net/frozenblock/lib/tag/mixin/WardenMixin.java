@@ -32,5 +32,4 @@ public class WardenMixin {
     public void frozenLib$ignoreTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
 		if (entity != null && entity.is(FrozenLibEntityTypeTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
     }
-
 }
