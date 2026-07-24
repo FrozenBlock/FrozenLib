@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.possible-triangle.neoforge") version("1.4-CUSTOM-SNAPSHOT")
+    id("com.possible-triangle.neoforge") version("+")
     id("com.gradleup.shadow")
     id("org.quiltmc.gradle.licenser")
     checkstyle

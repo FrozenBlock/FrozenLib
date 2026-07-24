@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.possible-triangle.fabric") version("1.4-CUSTOM-SNAPSHOT")
+    id("com.possible-triangle.fabric") version("+")
     id("org.quiltmc.gradle.licenser")
     id("com.gradleup.shadow")
     checkstyle
@@ -64,8 +64,9 @@ fabric {
 loom {
     runtimeOnlyLog4j.set(true)
 
+    accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
     interfaceInjection {
-        enableDependencyInterfaceInjection.set(true)
+        enableDependencyInterfaceInjection = true
     }
 
     runs {
@@ -94,11 +95,6 @@ loom {
             ideConfigGenerated(true)
             preferGradleTask = true
         }
-    }
-
-    accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
-    interfaceInjection {
-        enableDependencyInterfaceInjection = true
     }
 }
 
