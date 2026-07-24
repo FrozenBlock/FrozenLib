@@ -37,7 +37,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-public class FrozenLibRegistries {
+public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<WindManagerExtensionType<?>>> WIND_MANAGER_EXTENSION_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_manager_extension_type"));
 	public static final MappedRegistry<WindManagerExtensionType<?>> WIND_MANAGER_EXTENSION_TYPE = createSimple(WIND_MANAGER_EXTENSION_TYPE_REGISTRY, Lifecycle.stable(), true);
 

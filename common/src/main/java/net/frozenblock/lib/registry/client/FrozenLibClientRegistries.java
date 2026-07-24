@@ -26,7 +26,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.resources.ResourceKey;
 
 @ClientOnly
-public class FrozenLibClientRegistries {
+public final class FrozenLibClientRegistries {
 	public static final ResourceKey<net.minecraft.core.Registry<EntityTextureOverride>> ENTITY_TEXTURE_OVERRIDE_REGISTRY =
 		ResourceKey.createRegistryKey(FrozenLibConstants.id("entity_texture_override"));
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE =

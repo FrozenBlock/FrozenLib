@@ -30,3 +30,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `entry`: The required Config Entry's id.
   - `predicate`: The Config Predicate to use if the required Config Entry is present.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
+- Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
