@@ -20,13 +20,14 @@ package net.frozenblock.lib.entity.client.impl.suffocation;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState.Active;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.MeterSettings;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
@@ -36,16 +37,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
+@UtilityClass
 public final class SuffocationBubbleRenderer {
-	private static final int BUBBLES = 10;
-	private static final int POP_WINDOW_TICKS = 2;
 
 	private static final Comparator<Active> GAS_ORDER = Comparator
 		.comparingInt((Active a) -> a.type().mechanics().priority()).reversed()
 		.thenComparing(a -> a.holder().unwrapKey().map(key -> key.identifier().toString()).orElse(""));
-
-	private SuffocationBubbleRenderer() {}
 
 	public static boolean hasHazard(Player player) {
 		return !gasHazards(player).isEmpty();
@@ -62,13 +60,13 @@ public final class SuffocationBubbleRenderer {
 	}
 
 	public static int freeAirBubbles(Player player) {
-		return BUBBLES - gasCount(player);
+		return Hud.NUM_AIR_BUBBLES - gasCount(player);
 	}
 
 	public static int waterAirBubbles(Player player) {
 		final int maxAir = Math.max(1, player.getMaxAirSupply());
 		final int air = Mth.clamp(player.getAirSupply(), 0, maxAir);
-		return Mth.clamp(Mth.ceil((float) ((air - 2) * BUBBLES) / (float) maxAir), 0, BUBBLES);
+		return Mth.clamp(Mth.ceil((float) ((air - 2) * Hud.NUM_AIR_BUBBLES) / (float) maxAir), 0, Hud.NUM_AIR_BUBBLES);
 	}
 
 	public static Identifier airSprite(Player player, int airBubble, Identifier vanilla) {
@@ -110,10 +108,10 @@ public final class SuffocationBubbleRenderer {
 		final List<Segment> out = new ArrayList<>();
 		int used = 0;
 		for (Active a : gasHazards(player)) {
-			if (used >= BUBBLES) break;
+			if (used >= Hud.NUM_AIR_BUBBLES) break;
 			final int capacity = Math.max(1, a.type().mechanics().capacity());
-			final float fill = Mth.clamp((float) a.units() / (float) capacity, 0F, 1F) * BUBBLES;
-			final int count = Mth.clamp(Mth.ceil(fill), 0, BUBBLES - used);
+			final float fill = Mth.clamp((float) a.units() / (float) capacity, 0F, 1F) * Hud.NUM_AIR_BUBBLES;
+			final int count = Mth.clamp(Mth.ceil(fill), 0, Hud.NUM_AIR_BUBBLES - used);
 			if (count <= 0) continue;
 			out.add(new Segment(a.type(), count, Math.min(fill, count) - (count - 1), ClientSuffocationState.isRising(a.holder())));
 			used += count;
@@ -122,7 +120,7 @@ public final class SuffocationBubbleRenderer {
 	}
 
 	private static Identifier gasSpriteAt(Player player, int airBubble) {
-		final int fromLeft = BUBBLES - airBubble;
+		final int fromLeft = Hud.NUM_AIR_BUBBLES - airBubble;
 		int acc = 0;
 		for (Segment segment : segments(player)) {
 			if (fromLeft < acc + segment.count()) {
@@ -140,7 +138,7 @@ public final class SuffocationBubbleRenderer {
 		final int capacity = Math.max(1, type.mechanics().capacity());
 		final int fillTime = Math.max(1, type.mechanics().fillTime());
 		final int loadStep = Math.max(1, Math.round((float) capacity / (float) fillTime));
-		return (float) POP_WINDOW_TICKS * loadStep / capacity * BUBBLES;
+		return (float) Hud.AIR_BUBBLE_POPPING_DURATION * loadStep / capacity * Hud.NUM_AIR_BUBBLES;
 	}
 
 	private static List<Active> gasHazards(Player player) {

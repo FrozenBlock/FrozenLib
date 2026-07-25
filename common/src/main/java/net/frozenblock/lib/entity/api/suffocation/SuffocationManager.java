@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationData;
-import net.frozenblock.lib.entity.impl.suffocation.SuffocationStateInterface;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -33,24 +33,23 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
+@UtilityClass
 public final class SuffocationManager {
 	private static final int DROWN_THRESHOLD = -20;
 	private static final int BAR_BUBBLES = 10;
 
-	private SuffocationManager() {}
-
 	public static void applySource(LivingEntity entity, Holder<SuffocationType> type, int ticks) {
 		if (entity.level().isClientSide()) return;
-		((SuffocationStateInterface) entity).frozenLib$applySuffocationSource(type, ticks);
+		entity.frozenLib$applySuffocationSource(type, ticks);
 	}
 
 	public static void serverTick(LivingEntity entity) {
 		if (!(entity.level() instanceof ServerLevel level)) return;
 
-		final Map<Holder<SuffocationType>, Integer> timers = ((SuffocationStateInterface) entity).frozenLib$suffocationSourceTimers();
+		final Map<Holder<SuffocationType>, Integer> timers = entity.frozenLib$suffocationSourceTimers();
 		final Registry<SuffocationType> registry = SuffocationTypes.registry(level.registryAccess());
 
-		final SuffocationData data = entity.getAttachedOrElse(SuffocationData.ATTACHMENT, SuffocationData.EMPTY);
+		final SuffocationData data = SuffocationData.ATTACHMENT.getAttachedOrElse(entity, SuffocationData.EMPTY);
 		final Map<Holder<SuffocationType>, Integer> units = new HashMap<>(data.units());
 		boolean changed = false;
 
@@ -94,7 +93,7 @@ public final class SuffocationManager {
 			else entry.setValue(remaining);
 		}
 
-		if (changed) entity.setAttached(SuffocationData.ATTACHMENT, new SuffocationData(units));
+		if (changed) SuffocationData.ATTACHMENT.set(entity, new SuffocationData(units));
 	}
 
 	private static boolean isSourceActive(ServerLevel level, BlockPos eyePos, SuffocationType type, boolean timerActive) {
@@ -104,7 +103,7 @@ public final class SuffocationManager {
 
 	public static boolean preventsVanillaAirRefill(LivingEntity entity) {
 		if (!(entity.level() instanceof ServerLevel level)) return false;
-		final Map<Holder<SuffocationType>, Integer> timers = ((SuffocationStateInterface) entity).frozenLib$suffocationSourceTimers();
+		final Map<Holder<SuffocationType>, Integer> timers = entity.frozenLib$suffocationSourceTimers();
 		final Registry<SuffocationType> registry = SuffocationTypes.registry(level.registryAccess());
 		final BlockPos eyePos = BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ());
 		for (SuffocationType type : registry) {
@@ -203,7 +202,7 @@ public final class SuffocationManager {
 	public static int getMeterUnits(LivingEntity entity, Holder<SuffocationType> type) {
 		final SuffocationType.Mechanics mechanics = type.value().mechanics();
 		final int rest = mechanics.style().restValue(mechanics.capacity());
-		return entity.getAttachedOrElse(SuffocationData.ATTACHMENT, SuffocationData.EMPTY).getUnits(type, rest);
+		return SuffocationData.ATTACHMENT.getAttachedOrElse(entity, SuffocationData.EMPTY).getUnits(type, rest);
 	}
 
 	public static float dangerFraction(LivingEntity entity, Holder<SuffocationType> type) {
@@ -214,6 +213,6 @@ public final class SuffocationManager {
 	public static boolean isMeterActive(LivingEntity entity, Holder<SuffocationType> type) {
 		final SuffocationType.Mechanics mechanics = type.value().mechanics();
 		final int rest = mechanics.style().restValue(mechanics.capacity());
-		return entity.getAttachedOrElse(SuffocationData.ATTACHMENT, SuffocationData.EMPTY).getUnits(type, rest) != rest;
+		return SuffocationData.ATTACHMENT.getAttachedOrElse(entity, SuffocationData.EMPTY).getUnits(type, rest) != rest;
 	}
 }

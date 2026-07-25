@@ -19,10 +19,9 @@ package net.frozenblock.lib.entity.impl.suffocation;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentSyncPredicate;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,18 +29,16 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record SuffocationData(Map<Holder<SuffocationType>, Integer> units) {
 	public static final SuffocationData EMPTY = new SuffocationData(Map.of());
-
-	private static final StreamCodec<RegistryFriendlyByteBuf, Map<Holder<SuffocationType>, Integer>> UNITS_STREAM_CODEC =
-		ByteBufCodecs.map(HashMap::new, SuffocationType.STREAM_CODEC, ByteBufCodecs.VAR_INT);
-
+	private static final StreamCodec<RegistryFriendlyByteBuf, Map<Holder<SuffocationType>, Integer>> UNITS_STREAM_CODEC = ByteBufCodecs.map(
+		HashMap::new, SuffocationType.STREAM_CODEC, ByteBufCodecs.VAR_INT
+	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, SuffocationData> STREAM_CODEC = StreamCodec.composite(
 		UNITS_STREAM_CODEC, SuffocationData::units,
 		SuffocationData::new
 	);
-
-	public static final AttachmentType<SuffocationData> ATTACHMENT = AttachmentRegistry.create(
+	public static final DataAttachmentType<SuffocationData> ATTACHMENT = DataAttachmentType.create(
 		FrozenLibConstants.id("suffocation_data"),
-		builder -> builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all())
+		builder -> builder.syncWith(STREAM_CODEC, DataAttachmentSyncPredicate.all())
 	);
 
 	public static void init() {}

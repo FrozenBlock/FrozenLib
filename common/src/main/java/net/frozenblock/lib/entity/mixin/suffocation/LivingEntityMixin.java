@@ -46,9 +46,15 @@ public abstract class LivingEntityMixin implements SuffocationStateInterface {
 		this.frozenLib$preventAirRefill = SuffocationManager.preventsVanillaAirRefill(LivingEntity.class.cast(this));
 	}
 
-	@WrapOperation(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;increaseAirSupply(I)I"))
-	private int frozenLib$gateAirRefill(LivingEntity instance, int air, Operation<Integer> original) {
-		return this.frozenLib$preventAirRefill ? air : original.call(instance, air);
+	@WrapOperation(
+		method = "baseTick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;increaseAirSupply(I)I"
+		)
+	)
+	private int frozenLib$gateAirRefill(LivingEntity instance, int currentSupply, Operation<Integer> original) {
+		return this.frozenLib$preventAirRefill ? currentSupply : original.call(instance, currentSupply);
 	}
 
 	@Inject(method = "baseTick", at = @At("TAIL"))

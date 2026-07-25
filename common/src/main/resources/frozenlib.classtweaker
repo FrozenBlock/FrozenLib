@@ -271,6 +271,12 @@ transitive-accessible method net/minecraft/world/entity/projectile/arrow/Abstrac
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/gravity/impl/EntityGravityInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/entity/impl/EntityStepOnBlockInterface
 
+# Suffocation
+transitive-accessible field net/minecraft/client/gui/Hud NUM_AIR_BUBBLES I
+transitive-accessible field net/minecraft/client/gui/Hud AIR_BUBBLE_POPPING_DURATION I
+
+transitive-inject-interface net/minecraft/world/entity/LivingEntity net/frozenblock/lib/entity/impl/suffocation/SuffocationStateInterface
+
 # Callback
 transitive-accessible class net/minecraft/server/level/ServerLevel$EntityCallbacks
 transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityCallbacks

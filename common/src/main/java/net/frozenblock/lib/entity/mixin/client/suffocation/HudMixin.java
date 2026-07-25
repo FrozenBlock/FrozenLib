@@ -25,7 +25,10 @@ import net.minecraft.client.gui.Hud;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import org.objectweb.asm.Opcodes;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -33,55 +36,112 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(Hud.class)
 public class HudMixin {
 
+	@Shadow
+	@Final
+	private static int NUM_AIR_BUBBLES;
+
 	@ModifyExpressionValue(
 		method = "extractAirBubbles",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z")
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"
+		)
 	)
-	private boolean frozenLib$suffocationActsLikeUnderwater(boolean original, @Local(argsOnly = true) Player player) {
+	private boolean frozenLib$suffocationActsLikeUnderwater(
+		boolean original,
+		@Local(argsOnly = true) Player player
+	) {
 		return original || SuffocationBubbleRenderer.hasHazard(player);
 	}
 
-	@ModifyVariable(method = "extractAirBubbles", at = @At("STORE"), name = "fullAirBubbles")
-	private int frozenLib$airCount(int fullAirBubbles, @Local(argsOnly = true) Player player) {
+	@ModifyVariable(
+		method = "extractAirBubbles",
+		at = @At("STORE"),
+		name = "fullAirBubbles"
+	)
+	private int frozenLib$airCount(
+		int fullAirBubbles,
+		@Local(argsOnly = true) Player player
+	) {
 		if (frozenLib$gasOnly(player)) return 0;
 		return SuffocationBubbleRenderer.hasHazard(player) ? Math.min(fullAirBubbles, SuffocationBubbleRenderer.freeAirBubbles(player)) : fullAirBubbles;
 	}
 
-	@ModifyVariable(method = "extractAirBubbles", at = @At("STORE"), name = "emptyAirBubbles")
-	private int frozenLib$lostRegion(int emptyAirBubbles, @Local(argsOnly = true) Player player, @Local(name = "fullAirBubbles") int fullAirBubbles) {
+	@ModifyVariable(
+		method = "extractAirBubbles",
+		at = @At("STORE"),
+		name = "emptyAirBubbles"
+	)
+	private int frozenLib$lostRegion(
+		int emptyAirBubbles,
+		@Local(argsOnly = true) Player player,
+		@Local(name = "fullAirBubbles") int fullAirBubbles
+	) {
 		if (frozenLib$gasOnly(player)) return SuffocationBubbleRenderer.gasCount(player);
-		return SuffocationBubbleRenderer.hasHazard(player) ? 10 - fullAirBubbles : emptyAirBubbles;
+		return SuffocationBubbleRenderer.hasHazard(player) ? NUM_AIR_BUBBLES - fullAirBubbles : emptyAirBubbles;
 	}
 
-	@ModifyVariable(method = "extractAirBubbles", at = @At("STORE"), name = "poppingAirBubblePosition")
-	private int frozenLib$waterPopPos(int poppingAirBubblePosition, @Local(argsOnly = true) Player player) {
+	@ModifyVariable(
+		method = "extractAirBubbles",
+		at = @At("STORE"),
+		name = "poppingAirBubblePosition"
+	)
+	private int frozenLib$waterPopPos(
+		int poppingAirBubblePosition,
+		@Local(argsOnly = true) Player player
+	) {
 		return frozenLib$gasOnly(player) ? 0 : poppingAirBubblePosition;
 	}
 
 	@ModifyExpressionValue(
 		method = "extractAirBubbles",
-		at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Hud;AIR_SPRITE:Lnet/minecraft/resources/Identifier;", opcode = Opcodes.GETSTATIC)
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/client/gui/Hud;AIR_SPRITE:Lnet/minecraft/resources/Identifier;",
+			opcode = Opcodes.GETSTATIC
+		)
 	)
-	private Identifier frozenLib$airSprite(Identifier original, @Local(argsOnly = true) Player player, @Local(name = "airBubble") int airBubble) {
+	private Identifier frozenLib$airSprite(
+		Identifier original,
+		@Local(argsOnly = true) Player player,
+		@Local(name = "airBubble") int airBubble
+	) {
 		return SuffocationBubbleRenderer.airSprite(player, airBubble, original);
 	}
 
 	@ModifyExpressionValue(
 		method = "extractAirBubbles",
-		at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Hud;AIR_POPPING_SPRITE:Lnet/minecraft/resources/Identifier;", opcode = Opcodes.GETSTATIC)
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/client/gui/Hud;AIR_POPPING_SPRITE:Lnet/minecraft/resources/Identifier;",
+			opcode = Opcodes.GETSTATIC
+		)
 	)
-	private Identifier frozenLib$poppingSprite(Identifier original, @Local(argsOnly = true) Player player, @Local(name = "airBubble") int airBubble) {
+	private Identifier frozenLib$poppingSprite(
+		Identifier original,
+		@Local(argsOnly = true) Player player,
+		@Local(name = "airBubble") int airBubble
+	) {
 		return SuffocationBubbleRenderer.poppingSprite(player, airBubble, original);
 	}
 
 	@ModifyExpressionValue(
 		method = "extractAirBubbles",
-		at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/Hud;AIR_EMPTY_SPRITE:Lnet/minecraft/resources/Identifier;", opcode = Opcodes.GETSTATIC)
+		at = @At(
+			value = "FIELD",
+			target = "Lnet/minecraft/client/gui/Hud;AIR_EMPTY_SPRITE:Lnet/minecraft/resources/Identifier;",
+			opcode = Opcodes.GETSTATIC
+		)
 	)
-	private Identifier frozenLib$emptySprite(Identifier original, @Local(argsOnly = true) Player player, @Local(name = "airBubble") int airBubble) {
+	private Identifier frozenLib$emptySprite(
+		Identifier original,
+		@Local(argsOnly = true) Player player,
+		@Local(name = "airBubble") int airBubble
+	) {
 		return SuffocationBubbleRenderer.emptySprite(player, airBubble, original);
 	}
 
+	@Unique
 	private static boolean frozenLib$gasOnly(Player player) {
 		return SuffocationBubbleRenderer.hasHazard(player)
 			&& !SuffocationBubbleRenderer.underwater(player)

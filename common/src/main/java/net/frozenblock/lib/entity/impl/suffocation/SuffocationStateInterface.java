@@ -23,10 +23,10 @@ import net.minecraft.core.Holder;
 public interface SuffocationStateInterface {
 
 	default void frozenLib$applySuffocationSource(Holder<SuffocationType> type, int ticks) {
-		throw new AssertionError("Implemented by mixin");
+		throw new AssertionError();
 	}
 
 	default Map<Holder<SuffocationType>, Integer> frozenLib$suffocationSourceTimers() {
-		throw new AssertionError("Implemented by mixin");
+		throw new AssertionError();
 	}
 }

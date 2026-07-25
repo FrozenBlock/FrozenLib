@@ -18,11 +18,10 @@
 package net.frozenblock.lib.entity.client.impl.suffocation;
 
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState.Active;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.ScreenEffectSettings;
+import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -30,8 +29,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 
-@Environment(EnvType.CLIENT)
-public final class SuffocationOverlayRenderer implements HudElement {
+@ClientOnly
+public final class SuffocationOverlayRenderer implements HudElementRenderer {
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {

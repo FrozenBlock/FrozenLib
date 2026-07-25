@@ -18,20 +18,19 @@
 package net.frozenblock.lib.entity.client.impl.suffocation;
 
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState.Active;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.ScreenEffectSettings;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.Identifier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
+@UtilityClass
 public final class SuffocationPostEffectManager {
 	private static Identifier applied = null;
-
-	private SuffocationPostEffectManager() {}
 
 	public static void tick(Minecraft minecraft) {
 		final GameRenderer gameRenderer = minecraft.gameRenderer;

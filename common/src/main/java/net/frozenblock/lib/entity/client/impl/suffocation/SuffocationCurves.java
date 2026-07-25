@@ -18,16 +18,15 @@
 package net.frozenblock.lib.entity.client.impl.suffocation;
 
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.Keyframe;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.RelativeMode;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.util.Mth;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
+@UtilityClass
 public final class SuffocationCurves {
-
-	private SuffocationCurves() {}
 
 	public static float eval(List<Keyframe> curve, float fraction) {
 		if (curve.isEmpty()) return fraction;

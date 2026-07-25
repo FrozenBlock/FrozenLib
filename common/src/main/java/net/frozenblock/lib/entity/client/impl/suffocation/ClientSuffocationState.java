@@ -23,11 +23,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationData;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -37,14 +37,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
+@UtilityClass
 public final class ClientSuffocationState {
 	private static final int BUBBLES = 10;
 	private static int lastGasBubbles = 0;
 	private static final Map<ResourceKey<SuffocationType>, Integer> previousUnits = new HashMap<>();
 	private static final Set<ResourceKey<SuffocationType>> rising = new HashSet<>();
-
-	private ClientSuffocationState() {}
 
 	public static void clientTick(LocalPlayer player) {
 		final int gasBubbles = SuffocationBubbleRenderer.gasCount(player);
@@ -101,8 +100,9 @@ public final class ClientSuffocationState {
 	public record Active(Holder<SuffocationType> holder, SuffocationType type, int units, float danger) {}
 
 	public static List<Active> active(LivingEntity entity) {
-		final SuffocationData data = entity.getAttachedOrElse(SuffocationData.ATTACHMENT, SuffocationData.EMPTY);
+		final SuffocationData data = SuffocationData.ATTACHMENT.getAttachedOrElse(entity, SuffocationData.EMPTY);
 		if (data.isEmpty()) return List.of();
+
 		final List<Active> result = new ArrayList<>(data.units().size());
 		data.units().forEach((holder, units) -> {
 			final SuffocationType type = holder.value();
