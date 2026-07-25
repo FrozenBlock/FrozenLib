@@ -51,13 +51,14 @@ public final class SuffocationPostEffectManager {
 		if (player == null || player.isSpectator()) return null;
 		final List<Active> active = ClientSuffocationState.active(player);
 		if (active.isEmpty()) return null;
-		final float[] dangers = ClientSuffocationState.dangers(active);
 
+		final float[] dangers = ClientSuffocationState.dangers(active);
 		Identifier best = null;
 		float bestIntensity = 0F;
 		for (Active entry : active) {
 			final ScreenEffectSettings settings = entry.type().screenEffect().orElse(null);
 			if (settings == null || settings.postEffect().isEmpty()) continue;
+
 			final float intensity = SuffocationCurves.intensity(settings.postIntensityCurve(), settings.relativeMode(), entry.danger(), dangers);
 			if (intensity > bestIntensity) {
 				bestIntensity = intensity;

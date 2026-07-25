@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Optional;
+import net.frozenblock.lib.entity.api.suffocation.AirBehavior;
 import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
@@ -61,29 +62,6 @@ public record SuffocationType(
 
 	public boolean containsSourceBlock(BlockState state) {
 		return this.sourceBlocks.map(state::is).orElse(false);
-	}
-
-	public enum AirBehavior implements StringRepresentable {
-		NONE("none"),
-		DISPLAY_ONLY("display_only"),
-		DRAIN("drain");
-
-		public static final Codec<AirBehavior> CODEC = StringRepresentable.fromEnum(AirBehavior::values);
-
-		private final String name;
-
-		AirBehavior(String name) {
-			this.name = name;
-		}
-
-		public boolean usesVanillaAir() {
-			return this != NONE;
-		}
-
-		@Override
-		public String getSerializedName() {
-			return this.name;
-		}
 	}
 
 	public record Mechanics(MeterStyle style, AirBehavior airBehavior, int capacity, int fillTime, int drainTime, int priority, boolean pauseWhileDraining) {
@@ -132,32 +110,12 @@ public record SuffocationType(
 		).apply(instance, Sounds::new));
 	}
 
-	public enum FillDirection implements StringRepresentable {
-		LEFT("left"),
-		RIGHT("right");
-
-		public static final Codec<FillDirection> CODEC = StringRepresentable.fromEnum(FillDirection::values);
-
-		private final String name;
-
-		FillDirection(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public String getSerializedName() {
-			return this.name;
-		}
-	}
-
-	public record MeterSettings(Identifier full, Optional<Identifier> partial, Optional<Identifier> empty, Optional<Identifier> popping, FillDirection direction, int rowPriority) {
+	public record MeterSettings(Identifier full, Optional<Identifier> partial, Optional<Identifier> empty, Optional<Identifier> popping) {
 		public static final Codec<MeterSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Identifier.CODEC.fieldOf("full_texture").forGetter(MeterSettings::full),
 			Identifier.CODEC.optionalFieldOf("partial_texture").forGetter(MeterSettings::partial),
 			Identifier.CODEC.optionalFieldOf("empty_texture").forGetter(MeterSettings::empty),
-			Identifier.CODEC.optionalFieldOf("popping_texture").forGetter(MeterSettings::popping),
-			FillDirection.CODEC.optionalFieldOf("fill_direction", FillDirection.LEFT).forGetter(MeterSettings::direction),
-			Codec.INT.optionalFieldOf("row_priority", 0).forGetter(MeterSettings::rowPriority)
+			Identifier.CODEC.optionalFieldOf("popping_texture").forGetter(MeterSettings::popping)
 		).apply(instance, MeterSettings::new));
 
 		public Identifier partialOrFull() {
@@ -176,9 +134,7 @@ public record SuffocationType(
 		ABSOLUTE("absolute"),
 		RELATIVE_TO_TOTAL("relative_to_total"),
 		DOMINANT_ONLY("dominant_only");
-
 		public static final Codec<RelativeMode> CODEC = StringRepresentable.fromEnum(RelativeMode::values);
-
 		private final String name;
 
 		RelativeMode(String name) {
@@ -266,9 +222,9 @@ public record SuffocationType(
 			return this;
 		}
 
-		public Builder meter(Identifier full, Identifier partial, Identifier empty, Identifier popping, FillDirection direction, int rowPriority) {
+		public Builder meter(Identifier full, Identifier partial, Identifier empty, Identifier popping) {
 			this.meterSettings = new MeterSettings(
-				full, Optional.ofNullable(partial), Optional.ofNullable(empty), Optional.ofNullable(popping), direction, rowPriority
+				full, Optional.ofNullable(partial), Optional.ofNullable(empty), Optional.ofNullable(popping)
 			);
 			return this;
 		}

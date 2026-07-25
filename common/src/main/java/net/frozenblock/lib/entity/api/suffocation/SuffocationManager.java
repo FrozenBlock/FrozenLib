@@ -103,12 +103,14 @@ public final class SuffocationManager {
 
 	public static boolean preventsVanillaAirRefill(LivingEntity entity) {
 		if (!(entity.level() instanceof ServerLevel level)) return false;
+
 		final Map<Holder<SuffocationType>, Integer> timers = entity.frozenLib$suffocationSourceTimers();
 		final Registry<SuffocationType> registry = SuffocationTypes.registry(level.registryAccess());
 		final BlockPos eyePos = BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ());
 		for (SuffocationType type : registry) {
-			if (type.mechanics().airBehavior() != SuffocationType.AirBehavior.DRAIN) continue;
+			if (type.mechanics().airBehavior() != AirBehavior.DRAIN) continue;
 			if (type.mechanics().style() == MeterStyle.FILL) continue;
+
 			final Holder<SuffocationType> holder = registry.wrapAsHolder(type);
 			if (isSourceActive(level, eyePos, type, timers.getOrDefault(holder, 0) > 0)) return true;
 		}
@@ -161,8 +163,8 @@ public final class SuffocationManager {
 	private static boolean isDraining(LivingEntity entity, ServerLevel level, Registry<SuffocationType> registry, Map<Holder<SuffocationType>, Integer> timers, BlockPos eyePos) {
 		if (entity.isEyeInFluid(FluidTags.WATER)) return true;
 		for (SuffocationType type : registry) {
-			final SuffocationType.Mechanics m = type.mechanics();
-			if (!m.airBehavior().usesVanillaAir() || m.style() == MeterStyle.FILL) continue;
+			final SuffocationType.Mechanics mechanics = type.mechanics();
+			if (!mechanics.airBehavior().usesVanillaAir() || mechanics.style() == MeterStyle.FILL) continue;
 			if (isSourceActive(level, eyePos, type, timers.getOrDefault(registry.wrapAsHolder(type), 0) > 0)) return true;
 		}
 		return false;
@@ -187,9 +189,8 @@ public final class SuffocationManager {
 			if (entity.tickCount % interval == 0) entity.hurtServer(level, damageSource(level, type), type.damageSettings().amount());
 		}
 
-		if (next == rest) {
-			return units.remove(holder) != null;
-		}
+		if (next == rest) return units.remove(holder) != null;
+
 		return !Objects.equals(units.put(holder, next), next);
 	}
 

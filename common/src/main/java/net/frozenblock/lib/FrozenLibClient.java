@@ -21,6 +21,7 @@ import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationOverlayRenderer;
 import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationPostEffectManager;
 import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
@@ -64,6 +65,12 @@ public final class FrozenLibClient {
 			VanillaHudAnchor.MISC_OVERLAYS,
 			FrozenLibConstants.id("spotting_icons"),
 			new SpottingIconHudElement()
+		);
+
+		HudElementRegistry.attachElementAfter(
+			VanillaHudAnchor.MISC_OVERLAYS,
+			FrozenLibConstants.id("suffocation_overlay"),
+			new SuffocationOverlayRenderer()
 		);
 
 		ClientTickEvents.START_LEVEL_TICK.register(

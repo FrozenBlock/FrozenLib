@@ -28,6 +28,7 @@ import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationData;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -36,25 +37,25 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import javax.annotation.Nullable;
 
 @ClientOnly
 @UtilityClass
 public final class ClientSuffocationState {
-	private static final int BUBBLES = 10;
+	private static final Map<ResourceKey<SuffocationType>, Integer> PREVIOUS_UNITS = new HashMap<>();
+	private static final Set<ResourceKey<SuffocationType>> RISING = new HashSet<>();
 	private static int lastGasBubbles = 0;
-	private static final Map<ResourceKey<SuffocationType>, Integer> previousUnits = new HashMap<>();
-	private static final Set<ResourceKey<SuffocationType>> rising = new HashSet<>();
 
 	public static void clientTick(LocalPlayer player) {
 		final int gasBubbles = SuffocationBubbleRenderer.gasCount(player);
 		if (gasBubbles > lastGasBubbles) {
-			final SuffocationType loudest = dominantGas(player);
+			final SuffocationType loudest = getDominantType(player);
 			if (loudest != null) loudest.sounds().fill().ifPresent(sound -> play(player, sound, 0.5F, 1F));
 		}
 		lastGasBubbles = gasBubbles;
 
-		if (gasBubbles >= BUBBLES) {
-			final SuffocationType loudest = dominantGas(player);
+		if (gasBubbles >= Hud.NUM_AIR_BUBBLES) {
+			final SuffocationType loudest = getDominantType(player);
 			if (loudest != null && player.tickCount % Math.max(1, loudest.damageSettings().intervalTicks()) == 0) {
 				loudest.sounds().damage().ifPresent(sound -> play(player, sound, 0.7F, 1F));
 			}
@@ -64,40 +65,40 @@ public final class ClientSuffocationState {
 	}
 
 	private static void updateRising(LocalPlayer player) {
-		rising.clear();
+		RISING.clear();
 		final Set<ResourceKey<SuffocationType>> present = new HashSet<>();
-		for (Active a : active(player)) {
-			final ResourceKey<SuffocationType> key = a.holder().unwrapKey().orElse(null);
+		for (Active active : active(player)) {
+			final ResourceKey<SuffocationType> key = active.holder().unwrapKey().orElse(null);
 			if (key == null) continue;
+
 			present.add(key);
-			if (a.units() > previousUnits.getOrDefault(key, 0)) rising.add(key);
-			previousUnits.put(key, a.units());
+			if (active.units() > PREVIOUS_UNITS.getOrDefault(key, 0)) RISING.add(key);
+			PREVIOUS_UNITS.put(key, active.units());
 		}
-		previousUnits.keySet().retainAll(present);
+		PREVIOUS_UNITS.keySet().retainAll(present);
 	}
 
 	public static boolean isRising(Holder<SuffocationType> holder) {
-		return holder.unwrapKey().map(rising::contains).orElse(false);
+		return holder.unwrapKey().map(RISING::contains).orElse(false);
 	}
 
-	private static SuffocationType dominantGas(Player player) {
-		SuffocationType best = null;
+	@Nullable
+	private static SuffocationType getDominantType(Player player) {
+		SuffocationType bestType = null;
 		int bestUnits = -1;
-		for (Active a : active(player)) {
-			final SuffocationType.Mechanics m = a.type().mechanics();
-			if (m.airBehavior().usesVanillaAir() && m.style() == MeterStyle.FILL && a.units() > bestUnits) {
-				bestUnits = a.units();
-				best = a.type();
+		for (Active active : active(player)) {
+			final SuffocationType.Mechanics mechanics = active.type().mechanics();
+			if (mechanics.airBehavior().usesVanillaAir() && mechanics.style() == MeterStyle.FILL && active.units() > bestUnits) {
+				bestUnits = active.units();
+				bestType = active.type();
 			}
 		}
-		return best;
+		return bestType;
 	}
 
 	private static void play(LocalPlayer player, Holder<SoundEvent> sound, float volume, float pitch) {
 		player.level().playLocalSound(player.getX(), player.getY(), player.getZ(), sound.value(), SoundSource.PLAYERS, volume, pitch, false);
 	}
-
-	public record Active(Holder<SuffocationType> holder, SuffocationType type, int units, float danger) {}
 
 	public static List<Active> active(LivingEntity entity) {
 		final SuffocationData data = SuffocationData.ATTACHMENT.getAttachedOrElse(entity, SuffocationData.EMPTY);
@@ -123,7 +124,9 @@ public final class ClientSuffocationState {
 
 	public static void reset() {
 		lastGasBubbles = 0;
-		previousUnits.clear();
-		rising.clear();
+		PREVIOUS_UNITS.clear();
+		RISING.clear();
 	}
+
+	public record Active(Holder<SuffocationType> holder, SuffocationType type, int units, float danger) {}
 }

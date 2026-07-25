@@ -18,6 +18,7 @@
 package net.frozenblock.lib.entity.api.suffocation;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -28,10 +29,9 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
+@UtilityClass
 public final class SuffocationTypes {
 	public static final ResourceKey<SuffocationType> WATER = createKey(FrozenLibConstants.id("water"));
-
-	private SuffocationTypes() {}
 
 	public static Registry<SuffocationType> registry(RegistryAccess registryAccess) {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.SUFFOCATION_TYPE);
@@ -62,14 +62,13 @@ public final class SuffocationTypes {
 			context,
 			WATER,
 			SuffocationType.builder(MeterStyle.DRAIN, 15, 300)
-				.airBehavior(SuffocationType.AirBehavior.DISPLAY_ONLY)
+				.airBehavior(AirBehavior.DISPLAY_ONLY)
 				.capacity(300)
 				.meter(
 					Identifier.withDefaultNamespace("hud/air"),
 					null,
 					Identifier.withDefaultNamespace("hud/air_empty"),
 					Identifier.withDefaultNamespace("hud/air_bursting"),
-					SuffocationType.FillDirection.LEFT,
 					0
 				)
 		);
