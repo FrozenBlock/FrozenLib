@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireTypes;
+import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -51,6 +52,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 			);
 		});
 		 */
+		builder.add(FrozenLibRegistries.SUFFOCATION_TYPE, SuffocationTypes::bootstrap);
 	}
 
 	@Override

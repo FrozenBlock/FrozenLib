@@ -34,6 +34,7 @@ final class FrozenLibRegistryProvider extends FabricDynamicRegistryProvider {
 	protected void configure(HolderLookup.Provider registries, Entries entries) {
 		entries.addAll(asLookup(entries.getLookup(FrozenLibRegistries.FIRE_TYPE)));
 		entries.addAll(asLookup(entries.getLookup(FrozenLibRegistries.VARIANT_SPAWN_INJECTION)));
+		entries.addAll(asLookup(entries.getLookup(FrozenLibRegistries.SUFFOCATION_TYPE)));
 	}
 
 	public static <T> HolderLookup.RegistryLookup<T> asLookup(HolderGetter<T> getter) {

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
@@ -89,7 +90,7 @@ public class WindManager {
 	);
 
 	private Level level;
-	public final List<WindManagerExtension> extensions = new ArrayList<>();
+	public final List<WindManagerExtension> extensions = new CopyOnWriteArrayList<>();
 	private final List<DataAttachmentTarget> disturbanceHolders = new ArrayList<>();
 	private boolean loadedExtensions;
 	public Optional<Vec3> windOverride = Optional.empty();
@@ -294,6 +295,7 @@ public class WindManager {
 	public void reset() {
 		this.level = null;
 		this.extensions.clear();
+		this.loadedExtensions = false;
 		this.disturbanceHolders.clear();
 		this.windOverride = Optional.empty();
 		this.windX = 0D;

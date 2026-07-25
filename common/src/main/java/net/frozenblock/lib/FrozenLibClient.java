@@ -20,13 +20,15 @@ package net.frozenblock.lib;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
+import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationPostEffectManager;
 import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.particle.client.impl.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
-import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -70,6 +72,9 @@ public final class FrozenLibClient {
 				WindManager.getOrCreate(level).tick(level);
 				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
+
+				if (minecraft.player != null) ClientSuffocationState.clientTick(minecraft.player);
+				SuffocationPostEffectManager.tick(minecraft);
 			}
 		);
 
@@ -84,5 +89,7 @@ public final class FrozenLibClient {
 
 	private static void clearStaticClientData() {
 		ClientScreenShaker.reset();
+		ClientSuffocationState.reset();
+		SuffocationPostEffectManager.reset();
 	}
 }
