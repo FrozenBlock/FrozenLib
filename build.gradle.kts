@@ -2,10 +2,10 @@ import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
 plugins {
-    id("com.possible-triangle.core") version("+")
-    id("com.possible-triangle.common") version("+") apply(false)
-    id("com.possible-triangle.fabric") version("+") apply(false)
-    id("com.possible-triangle.neoforge") version("+") apply(false)
+    id("com.possible-triangle.core") version("1.4-CUSTOM-SNAPSHOT")
+    id("com.possible-triangle.common") version("1.4-CUSTOM-SNAPSHOT") apply(false)
+    id("com.possible-triangle.fabric") version("1.4-CUSTOM-SNAPSHOT") apply(false)
+    id("com.possible-triangle.neoforge") version("1.4-CUSTOM-SNAPSHOT") apply(false)
     id("net.mehvahdjukaar.candlelight") version("+") apply(false)
 
     id("org.quiltmc.gradle.licenser") version("+") apply(false)
