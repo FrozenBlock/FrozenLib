@@ -6,8 +6,8 @@
     "style": "drain"
   },
   "meter": {
-    "empty": "minecraft:hud/air_empty",
-    "full": "minecraft:hud/air",
-    "popping": "minecraft:hud/air_bursting"
+    "empty_texture": "minecraft:hud/air_empty",
+    "full_texture": "minecraft:hud/air",
+    "popping_texture": "minecraft:hud/air_bursting"
   }
 }

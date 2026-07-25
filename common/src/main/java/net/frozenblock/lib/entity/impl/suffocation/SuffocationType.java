@@ -39,6 +39,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
+// TODO: better field names
 public record SuffocationType(
 	Optional<HolderSet<Block>> sourceBlocks,
 	Mechanics mechanics,
@@ -151,11 +152,11 @@ public record SuffocationType(
 
 	public record MeterSettings(Identifier full, Optional<Identifier> partial, Optional<Identifier> empty, Optional<Identifier> popping, FillDirection direction, int rowPriority) {
 		public static final Codec<MeterSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Identifier.CODEC.fieldOf("full").forGetter(MeterSettings::full),
-			Identifier.CODEC.optionalFieldOf("partial").forGetter(MeterSettings::partial),
-			Identifier.CODEC.optionalFieldOf("empty").forGetter(MeterSettings::empty),
-			Identifier.CODEC.optionalFieldOf("popping").forGetter(MeterSettings::popping),
-			FillDirection.CODEC.optionalFieldOf("direction", FillDirection.LEFT).forGetter(MeterSettings::direction),
+			Identifier.CODEC.fieldOf("full_texture").forGetter(MeterSettings::full),
+			Identifier.CODEC.optionalFieldOf("partial_texture").forGetter(MeterSettings::partial),
+			Identifier.CODEC.optionalFieldOf("empty_texture").forGetter(MeterSettings::empty),
+			Identifier.CODEC.optionalFieldOf("popping_texture").forGetter(MeterSettings::popping),
+			FillDirection.CODEC.optionalFieldOf("fill_direction", FillDirection.LEFT).forGetter(MeterSettings::direction),
 			Codec.INT.optionalFieldOf("row_priority", 0).forGetter(MeterSettings::rowPriority)
 		).apply(instance, MeterSettings::new));
 

@@ -19,6 +19,8 @@ package net.frozenblock.lib.entity.mixin.client.suffocation;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationBubbleRenderer;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.gui.Hud;
@@ -28,7 +30,6 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -38,7 +39,7 @@ public class HudMixin {
 
 	@Shadow
 	@Final
-	private static int NUM_AIR_BUBBLES;
+	public static int NUM_AIR_BUBBLES;
 
 	@ModifyExpressionValue(
 		method = "extractAirBubbles",
@@ -47,10 +48,16 @@ public class HudMixin {
 			target = "Lnet/minecraft/world/entity/player/Player;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"
 		)
 	)
-	private boolean frozenLib$suffocationActsLikeUnderwater(
+	private boolean frozenLib$countSuffocationAsUnderwaterAndCaptureGasOnly(
 		boolean original,
-		@Local(argsOnly = true) Player player
+		@Local(argsOnly = true) Player player,
+		@Share("frozenlib$gasOnly") LocalBooleanRef gasOnly
 	) {
+		gasOnly.set(
+			!original
+			&& SuffocationBubbleRenderer.hasHazard(player)
+			&& SuffocationBubbleRenderer.waterAirBubbles(player) >= SuffocationBubbleRenderer.freeAirBubbles(player)
+		);
 		return original || SuffocationBubbleRenderer.hasHazard(player);
 	}
 
@@ -61,9 +68,10 @@ public class HudMixin {
 	)
 	private int frozenLib$airCount(
 		int fullAirBubbles,
-		@Local(argsOnly = true) Player player
+		@Local(argsOnly = true) Player player,
+		@Share("frozenlib$gasOnly") LocalBooleanRef gasOnly
 	) {
-		if (frozenLib$gasOnly(player)) return 0;
+		if (gasOnly.get()) return 0;
 		return SuffocationBubbleRenderer.hasHazard(player) ? Math.min(fullAirBubbles, SuffocationBubbleRenderer.freeAirBubbles(player)) : fullAirBubbles;
 	}
 
@@ -75,9 +83,10 @@ public class HudMixin {
 	private int frozenLib$lostRegion(
 		int emptyAirBubbles,
 		@Local(argsOnly = true) Player player,
-		@Local(name = "fullAirBubbles") int fullAirBubbles
+		@Local(name = "fullAirBubbles") int fullAirBubbles,
+		@Share("frozenlib$gasOnly") LocalBooleanRef gasOnly
 	) {
-		if (frozenLib$gasOnly(player)) return SuffocationBubbleRenderer.gasCount(player);
+		if (gasOnly.get()) return SuffocationBubbleRenderer.gasCount(player);
 		return SuffocationBubbleRenderer.hasHazard(player) ? NUM_AIR_BUBBLES - fullAirBubbles : emptyAirBubbles;
 	}
 
@@ -88,9 +97,9 @@ public class HudMixin {
 	)
 	private int frozenLib$waterPopPos(
 		int poppingAirBubblePosition,
-		@Local(argsOnly = true) Player player
+		@Share("frozenlib$gasOnly") LocalBooleanRef gasOnly
 	) {
-		return frozenLib$gasOnly(player) ? 0 : poppingAirBubblePosition;
+		return gasOnly.get() ? 0 : poppingAirBubblePosition;
 	}
 
 	@ModifyExpressionValue(
@@ -106,7 +115,7 @@ public class HudMixin {
 		@Local(argsOnly = true) Player player,
 		@Local(name = "airBubble") int airBubble
 	) {
-		return SuffocationBubbleRenderer.airSprite(player, airBubble, original);
+		return SuffocationBubbleRenderer.tryGetAirSprite(player, airBubble, original);
 	}
 
 	@ModifyExpressionValue(
@@ -122,7 +131,7 @@ public class HudMixin {
 		@Local(argsOnly = true) Player player,
 		@Local(name = "airBubble") int airBubble
 	) {
-		return SuffocationBubbleRenderer.poppingSprite(player, airBubble, original);
+		return SuffocationBubbleRenderer.tryGetPoppingSprite(player, airBubble, original);
 	}
 
 	@ModifyExpressionValue(
@@ -138,13 +147,6 @@ public class HudMixin {
 		@Local(argsOnly = true) Player player,
 		@Local(name = "airBubble") int airBubble
 	) {
-		return SuffocationBubbleRenderer.emptySprite(player, airBubble, original);
-	}
-
-	@Unique
-	private static boolean frozenLib$gasOnly(Player player) {
-		return SuffocationBubbleRenderer.hasHazard(player)
-			&& !SuffocationBubbleRenderer.underwater(player)
-			&& SuffocationBubbleRenderer.waterAirBubbles(player) >= SuffocationBubbleRenderer.freeAirBubbles(player);
+		return SuffocationBubbleRenderer.tryGetEmptySprite(player, airBubble, original);
 	}
 }

@@ -23,9 +23,7 @@ import net.minecraft.util.StringRepresentable;
 public enum MeterStyle implements StringRepresentable {
 	DRAIN("drain"),
 	FILL("fill");
-
 	public static final Codec<MeterStyle> CODEC = StringRepresentable.fromEnum(MeterStyle::values);
-
 	private final String name;
 
 	MeterStyle(String name) {

@@ -31,7 +31,6 @@ import net.minecraft.client.gui.Hud;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -40,17 +39,12 @@ import net.minecraft.world.level.block.state.BlockState;
 @ClientOnly
 @UtilityClass
 public final class SuffocationBubbleRenderer {
-
 	private static final Comparator<Active> GAS_ORDER = Comparator
-		.comparingInt((Active a) -> a.type().mechanics().priority()).reversed()
-		.thenComparing(a -> a.holder().unwrapKey().map(key -> key.identifier().toString()).orElse(""));
+		.comparingInt((Active active) -> active.type().mechanics().priority()).reversed()
+		.thenComparing(active -> active.holder().unwrapKey().map(key -> key.identifier().toString()).orElse(""));
 
 	public static boolean hasHazard(Player player) {
 		return !gasHazards(player).isEmpty();
-	}
-
-	public static boolean underwater(Player player) {
-		return player.isEyeInFluid(FluidTags.WATER);
 	}
 
 	public static int gasCount(Player player) {
@@ -69,35 +63,38 @@ public final class SuffocationBubbleRenderer {
 		return Mth.clamp(Mth.ceil((float) ((air - 2) * Hud.NUM_AIR_BUBBLES) / (float) maxAir), 0, Hud.NUM_AIR_BUBBLES);
 	}
 
-	public static Identifier airSprite(Player player, int airBubble, Identifier vanilla) {
+	public static Identifier tryGetAirSprite(Player player, int airBubble, Identifier vanilla) {
 		final Identifier gas = gasSpriteAt(player, airBubble);
 		if (gas != null) return gas;
+
 		final MeterSettings skin = activeSkin(player);
 		return skin != null ? skin.full() : vanilla;
 	}
 
-	public static Identifier emptySprite(Player player, int airBubble, Identifier vanilla) {
+	public static Identifier tryGetEmptySprite(Player player, int airBubble, Identifier vanilla) {
 		final Identifier gas = gasSpriteAt(player, airBubble);
 		if (gas != null) return gas;
+
 		final MeterSettings skin = activeSkin(player);
 		return skin != null ? skin.empty().orElse(vanilla) : vanilla;
 	}
 
-	public static Identifier poppingSprite(Player player, int airBubble, Identifier vanilla) {
+	public static Identifier tryGetPoppingSprite(Player player, int airBubble, Identifier vanilla) {
 		final Identifier gas = gasSpriteAt(player, airBubble);
 		if (gas != null) return gas;
+
 		final MeterSettings skin = activeSkin(player);
 		return skin != null ? skin.popping().orElse(vanilla) : vanilla;
 	}
 
 	private static MeterSettings activeSkin(Player player) {
 		final Level level = player.level();
-		final Registry<SuffocationType> registry = SuffocationTypes.registry(level.registryAccess());
-		final BlockState eye = level.getBlockState(BlockPos.containing(player.getX(), player.getEyeY(), player.getZ()));
-		for (SuffocationType type : registry) {
-			final SuffocationType.Mechanics m = type.mechanics();
-			if (!m.airBehavior().usesVanillaAir() || m.style() == MeterStyle.FILL || type.sourceBlocks().isEmpty()) continue;
-			if (type.containsSourceBlock(eye)) return type.meterSettings();
+		final Registry<SuffocationType> suffocationTypes = SuffocationTypes.registry(level.registryAccess());
+		final BlockState eyeState = level.getBlockState(BlockPos.containing(player.getEyePosition()));
+		for (SuffocationType type : suffocationTypes) {
+			final SuffocationType.Mechanics mechanics = type.mechanics();
+			if (!mechanics.airBehavior().usesVanillaAir() || mechanics.style() == MeterStyle.FILL || type.sourceBlocks().isEmpty()) continue;
+			if (type.containsSourceBlock(eyeState)) return type.meterSettings();
 		}
 		return null;
 	}
@@ -143,9 +140,9 @@ public final class SuffocationBubbleRenderer {
 
 	private static List<Active> gasHazards(Player player) {
 		final List<Active> out = new ArrayList<>();
-		for (Active a : ClientSuffocationState.active(player)) {
-			final SuffocationType.Mechanics m = a.type().mechanics();
-			if (m.airBehavior().usesVanillaAir() && m.style() == MeterStyle.FILL && a.units() > 0) out.add(a);
+		for (Active active : ClientSuffocationState.active(player)) {
+			final SuffocationType.Mechanics mechanics = active.type().mechanics();
+			if (mechanics.airBehavior().usesVanillaAir() && mechanics.style() == MeterStyle.FILL && active.units() > 0) out.add(active);
 		}
 		out.sort(GAS_ORDER);
 		return out;
