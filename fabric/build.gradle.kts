@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("com.possible-triangle.fabric") version("1.4-CUSTOM-SNAPSHOT")
+    id("net.frozenblock.triangle.fabric") version("+")
     id("org.quiltmc.gradle.licenser")
     id("com.gradleup.shadow")
     checkstyle

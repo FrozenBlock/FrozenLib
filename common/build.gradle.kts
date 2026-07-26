@@ -1,7 +1,7 @@
 import com.possible_triangle.gradle.features.enableKotlin
 
 plugins {
-    id("com.possible-triangle.common") version("1.4-CUSTOM-SNAPSHOT")
+    id("net.frozenblock.triangle.common") version("+")
     id("org.quiltmc.gradle.licenser")
     checkstyle
 }
