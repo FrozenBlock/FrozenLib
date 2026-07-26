@@ -35,7 +35,7 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version("+")
-    id("com.possible-triangle.helper") version("1.4-CUSTOM-SNAPSHOT")
+    id("com.possible-triangle.helper") version("+")
 }
 
 rootProject.name = "FrozenLib"
