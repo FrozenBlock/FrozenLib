@@ -188,21 +188,4 @@ subprojects {
             }
         }
     }
-
-    val env: MutableMap<String, String> = System.getenv()
-    val mod_version: String by project
-
-    /*upload.maven {
-        val snapshot = env["SNAPSDHOT"]
-
-        val publishVersion = makeModrinthVersion(mod_version)
-        val snapshotPublishVersion = publishVersion + if (snapshot?.equals("true") == true) "-SNAPSHOT" else ""
-
-        artifactVersion = snapshotPublishVersion
-    }*/
-}
-
-fun makeModrinthVersion(version: String): String {
-    val minecraft_version: String by project
-    return "$version-mc${minecraft_version}"
 }
