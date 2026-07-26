@@ -20,15 +20,15 @@ package net.frozenblock.lib.item.client.api.compass;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
 
+@UtilityClass
 @ClientOnly
 public final class CompassTargetResolvers {
 	private static final List<CompassTargetResolver> RESOLVERS = new CopyOnWriteArrayList<>();
-
-	private CompassTargetResolvers() {}
 
 	public static void register(CompassTargetResolver resolver) {
 		RESOLVERS.add(resolver);

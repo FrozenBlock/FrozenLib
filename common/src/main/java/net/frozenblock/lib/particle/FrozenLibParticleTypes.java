@@ -33,7 +33,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public class FrozenLibParticleTypes {
+public final class FrozenLibParticleTypes {
 	private static final FrozenDeferredRegister<ParticleType<?>> REGISTER = FrozenDeferredRegister.create(
 		Registries.PARTICLE_TYPE,
 		FrozenLibConstants.MOD_ID
@@ -41,38 +41,38 @@ public class FrozenLibParticleTypes {
 
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ControlledNoteParticleOptions>> CONTROLLED_NOTE = register("controlled_note",
 		false,
-		particleType -> ControlledNoteParticleOptions.CODEC,
-		particleType -> ControlledNoteParticleOptions.STREAM_CODEC
+		type -> ControlledNoteParticleOptions.CODEC,
+		type -> ControlledNoteParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> SMOKE_COLORED = register("smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> LARGE_SMOKE_COLORED = register("large_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_COSY_SMOKE_COLORED = register("campfire_cosy_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_SIGNAL_SMOKE_COLORED = register("campfire_signal_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_SMALL = register("wind_small",
 		false,
-		particleType -> WindParticleOptions.CODEC,
-		particleType -> WindParticleOptions.STREAM_CODEC
+		type -> WindParticleOptions.CODEC,
+		type -> WindParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_MEDIUM = register("wind_medium",
 		false,
-		particleType -> WindParticleOptions.CODEC,
-		particleType -> WindParticleOptions.STREAM_CODEC
+		type -> WindParticleOptions.CODEC,
+		type -> WindParticleOptions.STREAM_CODEC
 	);
 
 	static {

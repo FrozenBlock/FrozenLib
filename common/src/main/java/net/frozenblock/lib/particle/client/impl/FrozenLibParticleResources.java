@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.particle.client.impl;
 
-import net.frozenblock.lib.particle.ColoredCampfireSmokeParticle;
-import net.frozenblock.lib.particle.ColoredLargeSmokeParticle;
-import net.frozenblock.lib.particle.ColoredSmokeParticle;
+import net.frozenblock.lib.particle.client.ColoredCampfireSmokeParticle;
+import net.frozenblock.lib.particle.client.ColoredLargeSmokeParticle;
+import net.frozenblock.lib.particle.client.ColoredSmokeParticle;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.api.ParticleProviderRegistry;

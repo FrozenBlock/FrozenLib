@@ -15,29 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.particle;
+package net.frozenblock.lib.particle.client;
 
+import net.frozenblock.lib.particle.client.api.ColoredLerpedParticleHelper;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.CampfireSmokeParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 
 @ClientOnly
 public class ColoredCampfireSmokeParticle extends CampfireSmokeParticle {
-	private final float targetRColor;
-	private final float startRColor;
-	private final float targetBColor;
-	private final float startBColor;
-	private final float targetGColor;
-	private final float startGColor;
-	private final int colorLerpEndsAt;
-	private int colorLerpTicks;
+	final ColoredLerpedParticleHelper colorHelper;
 
 	protected ColoredCampfireSmokeParticle(
 		ClientLevel level,
@@ -48,28 +43,19 @@ public class ColoredCampfireSmokeParticle extends CampfireSmokeParticle {
 		TextureAtlasSprite sprite
 	) {
 		super(level, x, y, z, xa, ya, za, isSignalFire, sprite);
-		this.targetRColor = this.rCol;
-		this.rCol = this.startRColor = Math.clamp(this.targetRColor + rDifference, 0F, 1F);
-		this.targetGColor = this.gCol;
-		this.gCol = this.startGColor = Math.clamp(this.targetGColor + gDifference, 0F, 1F);
-		this.targetBColor = this.bCol;
-		this.bCol = this.startBColor = Math.clamp(this.targetBColor + bDifference, 0F, 1F);
-		this.colorLerpEndsAt = level.getRandom().nextInt(20, 40);
+		this.colorHelper = new ColoredLerpedParticleHelper(this, rDifference, gDifference, bDifference, level.getRandom().nextInt(20, 40));
 	}
 
 	@Override
 	public void tick() {
-		this.colorLerpTicks += 1;
+		this.colorHelper.tick();
 		super.tick();
 	}
 
 	@Override
-	protected int getLightCoords(float partialTick) {
-		final float colorLerp = Math.min((this.colorLerpTicks + partialTick), this.colorLerpEndsAt) / this.colorLerpEndsAt;
-		this.rCol = Mth.lerp(colorLerp, this.startRColor, this.targetRColor);
-		this.gCol = Mth.lerp(colorLerp, this.startGColor, this.targetGColor);
-		this.bCol = Mth.lerp(colorLerp, this.startBColor, this.targetBColor);
-		return super.getLightCoords(partialTick);
+	public void extract(QuadParticleRenderState particleTypeRenderState, Camera camera, float partialTickTime) {
+		this.colorHelper.applyColors(this, partialTickTime);
+		super.extract(particleTypeRenderState, camera, partialTickTime);
 	}
 
 	public record CosyProvider(SpriteSet spriteSet) implements ParticleProvider<ColoredSmokeParticleOptions> {
@@ -109,7 +95,8 @@ public class ColoredCampfireSmokeParticle extends CampfireSmokeParticle {
 				xAux, yAux, zAux,
 				options.rDifference(), options.gDifference(), options.bDifference(),
 				true,
-				this.spriteSet.get(random));
+				this.spriteSet.get(random)
+			);
 			particle.setAlpha(0.95F);
 			return particle;
 		}

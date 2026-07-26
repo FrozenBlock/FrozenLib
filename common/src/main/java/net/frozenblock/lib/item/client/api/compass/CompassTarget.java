@@ -24,6 +24,7 @@ import net.minecraft.core.GlobalPos;
 
 @ClientOnly
 public record CompassTarget(GlobalPos position, Optional<UUID> entity) {
+
 	public static CompassTarget of(GlobalPos position) {
 		return new CompassTarget(position, Optional.empty());
 	}

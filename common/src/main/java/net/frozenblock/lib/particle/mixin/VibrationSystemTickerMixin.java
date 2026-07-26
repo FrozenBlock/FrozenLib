@@ -84,5 +84,4 @@ public interface VibrationSystemTickerMixin {
 		if (!VibrationParticleVisibilityApi.isVisible(data, user)) return 1;
 		return operation.call(usedLevel, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
-
 }

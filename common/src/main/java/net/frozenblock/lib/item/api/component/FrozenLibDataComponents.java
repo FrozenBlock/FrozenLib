@@ -24,7 +24,7 @@ import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 
-public class FrozenLibDataComponents {
+public final class FrozenLibDataComponents {
 	private static final FrozenDeferredRegister<DataComponentType<?>> REGISTER = FrozenDeferredRegister.create(
 		Registries.DATA_COMPONENT_TYPE,
 		FrozenLibConstants.MOD_ID
