@@ -63,6 +63,11 @@ if (Constants.NEOFORGE) {
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
 
+localPluginRepository(
+    "GradleHelper",
+    enabled = true
+)
+
 fun localRepository(
     repo: String,
     dependencySub: String,
@@ -138,5 +143,30 @@ fun localRepository(
         } else {
             println("Local repo $repo not found")
         }
+    }
+}
+
+fun localPluginRepository(repo: String, enabled: Boolean = true) {
+    if (!enabled) return
+    println("Attempting to include local plugin build $repo")
+
+    val github = System.getenv("GITHUB_ACTIONS") == "true"
+
+    var path = "../$repo"
+    var file = File(path)
+
+    if (github) {
+        path = repo
+        file = File(path)
+        println("Running on GitHub")
+    }
+
+    if (file.exists()) {
+        pluginManagement {
+            includeBuild(path)
+        }
+        println("Included local plugin build $repo")
+    } else {
+        println("Local plugin build $repo not found")
     }
 }

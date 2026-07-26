@@ -1,7 +1,7 @@
 import com.possible_triangle.gradle.features.enableKotlin
 
 plugins {
-    id("net.frozenblock.triangle.common") version("+")
+    id("net.frozenblock.triangle.common")
     id("org.quiltmc.gradle.licenser")
     checkstyle
 }
@@ -12,7 +12,6 @@ checkstyle {
 }
 
 val minecraft_version: String by project
-val fabric_loader_version: String by project
 val asm_version: String by project
 
 val cloth_config_version: String by project

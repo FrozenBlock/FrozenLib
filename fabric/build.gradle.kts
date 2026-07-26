@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("net.frozenblock.triangle.fabric") version("+")
+    id("net.frozenblock.triangle.fabric")
     id("org.quiltmc.gradle.licenser")
     id("com.gradleup.shadow")
     checkstyle
@@ -272,21 +272,6 @@ tasks {
 
     named<Jar>("javadocJar") {
         // configured by java { withJavadocJar() } in multiloader-common
-    }
-
-    withType(JavaCompile::class) {
-        options.encoding = "UTF-8"
-        options.release = 25
-        options.isFork = true
-        options.isIncremental = true
-    }
-
-    withType(KotlinCompile::class) {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
-            //apiVersion = KotlinVersion.KOTLIN_2_1
-            //languageVersion = KotlinVersion.KOTLIN_2_1
-        }
     }
 
     withType(Test::class) {

@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
@@ -176,4 +179,36 @@ subprojects {
             name = "SomethingCatchy (MehVahdJukaar)"
         }
     }
+
+    tasks {
+        withType(JavaCompile::class) {
+            options.encoding = "UTF-8"
+            options.release = 25
+            options.isFork = true
+            options.isIncremental = true
+        }
+
+        withType(KotlinCompile::class) {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_25
+            }
+        }
+    }
+
+    val env: MutableMap<String, String> = System.getenv()
+    val mod_version: String by project
+
+    /*upload.maven {
+        val snapshot = env["SNAPSDHOT"]
+
+        val publishVersion = makeModrinthVersion(mod_version)
+        val snapshotPublishVersion = publishVersion + if (snapshot?.equals("true") == true) "-SNAPSHOT" else ""
+
+        artifactVersion = snapshotPublishVersion
+    }*/
+}
+
+fun makeModrinthVersion(version: String): String {
+    val minecraft_version: String by project
+    return "$version-mc${minecraft_version}"
 }
