@@ -294,6 +294,10 @@ tasks {
     }
 }
 
+shadow {
+    addShadowVariantIntoJavaComponent.set(false)
+}
+
 val build: Task by tasks
 val applyLicenses: Task by tasks
 val test: Task by tasks

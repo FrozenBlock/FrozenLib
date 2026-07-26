@@ -170,12 +170,10 @@ tasks {
         options.isFork = true
         options.isIncremental = true
     }
+}
 
-    withType(KotlinCompile::class) {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
-        }
-    }
+shadow {
+    addShadowVariantIntoJavaComponent.set(false)
 }
 
 java {
