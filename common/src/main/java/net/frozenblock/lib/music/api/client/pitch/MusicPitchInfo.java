@@ -19,7 +19,7 @@ package net.frozenblock.lib.music.api.client.pitch;
 
 import java.util.function.Function;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 
 // TODO: data-drive me

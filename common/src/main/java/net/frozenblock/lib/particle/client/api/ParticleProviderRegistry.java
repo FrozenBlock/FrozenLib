@@ -20,7 +20,7 @@ package net.frozenblock.lib.particle.client.api;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;

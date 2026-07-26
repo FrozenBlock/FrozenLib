@@ -23,7 +23,7 @@ import net.frozenblock.lib.particle.client.api.CustomRotationalParticleHelper;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.wind.WindManager;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;

@@ -27,7 +27,7 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationData;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;

@@ -20,7 +20,7 @@ package net.frozenblock.lib.renderer.hud;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.resources.Identifier;
 

@@ -30,7 +30,7 @@ import static net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelp
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;

@@ -15,15 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.client.api.compass;
+package net.frozenblock.lib.platform.api;
 
-import java.util.Optional;
-import net.frozenblock.lib.platform.api.ClientOnly;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.item.ItemStack;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ClientOnly
-@FunctionalInterface
-public interface CompassTargetResolver {
-	Optional<CompassTarget> resolve(ClientLevel level, ItemStack stack);
+@Retention(RetentionPolicy.CLASS)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PACKAGE})
+@Documented
+public @interface ClientOnly {
 }

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.menu.mixin.client;
 
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.spongepowered.asm.mixin.Mixin;

@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.client.impl.waterlike.WaterLikeFogUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.fog.environment.WaterFogEnvironment;
 import net.minecraft.core.BlockPos;

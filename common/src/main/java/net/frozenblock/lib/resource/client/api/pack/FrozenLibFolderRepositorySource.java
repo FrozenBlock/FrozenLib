@@ -19,7 +19,7 @@ package net.frozenblock.lib.resource.client.api.pack;
 
 import java.nio.file.Path;
 import java.util.List;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;

@@ -22,7 +22,7 @@ import net.frozenblock.lib.entrypoint.api.ClientEventEntrypoint;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 
 @FunctionalInterface
 public interface ConfigLoadEvent extends CommonEventEntrypoint {

@@ -33,7 +33,7 @@ package net.frozenblock.lib.renderer;
  * limitations under the License.
  */
 
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 

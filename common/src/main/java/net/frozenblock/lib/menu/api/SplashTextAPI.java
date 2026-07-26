@@ -20,7 +20,7 @@ package net.frozenblock.lib.menu.api;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Unmodifiable;
 

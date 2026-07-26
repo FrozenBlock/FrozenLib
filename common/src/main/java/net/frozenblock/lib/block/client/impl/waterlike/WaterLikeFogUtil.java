@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.impl.waterlike;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;

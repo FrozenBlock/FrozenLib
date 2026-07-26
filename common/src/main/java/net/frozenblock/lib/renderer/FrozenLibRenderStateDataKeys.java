@@ -19,7 +19,7 @@ package net.frozenblock.lib.renderer;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
 @ClientOnly

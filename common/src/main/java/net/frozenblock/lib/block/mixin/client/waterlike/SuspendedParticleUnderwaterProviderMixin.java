@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.client.waterlike;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.SuspendedParticle;
 import net.minecraft.core.BlockPos;

@@ -52,7 +52,7 @@ import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.resource.client.impl.pack.PackDownloadToast;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;

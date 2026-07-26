@@ -21,7 +21,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;

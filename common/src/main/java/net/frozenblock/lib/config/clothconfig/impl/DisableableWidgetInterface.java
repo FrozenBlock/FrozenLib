@@ -19,7 +19,7 @@ package net.frozenblock.lib.config.clothconfig.impl;
 
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 
 /**
  * Used to integrate config syncing with Cloth Config.

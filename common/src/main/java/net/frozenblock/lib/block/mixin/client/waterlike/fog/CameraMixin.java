@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.mixin.client.waterlike.fog;
 
 import net.frozenblock.lib.block.client.impl.waterlike.WaterLikeFogUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

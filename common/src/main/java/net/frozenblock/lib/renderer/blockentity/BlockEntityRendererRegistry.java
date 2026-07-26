@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.blockentity;
 
 import lombok.experimental.UtilityClass;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;

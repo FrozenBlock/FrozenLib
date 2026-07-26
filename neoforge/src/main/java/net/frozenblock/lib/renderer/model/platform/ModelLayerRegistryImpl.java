@@ -20,7 +20,7 @@ package net.frozenblock.lib.renderer.model.platform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;

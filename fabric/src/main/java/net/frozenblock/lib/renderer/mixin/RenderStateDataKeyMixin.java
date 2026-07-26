@@ -20,7 +20,7 @@ package net.frozenblock.lib.renderer.mixin;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;

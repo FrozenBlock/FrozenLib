@@ -20,7 +20,7 @@ package org.quiltmc.qsl.frozenblock.resource.loader.mixin.client;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldCallback;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;

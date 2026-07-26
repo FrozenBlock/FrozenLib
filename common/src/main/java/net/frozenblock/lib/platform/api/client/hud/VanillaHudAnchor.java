@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.api.client.hud;
 
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 
 @ClientOnly
 public enum VanillaHudAnchor {

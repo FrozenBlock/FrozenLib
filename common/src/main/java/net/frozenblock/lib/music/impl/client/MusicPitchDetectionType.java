@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.music.impl.client;
 
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 
 @ClientOnly
 public enum MusicPitchDetectionType {

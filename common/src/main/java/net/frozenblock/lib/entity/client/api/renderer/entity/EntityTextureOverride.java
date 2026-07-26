@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;

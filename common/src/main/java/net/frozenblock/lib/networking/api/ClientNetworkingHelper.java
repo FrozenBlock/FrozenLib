@@ -18,7 +18,7 @@
 package net.frozenblock.lib.networking.api;
 
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;

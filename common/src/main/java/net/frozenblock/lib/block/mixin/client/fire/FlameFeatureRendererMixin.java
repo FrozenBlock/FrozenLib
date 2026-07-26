@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;

@@ -20,7 +20,7 @@ package net.frozenblock.lib.networking.api.platform;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 @ClientOnly

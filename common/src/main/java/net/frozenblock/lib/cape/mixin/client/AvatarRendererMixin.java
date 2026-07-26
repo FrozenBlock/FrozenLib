@@ -18,7 +18,7 @@
 package net.frozenblock.lib.cape.mixin.client;
 
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.entity.ClientAvatarEntity;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;

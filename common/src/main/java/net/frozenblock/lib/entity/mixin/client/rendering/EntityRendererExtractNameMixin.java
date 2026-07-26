@@ -18,7 +18,7 @@
 package net.frozenblock.lib.entity.mixin.client.rendering;
 
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;

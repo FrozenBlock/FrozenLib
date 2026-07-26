@@ -25,7 +25,7 @@ import java.util.Set;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;

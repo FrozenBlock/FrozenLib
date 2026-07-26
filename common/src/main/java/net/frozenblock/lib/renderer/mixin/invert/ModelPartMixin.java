@@ -19,7 +19,7 @@ package net.frozenblock.lib.renderer.mixin.invert;
 
 import java.util.List;
 import net.frozenblock.lib.renderer.impl.ModelPartInvertInterface;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

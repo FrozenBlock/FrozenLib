@@ -25,7 +25,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.frozenblock.lib.resource.client.api.pack.FrozenLibFolderRepositorySource;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.repository.FolderRepositorySource;

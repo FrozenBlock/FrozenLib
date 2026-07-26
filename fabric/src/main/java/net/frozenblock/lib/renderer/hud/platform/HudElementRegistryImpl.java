@@ -21,7 +21,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 
 @ClientOnly

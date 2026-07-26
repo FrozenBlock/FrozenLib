@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.frozenlib_config.gui;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.frozenblock.lib.FrozenBools;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.gui.screens.Screen;
 
 @ClientOnly

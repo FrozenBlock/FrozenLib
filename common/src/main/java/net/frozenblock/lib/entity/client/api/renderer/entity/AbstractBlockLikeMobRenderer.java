@@ -22,7 +22,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.api.AbstractBlockLikeMob;
 import net.frozenblock.lib.entity.client.api.renderer.entity.state.BlockLikeMobRenderState;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockModelResolver;

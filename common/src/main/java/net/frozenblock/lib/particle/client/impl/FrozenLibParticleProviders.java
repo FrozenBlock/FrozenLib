@@ -18,7 +18,7 @@
 package net.frozenblock.lib.particle.client.impl;
 
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.NoteParticle;
 import net.minecraft.client.particle.Particle;

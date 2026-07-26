@@ -20,7 +20,7 @@ package net.frozenblock.lib.event.api.events.client;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 

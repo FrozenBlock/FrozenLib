@@ -20,7 +20,7 @@ package net.frozenblock.lib.debug.client.gui;
 import com.google.common.collect.ImmutableList;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;

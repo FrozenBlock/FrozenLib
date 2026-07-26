@@ -20,7 +20,7 @@ package net.frozenblock.lib.renderer.block;
 import net.frozenblock.lib.entrypoint.api.ClientEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 
 /**

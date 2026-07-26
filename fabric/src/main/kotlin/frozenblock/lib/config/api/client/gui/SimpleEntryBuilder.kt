@@ -21,7 +21,7 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text
-import net.mehvahdjukaar.candlelight.api.ClientOnly
+import net.frozenblock.lib.platform.api.ClientOnly
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
 

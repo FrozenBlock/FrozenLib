@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.client.impl.fire;
 
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 
 @ClientOnly
 public interface LavaParticleFireTypeInterface {

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.mixin;
 
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;

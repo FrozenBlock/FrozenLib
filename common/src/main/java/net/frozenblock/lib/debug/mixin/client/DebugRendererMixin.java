@@ -21,7 +21,7 @@ import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
 import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

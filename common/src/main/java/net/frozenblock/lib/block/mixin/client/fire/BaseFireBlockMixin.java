@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.concurrent.atomic.AtomicReference;
 import net.frozenblock.lib.block.api.fire.FireTypes;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseFireBlock;
