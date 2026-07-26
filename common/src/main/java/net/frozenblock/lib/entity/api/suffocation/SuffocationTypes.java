@@ -68,8 +68,7 @@ public final class SuffocationTypes {
 					Identifier.withDefaultNamespace("hud/air"),
 					null,
 					Identifier.withDefaultNamespace("hud/air_empty"),
-					Identifier.withDefaultNamespace("hud/air_bursting"),
-					0
+					Identifier.withDefaultNamespace("hud/air_bursting")
 				)
 		);
 	}

@@ -37,7 +37,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @ClientOnly
 @UtilityClass
