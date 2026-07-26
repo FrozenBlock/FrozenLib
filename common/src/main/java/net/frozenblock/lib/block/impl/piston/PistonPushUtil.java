@@ -68,7 +68,6 @@ public class PistonPushUtil {
 		return original;
 	}
 
-
 	public static boolean trySaveBlockEntity(Level level, BlockEntity blockEntity, BlockEntity pistonEntity) {
 		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
