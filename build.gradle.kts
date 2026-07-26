@@ -86,7 +86,7 @@ val publishMod by tasks.registering {
 }
 
 subprojects {
-    apply(plugin = "com.possible-triangle.core")
+    apply(plugin = "net.frozenblock.triangle.core")
     apply(plugin = "net.mehvahdjukaar.candlelight")
 
     val mavenUrl = env["MAVEN_URL"]
