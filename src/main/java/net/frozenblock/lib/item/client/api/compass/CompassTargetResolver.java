@@ -18,12 +18,11 @@
 package net.frozenblock.lib.item.client.api.compass;
 
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @FunctionalInterface
 public interface CompassTargetResolver {
 	Optional<CompassTarget> resolve(ClientLevel level, ItemStack stack);

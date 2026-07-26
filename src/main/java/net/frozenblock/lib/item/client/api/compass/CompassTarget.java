@@ -19,11 +19,10 @@ package net.frozenblock.lib.item.client.api.compass;
 
 import java.util.Optional;
 import java.util.UUID;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.GlobalPos;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record CompassTarget(GlobalPos position, Optional<UUID> entity) {
 	public static CompassTarget of(GlobalPos position) {
 		return new CompassTarget(position, Optional.empty());
