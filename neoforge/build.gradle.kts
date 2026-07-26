@@ -123,7 +123,7 @@ dependencies {
         exclude(group = "net.neoforged")
     }
 
-    implementation(project(":neoforge-locator"))
+    "jarJar"(project(":neoforge-locator"))
 }
 
 tasks {
@@ -144,6 +144,7 @@ tasks {
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
         archiveFileName.set("$archives_base_name-${getModVersion()}-neoforge.jar")
+        from(named("jarJar"))
         dependencies {
             exclude {
                 it.moduleGroup.contains("neoforged")

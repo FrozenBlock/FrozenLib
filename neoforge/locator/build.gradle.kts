@@ -12,3 +12,9 @@ dependencies {
     compileOnly("net.neoforged.fancymodloader:loader:11.0.13")
     compileOnly(project(":flib-common"))
 }
+
+upload {
+    maven {
+        group.set(null as String?)
+    }
+}

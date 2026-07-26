@@ -126,12 +126,6 @@ subprojects {
         compileOnly("net.mehvahdjukaar:candlelight:+")
     }
 
-    java {
-        toolchain.languageVersion = JavaLanguageVersion.of(25)
-        withSourcesJar()
-        withJavadocJar()
-    }
-
     if (project.name != "flib-common") {
         afterEvaluate {
             tasks.findByName("compileJava")?.dependsOn(":flib-common:candleLightTransform")
