@@ -15,6 +15,8 @@ dependencies {
 
 upload {
     maven {
-        group.set(null as String?)
+        group.unsetConvention()
+        name.unsetConvention()
+        artifactVersion.unsetConvention()
     }
 }
