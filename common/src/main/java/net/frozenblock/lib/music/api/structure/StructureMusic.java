@@ -32,6 +32,8 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 /**
  * @param structures The {@link Identifier}s of the relevant {@link Structure}s for the music to play it.
+ * <p>
+ * A {@link net.minecraft.core.HolderSet HolderSet} cannot be used as the {@link Structure} registry is not synced with the client.
  * @param backgroundMusic The {@link BackgroundMusic} to play while in a {@link Structure}.
  * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
  * @param configPredicate The {@link ConfigPredicate} to test. This instance will be ignored if it returns false.

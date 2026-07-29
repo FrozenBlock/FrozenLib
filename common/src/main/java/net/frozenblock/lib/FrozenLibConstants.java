@@ -19,7 +19,7 @@ package net.frozenblock.lib;
 
 import java.nio.file.Path;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public final class FrozenLibConstants {
 	 * It's smart to use this for at least registries.
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
-	public static final Path FROZENLIB_GAME_DIRECTORY = FrozenLibEarlyPlatformUtils.LOADER.getGameDir().resolve(MOD_ID);
+	public static final Path FROZENLIB_GAME_DIRECTORY = ModLoader.getGameDir().resolve(MOD_ID);
 
 	// DEBUG
 	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");

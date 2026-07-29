@@ -18,7 +18,7 @@
 package net.frozenblock.lib.wind.mixin.neoforge;
 
 import java.util.List;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.Entity;

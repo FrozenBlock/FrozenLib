@@ -18,17 +18,16 @@
 package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityTypes;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenTestClient implements ClientModInitializer {
 
     @Override

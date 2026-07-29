@@ -23,13 +23,12 @@ import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibRenderPipelines {
 	// TODO: test if these work
 	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING = RenderPipelines.register(

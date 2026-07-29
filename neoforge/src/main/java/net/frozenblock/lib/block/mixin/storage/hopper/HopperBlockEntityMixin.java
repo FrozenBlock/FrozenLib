@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.storage.hopper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.frozenblock.lib.block.storage.api.hopper.HopperApi;
+import net.frozenblock.lib.block.api.storage.hopper.HopperApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.Hopper;

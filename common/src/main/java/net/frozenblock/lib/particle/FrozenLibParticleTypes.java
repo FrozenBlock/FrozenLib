@@ -25,7 +25,7 @@ import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
-import net.frozenblock.lib.platform.api.registry.FrozenParticleTypes;
+import net.frozenblock.lib.platform.api.registry.ParticleTypeHelper;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -33,7 +33,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
-public class FrozenLibParticleTypes {
+public final class FrozenLibParticleTypes {
 	private static final FrozenDeferredRegister<ParticleType<?>> REGISTER = FrozenDeferredRegister.create(
 		Registries.PARTICLE_TYPE,
 		FrozenLibConstants.MOD_ID
@@ -41,38 +41,38 @@ public class FrozenLibParticleTypes {
 
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ControlledNoteParticleOptions>> CONTROLLED_NOTE = register("controlled_note",
 		false,
-		particleType -> ControlledNoteParticleOptions.CODEC,
-		particleType -> ControlledNoteParticleOptions.STREAM_CODEC
+		type -> ControlledNoteParticleOptions.CODEC,
+		type -> ControlledNoteParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> SMOKE_COLORED = register("smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> LARGE_SMOKE_COLORED = register("large_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_COSY_SMOKE_COLORED = register("campfire_cosy_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<ColoredSmokeParticleOptions>> CAMPFIRE_SIGNAL_SMOKE_COLORED = register("campfire_signal_smoke_colored",
 		false,
-		particleType -> ColoredSmokeParticleOptions.CODEC,
-		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+		type -> ColoredSmokeParticleOptions.CODEC,
+		type -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_SMALL = register("wind_small",
 		false,
-		particleType -> WindParticleOptions.CODEC,
-		particleType -> WindParticleOptions.STREAM_CODEC
+		type -> WindParticleOptions.CODEC,
+		type -> WindParticleOptions.STREAM_CODEC
 	);
 	public static final FrozenHolder<ParticleType<?>, ParticleType<WindParticleOptions>> WIND_MEDIUM = register("wind_medium",
 		false,
-		particleType -> WindParticleOptions.CODEC,
-		particleType -> WindParticleOptions.STREAM_CODEC
+		type -> WindParticleOptions.CODEC,
+		type -> WindParticleOptions.STREAM_CODEC
 	);
 
 	static {
@@ -82,7 +82,7 @@ public class FrozenLibParticleTypes {
 	public static void init() {}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name, boolean alwaysShow) {
-		return REGISTER.register(name, () -> FrozenParticleTypes.simple(alwaysShow));
+		return REGISTER.register(name, () -> ParticleTypeHelper.simple(alwaysShow));
 	}
 
 	private static FrozenHolder<ParticleType<?>, SimpleParticleType> register(String name) {
@@ -90,11 +90,11 @@ public class FrozenLibParticleTypes {
 	}
 
 	private static <T extends ParticleOptions> FrozenHolder<ParticleType<?>, ParticleType<T>> register(
-		String id,
+		String name,
 		boolean alwaysShow,
 		Function<ParticleType<T>, MapCodec<T>> codec,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return REGISTER.register(id, () -> FrozenParticleTypes.complex(alwaysShow, codec, streamCodec));
+		return REGISTER.register(name, () -> ParticleTypeHelper.complex(alwaysShow, codec, streamCodec));
 	}
 }

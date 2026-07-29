@@ -33,3 +33,35 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
   - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
 - Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.
+- Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+- Migrated Serializable Item Cooldowns to Data Attachments and optimized its network performance.
+- Added the `frozenlib:variant_spawn_injection` Dynamic Registry, with the following format:
+  - `registry`: The id of the variant registry.
+  - `variant`: The id of the variant to inject custom spawn conditions into.
+  - `spawn_conditions`: The spawn conditions to inject into the variant, using the same format as the `spawn_conditions` field in other mob variants.
+- Removed the `WolfVariantBiomeRegistry` class, as Variant Spawn Injections supercede its functionality.
+- Added the following new Spawn Conditions (used for selecting mob variants within the `spawn_conditions` field,) with the following formats:
+  - `frozenlib:config`Predicate to check.
+  - `frozenlib:compound`
+    - `conditions`: A list of Spawn Conditions that all must be met.
+- Added the `frozenlib:visual/lightmap_brightness` Environment Attribute, controlling the brightness of the lightmap.
+  - Can be any value between 0 and 1.
+- Added the `PistonEvents` class, containing the following events:
+  - `DETERMINE_BLOCK_ENTITY_PUSH_RESULT`: Determines whether a Block with a Block Entity can be pushed by a Piston.
+  - `DETERMINE_BLOCK_STICKINESS`: Determines whether a Block is considered sticky when pushed by a Piston.
+    - This will not enable any behavior on its own, and must be used in tandem with the `TRY_STICK_BLOCKS_TOGETHER` event to achieve the intended behavior.
+  - `TRY_STICK_BLOCKS_TOGETHER`: Determines whether two Blocks can stick together when pushed by a Piston.
+    - This will not enable any behavior on its own, and must be used in tandem with the `DETERMINE_BLOCK_STICKINESS` event to achieve the intended behavior.
+  - `ON_MOVING_BLOCK_SET`: Triggers when a moved Block is placed.
+  - `ON_PUSH_FAIL`: Triggers when Piston structure resolution fails.
+- Renamed `PushableBlockEntityUtil` to `PistonPushUtil` and added a few new methods to help with `PistonEvents` usage.
+- Updated and renamed `BooleanPropertySculkBehavior` to `BlockStatePropertySculkBehavior`, with the additional functionality of being able to use any Block State Property.
+- Added the `frozenlib:selector` Config Predicate, with the following format:
+  - `selector`: The Config Predicate used to determine which predicate to select.
+  - `when_true`: The Config Predicate to select when `selector` returns true.
+  - `when_false`: The Config Predicate to select when `selector` returns false.
+- Added the `frozenlib_with_fallback` Config Predicate, with the following format:
+  - `entry`: The required Config Entry's id.
+  - `predicate`: The Config Predicate to use if the required Config Entry is present.
+  - `fallback`: The fallback value to use if the required Config Entry is not present.
+- Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.

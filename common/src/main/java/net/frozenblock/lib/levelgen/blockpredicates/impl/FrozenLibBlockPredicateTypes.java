@@ -32,7 +32,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 
-public class FrozenLibBlockPredicateTypes {
+public final class FrozenLibBlockPredicateTypes {
 	private static final FrozenDeferredRegister<BlockPredicateType<?>> REGISTER = FrozenDeferredRegister.create(
 		Registries.BLOCK_PREDICATE_TYPE,
 		FrozenLibConstants.MOD_ID

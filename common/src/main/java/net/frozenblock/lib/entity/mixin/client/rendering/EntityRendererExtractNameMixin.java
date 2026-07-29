@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.entity.mixin.client.rendering;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
@@ -29,19 +28,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.ChatFormatting;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(EntityRenderer.class)
 public class EntityRendererExtractNameMixin<T extends Entity, S extends EntityRenderState> {
 
-	@Inject(
-		method = "extractRenderState",
-		at = @At("TAIL")
-	)
-	private void frozenLib$storeEntityName(T entity, S state, float partialTicks, CallbackInfo ci) {
-		if (entity != null) {
-			final String name = ChatFormatting.stripFormatting(entity.getDisplayName().getString());
-			state.frozenLib$setData(FrozenLibRenderStateDataKeys.ENTITY_NAME, name);
-		}
+	@Inject(method = "extractRenderState", at = @At("TAIL"))
+	private void frozenLib$storeEntityName(T entity, S state, float partialTicks, CallbackInfo info) {
+		if (entity == null) return;
+		final String name = ChatFormatting.stripFormatting(entity.getDisplayName().getString());
+		state.frozenLib$setData(FrozenLibRenderStateDataKeys.ENTITY_NAME, name);
 	}
-
 }

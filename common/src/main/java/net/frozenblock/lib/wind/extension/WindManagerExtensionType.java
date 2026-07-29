@@ -38,7 +38,7 @@ public interface WindManagerExtensionType<E extends WindManagerExtension> {
 
 	static void init() {}
 
-	public static <E extends WindManagerExtension> WindManagerExtensionType<E> register(
+	static <E extends WindManagerExtension> WindManagerExtensionType<E> register(
 		Identifier id,
 		int priority,
 		Supplier<E> supplier,

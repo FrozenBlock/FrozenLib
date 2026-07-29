@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -33,7 +33,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * Used to both request and transfer files between both the client and server.
@@ -66,7 +65,6 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	 * @return A {@link List} of new file transfer packets.
 	 * @throws IOException if file reading fails.
 	 */
-	@Unmodifiable
 	public static FileTransferPacket create(String destPath, File file) throws IOException {
 		final byte[] data = readFile(file);
 		return new FileTransferPacket(destPath, file.getName(), List.of(), false, data);
@@ -109,7 +107,7 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
-		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, create(destPath, file));
+		NetworkingHelper.sendToPlayer(player, create(destPath, file));
 	}
 
 	@ApiStatus.Internal

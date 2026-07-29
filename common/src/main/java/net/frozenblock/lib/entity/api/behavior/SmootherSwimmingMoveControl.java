@@ -25,14 +25,14 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 /**
  * A smoother version of {@link net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl}.
  */
-public class SmootherSwimmingMoveControl extends MoveControl {
+public class SmootherSwimmingMoveControl<T extends Mob> extends MoveControl<T> {
 	private final float maxTurnX;
 	private final float maxTurnY;
 	private final float inWaterSpeedModifier;
 	private final float outsideWaterSpeedModifier;
 	private final boolean applyGravity;
 
-	public SmootherSwimmingMoveControl(Mob mob, float maxTurnX, float maxTurnY, float inWaterSpeedModifier, float outsideWaterSpeedModifier, boolean applyGravity) {
+	public SmootherSwimmingMoveControl(T mob, float maxTurnX, float maxTurnY, float inWaterSpeedModifier, float outsideWaterSpeedModifier, boolean applyGravity) {
 		super(mob);
 		this.maxTurnX = maxTurnX;
 		this.maxTurnY = maxTurnY;

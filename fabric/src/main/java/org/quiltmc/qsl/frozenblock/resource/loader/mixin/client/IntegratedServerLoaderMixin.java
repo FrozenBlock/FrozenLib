@@ -37,9 +37,9 @@ public abstract class IntegratedServerLoaderMixin {
 
 	@Inject(method = "loadWorldDataBlocking", at = @At("HEAD"))
 	private <D, R> void onStartDataPackLoad(
-		WorldLoader.PackConfig dataPackConfig,
-		WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
-		WorldLoader.ResultFactory<D, R> resultFactory,
+		WorldLoader.PackConfig packConfig,
+		WorldLoader.WorldDataSupplier<D> worldDataGetter,
+		WorldLoader.ResultFactory<D, R> worldDataSupplier,
 		CallbackInfoReturnable<R> info
 	) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
@@ -48,9 +48,9 @@ public abstract class IntegratedServerLoaderMixin {
 	@ModifyReturnValue(method = "loadWorldDataBlocking", at = @At("RETURN"))
 	private <D, R> R onEndDataPackLoad(
 		R original,
-		WorldLoader.PackConfig dataPackConfig,
-		WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
-		WorldLoader.ResultFactory<D, R> resultFactory
+		WorldLoader.PackConfig packConfig,
+		WorldLoader.WorldDataSupplier<D> worldDataGetter,
+		WorldLoader.ResultFactory<D, R> worldDataSupplier
 	) {
 		if (original instanceof WorldStem worldStem) {
 			ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, worldStem.resourceManager(), null);

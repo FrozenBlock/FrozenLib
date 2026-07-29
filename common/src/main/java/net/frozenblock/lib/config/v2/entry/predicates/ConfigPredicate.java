@@ -24,11 +24,13 @@ import java.util.function.Supplier;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ID;
+import net.frozenblock.lib.entity.api.variant.ConfigCheck;
 import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
@@ -135,6 +137,18 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return exists(entry.id());
 	}
 
+	static ConfigPredicate selector(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
+		return new SelectorPredicate(selector, whenTrue, whenFalse);
+	}
+
+	static ConfigPredicate withFallback(ID id, ConfigPredicate predicate, ConfigPredicate fallback) {
+		return WithFallbackPredicate.of(id, predicate, fallback);
+	}
+
+	static ConfigPredicate withFallback(ConfigEntry<?> entry, ConfigPredicate predicate, ConfigPredicate fallback) {
+		return withFallback(entry.id(), predicate, fallback);
+	}
+
 	static ConfigPredicate not(ConfigPredicate predicate) {
 		return new NotPredicate(predicate);
 	}
@@ -157,5 +171,9 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 
 	default SurfaceRules.ConditionSource asConditionSource() {
 		return new ConfigConditionSource(this);
+	}
+
+	default SpawnCondition asSpawnCondition() {
+		return new ConfigCheck(this);
 	}
 }

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.item.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.item.api.FuelRegistry;
+import net.frozenblock.lib.item.api.registry.FuelRegistry;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.furnace.FurnaceFuelBurnTimeEvent;

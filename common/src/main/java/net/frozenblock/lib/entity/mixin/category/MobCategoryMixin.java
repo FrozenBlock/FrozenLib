@@ -19,9 +19,9 @@ package net.frozenblock.lib.entity.mixin.category;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import net.frozenblock.lib.entity.api.category.FrozenMobCategories;
-import net.frozenblock.lib.entity.impl.category.FrozenMobCategory;
-import net.frozenblock.lib.platform.FrozenLibMixinPlatformUtils;
+import java.util.concurrent.atomic.AtomicInteger;
+import net.frozenblock.lib.entity.api.category.MobCategoryApiEntrypoint;
+import net.frozenblock.lib.entrypoint.api.EntrypointHelper;
 import net.minecraft.world.entity.MobCategory;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
@@ -38,9 +38,9 @@ public class MobCategoryMixin {
 
 	@SuppressWarnings("InvokerTarget")
 	@Invoker("<init>")
-	private static MobCategory newType(
+	private static MobCategory frozenLib$newMobCategory(
 		String internalName,
-		int internalId,
+		int ordinal,
 		String name,
 		String debugAbbreviation,
 		int max,
@@ -69,34 +69,36 @@ public class MobCategoryMixin {
 	private static void frozenLib$addCustomCategories(CallbackInfo info) {
 		final var categories = new ArrayList<>(Arrays.asList($VALUES));
 		final var last = categories.getLast();
-		int currentOrdinal = last.ordinal();
+		final AtomicInteger currentOrdinal = new AtomicInteger(last.ordinal());
 
-		final ArrayList<String> internalIds = new ArrayList<>();
-		for (MobCategory category : categories) internalIds.add(category.name());
+		// Store all internal names to check for duplicates later
+		final ArrayList<String> allInternalNames = new ArrayList<>();
+		for (MobCategory category : categories) allInternalNames.add(category.name());
 
-		final var newCategories = FrozenLibMixinPlatformUtils.MOB_CATEGORY.gatherMobCategories();
+		// Add new categories
+		final MobCategoryApiEntrypoint.Context context = new MobCategoryApiEntrypoint.Context();
+		EntrypointHelper.forEachEntrypoint(MobCategoryApiEntrypoint.class, entrypoint -> entrypoint.add(context));
 
-		for (FrozenMobCategory category : newCategories) {
-			final String namespace = category.key().getNamespace();
-			final String path = category.key().getPath();
-			final StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
-			internalId.append(path.toUpperCase());
-			if (internalIds.contains(internalId.toString())) throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
+		context.forEach(mobCategory -> {
+			final String internalName = mobCategory.createNameWithModId("$").toUpperCase();
+			if (internalName.equals("$")) throw new IllegalStateException("Cannot add MobCategory with empty internal name!");
+			if (allInternalNames.stream().anyMatch(string -> string.equals(internalName))) {
+				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalName + "!");
+			}
 
-			currentOrdinal += 1;
-			final MobCategory addedCategory = newType(
-				internalId.toString(),
-				currentOrdinal,
-				namespace + path,
-				category.debugAbbreviation(),
-				category.max(),
-				category.isFriendly(),
-				category.isPersistent(),
-				category.despawnDistance()
+			final MobCategory newMobCategory = frozenLib$newMobCategory(
+				internalName,
+				currentOrdinal.incrementAndGet(),
+				mobCategory.createNameWithModId(":").toLowerCase(),
+				mobCategory.debugAbbreviation(),
+				mobCategory.max(),
+				mobCategory.isFriendly(),
+				mobCategory.isPersistent(),
+				mobCategory.despawnDistance()
 			);
-			categories.add(addedCategory);
-			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
-		}
+			mobCategory.onCreated(newMobCategory);
+			categories.add(newMobCategory);
+		});
 
 		$VALUES = categories.toArray(new MobCategory[0]);
 	}

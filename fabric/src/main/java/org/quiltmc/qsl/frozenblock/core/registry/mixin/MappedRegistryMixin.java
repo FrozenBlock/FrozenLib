@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
@@ -56,7 +56,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 		ResourceKey<? extends Registry<V>> key, Lifecycle initialLifecycle, boolean intrusiveHolders, CallbackInfo info
 	) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
-		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
+		this.frozenLib_quilt$entryAddedEvent = EventRegistry.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
 			for (var callback : callbacks) callback.onAdded(context);
 		});
 	}

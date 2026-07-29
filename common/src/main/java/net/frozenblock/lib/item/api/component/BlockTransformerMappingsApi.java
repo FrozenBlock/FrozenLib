@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.world.item.component.BlockTransformerMappings;
 
@@ -37,7 +37,7 @@ public class BlockTransformerMappingsApi {
 	/**
 	 * An event used to modify the Shovel's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyShovelBlockTransformer> MODIFY_SHOVEL = FrozenEvents.createEnvironmentEvent(ModifyShovelBlockTransformer.class,
+	public static final Event<ModifyShovelBlockTransformer> MODIFY_SHOVEL = EventRegistry.createEnvironmentEvent(ModifyShovelBlockTransformer.class,
 		callbacks -> (context) -> {
 			for (var callback : callbacks) callback.modifyShovelBlockTransformer(context);
 	});
@@ -45,7 +45,7 @@ public class BlockTransformerMappingsApi {
 	/**
 	 * An event used to modify the Axe's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyAxeBlockTransformer> MODIFY_AXE = FrozenEvents.createEnvironmentEvent(ModifyAxeBlockTransformer.class,
+	public static final Event<ModifyAxeBlockTransformer> MODIFY_AXE = EventRegistry.createEnvironmentEvent(ModifyAxeBlockTransformer.class,
 		callbacks -> (context) -> {
 			for (var callback : callbacks) callback.modifyAxeBlockTransformer(context);
 	});
@@ -53,7 +53,7 @@ public class BlockTransformerMappingsApi {
 	/**
 	 * An event used to modify the Hoe's {@link BlockTransformer}s.
 	 */
-	public static final Event<ModifyHoeBlockTransformer> MODIFY_HOE = FrozenEvents.createEnvironmentEvent(ModifyHoeBlockTransformer.class,
+	public static final Event<ModifyHoeBlockTransformer> MODIFY_HOE = EventRegistry.createEnvironmentEvent(ModifyHoeBlockTransformer.class,
 		callbacks -> (context) -> {
 			for (var callback : callbacks) callback.modifyHoeBlockTransformer(context);
 	});

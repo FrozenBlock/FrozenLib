@@ -17,20 +17,27 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class BlockEntityLifecycleEvents {
-
-	public static final Event<Load> BLOCK_ENTITY_LOAD = FrozenEvents.createEnvironmentEvent(Load.class, callbacks -> (blockEntity, level) -> {
+@UtilityClass
+public final class BlockEntityLifecycleEvents {
+	/**
+	 * The event that is triggered when a block entity is loaded.
+	 */
+	public static final Event<Load> BLOCK_ENTITY_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (blockEntity, level) -> {
 		for (Load callback : callbacks) {
 			callback.onLoad(blockEntity, level);
 		}
 	});
 
-	public static final Event<Unload> BLOCK_ENTITY_UNLOAD = FrozenEvents.createEnvironmentEvent(Unload.class, callbacks -> (blockEntity, level) -> {
+	/**
+	 * The event that is triggered when a block entity is unloaded.
+	 */
+	public static final Event<Unload> BLOCK_ENTITY_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (blockEntity, level) -> {
 		for (Unload callback : callbacks) {
 			callback.onUnload(blockEntity, level);
 		}

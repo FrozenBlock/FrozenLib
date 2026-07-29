@@ -131,26 +131,26 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 	private class WeatherContextImpl implements WeatherContext {
 		@Override
 		public void setPrecipitation(boolean hasPrecipitation) {
-			var settings = BiomeInterface.class.cast(biome).frozenLib$getClimateSettings();
-			BiomeInterface.class.cast(biome).frozenLib$setClimateSettings(new Biome.ClimateSettings(hasPrecipitation, settings.temperature(), settings.temperatureModifier(), settings.downfall()));
+			var settings = biome.frozenLib$getClimateSettings();
+			biome.frozenLib$setClimateSettings(new Biome.ClimateSettings(hasPrecipitation, settings.temperature(), settings.temperatureModifier(), settings.downfall()));
 		}
 
 		@Override
 		public void setTemperature(float temperature) {
-			var settings = BiomeInterface.class.cast(biome).frozenLib$getClimateSettings();
-			BiomeInterface.class.cast(biome).frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), temperature, settings.temperatureModifier(), settings.downfall()));
+			var settings = biome.frozenLib$getClimateSettings();
+			biome.frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), temperature, settings.temperatureModifier(), settings.downfall()));
 		}
 
 		@Override
 		public void setTemperatureModifier(Biome.TemperatureModifier temperatureModifier) {
-			var settings = BiomeInterface.class.cast(biome).frozenLib$getClimateSettings();
-			BiomeInterface.class.cast(biome).frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), settings.temperature(), Objects.requireNonNull(temperatureModifier), settings.downfall()));
+			var settings = biome.frozenLib$getClimateSettings();
+			biome.frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), settings.temperature(), Objects.requireNonNull(temperatureModifier), settings.downfall()));
 		}
 
 		@Override
 		public void setDownfall(float downfall) {
-			var settings = BiomeInterface.class.cast(biome).frozenLib$getClimateSettings();
-			BiomeInterface.class.cast(biome).frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), settings.temperature(), settings.temperatureModifier(), downfall));
+			var settings = biome.frozenLib$getClimateSettings();
+			biome.frozenLib$setClimateSettings(new Biome.ClimateSettings(settings.hasPrecipitation(), settings.temperature(), settings.temperatureModifier(), downfall));
 		}
 	}
 
@@ -187,7 +187,7 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 
 		@Override
 		public void setWaterColor(int color) {
-			BiomeSpecialEffectsInterface.class.cast(effects).frozenLib$setWaterColor(color);
+			effects.frozenLib$setWaterColor(color);
 		}
 
 		@Override
@@ -202,22 +202,22 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 
 		@Override
 		public void setFoliageColorOverride(Optional<Integer> color) {
-			BiomeSpecialEffectsInterface.class.cast(effects).frozenLib$setFoliageColorOverride(Objects.requireNonNull(color));
+			effects.frozenLib$setFoliageColorOverride(Objects.requireNonNull(color));
 		}
 
 		@Override
 		public void setDryFoliageColorOverride(Optional<Integer> color) {
-			BiomeSpecialEffectsInterface.class.cast(effects).frozenLib$setDryFoliageColorOverride(Objects.requireNonNull(color));
+			effects.frozenLib$setDryFoliageColorOverride(Objects.requireNonNull(color));
 		}
 
 		@Override
 		public void setGrassColorOverride(Optional<Integer> color) {
-			BiomeSpecialEffectsInterface.class.cast(effects).frozenLib$setGrassColorOverride(Objects.requireNonNull(color));
+			effects.frozenLib$setGrassColorOverride(Objects.requireNonNull(color));
 		}
 
 		@Override
 		public void setGrassColorModifier(BiomeSpecialEffects.GrassColorModifier colorModifier) {
-			BiomeSpecialEffectsInterface.class.cast(effects).frozenLib$setGrassColorModifier(Objects.requireNonNull(colorModifier));
+			effects.frozenLib$setGrassColorModifier(Objects.requireNonNull(colorModifier));
 		}
 
 		@Override

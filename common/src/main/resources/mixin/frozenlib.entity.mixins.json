@@ -9,16 +9,18 @@
   "mixins": [
     "AbstractFishMixin",
     "EntityMixin",
-    "VariantUtilsMixin",
+    "PriorityProviderMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin",
     "pathfinding.EntityTypeMixin",
-    "pathfinding.WalkNodeEvaluatorMixin"
+    "pathfinding.WalkNodeEvaluatorMixin",
+    "suffocation.LivingEntityMixin"
   ],
   "client": [
     "client.rendering.EntityRendererExtractNameMixin",
-    "client.rendering.LivingEntityRendererMixin"
+    "client.rendering.LivingEntityRendererMixin",
+    "client.suffocation.HudMixin"
   ]
 }

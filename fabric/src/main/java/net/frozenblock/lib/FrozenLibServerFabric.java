@@ -18,13 +18,12 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.integration.api.ModIntegrations;
+import net.frozenblock.lib.platform.api.ServerOnly;
 
-@Environment(EnvType.SERVER)
+@ServerOnly
 public class FrozenLibServerFabric implements DedicatedServerModInitializer {
 
     @Override

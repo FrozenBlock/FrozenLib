@@ -17,6 +17,11 @@
 
 package net.frozenblock.lib.renderer.impl;
 
+import net.frozenblock.lib.platform.api.ClientOnly;
+
+@ClientOnly
 public interface ModelPartInvertInterface {
-	void frozenLib$setInverted();
+	default void frozenLib$setInverted() {
+		throw new AssertionError();
+	}
 }

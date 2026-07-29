@@ -19,19 +19,15 @@ package net.frozenblock.lib.config.v2.impl.network;
 
 import java.util.Collection;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.networking.FrozenLibNetworking;
-import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.minecraft.client.Minecraft;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.api.PlayerLookup;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -40,11 +36,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @since 2.4
  */
+@ApiStatus.Internal
 public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements CustomPacketPayload {
 	private static final ConfigEntrySyncPacket DUMMY_PACKET = new ConfigEntrySyncPacket(null, null);
 	public static final Type<ConfigEntrySyncPacket<?>> PACKET_TYPE = new Type<>(FrozenLibConstants.id("config_entry_sync_packet"));
@@ -70,11 +68,11 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
 		if (player == null) return false;
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
-		if (!FrozenLibNetworking.connectedToServer()) return false;
+		if (ModLoader.isServer()) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		if (!NetworkingHelper.connectedToServer()) return false;
 
-		final boolean isHost = serverSide && FrozenLibNetworking.isLocalPlayer(player);
-		return FrozenLibNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		final boolean isHost = serverSide && NetworkingHelper.isLocalPlayer(player);
+		return NetworkingHelper.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 	}
 
 	public void write(FriendlyByteBuf buf) {
@@ -93,7 +91,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		if (sender != null) {
 			// C2S logic
 			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON SERVER: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
-			if (FrozenLibNetworking.isLocalPlayer(sender)) {
+			if (NetworkingHelper.isLocalPlayer(sender)) {
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(entry));
 				}
@@ -101,7 +99,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 				entry.setValue(packet.value());
 			}
 
-			if (!FrozenLibNetworking.connectedToIntegratedServer()) entry.configData().save();
+			if (!NetworkingHelper.connectedToIntegratedServer()) entry.configData().save();
 		} else {
 			// S2C logic
 			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON CLIENT: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
@@ -111,17 +109,17 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
     }
 
 	public static void sendDataS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
-		if (FrozenLibNetworking.isLocalPlayer(player)) return;
+		if (NetworkingHelper.isLocalPlayer(player)) return;
 		for (ConfigData<?> entry : entries) sendEntryS2C(player, entry.entries().values());
 	}
 
 	public static void sendEntryS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
-		if (FrozenLibNetworking.isLocalPlayer(player)) return;
+		if (NetworkingHelper.isLocalPlayer(player)) return;
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
 			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.get());
-			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, packet);
+			NetworkingHelper.sendToPlayer(player, packet);
 		}
 
 		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
@@ -139,45 +137,6 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	public static void sendS2C(ServerPlayer player) {
 		sendEntryS2C(player, ConfigV2Registry.allConfigEntries());
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static void sendC2S(Iterable<ConfigEntry<?>> entries) {
-		if (!FrozenLibNetworking.connectedToServer()) return;
-
-		for (ConfigEntry<?> entry : entries) {
-			if (!entry.isSyncable()) continue;
-			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.getActual());
-			FrozenLibInitPlatformUtils.NETWORKING.sendToServer(packet);
-		}
-
-		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
-
-		boolean hadEntryBefore = false;
-		final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT ON CLIENT ENV:");
-		for (ConfigEntry<?> entry : entries) {
-			if (!entry.isSyncable()) continue;
-			builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
-			hadEntryBefore = true;
-		}
-
-		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static void sendC2S() {
-		sendC2S(ConfigV2Registry.allConfigEntries());
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static <T> void trySendC2S(ConfigEntry<T> config) {
-		trySendC2S(List.of(config));
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
-		if (!hasPermissionsToSendSync(Minecraft.getInstance().player, false)) return;
-		sendC2S(entries);
 	}
 
 	@Override

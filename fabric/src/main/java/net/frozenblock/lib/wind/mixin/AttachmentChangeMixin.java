@@ -18,7 +18,7 @@
 package net.frozenblock.lib.wind.mixin;
 
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.minecraft.world.level.Level;

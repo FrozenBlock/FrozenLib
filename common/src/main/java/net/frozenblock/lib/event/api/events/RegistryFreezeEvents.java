@@ -20,7 +20,7 @@ package net.frozenblock.lib.event.api.events;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +32,7 @@ public class RegistryFreezeEvents {
 	 * <p>
 	 * The registry will not be frozen when this is invoked.
 	 */
-	public static final Event<StartRegistryFreeze> START_REGISTRY_FREEZE = FrozenEvents.createEnvironmentEvent(StartRegistryFreeze.class,
+	public static final Event<StartRegistryFreeze> START_REGISTRY_FREEZE = EventRegistry.createEnvironmentEvent(StartRegistryFreeze.class,
 		callbacks -> (registry, allRegistries) -> {
 		for (var callback : callbacks) callback.onStartRegistryFreeze(registry, allRegistries);
 	});
@@ -42,7 +42,7 @@ public class RegistryFreezeEvents {
 	 * <p>
 	 * The registry will be frozen when this is invoked.
 	 */
-	public static final Event<EndRegistryFreeze> END_REGISTRY_FREEZE = FrozenEvents.createEnvironmentEvent(EndRegistryFreeze.class,
+	public static final Event<EndRegistryFreeze> END_REGISTRY_FREEZE = EventRegistry.createEnvironmentEvent(EndRegistryFreeze.class,
 		callbacks -> (registry, allRegistries) -> {
 		for (var callback : callbacks) callback.onEndRegistryFreeze(registry, allRegistries);
 	});

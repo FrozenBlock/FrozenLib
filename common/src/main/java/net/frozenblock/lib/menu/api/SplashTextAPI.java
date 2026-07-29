@@ -20,13 +20,12 @@ package net.frozenblock.lib.menu.api;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Unmodifiable;
 
 @UtilityClass
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class SplashTextAPI {
 	private static final List<Identifier> SPLASH_FILES = new ArrayList<>();
 	private static final List<String> ADDITIONS = new ArrayList<>();

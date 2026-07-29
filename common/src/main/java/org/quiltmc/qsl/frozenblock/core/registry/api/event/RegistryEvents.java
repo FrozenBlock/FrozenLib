@@ -18,10 +18,11 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -29,7 +30,6 @@ import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
-import java.util.List;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.
@@ -55,7 +55,7 @@ public class RegistryEvents {
 	 * the combined registry manager, and each layer holds different registries.
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
-	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
+	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = EventRegistry.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
 		callbacks -> context -> {
 			for (var callback : callbacks) callback.onDynamicRegistrySetup(context);
 		}
@@ -82,7 +82,7 @@ public class RegistryEvents {
 	 * the combined registry manager, and each layer holds different registries.
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
-	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
+	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = EventRegistry.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
 		callbacks -> registryManager -> {
 			for (var callback : callbacks) callback.onDynamicRegistryLoaded(registryManager);
 		}

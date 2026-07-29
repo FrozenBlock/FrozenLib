@@ -17,15 +17,14 @@
 
 package net.frozenblock.lib.renderer.mixin.camera;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.impl.CameraRenderStateInterface;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(CameraRenderState.class)
 public class CameraRenderStateMixin implements CameraRenderStateInterface {
 

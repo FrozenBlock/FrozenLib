@@ -17,14 +17,19 @@
 
 package net.frozenblock.lib.renderer.mixin;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
+import net.frozenblock.lib.platform.api.ClientOnly;
+import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.level.LevelRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Environment(EnvType.CLIENT)
-@Mixin(EntityRenderState.class)
+@ClientOnly
+@Mixin({
+	EntityRenderState.class,
+	MovingBlockRenderState.class,
+	LevelRenderState.class
+})
 public abstract class FrozenLibRenderStateMixin implements FrozenLibRenderState {
 	// literally only here for interface injection
 }

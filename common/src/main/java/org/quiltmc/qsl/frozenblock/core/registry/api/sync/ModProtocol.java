@@ -29,13 +29,12 @@ import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.frozenblock.lib.event.api.EventRegistry;
+import net.frozenblock.lib.platform.ModLoader;
 import org.slf4j.Logger;
 
 public class ModProtocol {
-	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = FrozenEvents.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
+	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = EventRegistry.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
 		for (var callback : callbacks) callback.load();
 	});
 	public static final List<ModProtocolDef> REQUIRED = new ArrayList<>();
@@ -52,7 +51,7 @@ public class ModProtocol {
 		LOAD_MOD_PROTOCOL.invoker().load();
 
 		// TODO: see if ModProtocol is possible on NeoForge
-		for (LoaderHelper.ModEntry mod : FrozenLibEarlyPlatformUtils.LOADER.getAllMods()) {
+		for (ModLoader.ModEntry mod : ModLoader.getAllMods()) {
 			final var frozenRegistryOpt = mod.getCustomData("frozenlib_registry");
 			if (frozenRegistryOpt.isEmpty()) continue;
 
@@ -90,7 +89,7 @@ public class ModProtocol {
 		}
 	}
 
-	private static IntList decodeVersion(String path, LoaderHelper.ModEntry mod, JsonElement value) {
+	private static IntList decodeVersion(String path, ModLoader.ModEntry mod, JsonElement value) {
 		if (value == null || value.isJsonNull()) {
 			invalidEntryType(path, mod, "NUMBER", "NULL");
 			return null;
@@ -129,12 +128,12 @@ public class ModProtocol {
 		return null;
 	}
 
-	private static void invalidEntryType(String path, LoaderHelper.ModEntry mod, String expected, String found) {
+	private static void invalidEntryType(String path, ModLoader.ModEntry mod, String expected, String found) {
 		LOGGER.warn("Mod {} ({}) contains invalid 'frozenlib_registry.mod_protocol{}' entry! Expected '{}', found '{}'",
 			path, mod.getName(), mod.getId(), expected, found);
 	}
 
-	private static void negativeEntry(String path, LoaderHelper.ModEntry mod, int i) {
+	private static void negativeEntry(String path, ModLoader.ModEntry mod, int i) {
 		LOGGER.warn("Mod {} ({}) contains invalid 'frozenlib_registry.mod_protocol{}' entry! Protocol requires non-negative integer, found '{}'!",
 			path, mod.getName(), mod.getId(), i);
 	}

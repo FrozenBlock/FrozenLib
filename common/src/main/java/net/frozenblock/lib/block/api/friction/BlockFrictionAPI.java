@@ -19,10 +19,11 @@ package net.frozenblock.lib.block.api.friction;
 
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 
 public class BlockFrictionAPI {
-	public static final Event<FrictionModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
+
+	public static final Event<FrictionModification> MODIFICATIONS = EventRegistry.createEnvironmentEvent(
 		FrictionModification.class,
 		callbacks -> context -> {
 			for (FrictionModification modification : callbacks) modification.modifyFriction(context);

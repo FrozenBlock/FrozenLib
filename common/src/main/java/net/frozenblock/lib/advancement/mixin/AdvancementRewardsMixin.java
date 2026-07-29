@@ -40,6 +40,11 @@ public class AdvancementRewardsMixin implements AdvancementRewardsInterface {
 	@Shadow
 	private List<ResourceKey<Recipe<?>>> recipes;
 
+	@Mutable
+	@Shadow
+	@Final
+	private int experience;
+
 	@Override
 	public List<ResourceKey<LootTable>> frozenLib$getLoot() {
 		return this.loot;
@@ -58,5 +63,15 @@ public class AdvancementRewardsMixin implements AdvancementRewardsInterface {
 	@Override
 	public void frozenLib$setRecipes(List<ResourceKey<Recipe<?>>> recipes) {
 		this.recipes = recipes;
+	}
+
+	@Override
+	public int frozenLib$getExperience() {
+		return this.experience;
+	}
+
+	@Override
+	public void frozenLib$setExperience(int experience) {
+		this.experience = experience;
 	}
 }

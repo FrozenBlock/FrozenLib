@@ -49,5 +49,4 @@ public class BreathAirGoalMixin {
 	public boolean frozenLib$accountForWaterLikeBubbleColumns(BlockState state, Object block, Operation<Boolean> operation) {
 		return operation.call(state, block) || WaterLikeBlock.hasBubbleColumn(state);
 	}
-
 }

@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.entrypoint.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "net.frozenblock.lib.entrypoint.mixin.FrozenLibEarlyEntrypointPlugin",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": []
+}

@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireTypes;
+import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibDimensionTypeTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
@@ -42,6 +43,18 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
 		builder.add(FrozenLibRegistries.FIRE_TYPE, FireTypes::bootstrap);
+		/*
+		builder.add(FrozenLibRegistries.VARIANT_SPAWN_INJECTION, context -> {
+			VariantSpawnInjection.register(
+				context,
+				FrozenLibConstants.id("test"),
+				Registries.CHICKEN_VARIANT,
+				context.lookup(Registries.CHICKEN_VARIANT).getOrThrow(ChickenVariants.COLD),
+				SpawnPrioritySelectors.single(new BiomeCheck(context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_FOREST)), 5)
+			);
+		});
+		 */
+		builder.add(FrozenLibRegistries.SUFFOCATION_TYPE, SuffocationTypes::bootstrap);
 	}
 
 	@Override

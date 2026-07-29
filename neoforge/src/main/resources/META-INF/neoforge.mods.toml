@@ -10,9 +10,6 @@ config="mixin/frozenlib.advancement.mixins.json"
 config="mixin/frozenlib.block.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.brewing.mixins.json"
-
-[[mixins]]
 config="mixin/frozenlib.cape.mixins.json"
 
 [[mixins]]
@@ -21,6 +18,9 @@ requiredMods=["cloth_config"]
 
 [[mixins]]
 config="mixin/frozenlib.core.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.debug.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.data_attachment.mixins.json"
@@ -42,6 +42,9 @@ config="mixin/frozenlib.item.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.item.neoforge.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.levelgen.attribute.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.levelgen.biome.mixins.json"
@@ -80,7 +83,7 @@ config="mixin/frozenlib.registry.neoforge.mixins.json"
 config="mixin/frozenlib.renderer.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.resource_pack.mixins.json"
+config="mixin/frozenlib.resource.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.screenshake.mixins.json"
@@ -95,9 +98,6 @@ config="mixin/frozenlib.storage.mixins.json"
 config="mixin/frozenlib.tag.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.texture.mixins.json"
-
-[[mixins]]
 config="mixin/frozenlib.wind.neoforge.mixins.json"
 
 [[mods]]
@@ -106,7 +106,7 @@ config="mixin/frozenlib.wind.neoforge.mixins.json"
     displayName="FrozenLib"
     displayURL="https://www.modrinth.com/mod/FrozenLib"
     logoFile="assets/frozenlib/icon.png"
-    authors="Ethan Stokes, Luna"
+    authors="AViewFromTheTop/Lunade, Ethan Stokes"
     description='''
 A library that contains many tools for modders.
 Includes advanced math operations, noise sampling, advanced sounds, entity texture overrides,

@@ -20,12 +20,14 @@ package net.frozenblock.lib.file.transfer;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 
-public class FileTransferFilter {
+@UtilityClass
+public final class FileTransferFilter {
 	private static final List<String> WHITELISTED_FILE_EXTENSIONS = ImmutableList.of("png", "jpeg", "mcphoto", "json");
 	private static final List<String> WHITELISTED_SERVER_DESTINATIONS = new ArrayList<>();
 	private static final List<String> WHITELISTED_CLIENT_DESTINATIONS = new ArrayList<>();
@@ -71,5 +73,4 @@ public class FileTransferFilter {
 	public static void whitelistRequestPath(String destPath, boolean client) {
 		(client ? WHITELISTED_CLIENT_REQUEST_PATHS : WHITELISTED_SERVER_REQUEST_PATHS).add(destPath);
 	}
-
 }

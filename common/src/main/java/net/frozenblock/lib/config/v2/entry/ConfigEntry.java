@@ -28,14 +28,15 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncClientUtil;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.networking.PlayerLookup;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.PlayerLookup;
+import net.frozenblock.lib.platform.Game;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -113,15 +114,15 @@ public class ConfigEntry<T> implements Supplier<T> {
 		if (!this.isSyncable()) return;
 		if (this.syncedValue.isPresent() && this.syncedValue.get() == value) return;
 
-		if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) {
-			final MinecraftServer server = (MinecraftServer) FrozenLibInitPlatformUtils.GAME.getGameObject();
+		if (ModLoader.isServer()) {
+			final MinecraftServer server = (MinecraftServer) Game.getInstance();
 			if (server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
 				ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
 			}
 		} else {
 			//noinspection ConstantValue
-			if (Minecraft.getInstance() != null) ConfigEntrySyncPacket.trySendC2S(this);
+			if (Minecraft.getInstance() != null) ConfigEntrySyncClientUtil.trySendC2S(this);
 		}
 	}
 

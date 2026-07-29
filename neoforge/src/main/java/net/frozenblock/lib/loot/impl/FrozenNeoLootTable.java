@@ -17,14 +17,14 @@
 
 package net.frozenblock.lib.loot.impl;
 
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 /**
  * Lets a {@link LootTable} remember its own registry {@link Holder}, populated once the loot table registry
  * has finished loading. Used to resolve the {@code holder} parameter for
- * {@link FrozenLibLootTableEvents.ModifyDrops}.
+ * {@link LootTableEvents.ModifyDrops}.
  */
 public interface FrozenNeoLootTable {
 	void frozenLib$setHolder(Holder<LootTable> holder);

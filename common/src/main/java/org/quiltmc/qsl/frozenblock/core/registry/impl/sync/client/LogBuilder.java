@@ -20,14 +20,13 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import net.minecraft.ChatFormatting;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class LogBuilder {
 	private Component title;
 	private List<Component> entriesCurrent;

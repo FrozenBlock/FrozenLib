@@ -24,8 +24,8 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
-import net.frozenblock.lib.platform.api.data.DataAttachmentType;
+import net.frozenblock.lib.event.api.EventRegistry;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -49,7 +49,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link Player} interacts with a {@link SulfurCube}.
 	 */
-	public static final Event<Interact> ON_INTERACT = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Interact> ON_INTERACT = EventRegistry.createEnvironmentEvent(
 		Interact.class,
 		(callbacks) -> (sulfurCube, player, hand) -> {
 			for (var callback : callbacks) {
@@ -63,7 +63,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} clears its {@link SulfurCubeArchetype}-related data each tick.
 	 */
-	public static final Event<ArchetypeDataRemove> ON_ARCHETYPE_DATA_REMOVE = FrozenEvents.createEnvironmentEvent(
+	public static final Event<ArchetypeDataRemove> ON_ARCHETYPE_DATA_REMOVE = EventRegistry.createEnvironmentEvent(
 		ArchetypeDataRemove.class,
 		(callbacks) -> (sulfurCube, archetypeDataStorage) -> {
 			for (var callback : callbacks) callback.onArchetypeDataRemove(sulfurCube, archetypeDataStorage);
@@ -73,7 +73,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} applies its {@link SulfurCubeArchetype} each tick.
 	 */
-	public static final Event<ArchetypeApply> ON_ARCHETYPE_APPLY = FrozenEvents.createEnvironmentEvent(
+	public static final Event<ArchetypeApply> ON_ARCHETYPE_APPLY = EventRegistry.createEnvironmentEvent(
 		ArchetypeApply.class,
 		(callbacks) -> (sulfurCube, archetype, archetypeDataStorage) -> {
 			for (var callback : callbacks) callback.onArchetypeApply(sulfurCube, archetype, archetypeDataStorage);
@@ -83,7 +83,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} becomes powered or unpowered via redstone.
 	 */
-	public static final Event<Power> ON_POWER_CHANGED = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Power> ON_POWER_CHANGED = EventRegistry.createEnvironmentEvent(
 		Power.class,
 		(callbacks) -> (sulfurCube, powered) -> {
 			for (var callback : callbacks) callback.onPowerChanged(sulfurCube, powered);
@@ -93,7 +93,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} plays its push sound.
 	 */
-	public static final Event<PushSoundPlayed> ON_PUSH_SOUND_PLAYED = FrozenEvents.createEnvironmentEvent(
+	public static final Event<PushSoundPlayed> ON_PUSH_SOUND_PLAYED = EventRegistry.createEnvironmentEvent(
 		PushSoundPlayed.class,
 		(callbacks) -> (sulfurCube, player, pushVelocity) -> {
 			for (var callback : callbacks) callback.onPushSoundPlayed(sulfurCube, player, pushVelocity);
@@ -103,7 +103,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} is pushed.
 	 */
-	public static final Event<Push> ON_PUSH = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Push> ON_PUSH = EventRegistry.createEnvironmentEvent(
 		Push.class,
 		(callbacks) -> (sulfurCube, player, pushVelocity) -> {
 			for (var callback : callbacks) callback.onPush(sulfurCube, player, pushVelocity);
@@ -113,7 +113,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} is hit.
 	 */
-	public static final Event<Hit> ON_HIT = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Hit> ON_HIT = EventRegistry.createEnvironmentEvent(
 		Hit.class,
 		(callbacks) -> (sulfurCube, pushVelocity, source, damage, comesFromEffect) -> {
 			for (var callback : callbacks) callback.onHit(sulfurCube, pushVelocity, source, damage, comesFromEffect);
@@ -123,7 +123,7 @@ public final class SulfurCubeEvents {
 	/**
 	 * The event that is triggered when a {@link SulfurCube} squishes (lands on the ground.)
 	 */
-	public static final Event<Squish> ON_SQUISH = FrozenEvents.createEnvironmentEvent(
+	public static final Event<Squish> ON_SQUISH = EventRegistry.createEnvironmentEvent(
 		Squish.class,
 		(callbacks) -> (sulfurCube) -> {
 			for (var callback : callbacks) callback.onSquish(sulfurCube);

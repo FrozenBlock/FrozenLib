@@ -18,8 +18,7 @@
 package net.frozenblock.lib.renderer.mixin.camera;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.Mth;
@@ -29,7 +28,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(Camera.class)
 public class CameraMixin {
 	@Unique
@@ -46,5 +45,4 @@ public class CameraMixin {
 		cameraState.frozenLib$setHorizontalOrientation(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, original, new Quaternionf()));
 		return original;
 	}
-
 }

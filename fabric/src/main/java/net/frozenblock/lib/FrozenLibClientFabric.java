@@ -24,11 +24,10 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
-import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.networking.FrozenLibClientNetworking;
+import net.frozenblock.lib.networking.impl.FrozenLibClientNetworking;
 import net.minecraft.client.Minecraft;
 
 public final class FrozenLibClientFabric implements ClientModInitializer {
@@ -59,8 +58,6 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 				}
 			);
 		});
-
-		FrozenLibDebugScreenEntries.init();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}

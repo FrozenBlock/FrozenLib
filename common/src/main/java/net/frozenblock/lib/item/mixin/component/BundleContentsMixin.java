@@ -46,7 +46,6 @@ public class BundleContentsMixin {
 			final BundleWeightOverride weightOverride = stackTemplate.get(FrozenLibDataComponents.BUNDLE_WEIGHT_OVERRIDE.get());
 			if (weightOverride == null) return;
 			info.setReturnValue(DataResult.success(weightOverride.fraction()));
-			return;
 		}
 	}
 }

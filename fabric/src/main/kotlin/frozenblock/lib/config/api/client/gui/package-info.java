@@ -15,8 +15,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@Environment(EnvType.CLIENT)
-package net.frozenblock.lib.config.api.client.gui;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+package frozenblock.lib.config.api.client.gui;

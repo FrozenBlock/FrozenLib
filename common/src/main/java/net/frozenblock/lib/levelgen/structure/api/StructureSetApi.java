@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.structure.api;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.frozenblock.lib.levelgen.structure.impl.StructureSetAdditionInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -34,7 +34,7 @@ public class StructureSetApi {
 	/**
 	 * An event used to add new {@link Structure}s to {@link StructureSet}s.
 	 */
-	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_STRUCTURES = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
+	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_STRUCTURES = EventRegistry.createEnvironmentEvent(AddAdditionalTemplatePools.class,
 		callbacks -> (registry, structureSet, context) -> {
 			for (var callback : callbacks) callback.addAdditionalStructures(registry, structureSet, context);
 	});

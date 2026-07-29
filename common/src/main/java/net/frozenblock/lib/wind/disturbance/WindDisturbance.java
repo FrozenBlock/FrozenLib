@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.disturbance;
 import com.mojang.serialization.Codec;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public interface WindDisturbance<T extends DataAttachmentTarget> {
+public interface WindDisturbance<T> {
 	Codec<WindDisturbance<?>> CODEC = FrozenLibRegistries.WIND_DISTURBANCE_TYPE.byNameCodec().dispatch(WindDisturbance::type, WindDisturbanceType::codec);
 	StreamCodec<RegistryFriendlyByteBuf, WindDisturbance<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY)
 		.dispatch(WindDisturbance::type, WindDisturbanceType::streamCodec);

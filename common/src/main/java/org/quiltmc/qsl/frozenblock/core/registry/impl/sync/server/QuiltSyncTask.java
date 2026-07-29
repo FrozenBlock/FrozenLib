@@ -20,8 +20,8 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
 import java.util.function.Consumer;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.networking.ConfigPacketSender;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.impl.ConfigPacketSender;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
@@ -42,7 +42,7 @@ public class QuiltSyncTask implements ConfigurationTask {
 
 	@Override
 	public void start(Consumer<Packet<?>> sender) {
-		ServerRegistrySync.sendHelloPacket(FrozenLibInitPlatformUtils.NETWORKING.getServerConfigSender(this.packetHandler));
+		ServerRegistrySync.sendHelloPacket(NetworkingHelper.getServerConfigSender(this.packetHandler));
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class QuiltSyncTask implements ConfigurationTask {
 
 	public void handleHandshake(ClientPackets.Handshake handshake) {
 		this.syncVersion = handshake.version();
-		this.sendSyncPackets(FrozenLibInitPlatformUtils.NETWORKING.getServerConfigSender(this.packetHandler));
+		this.sendSyncPackets(NetworkingHelper.getServerConfigSender(this.packetHandler));
 	}
 
 	public void handleModProtocol(ClientPackets.ModProtocol protocol, ConfigPacketSender sender) {
@@ -67,7 +67,7 @@ public class QuiltSyncTask implements ConfigurationTask {
 		if (this.syncVersion == ProtocolVersions.NO_PROTOCOL && ServerRegistrySync.requiresSync()) {
 			this.packetHandler.disconnect(ServerRegistrySync.noRegistrySyncMessage);
 		} else {
-			FrozenLibInitPlatformUtils.NETWORKING.completeConfigTask(this.packetHandler, TYPE);
+			NetworkingHelper.completeConfigTask(this.packetHandler, TYPE);
 		}
 	}
 }

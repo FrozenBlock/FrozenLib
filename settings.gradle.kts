@@ -7,14 +7,17 @@ pluginManagement {
         maven("https://maven.fabricmc.net") {
             name = "Fabric"
         }
-        maven("https://maven.architectury.dev/") {
-            name = "Architectury"
-        }
         maven("https://maven.neoforged.net/releases") {
             name = "NeoForged"
         }
         maven("https://jitpack.io") {
             name = "Jitpack"
+        }
+        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
+            name = "SomethingCatchy (MehVahdJukaar)"
+        }
+        maven("https://maven.frozenblock.net/snapshot") {
+            name = "FrozenBlock Snapshot"
         }
         mavenCentral()
         gradlePluginPortal()
@@ -31,12 +34,11 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+    id("org.gradle.toolchains.foojay-resolver-convention") version("+")
+    id("net.frozenblock.triangle.helper") version("+")
 }
 
 rootProject.name = "FrozenLib"
-
-includeBuild("build-logic")
 
 object Constants {
     const val FABRIC: Boolean = true
@@ -54,12 +56,26 @@ if (Constants.FABRIC) {
 if (Constants.NEOFORGE) {
     include("flib-neoforge")
     project(":flib-neoforge").projectDir = file("neoforge")
+
+    include("neoforge-locator")
+    project(":neoforge-locator").projectDir = file("neoforge/locator")
 }
 
-localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
+localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
 
+localPluginRepository(
+    "GradleHelper",
+    enabled = true
+)
 
-fun localRepository(repo: String, dependencySub: String, prefix: String = "", multi: Boolean = true, kotlin: Boolean = true, enabled: Boolean) {
+fun localRepository(
+    repo: String,
+    dependencySub: String,
+    prefix: String = "",
+    multi: Boolean = true,
+    candlelight: Boolean = false,
+    enabled: Boolean
+) {
     if (!enabled) return
     println("Attempting to include local repo $repo")
 
@@ -77,6 +93,10 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
     var path = "../$repo"
     var file = File(path)
 
+    val allSuffixes = mutableListOf("common")
+    if (Constants.FABRIC) allSuffixes.add("fabric")
+    if (Constants.NEOFORGE) allSuffixes.add("neoforge")
+
     if (allowLocalRepoUse && (isIDE || allowLocalRepoInConsoleMode)) {
         if (github) {
             path = repo
@@ -86,9 +106,6 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
         if (file.exists()) {
             includeBuild(path) {
                 dependencySubstitution {
-                    val allSuffixes = mutableListOf("common")
-                    if (Constants.FABRIC) allSuffixes.add("fabric")
-                    if (Constants.NEOFORGE) allSuffixes.add("neoforge")
                     if (multi && allSuffixes.isNotEmpty()) {
                         for (suffix in allSuffixes) {
                             substitute(module("$dependencySub-$suffix")).using(project(":$prefix-$suffix"))
@@ -101,6 +118,27 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
                     }
                 }
             }
+
+            // candlelight rewrites compiled classes into build/classes/java/main via its own
+            // candleLightTransform task, which isn't wired as a producer of the "classes" variant.
+            // Composite-build dependency substitution only pulls in the included build's compileJava,
+            // so without this, edits there compile stale here until its own classes/jar/build task
+            // is run once to trigger candleLightTransform.
+            if (multi && candlelight) {
+                gradle.rootProject {
+                    subprojects {
+                        val suffix = allSuffixes.find { project.name.endsWith("-$it") }
+                        if (suffix != null) {
+                            afterEvaluate {
+                                tasks.findByName("compileJava")?.dependsOn(
+                                    gradle.includedBuild(repo).task(":$prefix-$suffix:candleLightTransform")
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
             println("Included local repo $repo")
         } else {
             println("Local repo $repo not found")
@@ -108,3 +146,27 @@ fun localRepository(repo: String, dependencySub: String, prefix: String = "", mu
     }
 }
 
+fun localPluginRepository(repo: String, enabled: Boolean = true) {
+    if (!enabled) return
+    println("Attempting to include local plugin build $repo")
+
+    val github = System.getenv("GITHUB_ACTIONS") == "true"
+
+    var path = "../$repo"
+    var file = File(path)
+
+    if (github) {
+        path = repo
+        file = File(path)
+        println("Running on GitHub")
+    }
+
+    if (file.exists()) {
+        pluginManagement {
+            includeBuild(path)
+        }
+        println("Included local plugin build $repo")
+    } else {
+        println("Local plugin build $repo not found")
+    }
+}

@@ -20,7 +20,7 @@ package net.frozenblock.lib.integration.api;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
@@ -71,7 +71,7 @@ public class ModIntegrations {
 	public static void initializePreFreeze() {
 		for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
-			if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) continue;
+			if (ModLoader.isServer()) continue;
 			integration.getIntegration().clientInitPreFreeze();
 		}
 	}
@@ -82,7 +82,7 @@ public class ModIntegrations {
     public static void initialize() {
         for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
-			if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) continue;
+			if (ModLoader.isServer()) continue;
 			integration.getIntegration().clientInit();
         }
     }

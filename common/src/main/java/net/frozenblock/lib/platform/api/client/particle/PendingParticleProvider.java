@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.platform.api.client.particle;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
@@ -29,7 +28,7 @@ import net.minecraft.core.particles.ParticleType;
  *
  * <p>Particle sprites are loaded from {@code domain:/particles/particle_name.json}, as per vanilla behavior.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @FunctionalInterface
 public interface PendingParticleProvider<T extends ParticleOptions> {
 	ParticleProvider<T> create(SpriteSet spriteSet);

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.event.impl;
 
-import net.frozenblock.lib.event.api.events.ClientTickEvents;
+import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.neoforge.client.event.ClientTickEvent;

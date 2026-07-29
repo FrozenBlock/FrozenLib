@@ -19,7 +19,7 @@ package net.frozenblock.lib.config.clothconfig.mixin.plugin;
 
 import java.util.List;
 import java.util.Set;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -40,8 +40,8 @@ public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (FrozenLibEarlyPlatformUtils.LOADER.isFabric()) {
-			return FrozenLibEarlyPlatformUtils.LOADER.isModLoaded("cloth-config");
+		if (ModLoader.isFabric()) {
+			return ModLoader.isModLoaded("cloth-config");
 		}
 		return true;
 	}

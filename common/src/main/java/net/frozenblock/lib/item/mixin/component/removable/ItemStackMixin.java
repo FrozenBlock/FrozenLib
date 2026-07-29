@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.item.api.component.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.component.removable.RemovableItemTags;
-import net.frozenblock.lib.item.impl.ItemStackExtension;
+import net.frozenblock.lib.item.impl.component.removable.RemovableComponentsItemStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemStack.class)
-public abstract class ItemStackMixin implements ItemStackExtension {
+public abstract class ItemStackMixin implements RemovableComponentsItemStack {
 
 	@Shadow
 	public abstract Item getItem();

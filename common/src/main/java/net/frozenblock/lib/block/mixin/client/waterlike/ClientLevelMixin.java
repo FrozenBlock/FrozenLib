@@ -23,9 +23,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -38,7 +37,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(ClientLevel.class)
 public class ClientLevelMixin {
 
@@ -104,5 +103,4 @@ public class ClientLevelMixin {
 
 		return original.call(instance, options, x, y, z, xa, ya, za);
 	}
-
 }

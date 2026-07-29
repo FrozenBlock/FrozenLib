@@ -23,15 +23,15 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
-import net.frozenblock.lib.networking.FrozenLibClientNetworking;
-import net.frozenblock.lib.platform.hud.NeoHudElementHelper;
-import net.frozenblock.lib.platform.model.NeoModelLayerHelper;
-import net.frozenblock.lib.platform.particle.NeoParticleProviderRegistryHelper;
-import net.frozenblock.lib.platform.renderer.NeoBlockEntityRendererHelper;
-import net.frozenblock.lib.platform.renderer.NeoEntityRendererHelper;
-import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.networking.impl.FrozenLibClientNetworking;
+import net.frozenblock.lib.renderer.blockentity.platform.BlockEntityRendererRegistryImpl;
+import net.frozenblock.lib.renderer.entity.platform.EntityRendererRegistryImpl;
+import net.frozenblock.lib.renderer.hud.platform.HudElementRegistryImpl;
+import net.frozenblock.lib.renderer.model.platform.ModelLayerRegistryImpl;
+import net.frozenblock.lib.particle.client.api.platform.ParticleProviderRegistryImpl;
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
-import net.frozenblock.lib.resource_pack.impl.client.FrozenLibFolderRepositorySource;
+import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
+import net.frozenblock.lib.resource.client.api.pack.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -60,12 +60,12 @@ public final class FrozenLibClientNeoForge {
 
 		NeoEventBridge.initClientModStage();
 
-		modBus.addListener(AddClientReloadListenersEvent.class, NeoResourceLoaderHelper::flushClientListeners);
-		modBus.addListener(RegisterGuiLayersEvent.class, NeoHudElementHelper::flush);
-		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, NeoModelLayerHelper::flush);
-		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoBlockEntityRendererHelper::flush);
-		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, NeoEntityRendererHelper::flush);
-		modBus.addListener(RegisterParticleProvidersEvent.class, NeoParticleProviderRegistryHelper::flush);
+		modBus.addListener(AddClientReloadListenersEvent.class, ResourceLoaderHelperImpl::flushClientListeners);
+		modBus.addListener(RegisterGuiLayersEvent.class, HudElementRegistryImpl::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, ModelLayerRegistryImpl::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, BlockEntityRendererRegistryImpl::flush);
+		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, EntityRendererRegistryImpl::flush);
+		modBus.addListener(RegisterParticleProvidersEvent.class, ParticleProviderRegistryImpl::flush);
 
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientScreenShaker.reset()

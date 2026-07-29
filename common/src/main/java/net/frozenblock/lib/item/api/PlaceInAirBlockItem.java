@@ -80,8 +80,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 
 	public boolean checkIfPlayerCanPlaceBlock(Player player, ItemStack stack, Level level, BlockPos pos) {
 		if (player.isSpectator()) return false;
-		if (!player.getAbilities().mayBuild && !stack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, pos, false))) return false;
-		return true;
+		return player.getAbilities().mayBuild || stack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, pos, false));
 	}
 
 	public static boolean checkIfPlayerCanPlaceBlock(ItemStack stack, Player player, Level level, BlockPos pos) {

@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.api.modification;
 import java.util.function.Function;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -41,7 +41,7 @@ public class BlockRegistryModificationEvents {
 	 * <p>
 	 * Custom register methods will be ignored.
 	 */
-	public static final Event<ModifyProperties> MODIFY_PROPERTIES = FrozenEvents.createEnvironmentEvent(ModifyProperties.class, (callbacks) -> (id, properties) -> {
+	public static final Event<ModifyProperties> MODIFY_PROPERTIES = EventRegistry.createEnvironmentEvent(ModifyProperties.class, (callbacks) -> (id, properties) -> {
 		for (var callback : callbacks) {
 			final BlockBehaviour.Properties eventProperties = callback.modifyProperties(id, properties);
 			if (eventProperties != null) properties = eventProperties;
@@ -56,7 +56,7 @@ public class BlockRegistryModificationEvents {
 	 * <p>
 	 * Custom register methods will be ignored.
 	 */
-	public static final Event<ReplaceFactory> REPLACE_FACTORY = FrozenEvents.createEnvironmentEvent(ReplaceFactory.class, (callbacks) -> (id, properties, factory) -> {
+	public static final Event<ReplaceFactory> REPLACE_FACTORY = EventRegistry.createEnvironmentEvent(ReplaceFactory.class, (callbacks) -> (id, properties, factory) -> {
 		for (var callback : callbacks) {
 			final Function<BlockBehaviour.Properties, Block> eventFactory = callback.replaceFactory(id, properties, factory);
 			if (eventFactory != null) factory = eventFactory;

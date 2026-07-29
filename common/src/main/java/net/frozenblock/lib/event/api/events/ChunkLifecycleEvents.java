@@ -17,20 +17,27 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 
-public class ChunkLifecycleEvents {
-
-	public static final Event<Load> CHUNK_LOAD = FrozenEvents.createEnvironmentEvent(Load.class, callbacks -> (level, chunk, newChunk) -> {
+@UtilityClass
+public final class ChunkLifecycleEvents {
+	/**
+	 * The event that is triggered when a chunk is loaded.
+	 */
+	public static final Event<Load> CHUNK_LOAD = EventRegistry.createEnvironmentEvent(Load.class, callbacks -> (level, chunk, newChunk) -> {
 		for (Load callback : callbacks) {
 			callback.onChunkLoad(level, chunk, newChunk);
 		}
 	});
 
-	public static final Event<Unload> CHUNK_UNLOAD = FrozenEvents.createEnvironmentEvent(Unload.class, callbacks -> (level, chunk) -> {
+	/**
+	 * The event that is triggered when a chunk is unloaded.
+	 */
+	public static final Event<Unload> CHUNK_UNLOAD = EventRegistry.createEnvironmentEvent(Unload.class, callbacks -> (level, chunk) -> {
 		for (Unload callback : callbacks) {
 			callback.onChunkUnload(level, chunk);
 		}

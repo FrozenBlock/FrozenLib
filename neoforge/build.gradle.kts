@@ -2,11 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("flib-multiloader-loader")
-    id("dev.architectury.loom-no-remap")
+    id("net.frozenblock.triangle.neoforge")
     id("com.gradleup.shadow")
     id("org.quiltmc.gradle.licenser")
-    kotlin("jvm")
     checkstyle
 }
 
@@ -14,6 +12,8 @@ checkstyle {
     configFile = rootProject.file("checkstyle.xml")
     toolVersion = "10.20.2"
 }
+
+withKotlin()
 
 val mod_id: String by project
 val mod_version: String by project
@@ -36,8 +36,10 @@ val kotlinforforge_version: String by project
 val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
 
 base {
-    archivesName.set("$archives_base_name-neoforge")
+    archivesName.set(archives_base_name)
 }
+
+val release = findProperty("releaseType") == "stable"
 
 version = getModVersion()
 group = maven_group
@@ -49,33 +51,9 @@ repositories {
     }
 }
 
-loom {
-    accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
-    enableTransitiveAccessWideners = true
-
-    interfaceInjection {
-        enableDependencyInterfaceInjection = true
-    }
-
-    runs {
-        named("client") {
-            client()
-            name("NeoForge Client")
-            ideConfigGenerated(true)
-            //gameDirectory.set(project.mkdir(project.file("runs/client")))
-        }
-        named("server") {
-            server()
-            name("NeoForge Server")
-            ideConfigGenerated(true)
-            project.file("runs/server").parentFile?.mkdirs()
-            //gameDirectory.set(project.mkdir(project.file("runs/server")))
-        }
-    }
-}
-
-extensions.getByType<net.fabricmc.loom.api.LoomGradleExtensionAPI>().neoForge.run {
-    accessTransformer(file("src/main/resources/META-INF/neo/accesstransformer.cfg"))
+neoforge {
+    dependOn(project(":flib-common"))
+    accessWidener(project(":flib-common"))
 }
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
@@ -123,8 +101,7 @@ val relocApi: Configuration by configurations.creating {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraft_version")
-    "neoForge"("net.neoforged:neoforge:$neoforge_version")
+    //"neoForge"("net.neoforged:neoforge:$neoforge_version")
 
     // Toml
     api("com.moandjiezana.toml:toml4j:$toml4j_version")
@@ -142,15 +119,11 @@ dependencies {
     //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 
     // Cloth Config (NeoForge edition)
-    compileOnly("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
+    implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
         exclude(group = "net.neoforged")
     }
-}
 
-fun getModVersion(): String {
-    var version = "$mod_version-mc$minecraft_version"
-
-    return version
+    "jarJar"(project(":neoforge-locator"))
 }
 
 tasks {
@@ -166,15 +139,17 @@ tasks {
     }
 
     shadowJar {
+        dependsOn(named("jar"))
         configurations = listOf(relocImplementation, relocApi)
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
+        archiveFileName.set("$archives_base_name-${getModVersion()}-neoforge.jar")
+        from(named("jarJar"))
         dependencies {
             exclude {
                 it.moduleGroup.contains("neoforged")
             }
-            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
             exclude {
                 it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")
                     || it.moduleGroup.contains("checkerframework") || it.moduleGroup.contains("slf4j")
@@ -182,6 +157,8 @@ tasks {
                     || it.moduleGroup.contains("intellij") || it.moduleGroup.contains("jetbrains")
             }
         }
+        exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
+
         relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
     }
 
@@ -195,15 +172,60 @@ tasks {
         options.isFork = true
         options.isIncremental = true
     }
+}
 
-    withType(KotlinCompile::class) {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_25
-        }
-    }
+shadow {
+    addShadowVariantIntoJavaComponent.set(false)
+}
+
+// tasks reading the `jar` archive file (whose content is actually overwritten by shadowJar,
+// see above) must be ordered after shadowJar so they see the final shaded content
+tasks.withType<org.gradle.api.publish.tasks.GenerateModuleMetadata>().configureEach {
+    dependsOn(tasks.named("shadowJar"))
+}
+tasks.withType<org.gradle.api.publish.maven.tasks.AbstractPublishToMaven>().configureEach {
+    dependsOn(tasks.named("shadowJar"))
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+}
+
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
+
+    if (!release) {
+        version += "-unstable"
+    }
+
+    return version
+}
+
+val changelogText = run {
+    val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
+    check(split.size == 2) { "Malformed changelog" }
+    split[1].trim()
+}
+
+upload {
+    maven {
+        name.set("frozenlib-neoforge")
+    }
+
+    forEach {
+        changelog.set(changelogText)
+    }
+
+    curseforge {
+        dependencies {
+            optional("cloth-config")
+        }
+    }
+
+    modrinth {
+        dependencies {
+            optional("cloth-config")
+        }
+    }
 }

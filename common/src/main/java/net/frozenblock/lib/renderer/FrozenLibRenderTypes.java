@@ -19,16 +19,15 @@ package net.frozenblock.lib.renderer;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibRenderTypes {
 	// TODO: test if these work
 	public static final Function<Identifier, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize(identifier -> {

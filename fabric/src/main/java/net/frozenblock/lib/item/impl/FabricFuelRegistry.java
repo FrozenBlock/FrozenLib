@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.impl;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
-import net.frozenblock.lib.item.api.FuelRegistry;
+import net.frozenblock.lib.item.api.registry.FuelRegistry;
 
 @UtilityClass
 public class FabricFuelRegistry {

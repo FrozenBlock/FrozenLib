@@ -22,9 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -33,7 +32,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
 

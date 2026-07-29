@@ -38,5 +38,7 @@ package net.frozenblock.lib.levelgen.biome.impl.modifications;
  * if it does occur.
  */
 public interface BiomeModificationMarker {
-	void frozenLib$markModified();
+	default void frozenLib$markModified() {
+		throw new AssertionError();
+	}
 }

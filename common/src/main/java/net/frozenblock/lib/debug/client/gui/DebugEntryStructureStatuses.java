@@ -18,10 +18,9 @@
 package net.frozenblock.lib.debug.client.gui;
 
 import com.google.common.collect.ImmutableList;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -29,9 +28,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
+@ApiStatus.Internal
+@ClientOnly
 public class DebugEntryStructureStatuses implements DebugScreenEntry {
 	private static final Identifier GROUP = FrozenLibConstants.id("structure_status");
 
@@ -46,7 +47,7 @@ public class DebugEntryStructureStatuses implements DebugScreenEntry {
 		final Entity entity = minecraft.getCameraEntity();
 		if (entity == null) return;
 
-		StructureStatus.ATTACHMENT_TYPE.getAttachedOrGet(entity, ImmutableList::of).forEach(structureStatus -> {
+		StructureStatus.ATTACHMENT_TYPE.getAttachedOrElseGet(entity, ImmutableList::of).forEach(structureStatus -> {
 			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
 		});
 	}

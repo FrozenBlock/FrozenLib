@@ -33,6 +33,7 @@ package net.frozenblock.lib.renderer;
  * limitations under the License.
  */
 
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKey;
 import org.jetbrains.annotations.ApiStatus;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.ApiStatus;
  * A unique key representing extra data to attach to a render state.
  * @param <T> The type of the render state data.
  */
+@ClientOnly
 public final class RenderStateDataKey<T> {
 	private final ContextKey<T> key;
 	private Object fabricKey = null;

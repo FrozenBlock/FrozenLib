@@ -26,13 +26,14 @@ import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
+import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
 import net.frozenblock.lib.levelgen.structure.impl.processor.StructureProcessorListAddition;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.frozenblock.lib.platform.RegistryHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.sound.impl.damage.PlayerDamageTypeSound;
@@ -89,20 +90,24 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
 	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
+	public static final ResourceKey<Registry<SuffocationType>> SUFFOCATION_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("suffocation_type"));
 	public static final ResourceKey<Registry<RuleSourceAddition>> RULE_SOURCE_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("rule_source_addition"));
 	public static final ResourceKey<Registry<PlayerDamageTypeSound>> PLAYER_DAMAGE_TYPE_SOUND = ResourceKey.createRegistryKey(FrozenLibConstants.id("player_damage_type_sound"));
 	public static final ResourceKey<Registry<StructureProcessorListAddition>> STRUCTURE_PROCESSOR_LIST_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_processor_list_addition"));
+	public static final ResourceKey<Registry<VariantSpawnInjection>> VARIANT_SPAWN_INJECTION = ResourceKey.createRegistryKey(FrozenLibConstants.id("variant_spawn_injection"));
 
-    public static void setup() {
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerDynamicRegistry(RULE_SOURCE_ADDITION, RuleSourceAddition.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(PLAYER_DAMAGE_TYPE_SOUND, PlayerDamageTypeSound.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC);
-    }
+	public static void setup() {
+		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(SUFFOCATION_TYPE, SuffocationType.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(RULE_SOURCE_ADDITION, RuleSourceAddition.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(PLAYER_DAMAGE_TYPE_SOUND, PlayerDamageTypeSound.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(VARIANT_SPAWN_INJECTION, VariantSpawnInjection.CODEC);
+	}
 
 	// TODO: see if this 26.3 change affects anything
 	public static HolderLookup.Provider vanillaRegistries() {
@@ -118,6 +123,6 @@ public class FrozenLibRegistries {
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, RegistryHelper.RegistryBootstrap<T> bootstrap) {
-		return FrozenLibInitPlatformUtils.REGISTRY.createSimpleRegistry(key, lifecycle, synced, bootstrap);
+		return RegistryHelper.createSimpleRegistry(key, lifecycle, synced, bootstrap);
 	}
 }

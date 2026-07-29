@@ -25,6 +25,12 @@
     "fire.ZombieMixin",
     "friction.LivingEntityMixin",
     "modification.BlocksMixin",
+    "piston.PistonBaseBlockMixin",
+    "piston.PistonMovingBlockEntityMixin",
+    "piston.lectern.LecternBlockEntityMixin",
+    "piston.shelf.ShelfBlockMixin",
+    "piston.shelf.ShelfBlockUnpowerOnMoveMixin",
+    "piston.PistonStructureResolverMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",
@@ -51,6 +57,7 @@
     "client.fire.ScreenEffectRendererMixin",
     "client.fire.TorchBlockMixin",
     "client.fire.WallTorchBlockMixin",
+    "client.piston.PistonHeadRendererMixin",
     "client.waterlike.ClientLevelMixin",
     "client.waterlike.EntityRendererMixin",
     "client.waterlike.MultiPlayerGameModeMixin",
@@ -60,6 +67,6 @@
     "client.waterlike.sound.BubbleColumnAmbientSoundHandlerMixin",
     "client.waterlike.sound.LocalPlayerMixin",
     "client.waterlike.sound.UnderwaterAmbientSoundHandlerMixin",
-    "tick.client.ClientLevelMixin"
+    "client.tick.ClientLevelMixin"
   ]
 }

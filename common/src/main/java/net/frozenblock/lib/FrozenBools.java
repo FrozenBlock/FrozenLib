@@ -18,9 +18,9 @@
 package net.frozenblock.lib;
 
 import java.util.Arrays;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 
-public class FrozenBools {
+public final class FrozenBools {
 	/**
 	 * This is set to true when Bootstrap.bootStrap() is finished.
 	 */
@@ -33,10 +33,12 @@ public class FrozenBools {
 	public static final boolean IS_DATAGEN = isDatagen();
 
 	private static boolean isDatagen() {
-		return Arrays.stream(FrozenLibEarlyPlatformUtils.LOADER.getLaunchArgs())
+		final boolean isDatagen = Arrays.stream(ModLoader.getLaunchArgs())
 			.toList()
 			.stream()
-			.anyMatch(string -> string.contains("datagen"));
+			.anyMatch(string -> string.contains("run/data"));
+		if (ModLoader.isDevelopmentEnvironment()) FrozenLibLogUtils.log("Datagen " + (isDatagen ? "enabled" : "disabled") + "!");
+		return isDatagen;
 	}
 
     // EXTERNAL MODS
@@ -49,6 +51,6 @@ public class FrozenBools {
     public static final boolean HAS_TERRABLENDER = hasMod("terrablender");
 
 	public static boolean hasMod(String mod) {
-		return FrozenLibEarlyPlatformUtils.LOADER.isModLoaded(mod);
+		return ModLoader.isModLoaded(mod);
 	}
 }

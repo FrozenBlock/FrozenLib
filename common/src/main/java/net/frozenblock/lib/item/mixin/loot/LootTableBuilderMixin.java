@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Consumer;
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableBuilder;
+import net.frozenblock.lib.item.impl.loot.ModifiableLootTableBuilder;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Final;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(LootTable.Builder.class)
-abstract class LootTableBuilderMixin implements FrozenLibLootTableBuilder {
+public abstract class LootTableBuilderMixin implements ModifiableLootTableBuilder {
 
 	@Shadow
 	@Final
@@ -40,10 +40,6 @@ abstract class LootTableBuilderMixin implements FrozenLibLootTableBuilder {
 	public ImmutableList.Builder<LootPool> pools;
 
 	@Unique
-	private LootTable.Builder frozenLib$self() {
-		return (LootTable.Builder) (Object) this;
-	}
-
 	@Override
 	public LootTable.Builder frozenLib$modifyPools(Consumer<? super LootPool.Builder> modifier) {
 		final List<LootPool> list = new ArrayList<>(this.pools.build());
@@ -58,7 +54,7 @@ abstract class LootTableBuilderMixin implements FrozenLibLootTableBuilder {
 		this.pools = ImmutableList.builder();
 		this.pools.addAll(list);
 
-		return frozenLib$self();
+		return LootTable.Builder.class.cast(this);
 	}
 
 	@Unique

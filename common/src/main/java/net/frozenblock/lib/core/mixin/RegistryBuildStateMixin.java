@@ -21,6 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.List;
+import net.frozenblock.lib.levelgen.biome.api.FrozenLibBiome;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -30,12 +31,23 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(RegistrySetBuilder.BuildState.class)
 public class RegistryBuildStateMixin {
 
-	@WrapOperation(method = "reportNotCollectedHolders", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
-	private boolean ignoreMissingBiomes(List<RuntimeException> instance, Object e, Operation<Boolean> original, @Local(name = "key") ResourceKey<Object> key) {
-		if (!key.registryKey().equals(Registries.BIOME)) {
-			return original.call(instance, e);
-		} else {
+	/**
+	 * This is meant to fix {@code VanillaRegistries} lookup crashes we have.
+	 */
+	@WrapOperation(
+		method = "reportNotCollectedHolders",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/List;add(Ljava/lang/Object;)Z"
+		)
+	)
+	private boolean frozenLib$ignoreMissingBiomes(
+		List<RuntimeException> instance, Object object, Operation<Boolean> original,
+		@Local(name = "key") ResourceKey<Object> key
+	) {
+		if (key.registryKey().equals(Registries.BIOME) && FrozenLibBiome.allFrozenLibBiomes().stream().anyMatch(biome -> biome.getKey().equals(key))) {
 			return false;
 		}
+		return original.call(instance, object);
 	}
 }

@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 /**
- * Drives {@link FrozenLibLootTableEvents#MODIFY_DROPS}, which has no NeoForge equivalent.
+ * Drives {@link LootTableEvents#MODIFY_DROPS}, which has no NeoForge equivalent.
  */
 @Mixin(LootTable.class)
 abstract class LootTableMixin implements FrozenNeoLootTable {
@@ -56,7 +56,7 @@ abstract class LootTableMixin implements FrozenNeoLootTable {
 
 		final List<ItemStack> drops = new ArrayList<>();
 		original.call(context, (Consumer<ItemStack>) drops::add);
-		FrozenLibLootTableEvents.MODIFY_DROPS.invoker().modifyLootTableDrops(this.frozenLib$holder, context, drops);
+		LootTableEvents.MODIFY_DROPS.invoker().modifyLootTableDrops(this.frozenLib$holder, context, drops);
 		drops.forEach(output);
 	}
 

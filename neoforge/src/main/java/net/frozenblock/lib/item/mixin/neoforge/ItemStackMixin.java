@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.mixin.neoforge;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
+import net.frozenblock.lib.item.api.component.removable.RemovableDataComponents;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.world.item.ItemStack;

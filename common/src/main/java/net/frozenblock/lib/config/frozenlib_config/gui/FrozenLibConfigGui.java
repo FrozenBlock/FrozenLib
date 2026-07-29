@@ -21,22 +21,22 @@ import java.util.List;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import static net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper.*;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
+import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
@@ -47,7 +47,7 @@ public final class FrozenLibConfigGui {
 
 		category.addEntry(
 			syncedEntry(
-				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
+				entryBuilder.startEnumSelector(text("pack_downloading"), ModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
 					.setEnumNameProvider(downloadSetting -> enumNameProvider(downloadSetting.toString()))
 					.setTooltip(tooltip("pack_downloading")),
 				FrozenLibConfig.PACK_DOWNLOADING
@@ -78,7 +78,7 @@ public final class FrozenLibConfigGui {
 						final Identifier capeId = Identifier.parse((String) newValue);
 						FrozenLibConfig.CAPE.setValue((String) newValue);
 						if (Minecraft.getInstance().getConnection() != null)
-							FrozenLibInitPlatformUtils.NETWORKING.sendToServer(CapeCustomizePacket.create(capeId));
+							ClientNetworkingHelper.sendToServer(CapeCustomizePacket.create(capeId));
 					})
 					.setTooltip(tooltip("cape"))
 					.build()

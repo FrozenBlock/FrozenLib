@@ -24,13 +24,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
-import net.frozenblock.lib.networking.FrozenLibNetworking;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
-import net.frozenblock.lib.platform.api.data.DataAttachmentTarget;
-import net.frozenblock.lib.platform.api.data.DataAttachmentType;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.platform.ModLoader;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
@@ -89,7 +90,7 @@ public class WindManager {
 	);
 
 	private Level level;
-	public final List<WindManagerExtension> extensions = new ArrayList<>();
+	public final List<WindManagerExtension> extensions = new CopyOnWriteArrayList<>();
 	private final List<DataAttachmentTarget> disturbanceHolders = new ArrayList<>();
 	private boolean loadedExtensions;
 	public Optional<Vec3> windOverride = Optional.empty();
@@ -135,11 +136,11 @@ public class WindManager {
 	 */
 	public static WindManager getOrCreate(Level level) {
 		WindManager windManager = level instanceof ServerLevel
-			? level.frozenLib$getAttached(ATTACHMENT_TYPE)
+			? ATTACHMENT_TYPE.get(level)
 			: INSTANCE;
 		if (windManager == null) {
 			windManager = new WindManager((ServerLevel) level);
-			level.frozenLib$setAttached(ATTACHMENT_TYPE, windManager);
+			ATTACHMENT_TYPE.set(level, windManager);
 		} else {
 			windManager.setLevel(level);
 		}
@@ -294,6 +295,7 @@ public class WindManager {
 	public void reset() {
 		this.level = null;
 		this.extensions.clear();
+		this.loadedExtensions = false;
 		this.disturbanceHolders.clear();
 		this.windOverride = Optional.empty();
 		this.windX = 0D;
@@ -479,8 +481,8 @@ public class WindManager {
 		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
-			FrozenLibNetworking.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
-		} else if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
+			NetworkingHelper.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
+		} else if (ModLoader.isClient()) {
 			ClientWindUtil.Debug.addAccessedPosition(target);
 		}
 

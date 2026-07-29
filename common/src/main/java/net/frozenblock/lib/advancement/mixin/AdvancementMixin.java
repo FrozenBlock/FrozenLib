@@ -64,7 +64,7 @@ public class AdvancementMixin implements AdvancementInterface {
 
 	@Override
 	public AdvancementRequirementsInterface frozenLib$getRequirementsInterface() {
-		return AdvancementRequirementsInterface.class.cast(this.requirements);
+		return this.requirements;
 	}
 
 	@Override

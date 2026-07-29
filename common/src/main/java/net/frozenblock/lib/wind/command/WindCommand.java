@@ -105,5 +105,4 @@ public class WindCommand {
 		}
 		return 1;
 	}
-
 }

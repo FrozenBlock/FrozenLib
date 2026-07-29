@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.RegistrationInfo;
@@ -53,7 +53,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	@Inject(method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
 	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo info) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
-		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
+		this.frozenLib_quilt$entryAddedEvent = EventRegistry.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
 			for (var callback : callbacks) callback.onAdded(context);
 		});
 	}

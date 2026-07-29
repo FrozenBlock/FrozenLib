@@ -19,27 +19,34 @@ package net.frozenblock.lib;
 
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateTypes;
+import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
+import net.frozenblock.lib.entity.impl.suffocation.SuffocationData;
+import net.frozenblock.lib.entity.impl.variant.FrozenLibSpawnConditions;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
+import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
-import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
-import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
-import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
+import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
+import net.frozenblock.lib.levelgen.structure.api.placement.StructurePlacementExclusionApi;
+import net.frozenblock.lib.levelgen.structure.api.pools.TemplatePoolApi;
 import net.frozenblock.lib.levelgen.structure.api.processor.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.networking.FrozenLibNetworking;
+import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
@@ -58,12 +65,14 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenLibMain {
 
-	public static void preQuiltInit() {
+	public static void preQuiltSetup() {
 		FireData.init();
+		SerializableItemCooldowns.init();
 		SoundTypeOverrides.init();
+		SuffocationData.init();
 	}
 
-	public static void quiltInit() {
+	public static void quiltSetup() {
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
 		ServerRegistrySync.registerHandlers();
@@ -81,15 +90,20 @@ public final class FrozenLibMain {
 		);
 		argTypes.register();
 
+		CapeUtil.init();
+		SpottingIcons.init();
+		SulfurCubeEvents.init();
 		StructureStatus.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
 		FrozenLibParticleTypes.init();
+		FrozenLibEnvironmentAttributes.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibDataComponents.init();
 		FrozenLibFeatureTypes.init();
 		ConfigPredicateTypes.init();
+		FrozenLibSpawnConditions.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();

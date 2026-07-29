@@ -28,12 +28,11 @@ import org.joml.Vector3fc;
 import org.joml.Vector3ic;
 
 /**
- *
+ * @since 1.3.8
  * @param type The {@link PositionType} linked to {@link #pos}.
  * @param pos The position
  * @param opposite The position in the opposite position type
  * @param <T> The type of position being tracked
- * @since 1.3.8
  */
 public record TrackedPosition<T>(PositionType type, T pos, T opposite) {
 

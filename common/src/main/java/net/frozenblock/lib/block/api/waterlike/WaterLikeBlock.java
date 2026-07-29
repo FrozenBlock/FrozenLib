@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.api.waterlike;
 
 import java.util.Optional;
-import net.frozenblock.lib.block.api.shape.FrozenShapes;
+import net.frozenblock.lib.block.api.shape.ShapeUtil;
 import net.frozenblock.lib.block.impl.waterlike.BubbleColumnDirection;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -213,7 +213,7 @@ public interface WaterLikeBlock {
 		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType(entity.registryAccess()).blocks())))) {
 			for (Direction direction : Direction.values()) {
 				if ((direction == Direction.UP && this.canWithinEntityTypesExitFromTop(state)) || level.getFluidState(pos.relative(direction)).is(FluidTags.WATER)) continue;
-				shape = Shapes.or(shape, FrozenShapes.makePlaneFromDirection(direction, ENTITY_WITHIN_COLLISION_FROM_SIDE));
+				shape = Shapes.or(shape, ShapeUtil.makePlaneFromDirection(direction, ENTITY_WITHIN_COLLISION_FROM_SIDE));
 			}
 		}
 

@@ -20,9 +20,8 @@ package net.frozenblock.lib.config.api.client.gui
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text
+import net.frozenblock.lib.platform.api.ClientOnly
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
 
@@ -30,7 +29,7 @@ import java.util.function.Consumer
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 data class SimpleEntryBuilder<T>(
     @JvmField val title: Component,
 

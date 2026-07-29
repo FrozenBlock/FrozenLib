@@ -18,11 +18,15 @@
 package net.frozenblock.lib.platform.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredItem;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
@@ -46,7 +50,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
-
+	private static final List<FrozenDeferredRegister<?>> FAILED_REGISTERS = new ArrayList<>();
 	protected final DeferredRegister<T> inner;
 	private final Map<FrozenHolder<Object, Object>, Consumer<Object>> consumers = new Object2ObjectLinkedOpenHashMap<>();
 
@@ -104,9 +108,27 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 	@Override
 	public void register() {
-		final var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
-		this.inner.register(bus);
-		bus.addListener(this::runCallbacks);
+		try	{
+			final var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+			this.inner.register(bus);
+			bus.addListener(this::runCallbacks);
+		} catch (Exception e) {
+			if (!FAILED_REGISTERS.contains(this)) {
+				FAILED_REGISTERS.add(this);
+				FrozenLibLogUtils.logError(
+					"Failed to register FrozenLib Deferred Register for registry" + this.inner.getRegistry() + ", postponing register event."
+					+ "\nThis is NOT acceptable implementation, please try to alleviate this issue the best you can if viable.",
+					ModLoader.isDevelopmentEnvironment()
+				);
+			}
+		}
+	}
+
+	public static void tryRegisterFailedRegisters() {
+		FAILED_REGISTERS.removeIf(register -> {
+			register.register();
+			return true;
+		});
 	}
 
 	private void runCallbacks(RegisterEvent event) {

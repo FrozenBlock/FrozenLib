@@ -19,11 +19,10 @@ package net.frozenblock.lib.block.mixin.client.fire;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.fire.LavaParticleFireTypeInterface;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.LavaParticle;
 import net.minecraft.client.particle.Particle;
@@ -31,7 +30,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(LavaParticle.Provider.class)
 public class LavaParticleProviderMixin {
 
@@ -55,5 +54,4 @@ public class LavaParticleProviderMixin {
 
 		return original;
 	}
-
 }

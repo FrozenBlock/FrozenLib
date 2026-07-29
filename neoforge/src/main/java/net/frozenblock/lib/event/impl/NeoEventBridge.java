@@ -38,7 +38,6 @@ public final class NeoEventBridge {
 		NeoEntityTrackingEventBridge.init();
 		NeoEntityLifecycleEventBridge.init();
 		NeoChunkLifecycleEventBridge.init();
-		NeoPotionBrewingEventBridge.init();
 
 		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerAboutToStartEvent.class, event -> {
 			LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(event.getServer());

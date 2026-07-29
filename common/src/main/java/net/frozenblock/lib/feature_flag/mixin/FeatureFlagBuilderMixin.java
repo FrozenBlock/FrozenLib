@@ -33,7 +33,7 @@ public class FeatureFlagBuilderMixin {
 		),
 		require = 0
 	)
-	private int frozenLib$increaseMax(int constant) {
+	private int frozenLib$increaseMaxFeatureFlags(int constant) {
 		return Math.max(constant, 512);
 	}
 }

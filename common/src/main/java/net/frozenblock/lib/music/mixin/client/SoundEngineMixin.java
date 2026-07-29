@@ -18,9 +18,8 @@
 package net.frozenblock.lib.music.mixin.client;
 
 import java.util.Map;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.impl.client.SoundEngineInterface;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.ChannelAccess;
 import net.minecraft.client.sounds.SoundEngine;
@@ -29,7 +28,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(SoundEngine.class)
 public class SoundEngineMixin implements SoundEngineInterface {
 

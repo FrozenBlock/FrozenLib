@@ -19,10 +19,9 @@ package net.frozenblock.lib.entity.client.api.renderer.entity;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
@@ -34,7 +33,7 @@ import net.minecraft.world.entity.LivingEntity;
  *
  * @param <T> The entity class the override is for.
  */
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public record EntityTextureOverride<T extends LivingEntity>(Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition) {
 
 	/**
@@ -100,7 +99,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 		return Registry.register(FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
 	}
 
-	@Environment(EnvType.CLIENT)
+	@ClientOnly
 	@FunctionalInterface
 	public interface Condition {
 		boolean test(LivingEntityRenderState renderState);

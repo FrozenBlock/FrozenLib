@@ -19,16 +19,16 @@ package net.frozenblock.lib;
 
 import java.util.function.Consumer;
 import net.frozenblock.lib.command.FrozenLibCommand;
+import net.frozenblock.lib.entity.api.attribute.platform.DefaultAttributeRegistryImpl;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.item.impl.NeoFuelRegistry;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.platform.attribute.NeoDefaultAttributeRegistryHelper;
-import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
-import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
-import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
-import net.frozenblock.lib.platform.resource.NeoResourceLoaderHelper;
+import net.frozenblock.lib.networking.api.platform.NetworkingHelperImpl;
+import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
+import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
+import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
@@ -64,25 +64,25 @@ public final class FrozenLibNeoForge {
 	public FrozenLibNeoForge(IEventBus modBus) {
 		DelayedRegistry.setFactory(NeoForgeDelayedRegistry::new);
 
-		modBus.addListener(NewRegistryEvent.class, NeoRegistryHelper::flushRegistries);
+		modBus.addListener(NewRegistryEvent.class, RegistryHelperImpl::flushRegistries);
 		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
 			FrozenLibRegistries.setup();
-			NeoRegistryHelper.flushDynamicRegistries(event);
+			RegistryHelperImpl.flushDynamicRegistries(event);
 		});
 		modBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
-			NeoNetworkingHelper neoNetworking = (NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING;
-			PayloadRegistrar registrar = event.registrar("frozenlib");
-			neoNetworking.flush(registrar);
-			neoNetworking.flushConfig(registrar);
+			final PayloadRegistrar registrar = event.registrar("frozenlib");
+			NetworkingHelperImpl.flush(registrar);
+			NetworkingHelperImpl.flushConfig(registrar);
 		});
-		modBus.addListener(AddPackFindersEvent.class, NeoResourceLoaderHelper::flushPackFinders);
-		modBus.addListener(EntityAttributeCreationEvent.class, NeoDefaultAttributeRegistryHelper::flush);
+		modBus.addListener(AddPackFindersEvent.class, ResourceLoaderHelperImpl::flushPackFinders);
+		modBus.addListener(EntityAttributeCreationEvent.class, DefaultAttributeRegistryImpl::flush);
 
-		FrozenLibMain.preQuiltInit();
-		FrozenLibMain.quiltInit();
+		NeoFrozenDeferredRegister.tryRegisterFailedRegisters();
+		FrozenLibMain.preQuiltSetup();
+		FrozenLibMain.quiltSetup();
 		FrozenLibMain.setup();
 
-		NeoDataAttachmentHelper.register(modBus);
+		DataAttachmentHelperImpl.register(modBus);
 		NeoEventBridge.initModStage(modBus);
 
 		modBus.addListener(RegisterConfigurationTasksEvent.class, event -> {
@@ -122,11 +122,12 @@ public final class FrozenLibNeoForge {
 			FrozenLibCommand.register(event.getDispatcher())
 		);
 
-		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, NeoResourceLoaderHelper::flushServerListeners);
+		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, ResourceLoaderHelperImpl::flushServerListeners);
 
 		NeoForge.EVENT_BUS.addListener(LevelTickEvent.Post.class, event -> {
-			Level level = event.getLevel();
+			final Level level = event.getLevel();
 			if (!(level instanceof ServerLevel serverLevel)) return;
+
 			ScreenShakes.tick(serverLevel, serverLevel);
 			for (Entity entity : serverLevel.getAllEntities()) {
 				if (entity.isRemoved()) continue;

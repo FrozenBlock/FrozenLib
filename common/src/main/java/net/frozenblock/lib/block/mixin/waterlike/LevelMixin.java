@@ -60,5 +60,4 @@ public class LevelMixin {
 		if (blockState.getBlock() instanceof WaterLikeBlock) return Fluids.EMPTY.defaultFluidState();
 		return fluidState;
 	}
-
 }

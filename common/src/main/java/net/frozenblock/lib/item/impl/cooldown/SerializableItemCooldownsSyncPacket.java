@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2024-2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.item.impl.cooldown;
+
+import net.frozenblock.lib.FrozenLibConstants;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+
+public record SerializableItemCooldownsSyncPacket(int tickCount, SerializableItemCooldowns serializableItemCooldowns) implements CustomPacketPayload {
+	public static final Type<SerializableItemCooldownsSyncPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("serializable_item_cooldowns_sync"));
+	public static final StreamCodec<RegistryFriendlyByteBuf, SerializableItemCooldownsSyncPacket> CODEC = StreamCodec.ofMember(SerializableItemCooldownsSyncPacket::write, SerializableItemCooldownsSyncPacket::new);
+
+	public SerializableItemCooldownsSyncPacket(RegistryFriendlyByteBuf buf) {
+		this(buf.readVarInt(), SerializableItemCooldowns.STREAM_CODEC.decode(buf));
+	}
+
+	public void write(RegistryFriendlyByteBuf buf) {
+		buf.writeVarInt(this.tickCount());
+		SerializableItemCooldowns.STREAM_CODEC.encode(buf, this.serializableItemCooldowns());
+	}
+
+	@Override
+	public Type<?> type() {
+		return PACKET_TYPE;
+	}
+}

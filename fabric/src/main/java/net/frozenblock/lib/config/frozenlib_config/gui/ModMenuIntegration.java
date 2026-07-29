@@ -19,12 +19,11 @@ package net.frozenblock.lib.config.frozenlib_config.gui;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.gui.screens.Screen;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class ModMenuIntegration implements ModMenuApi {
 
     @Override

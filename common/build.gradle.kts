@@ -1,12 +1,17 @@
+import com.possible_triangle.gradle.features.enableKotlin
+
 plugins {
-    id("flib-multiloader-common")
-    id("dev.architectury.loom-no-remap")
+    id("net.frozenblock.triangle.common")
     id("org.quiltmc.gradle.licenser")
-    kotlin("jvm")
+    checkstyle
+}
+
+checkstyle {
+    configFile = rootProject.file("checkstyle.xml")
+    toolVersion = "10.20.2"
 }
 
 val minecraft_version: String by project
-val loader_version: String by project
 val asm_version: String by project
 
 val cloth_config_version: String by project
@@ -22,8 +27,9 @@ val licenseChecks: Boolean = githubActions
 
 val applyLicenses: Task by tasks
 
-loom {
-    accessWidenerPath = file("src/main/resources/frozenlib.classtweaker")
+common {
+    accessWidener()
+    enableKotlin()
 }
 
 tasks {
@@ -39,11 +45,6 @@ tasks {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraft_version")
-
-    // only for @Environment
-    api("net.fabricmc:fabric-loader:${loader_version}")
-
     compileOnlyApi("org.ow2.asm:asm:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-commons:${asm_version}")
@@ -67,14 +68,6 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/generated")
-        }
-    }
-}
-
 val mergeCommonResources by tasks.registering(Sync::class) {
     from(sourceSets.main.get().resources.srcDirs)
     into(layout.buildDirectory.dir("merged-resources"))
@@ -92,27 +85,6 @@ configurations {
     }
 }
 
-artifacts {
-    add("commonJava", sourceSets.main.get().java.sourceDirectories.singleFile)
-    add("commonResources", mergeCommonResources.map { it.destinationDir }) {
-        builtBy(mergeCommonResources)
-    }
-}
-
-val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
-listOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements").forEach { variant ->
-    configurations.named(variant) {
-        attributes {
-            attribute(loaderAttribute, "common")
-        }
-    }
-}
-sourceSets.configureEach {
-    listOf(compileClasspathConfigurationName, runtimeClasspathConfigurationName).forEach { variant ->
-        configurations.named(variant) {
-            attributes {
-                attribute(loaderAttribute, "common")
-            }
-        }
-    }
+upload.maven {
+    name.set("frozenlib-common")
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.ChunkLifecycleEvents;
-import net.frozenblock.lib.event.api.events.ClientChunkLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientChunkLifecycleEvents;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.LevelAccessor;

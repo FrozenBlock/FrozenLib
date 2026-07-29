@@ -18,5 +18,7 @@
 package net.frozenblock.lib.entity.impl.behavior;
 
 public interface FrozenLibBehavior {
-	int frozenLib$getDuration();
+	default int frozenLib$getDuration() {
+		throw new AssertionError("Implemented in mixin");
+	}
 }

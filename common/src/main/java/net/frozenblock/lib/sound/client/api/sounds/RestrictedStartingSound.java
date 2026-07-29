@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.sound.client.api.sounds;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -27,7 +26,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundInstance<T> {
 
 	public final boolean stopOnDeath;

@@ -24,7 +24,7 @@ import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcesso
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
 
-public class FrozenLibStructureProcessorTypes {
+public final class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
 		final var register = FrozenDeferredRegister.create(

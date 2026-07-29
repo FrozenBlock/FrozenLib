@@ -17,16 +17,15 @@
 
 package net.frozenblock.lib.renderer.mixin.builtinblockmodels;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(BuiltInBlockModels.class)
 public class BuiltInBlockModelsMixin {
 

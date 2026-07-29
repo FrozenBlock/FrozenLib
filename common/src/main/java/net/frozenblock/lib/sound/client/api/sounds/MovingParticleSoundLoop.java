@@ -17,15 +17,14 @@
 
 package net.frozenblock.lib.sound.client.api.sounds;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickableSoundInstance {
 	private final T particle;
 	private final int fadeInTicks;

@@ -24,13 +24,32 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.triggers.Criterion;
 
 public interface AdvancementInterface {
-	AdvancementRewards frozenLib$getRewards();
-	void frozenLib$setRewards(AdvancementRewards rewards);
 
-	AdvancementRequirements frozenLib$getRequirements();
-	AdvancementRequirementsInterface frozenLib$getRequirementsInterface();
-	void frozenLib$setRequirements(AdvancementRequirements requirements);
+	default AdvancementRewards frozenLib$getRewards() {
+		throw new AssertionError();
+	}
 
-	Map<String, Criterion<?>> frozenLib$getCriteria();
-	void frozenLib$setCriteria(HashMap<String, Criterion<?>> criteria);
+	default void frozenLib$setRewards(AdvancementRewards rewards) {
+		throw new AssertionError();
+	}
+
+	default AdvancementRequirements frozenLib$getRequirements() {
+		throw new AssertionError();
+	}
+
+	default AdvancementRequirementsInterface frozenLib$getRequirementsInterface() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setRequirements(AdvancementRequirements requirements) {
+		throw new AssertionError();
+	}
+
+	default Map<String, Criterion<?>> frozenLib$getCriteria() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setCriteria(HashMap<String, Criterion<?>> criteria) {
+		throw new AssertionError();
+	}
 }

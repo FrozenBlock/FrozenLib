@@ -23,8 +23,8 @@ import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
-import net.frozenblock.lib.networking.ConfigPacketSender;
-import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.networking.api.NetworkingHelper;
+import net.frozenblock.lib.networking.impl.ConfigPacketSender;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -52,30 +52,30 @@ public final class ServerRegistrySync {
 
 	public static void registerHandlers() {
 		ConfigurationConnectionEvents.SERVER_CONFIGURE.register((handler, server, taskAdder) -> {
-			if (FrozenLibInitPlatformUtils.NETWORKING.canSendConfigPacket(handler, ServerPackets.Handshake.PACKET_TYPE)
-				&& FrozenLibInitPlatformUtils.NETWORKING.canSendConfigPacket(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
-				&& FrozenLibInitPlatformUtils.NETWORKING.canSendConfigPacket(handler, ServerPackets.ModProtocol.PACKET_TYPE)
-				&& FrozenLibInitPlatformUtils.NETWORKING.canSendConfigPacket(handler, ServerPackets.End.PACKET_TYPE)
+			if (NetworkingHelper.canSendConfigPacket(handler, ServerPackets.Handshake.PACKET_TYPE)
+				&& NetworkingHelper.canSendConfigPacket(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
+				&& NetworkingHelper.canSendConfigPacket(handler, ServerPackets.ModProtocol.PACKET_TYPE)
+				&& NetworkingHelper.canSendConfigPacket(handler, ServerPackets.End.PACKET_TYPE)
 			) {
 				taskAdder.accept(new QuiltSyncTask(handler, handler.connection));
 			}
 		});
 
-		FrozenLibInitPlatformUtils.NETWORKING.registerServerboundConfigPayloadType(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
-		FrozenLibInitPlatformUtils.NETWORKING.registerServerboundConfigPayloadType(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
-		FrozenLibInitPlatformUtils.NETWORKING.registerServerboundConfigPayloadType(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
+		NetworkingHelper.registerServerboundConfigPayloadType(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
+		NetworkingHelper.registerServerboundConfigPayloadType(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
+		NetworkingHelper.registerServerboundConfigPayloadType(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
 
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalServerConfigReceiver(ClientPackets.Handshake.PACKET_TYPE,
+		NetworkingHelper.registerGlobalServerConfigReceiver(ClientPackets.Handshake.PACKET_TYPE,
 			(payload, listener, sender) -> handleHandshake(payload, listener));
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalServerConfigReceiver(ClientPackets.ModProtocol.PACKET_TYPE,
+		NetworkingHelper.registerGlobalServerConfigReceiver(ClientPackets.ModProtocol.PACKET_TYPE,
 			(payload, listener, sender) -> handleModProtocol(payload, listener, sender));
-		FrozenLibInitPlatformUtils.NETWORKING.registerGlobalServerConfigReceiver(ClientPackets.End.PACKET_TYPE,
+		NetworkingHelper.registerGlobalServerConfigReceiver(ClientPackets.End.PACKET_TYPE,
 			(payload, listener, sender) -> handleEnd(payload, listener));
 
-		FrozenLibInitPlatformUtils.NETWORKING.registerClientboundConfigPayloadType(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
-		FrozenLibInitPlatformUtils.NETWORKING.registerClientboundConfigPayloadType(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
-		FrozenLibInitPlatformUtils.NETWORKING.registerClientboundConfigPayloadType(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
-		FrozenLibInitPlatformUtils.NETWORKING.registerClientboundConfigPayloadType(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
 	}
 
 	public static void handleHandshake(ClientPackets.Handshake handshake, ServerConfigurationPacketListenerImpl listener) {

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.testmod.registry;
 
-import net.frozenblock.lib.item.api.loot.LootTableModificationApi;
+import net.frozenblock.lib.item.api.loot.LootTableModification;
 import net.frozenblock.lib.item.impl.loot.MutableLootTable;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.item.Items;
@@ -33,7 +33,7 @@ public final class FTLootTables {
 	public static void init() {
 		FrozenTestMain.LOGGER.info("Registering Loot Table Modifications for FrozenTest.");
 		//BONUS CHEST
-		LootTableModificationApi.editTable(
+		LootTableModification.editTable(
 			BuiltInLootTables.SPAWN_BONUS_CHEST, false,
 			(id, mutableLootTable) -> mutableLootTable.modifyPools(
 				MutableLootTable.has(Items.ACACIA_LOG),
@@ -42,7 +42,7 @@ public final class FTLootTables {
 		);
 
 		//Cold Ocean Ruin Archaeology
-		LootTableModificationApi.editTable(
+		LootTableModification.editTable(
 			BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY, false,
 			(id, mutableLootTable) -> mutableLootTable.modifyPools(
 				MutableLootTable.has(Items.MOURNER_POTTERY_SHERD),

@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.event.mixin.neoforge.client;
 
-import net.frozenblock.lib.event.api.events.ClientLevelEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.jspecify.annotations.Nullable;
@@ -26,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@ClientOnly
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
 

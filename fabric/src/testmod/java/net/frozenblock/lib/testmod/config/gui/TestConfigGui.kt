@@ -20,8 +20,6 @@ package net.frozenblock.lib.testmod.config.gui
 import me.shedaniel.clothconfig2.api.ConfigBuilder
 import me.shedaniel.clothconfig2.api.ConfigCategory
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder
 import net.frozenblock.lib.config.api.client.gui.Slider
 import net.frozenblock.lib.config.api.client.gui.SliderType
@@ -29,13 +27,14 @@ import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper
 import net.frozenblock.lib.config.clothconfig.synced
 import net.frozenblock.lib.testmod.FrozenTestMain
 import net.frozenblock.lib.testmod.config.TestConfig
+import net.frozenblock.lib.platform.api.ClientOnly
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 object TestConfigGui {
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     fun setupEntries(category: ConfigCategory, entryBuilder: ConfigEntryBuilder) {
         category.setBackground(Identifier.withDefaultNamespace("textures/block/packed_mud.png"))
 

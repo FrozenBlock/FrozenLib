@@ -19,18 +19,19 @@ package net.frozenblock.lib.file.nbt;
 
 import java.io.File;
 import java.io.IOException;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * A class used to save and read NBT to/from files.
  */
-public class NbtFileUtils {
-	public static final File CONFIG_PATH = FrozenLibEarlyPlatformUtils.LOADER.getConfigDir().toFile();
+@UtilityClass
+public final class NbtFileUtils {
+	public static final File CONFIG_PATH = ModLoader.getConfigDir().toFile();
 
 	/**
 	 * Saves an NBT file to the config directory.
@@ -102,22 +103,21 @@ public class NbtFileUtils {
 	 */
 	@Nullable
 	public static CompoundTag readFromFile(File file) {
-		CompoundTag compoundTag = null;
+		CompoundTag tag = null;
 		try {
-			compoundTag = NbtIo.read(file.toPath());
+			tag = NbtIo.read(file.toPath());
 		} catch (IOException iOException) {
 			FrozenLibConstants.LOGGER.error("Could not read data {}", file, iOException);
 		}
-		return compoundTag;
+		return tag;
 	}
 
 	/**
-	 * Appends ".nbt" to the end of a {@link String}.
+	 * Appends {@code .nbt} to the end of a {@link String}.
 	 *
 	 * @param string The file's name, excluding the file extension.
-	 * @return The provided {@link String}, with ".nbt" appended at the end.
+	 * @return The provided {@link String}, with {@code .nbt} appended at the end.
 	 */
-	@Contract(pure = true)
 	public static String withNBTExtension(String string) {
 		return string + ".nbt";
 	}

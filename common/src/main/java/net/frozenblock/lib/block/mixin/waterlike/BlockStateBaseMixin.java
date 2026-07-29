@@ -43,5 +43,4 @@ public abstract class BlockStateBaseMixin {
 		if (!(this.asState().getBlock() instanceof BubbleColumnBlock bubbleColumn) || !WaterLikeBlock.supportsBubbleColumns(this.asState())) return;
 		level.scheduleTick(pos, bubbleColumn, BubbleColumnBlock.CHECK_PERIOD);
 	}
-
 }

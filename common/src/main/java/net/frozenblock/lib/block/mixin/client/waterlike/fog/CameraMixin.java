@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib.block.mixin.client.waterlike.fog;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.waterlike.WaterLikeFogUtil;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -30,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(Camera.class)
 public abstract class CameraMixin {
 
@@ -58,5 +57,4 @@ public abstract class CameraMixin {
 	private void frozenLib$resetWaterLikeFog(CallbackInfo info) {
 		WaterLikeFogUtil.reset(true);
 	}
-
 }

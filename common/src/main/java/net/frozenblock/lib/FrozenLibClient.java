@@ -17,30 +17,33 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
+import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
-import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
-import net.frozenblock.lib.event.api.events.ClientLevelEvents;
-import net.frozenblock.lib.event.api.events.ClientLifecycleEvents;
-import net.frozenblock.lib.event.api.events.ClientTickEvents;
-import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
-import net.frozenblock.lib.platform.api.client.hud.FrozenHudElements;
+import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationOverlayRenderer;
+import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationPostEffectManager;
+import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
+import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
+import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
+import net.frozenblock.lib.particle.client.impl.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
-import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {
@@ -56,13 +59,20 @@ public final class FrozenLibClient {
 		ClientCapeUtil.init();
 		FrozenLibParticleResources.init();
 		FrozenLibModelLayers.init();
-		FrozenLibModResourcePackApi.init();
+		ModResourcePackApi.init();
 		ClientWindUtil.init();
+		FrozenLibDebugScreenEntries.init();
 
-		FrozenHudElements.attachElementAfter(
+		HudElementRegistry.attachElementAfter(
 			VanillaHudAnchor.MISC_OVERLAYS,
 			FrozenLibConstants.id("spotting_icons"),
 			new SpottingIconHudElement()
+		);
+
+		HudElementRegistry.attachElementAfter(
+			VanillaHudAnchor.MISC_OVERLAYS,
+			FrozenLibConstants.id("suffocation_overlay"),
+			new SuffocationOverlayRenderer()
 		);
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(_ -> {
@@ -79,6 +89,9 @@ public final class FrozenLibClient {
 				WindManager.getOrCreate(level).tick(level);
 				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
+
+				if (minecraft.player != null) ClientSuffocationState.clientTick(minecraft.player);
+				SuffocationPostEffectManager.tick(minecraft);
 			}
 		);
 
@@ -93,5 +106,7 @@ public final class FrozenLibClient {
 
 	private static void clearStaticClientData() {
 		ClientScreenShaker.reset();
+		ClientSuffocationState.reset();
+		SuffocationPostEffectManager.reset();
 	}
 }

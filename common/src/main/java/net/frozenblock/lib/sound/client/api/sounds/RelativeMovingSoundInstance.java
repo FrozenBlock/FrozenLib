@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.sound.client.api.sounds;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -26,17 +25,17 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class RelativeMovingSoundInstance extends AbstractTickableSoundInstance {
 	private final Entity entity;
 	private final double xOffset;
 	private final double yOffset;
 	private final double zOffset;
 
-	public RelativeMovingSoundInstance(SoundEvent sound, SoundSource source, float f, float g, Entity entity, BlockPos pos, long l) {
-		super(sound, source, RandomSource.create(l));
-		this.volume = f;
-		this.pitch = g;
+	public RelativeMovingSoundInstance(SoundEvent sound, SoundSource source, float volume, float pitch, Entity entity, BlockPos pos, long seed) {
+		super(sound, source, RandomSource.create(seed));
+		this.volume = volume;
+		this.pitch = pitch;
 		this.entity = entity;
 		this.x = pos.getX() + 0.5D;
 		this.y = pos.getY() + 0.5D;

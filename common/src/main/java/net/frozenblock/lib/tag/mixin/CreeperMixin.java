@@ -32,5 +32,4 @@ public class CreeperMixin {
     public void frozenLib$ignoreTag(LivingEntity target, CallbackInfo info) {
 		if (target != null && target.is(FrozenLibEntityTypeTags.CREEPER_IGNORES)) info.cancel();
     }
-
 }

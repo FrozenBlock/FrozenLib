@@ -17,18 +17,16 @@
 
 package net.frozenblock.lib.renderer.mixin;
 
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.FabricRenderState;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(FabricRenderState.class)
 public interface RenderStateDataKeyMixin extends FrozenLibRenderState { // in common mixins.json
 
@@ -58,13 +56,13 @@ public interface RenderStateDataKeyMixin extends FrozenLibRenderState { // in co
 
 	@Unique
 	@Override
-	public default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
+	default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
 		this.setData(getOrCreateFabricKey(key), value);
 	}
 
 	@Unique
 	@Override
-	public default void frozenLib$clearExtraData() {
+	default void frozenLib$clearExtraData() {
 		this.clearExtraData();
 	}
 

@@ -17,20 +17,27 @@
 
 package net.frozenblock.lib.event.api.events;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
-public class EntityTrackingEvents {
-
-	public static final Event<StartTracking> START_TRACKING = FrozenEvents.createEnvironmentEvent(StartTracking.class, callbacks -> (trackedEntity, player) -> {
+@UtilityClass
+public final class EntityTrackingEvents {
+	/**
+	 * The event that is triggered when an entity starts being tracked.
+	 */
+	public static final Event<StartTracking> START_TRACKING = EventRegistry.createEnvironmentEvent(StartTracking.class, callbacks -> (trackedEntity, player) -> {
 		for (StartTracking callback : callbacks) {
 			callback.onStartTracking(trackedEntity, player);
 		}
 	});
 
-	public static final Event<StopTracking> STOP_TRACKING = FrozenEvents.createEnvironmentEvent(StopTracking.class, callbacks -> (trackedEntity, player) -> {
+	/**
+	 * The event that is triggered when an entity stops being tracked.
+	 */
+	public static final Event<StopTracking> STOP_TRACKING = EventRegistry.createEnvironmentEvent(StopTracking.class, callbacks -> (trackedEntity, player) -> {
 		for (StopTracking callback : callbacks) {
 			callback.onStopTracking(trackedEntity, player);
 		}

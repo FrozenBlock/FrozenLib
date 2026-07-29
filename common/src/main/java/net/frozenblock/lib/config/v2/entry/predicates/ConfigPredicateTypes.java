@@ -38,6 +38,8 @@ public class ConfigPredicateTypes {
 		register("all_of", AllOfPredicate.CODEC);
 		register("not", NotPredicate.CODEC);
 		register("exists", ExistsPredicate.CODEC);
+		register("selector", SelectorPredicate.CODEC);
+		register("with_fallback", WithFallbackPredicate.CODEC);
 		register("true", TruePredicate.CODEC);
 	}
 

@@ -17,22 +17,21 @@
 
 package net.frozenblock.lib.renderer.block;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entrypoint.api.ClientEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.event.api.EventRegistry;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 
 /**
  * Helps with registering a built-in block model.
  */
-@Environment(EnvType.CLIENT)
-public class BuiltInBlockModelRegistry {
+@ClientOnly
+public final class BuiltInBlockModelRegistry {
 	/**
 	 * The event that is triggered when built-in block models are being created.
 	 */
-	public static final Event<Register> REGISTER = FrozenEvents.createEnvironmentEvent(Register.class, (callbacks) -> (builder) -> {
+	public static final Event<Register> REGISTER = EventRegistry.createEnvironmentEvent(Register.class, (callbacks) -> (builder) -> {
 		for (var callback : callbacks) callback.addBuiltInBlockModels(builder);
 	});
 

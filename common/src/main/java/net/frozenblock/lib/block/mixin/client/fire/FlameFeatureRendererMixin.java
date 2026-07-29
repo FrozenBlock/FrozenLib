@@ -20,10 +20,9 @@ package net.frozenblock.lib.block.mixin.client.fire;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.renderer.FrozenLibRenderState;import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.FeatureFrameContext;
@@ -33,7 +32,7 @@ import net.minecraft.client.resources.model.sprite.AtlasManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(FlameFeatureRenderer.class)
 public class FlameFeatureRendererMixin {
 
@@ -49,7 +48,7 @@ public class FlameFeatureRendererMixin {
 		FeatureFrameContext context
 	) {
 		final EntityRenderState entityRenderState = submit.entityRenderState();
-		final FireType fireType = ((FrozenLibRenderState) entityRenderState).frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
+		final FireType fireType = entityRenderState.frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
 		if (fireType != null) {
 			final AtlasManager atlasManager = context.atlasManager();
 			final FireType.TextureSettings textures = fireType.textures();

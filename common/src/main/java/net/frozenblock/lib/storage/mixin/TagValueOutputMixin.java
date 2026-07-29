@@ -23,6 +23,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TagValueOutput.class)
 public class TagValueOutputMixin implements ValueOutputExtension {
@@ -31,11 +32,13 @@ public class TagValueOutputMixin implements ValueOutputExtension {
 	@Final
 	private CompoundTag output;
 
+	@Unique
 	@Override
 	public void frozenLib$putByteArray(String key, byte[] value) {
 		this.output.putByteArray(key, value);
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$putLongArray(String key, long[] value) {
 		this.output.putLongArray(key, value);

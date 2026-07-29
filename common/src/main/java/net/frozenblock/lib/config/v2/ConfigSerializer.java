@@ -37,11 +37,11 @@ import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.Nullable;
 
 public class ConfigSerializer {
-	private static final Path CONFIG_PATH = FrozenLibEarlyPlatformUtils.LOADER.getConfigDir();
+	private static final Path CONFIG_PATH = ModLoader.getConfigDir();
 
 	public static <T> void saveConfig(ConfigData<T> data) {
 		final ID configId = data.id();

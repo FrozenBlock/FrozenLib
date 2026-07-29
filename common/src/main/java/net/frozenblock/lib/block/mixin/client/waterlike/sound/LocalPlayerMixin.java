@@ -24,10 +24,9 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.waterlike.UnderWaterAmbientSoundInstanceHandler;
-import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -44,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin {
 
@@ -57,7 +56,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> wasPlayerInWaterLikeStatuses
 	) {
-		wasPlayerInWaterLikeStatuses.set(((PlayerInWaterLikeInterface) this).frozenLib$playerWaterLikesInside());
+		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 		UnderWaterAmbientSoundInstanceHandler.tick();
 	}
 
@@ -73,7 +72,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
-		isPlayerInWaterLikeStatuses.set(((PlayerInWaterLikeInterface) this).frozenLib$playerWaterLikesInside());
+		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 	}
 
 	@ModifyExpressionValue(
@@ -161,5 +160,4 @@ public class LocalPlayerMixin {
 		}
 		return original;
 	}
-
 }
