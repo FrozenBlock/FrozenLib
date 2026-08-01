@@ -30,15 +30,11 @@ import net.minecraft.server.level.ServerPlayer;
 
 public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPayload {
 	public static final Type<CapeCustomizePacket> TYPE = new Type<>(FrozenLibConstants.id("customize_cape"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
-
-	public CapeCustomizePacket(FriendlyByteBuf buf) {
-		this(Cape.NETWORK_CODEC.decode(buf));
-	}
-
-	public void write(FriendlyByteBuf buf) {
-		Cape.NETWORK_CODEC.encode(buf, this.cape);
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.composite(
+		Cape.NETWORK_CODEC,
+		CapeCustomizePacket::cape,
+		CapeCustomizePacket::new
+	);
 
 	public static CapeCustomizePacket createDisable() {
 		return new CapeCustomizePacket(Optional.empty());

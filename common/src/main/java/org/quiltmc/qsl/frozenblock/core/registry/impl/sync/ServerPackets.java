@@ -99,17 +99,15 @@ public final class ServerPackets {
 	 */
 	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
 		public static final Type<ErrorStyle> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/error_style"));
-		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
-
-		public ErrorStyle(FriendlyByteBuf buf) {
-			this(ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), buf.readBoolean());
-		}
-
-		public void write(FriendlyByteBuf buf) {
-			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorHeader);
-			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorFooter);
-			buf.writeBoolean(this.showError);
-		}
+		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.composite(
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC,
+			ErrorStyle::errorHeader,
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC,
+			ErrorStyle::errorFooter,
+			ByteBufCodecs.BOOL,
+			ErrorStyle::showError,
+			ErrorStyle::new
+		);
 
 		@Override
 		public Type<?> type() {

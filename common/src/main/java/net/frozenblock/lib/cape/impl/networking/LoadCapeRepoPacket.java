@@ -18,21 +18,18 @@
 package net.frozenblock.lib.cape.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record LoadCapeRepoPacket(String capeRepo) implements CustomPacketPayload {
 	public static final Type<LoadCapeRepoPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("load_cape_repo"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, LoadCapeRepoPacket> STREAM_CODEC = StreamCodec.ofMember(LoadCapeRepoPacket::write, LoadCapeRepoPacket::create);
-
-	public static LoadCapeRepoPacket create(FriendlyByteBuf buf) {
-		return new LoadCapeRepoPacket(buf.readUtf());
-	}
-
-	public void write(FriendlyByteBuf buf) {
-		buf.writeUtf(this.capeRepo());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, LoadCapeRepoPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.STRING_UTF8,
+		LoadCapeRepoPacket::capeRepo,
+		LoadCapeRepoPacket::new
+	);
 
 	@Override
 	public Type<? extends CustomPacketPayload> type() {

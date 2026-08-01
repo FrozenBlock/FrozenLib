@@ -121,9 +121,9 @@ public final class FrozenLibNetworking {
 		// CAPE
 		NetworkingHelper.registerC2SPayloadType(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
 		NetworkingHelper.registerGlobalServerReceiver(CapeCustomizePacket.TYPE, (packet, server, player) -> CapeCustomizePacket.handle(packet, player));
-		NetworkingHelper.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
+		NetworkingHelper.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.CODEC);
 
 		// WIND
-		NetworkingHelper.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
+		NetworkingHelper.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.CODEC);
 	}
 }

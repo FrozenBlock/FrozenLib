@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 
 public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
 	public static final Type<WindAccessPacket> TYPE = new Type<>(FrozenLibConstants.id("wind_access"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, WindAccessPacket> STREAM_CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
+	public static final StreamCodec<RegistryFriendlyByteBuf, WindAccessPacket> CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
 
 	public static WindAccessPacket create(FriendlyByteBuf buf) {
         return new WindAccessPacket(Vec3.STREAM_CODEC.decode(buf));
