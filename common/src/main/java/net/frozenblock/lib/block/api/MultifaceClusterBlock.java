@@ -59,7 +59,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     private final Function<BlockState, VoxelShape> shapesCache;
 
     public MultifaceClusterBlock(int height, int xzOffset, Properties properties) {
-        super(properties.pushReaction(PushReaction.DESTROY));
+        super(properties.pushReaction(PushReaction.POPPED));
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
         this.upShape = Block.box(xzOffset, 0D, xzOffset, 16D - xzOffset, height, (16D - xzOffset));
         this.downShape = Block.box(xzOffset, (16D - height), xzOffset, (16D - xzOffset), 16D, (16D - xzOffset));

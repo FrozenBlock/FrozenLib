@@ -44,6 +44,7 @@ public abstract class DataMarkerProcessableLegacySinglePoolElement extends DataM
 	@Override
 	protected StructurePlaceSettings getSettings(Rotation rotation, BoundingBox boundingBox, LiquidSettings liquidSettings, boolean offset) {
 		StructurePlaceSettings structurePlaceSettings = super.getSettings(rotation, boundingBox, liquidSettings, offset);
+		structurePlaceSettings.popProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
 		structurePlaceSettings.addProcessor(BlockIgnoreProcessor.AIR);
 		return structurePlaceSettings;
 	}

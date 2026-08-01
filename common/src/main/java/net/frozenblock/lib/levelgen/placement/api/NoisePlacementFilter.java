@@ -26,7 +26,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 public class NoisePlacementFilter implements PlacementFilter {
 	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -78,7 +78,7 @@ public class NoisePlacementFilter implements PlacementFilter {
 	@Override
 	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
 		final WorldGenLevel level = context.getLevel();
-		final ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
+		final PerlinNoise sampler = this.noiseType.createNoise(level.getSeed());
 		final double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 
 		boolean isInside = sample > this.minThreshold && sample < this.maxThreshold;

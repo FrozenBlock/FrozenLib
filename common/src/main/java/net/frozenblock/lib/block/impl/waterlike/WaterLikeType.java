@@ -21,12 +21,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.registry.FrozenLibRegistries;import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,7 +45,7 @@ public record WaterLikeType(
 	Holder<SoundEvent> ambientSound
 ) {
 	public static final Codec<WaterLikeType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(WaterLikeType::blocks),
+		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("blocks").forGetter(WaterLikeType::blocks),
 		SoundEvent.CODEC.fieldOf("generic_swim_sound").forGetter(WaterLikeType::genericSwimSound),
 		SoundEvent.CODEC.fieldOf("hostile_swim_sound").forGetter(WaterLikeType::hostileSwimSound),
 		SoundEvent.CODEC.fieldOf("player_swim_sound").forGetter(WaterLikeType::playerSwimSound),

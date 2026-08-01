@@ -26,13 +26,13 @@ import net.frozenblock.lib.entity.api.suffocation.MeterStyle;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryFixedCodec;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.StringRepresentable;
@@ -50,7 +50,7 @@ public record SuffocationType(
 	Optional<ScreenEffectSettings> screenEffect
 ) {
 	public static final Codec<SuffocationType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.BLOCK).optionalFieldOf("source_blocks").forGetter(SuffocationType::sourceBlocks),
+		RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("source_blocks").forGetter(SuffocationType::sourceBlocks),
 		Mechanics.CODEC.fieldOf("mechanics").forGetter(SuffocationType::mechanics),
 		DamageSettings.CODEC.optionalFieldOf("damage_settings", DamageSettings.DEFAULT).forGetter(SuffocationType::damageSettings),
 		Sounds.CODEC.optionalFieldOf("sounds", Sounds.EMPTY).forGetter(SuffocationType::sounds),

@@ -72,8 +72,8 @@ public final class ServerRegistrySync {
 		NetworkingHelper.registerGlobalServerConfigReceiver(ClientPackets.End.PACKET_TYPE,
 			(payload, listener, sender) -> handleEnd(payload, listener));
 
-		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
-		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.STREAM_CODEC);
+		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.STREAM_CODEC);
 		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
 		NetworkingHelper.registerClientboundConfigPayloadType(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
 	}

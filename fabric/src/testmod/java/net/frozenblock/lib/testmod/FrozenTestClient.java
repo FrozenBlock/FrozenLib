@@ -32,7 +32,7 @@ public final class FrozenTestClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityTypes.ARROW, new FlyBySoundHub.FlyBySound(1F, 1F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
+        FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityTypes.ARROW, new FlyBySoundHub.FlyBySound(1F, 1F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE.value()));
 		SplashTextAPI.addSplashLocation(Identifier.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, "texts/splashes.txt"));
     }
 }

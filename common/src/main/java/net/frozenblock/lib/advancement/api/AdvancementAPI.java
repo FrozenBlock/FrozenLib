@@ -27,6 +27,10 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.triggers.Criterion;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -42,7 +46,7 @@ public final class AdvancementAPI {
 	 * Use only when needed, as this will increase memory usage
 	 */
 	public static void setupRewards(Advancement advancement) {
-		if (advancement.frozenLib$getRewards() == AdvancementRewards.EMPTY) advancement.frozenLib$setRewards(new AdvancementRewards(0, List.of(), List.of(), Optional.empty()));
+		if (advancement.frozenLib$getRewards() == AdvancementRewards.EMPTY) advancement.frozenLib$setRewards(new AdvancementRewards(0, HolderSet.empty(), List.of(), Optional.empty()));
 	}
 
 	/**
@@ -90,13 +94,14 @@ public final class AdvancementAPI {
 		advancement.frozenLib$getRequirementsInterface().frozenLib$setRequirements(Collections.unmodifiableList(requirementsList));
 	}
 
-	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> newLootTables) {
+	public static void addLootTables(HolderLookup.Provider registries, Advancement advancement, List<ResourceKey<LootTable>> newLootTables) {
 		if (newLootTables.isEmpty()) return;
 		setupRewards(advancement);
+		var lootTables = registries.lookupOrThrow(Registries.LOOT_TABLE);
 
-		final List<ResourceKey<LootTable>> finalLootTables = new ArrayList<>(advancement.frozenLib$getRewards().frozenLib$getLoot());
-		finalLootTables.addAll(newLootTables);
-		advancement.frozenLib$getRewards().frozenLib$setLoot(Collections.unmodifiableList(finalLootTables));
+		final List<Holder<LootTable>> finalLootTables = new ArrayList<>(advancement.frozenLib$getRewards().frozenLib$getLoot().stream().toList());
+		finalLootTables.addAll(newLootTables.stream().map(lootTables::getOrThrow).toList());
+		advancement.frozenLib$getRewards().frozenLib$setLoot(HolderSet.direct(Collections.unmodifiableList(finalLootTables)));
 	}
 
 	public static void addRecipes(Advancement advancement, List<ResourceKey<Recipe<?>>> newRecipes) {

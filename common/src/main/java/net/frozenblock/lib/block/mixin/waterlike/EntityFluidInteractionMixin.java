@@ -36,14 +36,14 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityFluidInteraction.class)
 public class EntityFluidInteractionMixin {
 
 	@Inject(method = "update", at = @At("HEAD"))
 	public void frozenLib$setupMesogleaFluidDetection(
-		Entity entity, boolean ignoreCurrent, CallbackInfo info,
+		Entity entity, boolean ignoreCurrent, CallbackInfoReturnable<Boolean> cir,
 		@Share("frozenLib$closestPosDistance") LocalDoubleRef closestPosDistanceRef
 	) {
 		closestPosDistanceRef.set(Double.MAX_VALUE);
@@ -103,7 +103,7 @@ public class EntityFluidInteractionMixin {
 		)
 	)
 	public void frozenLib$updateEyeInWaterLike(
-		Entity entity, boolean ignoreCurrent, CallbackInfo info,
+		Entity entity, boolean ignoreCurrent, CallbackInfoReturnable<Boolean> cir,
 		@Share("frozenLib$blockState") LocalRef<BlockState> blockStateRef
 	) {
 		if (blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock) {

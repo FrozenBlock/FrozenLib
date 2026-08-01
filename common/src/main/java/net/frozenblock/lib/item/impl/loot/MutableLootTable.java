@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.frozenblock.lib.item.api.loot.LootTableSource;
+import net.frozenblock.lib.item.mixin.loot.LootTableAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKeySet;
@@ -36,13 +38,13 @@ import org.jetbrains.annotations.Nullable;
 @UnstableApi
 public class MutableLootTable {
 	private final ArrayList<MutableLootPool> pools;
-	private final ArrayList<LootItemFunction> functions = new ArrayList<>();
+	private final ArrayList<Holder<LootItemFunction>> functions = new ArrayList<>();
 	private final ContextKeySet paramSet;
 	private final Identifier randomSequence;
 
 	public MutableLootTable(LootTable table) {
 		this.pools = createLootPools(table.pools);
-		this.functions.addAll(table.functions);
+		((LootTableAccessor) table).frozenLib$getModifier().ifPresent(this.functions::add);
 		this.paramSet = table.getParamSet();
 		this.randomSequence = table.randomSequence.orElse(null);
 	}

@@ -25,7 +25,6 @@ import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
-import net.frozenblock.lib.item.impl.FabricFuelRegistry;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 
 public final class FrozenLibFabric extends FrozenModInitializer {
@@ -46,7 +45,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibMain.setup();
-		FabricFuelRegistry.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 

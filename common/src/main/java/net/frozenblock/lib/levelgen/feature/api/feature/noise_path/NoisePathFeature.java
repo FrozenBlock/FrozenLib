@@ -31,7 +31,7 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 
 public record NoisePathFeature(
 	NoiseBandPlacement noiseBandPlacement,
@@ -49,7 +49,7 @@ public record NoisePathFeature(
 
 	@Override
 	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
-		final ImprovedNoise sampler = this.noiseBandPlacement.noiseType().createNoise(level.getSeed());
+		final PerlinNoise sampler = this.noiseBandPlacement.noiseType().createNoise(level.getSeed());
 		final double noiseScale = this.noiseBandPlacement.noiseScale();
 		final boolean calculateNoiseWithY = this.noiseBandPlacement.calculateNoiseWithY();
 		final boolean scaleYNoise = this.noiseBandPlacement.scaleYNoise();
@@ -107,7 +107,7 @@ public record NoisePathFeature(
 		BlockPos.MutableBlockPos pos,
 		RandomSource random,
 		List<NoiseBandBlockPlacement> blockPlacements,
-		ImprovedNoise sampler,
+		PerlinNoise sampler,
 		double noiseScale,
 		boolean calculateNoiseWithY,
 		boolean scaleYNoise

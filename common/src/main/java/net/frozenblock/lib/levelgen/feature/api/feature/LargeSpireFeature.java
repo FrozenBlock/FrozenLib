@@ -24,7 +24,7 @@ import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
@@ -72,8 +72,8 @@ public record LargeSpireFeature(
 		FloatProviders.codec(0F, 2F).fieldOf("wind_speed").forGetter(LargeSpireFeature::windSpeed),
 		Codec.intRange(0, 100).fieldOf("min_radius_for_wind").forGetter(LargeSpireFeature::minRadiusForWind),
 		Codec.floatRange(0F, 5F).fieldOf("min_bluntness_for_wind").forGetter(LargeSpireFeature::minBluntnessForWind),
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("base_blocks").forGetter(LargeSpireFeature::baseBlocks),
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter(LargeSpireFeature::replaceable)
+		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("base_blocks").forGetter(LargeSpireFeature::baseBlocks),
+		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("replaceable").forGetter(LargeSpireFeature::replaceable)
 	).apply(instance, LargeSpireFeature::new));
 
 	@Override

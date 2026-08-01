@@ -18,48 +18,53 @@
 package net.frozenblock.lib.item.impl.loot;
 
 import io.netty.util.internal.UnstableApi;
+import java.util.ArrayList;
 import java.util.List;
+import net.frozenblock.lib.item.mixin.loot.LootPoolEntryContainerAccessor;
+import net.frozenblock.lib.item.mixin.loot.UniformContainerBaseAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.UniformContainerBase;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 @UnstableApi
 public class MutableLootItem {
-	public final List<LootItemCondition> conditions;
+	public final ArrayList<Holder<LootItemCondition>> conditions = new ArrayList<>();
 	public int weight;
 	public int quality;
-	public final List<LootItemFunction> functions;
+	public final ArrayList<Holder<LootItemFunction>> functions = new ArrayList<>();
 	public Holder<Item> item;
 
 	public MutableLootItem(LootItem original) {
-		this.conditions = original.conditions;
-		this.weight = original.weight;
-		this.quality = original.quality;
-		this.functions = original.functions;
+		((LootPoolEntryContainerAccessor) original).frozenLib$getCondition().ifPresent(this.conditions::add);
+		((LootPoolEntryContainerAccessor) original).frozenLib$getModifier().ifPresent(this.functions::add);
+		this.weight = ((UniformContainerBaseAccessor) original).frozenLib$getWeight();
+		this.quality = ((UniformContainerBaseAccessor) original).frozenLib$getQuality();
 		this.item = original.item;
 	}
 
-	public MutableLootItem(Holder<Item> item, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
+	public MutableLootItem(Holder<Item> item, int weight, int quality, List<Holder<LootItemCondition>> conditions, List<Holder<LootItemFunction>> functions) {
 		this.item = item;
-		this.conditions = conditions;
+		this.conditions.addAll(conditions);
 		this.weight = weight;
 		this.quality = quality;
-		this.functions = functions;
+		this.functions.addAll(functions);
 	}
 
-	public MutableLootItem(ItemLike item, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
-		this.item = item.asItem().builtInRegistryHolder();
-		this.conditions = conditions;
-		this.weight = weight;
-		this.quality = quality;
-		this.functions = functions;
+	public MutableLootItem(ItemLike item, int weight, int quality, List<Holder<LootItemCondition>> conditions, List<Holder<LootItemFunction>> functions) {
+		this(item.asItem().builtInRegistryHolder(), weight, quality, conditions, functions);
 	}
 
 	public LootItem build() {
-		return new LootItem(this.item, this.weight, this.quality, this.conditions, this.functions);
+		final UniformContainerBase.Builder<?> builder = LootItem.lootTableItem(this.item.value());
+		builder.setWeight(this.weight);
+		builder.setQuality(this.quality);
+		this.conditions.forEach(builder::when);
+		this.functions.forEach(builder::apply);
+		return (LootItem) builder.build();
 	}
 
 	public int getWeight() {

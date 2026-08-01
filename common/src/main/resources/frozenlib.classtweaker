@@ -289,8 +289,8 @@ transitive-mutable field net/minecraft/client/renderer/entity/AgeableMobRenderer
 
 # Rendering
 transitive-accessible method net/minecraft/client/renderer/entity/EntityRenderers register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/client/renderer/entity/EntityRendererProvider;)V
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
 
 transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
@@ -373,7 +373,7 @@ transitive-inject-interface net/minecraft/world/item/ServerItemCooldowns net/fro
 
 # Loot Table
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootTable functions Ljava/util/List;
+#transitive-accessible field net/minecraft/world/level/storage/loot/LootTable functions Ljava/util/List;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable randomSequence Ljava/util/Optional;
 
 # Loot Table Builder
@@ -386,30 +386,30 @@ transitive-inject-interface net/minecraft/world/level/storage/loot/LootTable$Bui
 
 # Loot Pool
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool entries Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool conditions Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool functions Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+#transitive-accessible field net/minecraft/world/level/storage/loot/LootPool conditions Ljava/util/List;
+#transitive-accessible field net/minecraft/world/level/storage/loot/LootPool functions Ljava/util/List;
+#transitive-accessible field net/minecraft/world/level/storage/loot/LootPool rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+#transitive-accessible field net/minecraft/world/level/storage/loot/LootPool bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder conditions Lcom/google/common/collect/ImmutableList$Builder;
 transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
-transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder rolls Lnet/minecraft/core/Holder;
+transitive-accessible field net/minecraft/world/level/storage/loot/LootPool$Builder bonusRolls Lnet/minecraft/core/Holder;
 
 # Loot Pool Entry Container
-transitive-accessible method net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer <init> (Ljava/util/List;)V
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer conditions Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer compositeCondition Ljava/util/function/Predicate;
+#transitive-accessible method net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer <init> (Ljava/util/List;)V
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer conditions Ljava/util/List;
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer compositeCondition Ljava/util/function/Predicate;
 
 # Loot Pool Singleton Container
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer weight I
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer quality I
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer functions Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer weight I
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer quality I
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer functions Ljava/util/List;
+#transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
 
 # Loot Item
 transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;
-transitive-accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/core/Holder;IILjava/util/List;Ljava/util/List;)V
+#transitive-accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/core/Holder;IILjava/util/List;Ljava/util/List;)V
 
 # Worldgen
 ####################################################################################
@@ -431,8 +431,8 @@ transitive-accessible field net/minecraft/world/level/levelgen/placement/Placeme
 transitive-accessible method net/minecraft/world/level/levelgen/feature/MultifaceGrowthFeature isAirOrWater (Lnet/minecraft/world/level/block/state/BlockState;)Z
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader$DefaultSpreaderConfig block Lnet/minecraft/world/level/block/MultifaceBlock;
 transitive-accessible method net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider <init> (Lnet/minecraft/world/level/block/state/BlockState;)V
-transitive-accessible method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature distributeVegetation (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Ljava/util/Set;)V
-transitive-accessible method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature placeGround (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/function/Predicate;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos$MutableBlockPos;I)Z
+transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature distributeVegetation (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Ljava/util/Set;)V
+transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature placeGround (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/function/Predicate;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos$MutableBlockPos;I)Z
 
 # Biomes
 transitive-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
@@ -447,12 +447,12 @@ transitive-accessible field net/minecraft/world/level/biome/BiomeGenerationSetti
 transitive-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings boneMealFeatures Ljava/util/function/Supplier;
 transitive-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
 transitive-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
-transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
-transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
+#transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
+#transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
 transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
 transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
-transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
-transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
+#transitive-accessible field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
+#transitive-mutable field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
 transitive-accessible method net/minecraft/data/worldgen/biome/OverworldBiomes calculateSkyColor (F)I
 transitive-accessible method net/minecraft/world/level/biome/OverworldBiomeBuilder addBiomes (Ljava/util/function/Consumer;)V
 transitive-accessible field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Ljava/util/function/Supplier;
@@ -477,7 +477,7 @@ transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Biom
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource <init> (Lnet/minecraft/core/HolderSet;)V
 
 # Noise
-transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
+#transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
 transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSettings net/frozenblock/lib/levelgen/material/impl/NoiseGeneratorSettingsInterface
 
 # Structures

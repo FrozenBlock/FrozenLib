@@ -41,6 +41,9 @@ import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.MobSpawnSettings;
@@ -82,28 +85,22 @@ public final class BiomeModifications {
 	 * Convenience method to add an entity spawn to one or more biomes.
 	 *
 	 * @see BiomeSelectors
-	 * @see net.minecraft.world.level.biome.MobSpawnSettings.Builder#addSpawn(MobCategory, int, MobSpawnSettings.SpawnerData)
+	 * @see net.minecraft.world.level.biome.MobSpawnSettings.Builder#addSpawn(EntityType, MobCategory, int, IntProvider)
 	 */
-	public static void addSpawn(
-		Predicate<BiomeSelectionContext> biomeSelector,
-		MobCategory category,
-		EntityType<?> entityType,
-		int weight,
-		int minGroupSize,
-		int maxGroupSize
-	) {
+	public static void addSpawn(Predicate<BiomeSelectionContext> biomeSelector,
+	                            MobCategory category, EntityType<?> entityType,
+	                            int weight, int minGroupSize, int maxGroupSize) {
 		// See constructor of SpawnSettings.SpawnEntry for context
-		Preconditions.checkArgument(
-			entityType.getCategory() != MobCategory.MISC,
-			"Cannot add spawns for entities with category=MISC since they'd be replaced by pigs."
-		);
+		Preconditions.checkArgument(entityType.getCategory() != MobCategory.MISC,
+			"Cannot add spawns for entities with category=MISC since they'd be replaced by pigs.");
 
 		// We need the entity type to be registered, or we cannot deduce an ID otherwise
-		final Identifier entityId = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+		Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 		Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.getResourceKey(entityType).isPresent(), "Unregistered entity type: %s", entityType);
 
-		create(entityId).add(ModificationPhase.ADDITIONS, biomeSelector, context -> {
-			context.getMobSpawnSettings().addSpawn(category, new MobSpawnSettings.SpawnerData(entityType, minGroupSize, maxGroupSize), weight);
+		create(id).add(ModificationPhase.ADDITIONS, biomeSelector, context -> {
+			IntProvider count = minGroupSize == maxGroupSize ? ConstantInt.of(minGroupSize) : UniformInt.of(minGroupSize, maxGroupSize);
+			context.getMobSpawnSettings().addSpawn(category, new MobSpawnSettings.SpawnerData(entityType, count), weight);
 		});
 	}
 

@@ -60,11 +60,12 @@ public abstract class LootTableBuilderMixin implements ModifiableLootTableBuilde
 	@Unique
 	private static LootPool.Builder frozenLib$copyOf(LootPool pool) {
 		final LootPool.Builder builder = LootPool.lootPool();
-		builder.setRolls(pool.rolls);
-		builder.setBonusRolls(pool.bonusRolls);
+		final LootPoolAccessor accessor = (LootPoolAccessor) pool;
+		builder.setRolls(accessor.frozenLib$getRolls());
+		builder.setBonusRolls(accessor.frozenLib$getBonusRolls());
 		pool.entries.forEach(builder.entries::add);
-		pool.conditions.forEach(builder.conditions::add);
-		pool.functions.forEach(builder.functions::add);
+		accessor.frozenLib$getCondition().ifPresent(builder.conditions::add);
+		accessor.frozenLib$getModifier().ifPresent(builder.functions::add);
 		return builder;
 	}
 }

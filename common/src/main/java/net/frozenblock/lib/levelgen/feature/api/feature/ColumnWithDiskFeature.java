@@ -23,7 +23,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
@@ -50,7 +50,7 @@ public record ColumnWithDiskFeature(
 		IntProviders.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(ColumnWithDiskFeature::radius),
 		IntProviders.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(ColumnWithDiskFeature::height),
 		Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(ColumnWithDiskFeature::surroundingPillarChance),
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(ColumnWithDiskFeature::replaceableBlocks),
+		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(ColumnWithDiskFeature::replaceableBlocks),
 		BlockStateProvider.CODEC.fieldOf("disk_block_state").forGetter(ColumnWithDiskFeature::diskState)
 	).apply(instance, ColumnWithDiskFeature::new));
 

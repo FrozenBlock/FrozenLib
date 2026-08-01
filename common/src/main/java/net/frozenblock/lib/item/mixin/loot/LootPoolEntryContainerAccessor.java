@@ -15,15 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.axe;
+package net.frozenblock.lib.item.mixin.loot;
 
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
-import net.minecraft.world.level.block.Block;
+import java.util.Optional;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public final class StrippableBlockRegistry {
+@Mixin(LootPoolEntryContainer.class)
+public interface LootPoolEntryContainerAccessor {
 
-	@PlatformImpl
-	public static void register(Block block, Block strippedBlock) {
-		throw new AssertionError();
-	}
+	@Accessor("condition")
+	Optional<Holder<LootItemCondition>> frozenLib$getCondition();
+
+	@Accessor("modifier")
+	Optional<Holder<LootItemFunction>> frozenLib$getModifier();
 }

@@ -18,26 +18,26 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.api.sync;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 
 public record ModProtocolDef(String id, String displayName, IntList versions, boolean optional) {
-	public static void write(FriendlyByteBuf buf, ModProtocolDef def) {
-		buf.writeUtf(def.id);
-		buf.writeUtf(def.displayName);
-		buf.writeIntIdList(def.versions);
-		buf.writeBoolean(def.optional);
-	}
-
-	public static ModProtocolDef read(FriendlyByteBuf buf) {
-		final String id = buf.readUtf();
-		final String name = buf.readUtf();
-		final IntList versions = buf.readIntIdList();
-		final boolean optional = buf.readBoolean();
-		return new ModProtocolDef(id, name, versions, optional);
-	}
+	public static final StreamCodec<FriendlyByteBuf, ModProtocolDef> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.STRING_UTF8,
+		ModProtocolDef::id,
+		ByteBufCodecs.STRING_UTF8,
+		ModProtocolDef::displayName,
+		ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.collection(IntArrayList::new)),
+		ModProtocolDef::versions,
+		ByteBufCodecs.BOOL,
+		ModProtocolDef::optional,
+		ModProtocolDef::new
+	);
 
 	public int latestMatchingVersion(IntCollection versions) {
 		return ProtocolVersions.getHighestSupported(versions, this.versions);

@@ -23,7 +23,7 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.sound.SoundTypeCodecs;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class SoundTypeOverride {
 	public static final Codec<SoundTypeOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
+		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
 		SoundTypeCodecs.SOUND_TYPE.fieldOf("sound_type").forGetter(override -> override.soundType),
 		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(override -> override.configPredicate)
 	).apply(instance, SoundTypeOverride::new));

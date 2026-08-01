@@ -17,15 +17,12 @@
 
 package net.frozenblock.lib.advancement.mixin;
 
-import com.google.gson.JsonElement;
 import java.util.Map;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.ServerAdvancementManager;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -36,21 +33,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ServerAdvancementManager.class, priority = 1500)
 public class ServerAdvancementManagerMixin {
 
+	@Final
 	@Shadow
 	private Map<Identifier, AdvancementHolder> advancements;
 
-	@Shadow
-	@Final
-	private HolderLookup.Provider registries;
-
 	@Inject(
-		method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+		method = "<init>",
 		at = @At(
 			value = "INVOKE",
 			target = "Ljava/util/Map;values()Ljava/util/Collection;"
 		)
 	)
-	private void modifyAdvancement(Map<Identifier, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
-		for (AdvancementHolder holder : advancements.values()) AdvancementEvents.INIT.invoker().onInit(holder, this.registries);
+	private void modifyAdvancement(HolderLookup.Provider registries, CallbackInfo ci) {
+		for (AdvancementHolder holder : advancements.values()) AdvancementEvents.INIT.invoker().onInit(holder, registries);
 	}
 }

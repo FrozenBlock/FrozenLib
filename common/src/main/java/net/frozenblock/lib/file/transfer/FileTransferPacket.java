@@ -49,13 +49,20 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	@ApiStatus.Internal
 	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("file_transfer"));
 	@ApiStatus.Internal
-	public static final StreamCodec<RegistryFriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
+	public static final StreamCodec<RegistryFriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.STRING_UTF8,
+		FileTransferPacket::transferPath,
+		ByteBufCodecs.STRING_UTF8,
+		FileTransferPacket::fileName,
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
+		FileTransferPacket::fileExtensions,
+		ByteBufCodecs.BOOL,
+		FileTransferPacket::request,
+		ByteBufCodecs.BYTE_ARRAY,
+		FileTransferPacket::data,
+		FileTransferPacket::new
+	);
 	public static final int MAX_SIZE_PER_TRANSFER = 1835008; // 1.75MB
-
-	@ApiStatus.Internal
-	public static FileTransferPacket create(FriendlyByteBuf buf) {
-		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readList(ByteBufCodecs.STRING_UTF8), buf.readBoolean(), buf.readByteArray());
-	}
 
 	/**
 	 * Creates a file transfer packet.

@@ -23,14 +23,14 @@ import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageType;
 
 public record PlayerDamageTypeSound(HolderSet<DamageType> damageTypes, Holder<SoundEvent> sound, Optional<ConfigPredicate> enabledWhen) {
 	public static final Codec<PlayerDamageTypeSound> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.DAMAGE_TYPE).fieldOf("damage_types").forGetter(PlayerDamageTypeSound::damageTypes),
+		RegistryCodecs.holderSet(Registries.DAMAGE_TYPE).fieldOf("damage_types").forGetter(PlayerDamageTypeSound::damageTypes),
 		SoundEvent.CODEC.fieldOf("sound_event").forGetter(PlayerDamageTypeSound::sound),
 		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(PlayerDamageTypeSound::enabledWhen)
 	).apply(instance, PlayerDamageTypeSound::new));

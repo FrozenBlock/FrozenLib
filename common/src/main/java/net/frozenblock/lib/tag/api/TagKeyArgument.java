@@ -74,10 +74,7 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder suggestions) {
-		final Object source = context.getSource();
-		return source instanceof SharedSuggestionProvider sharedSuggestionProvider
-			? sharedSuggestionProvider.suggestRegistryElements(this.registryKey, SharedSuggestionProvider.ElementSuggestionType.TAGS, suggestions, context)
-			: suggestions.buildFuture();
+		return SharedSuggestionProvider.listSuggestions(context, suggestions, this.registryKey, SharedSuggestionProvider.ElementSuggestionType.TAGS);
 	}
 
 	@Override

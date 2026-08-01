@@ -98,10 +98,10 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 			target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"
 		)
 	)
-	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos pos, BlockState blockState, int updateFlags, Operation<Boolean> original) {
-		final boolean setBlock = original.call(level, pos, blockState, updateFlags);
-		PistonPushUtil.trySetBlockAndEntity(level, pos, blockState, PistonMovingBlockEntity.class.cast(this));
-		PistonEvents.ON_MOVING_BLOCK_SET.invoker().onMovingBlockSet(level, pos, blockState, PistonMovingBlockEntity.class.cast(this));
+	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos blockPos, BlockState blockState, Operation<Boolean> original) {
+		final boolean setBlock = original.call(level, blockPos, blockState);
+		PistonPushUtil.trySetBlockAndEntity(level, blockPos, blockState, PistonMovingBlockEntity.class.cast(this));
+		PistonEvents.ON_MOVING_BLOCK_SET.invoker().onMovingBlockSet(level, blockPos, blockState, PistonMovingBlockEntity.class.cast(this));
 		return setBlock;
 	}
 

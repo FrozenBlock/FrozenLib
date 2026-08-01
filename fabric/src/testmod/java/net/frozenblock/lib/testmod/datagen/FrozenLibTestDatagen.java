@@ -28,11 +28,12 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvi
 import net.frozenblock.lib.data.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Items;
@@ -43,6 +44,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.item.crafting.Recipe;
 
 public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
@@ -62,13 +64,13 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput recipeOutput) {
-			return new RecipeProvider(provider, recipeOutput) {
+		protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, BootstrapContext<Recipe<?>> recipeOutput, BootstrapContext<Advancement> advancementOutput) {
+			return new RecipeProvider(recipeOutput, advancementOutput) {
 				@Override
 				public void buildRecipes() {
 					this.shapeless(RecipeCategory.MISC, Items.DIAMOND_BLOCK)
 						.requires(Items.IRON_INGOT, 2)
-						.save(recipeOutput);
+						.save(this.output);
 				}
 			};
 		}
@@ -129,6 +131,11 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 							.add(LootItem.lootTableItem(Items.DRAGON_EGG))
 				)
 			);
+		}
+
+		@Override
+		public void run() {
+			// unused; Fabric's datagen pipeline calls generate(BiConsumer) directly
 		}
 	}
 }

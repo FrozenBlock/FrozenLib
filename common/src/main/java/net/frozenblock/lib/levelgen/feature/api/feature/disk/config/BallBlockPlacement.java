@@ -23,7 +23,7 @@ import java.util.Optional;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -44,7 +44,7 @@ public class BallBlockPlacement {
 			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
 			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
 			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset),
-			RegistryCodecs.homogeneousList(Registries.BIOME).lenientOptionalFieldOf("excluded_biomes").forGetter(config -> config.excludedBiomes),
+			RegistryCodecs.holderSet(Registries.BIOME).lenientOptionalFieldOf("excluded_biomes").forGetter(config -> config.excludedBiomes),
 			BallOuterRingBlockPlacement.CODEC.lenientOptionalFieldOf("outer_placement").forGetter(config -> config.outerRingBlockPlacement)
 		).apply(instance, BallBlockPlacement::new)
 	);

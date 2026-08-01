@@ -61,6 +61,11 @@ fabric {
     }
 }
 
+mod {
+    additional.add("minecraft_version", providers.provider { "~26.3-" })
+    additional.add("fabric_loader_version", providers.provider { ">=$min_fabric_loader_version" })
+}
+
 loom {
     runtimeOnlyLog4j.set(true)
 
@@ -212,22 +217,6 @@ dependencies {
 }
 
 tasks {
-    processResources {
-        val properties = HashMap<String, Any>()
-        properties["version"] = project.version
-        properties["minecraft_version"] = "~26.3-"//minecraft_version
-
-        properties["fabric_loader_version"] = ">=$min_fabric_loader_version"
-        properties["fabric_api_version"] = ">=$fabric_api_version"
-        properties["fabric_kotlin_version"] = fabric_kotlin_version
-
-        properties.forEach { (a, b) -> inputs.property(a, b) }
-
-        filesMatching("fabric.mod.json") {
-            expand(properties)
-        }
-    }
-
     license {
         if (licenseChecks) {
             rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
@@ -284,12 +273,11 @@ shadow {
     addShadowVariantIntoJavaComponent.set(false)
 }
 
-// tasks reading the `jar` archive file (whose content is actually overwritten by shadowJar,
-// see above) must be ordered after shadowJar so they see the final shaded content
-tasks.withType<org.gradle.api.publish.tasks.GenerateModuleMetadata>().configureEach {
+// make shadowJar used when something tries to use jar
+tasks.withType<GenerateModuleMetadata>().configureEach {
     dependsOn(tasks.named("shadowJar"))
 }
-tasks.withType<org.gradle.api.publish.maven.tasks.AbstractPublishToMaven>().configureEach {
+tasks.withType<AbstractPublishToMaven>().configureEach {
     dependsOn(tasks.named("shadowJar"))
 }
 

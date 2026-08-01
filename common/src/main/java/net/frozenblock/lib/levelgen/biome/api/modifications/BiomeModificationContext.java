@@ -306,9 +306,6 @@ public interface BiomeModificationContext {
 	interface MobSpawnSettingsContext {
 		/**
 		 * Associated JSON property: <code>creature_spawn_probability</code>.
-		 *
-		 * @see MobSpawnSettings#getCreatureProbability()
-		 * @see MobSpawnSettings.Builder#creatureGenerationProbability(float)
 		 */
 		void setCreatureGenerationProbability(float probability);
 
@@ -317,7 +314,7 @@ public interface BiomeModificationContext {
 		 *
 		 * <p>Associated JSON property: <code>spawners</code>.
 		 *
-		 * @see MobSpawnSettings#getMobs(MobCategory)
+		 * @see MobSpawnSettings#getMobsInCategory(MobCategory)
 		 */
 		@UnmodifiableView
 		List<Weighted<MobSpawnSettings.SpawnerData>> getMobs(MobCategory category);
@@ -325,8 +322,7 @@ public interface BiomeModificationContext {
 		/**
 		 * Associated JSON property: <code>spawners</code>.
 		 *
-		 * @see MobSpawnSettings#getMobs(MobCategory)
-		 * @see MobSpawnSettings.Builder#addSpawn(MobCategory, int, MobSpawnSettings.SpawnerData)
+		 * @see MobSpawnSettings#getMobsInCategory(MobCategory)
 		 */
 		void addSpawn(MobCategory category, MobSpawnSettings.SpawnerData data, int weight);
 
@@ -370,7 +366,7 @@ public interface BiomeModificationContext {
 		 * Associated JSON property: <code>spawn_costs</code>.
 		 *
 		 * @see MobSpawnSettings#getMobSpawnCost(EntityType)
-		 * @see MobSpawnSettings.Builder#addMobCharge(EntityType, double, double)
+		 * @see MobSpawnSettings.Builder#addMobSpawnCost(EntityType, double, double)
 		 */
 		void addMobCharge(EntityType<?> type, double charge, double energyBudget);
 

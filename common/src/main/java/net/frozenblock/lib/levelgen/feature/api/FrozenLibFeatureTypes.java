@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.levelgen.feature.api;
 
-import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchLessBordersFeature;
@@ -34,11 +33,7 @@ import net.frozenblock.lib.levelgen.feature.api.feature.VegetationPatchWithEdgeD
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.NoisePathFeature;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.levelgen.feature.Feature;
 
 public class FrozenLibFeatureTypes {
 

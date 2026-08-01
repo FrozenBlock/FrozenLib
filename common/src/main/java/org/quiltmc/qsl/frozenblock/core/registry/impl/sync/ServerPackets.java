@@ -18,12 +18,14 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import java.util.Collection;
+import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
@@ -51,15 +53,11 @@ public final class ServerPackets {
 	 */
 	public record Handshake(IntList supportedVersions) implements CustomPacketPayload {
 		public static final Type<Handshake> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/handshake"));
-		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = StreamCodec.ofMember(Handshake::write, Handshake::new);
-
-		public Handshake(FriendlyByteBuf buf) {
-			this(buf.readIntIdList());
-		}
-
-		public void write(FriendlyByteBuf buf) {
-			buf.writeIntIdList(this.supportedVersions);
-		}
+		public static final StreamCodec<FriendlyByteBuf, Handshake> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.collection(IntArrayList::new)),
+			Handshake::supportedVersions,
+			Handshake::new
+		);
 
 		@Override
 		public Type<Handshake> type() {
@@ -135,18 +133,15 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
+	public record ModProtocol(String prioritizedId, List<ModProtocolDef> protocols) implements CustomPacketPayload {
 		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/mod_protocol"));
-		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
-
-		public ModProtocol(FriendlyByteBuf buf) {
-			this(buf.readUtf(), buf.readList(ModProtocolDef::read));
-		}
-
-		public void write(FriendlyByteBuf buf) {
-			buf.writeUtf(this.prioritizedId);
-			buf.writeCollection(this.protocols, ModProtocolDef::write);
-		}
+		public static final StreamCodec<FriendlyByteBuf, ModProtocol> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.STRING_UTF8,
+			ModProtocol::prioritizedId,
+			ModProtocolDef.STREAM_CODEC.apply(ByteBufCodecs.list()),
+			ModProtocol::protocols,
+			ModProtocol::new
+		);
 
 		public Type<?> type() {
 			return PACKET_TYPE;

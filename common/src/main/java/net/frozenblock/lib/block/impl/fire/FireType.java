@@ -21,17 +21,18 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.registry.FrozenLibRegistries;import net.minecraft.core.Holder;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 
@@ -67,8 +68,8 @@ public record FireType(
 		HolderSet<Block> supportingBlocks
 	) {
 		public static final Codec<SourceSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("fire_source_blocks").forGetter(SourceSettings::fireSourceBlocks),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).optionalFieldOf("supporting_blocks", HolderSet.empty()).forGetter(SourceSettings::supportingBlocks)
+			RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("fire_source_blocks").forGetter(SourceSettings::fireSourceBlocks),
+			RegistryCodecs.holderSet(Registries.BLOCK).optionalFieldOf("supporting_blocks", HolderSet.empty()).forGetter(SourceSettings::supportingBlocks)
 		).apply(instance, SourceSettings::new));
 	}
 
@@ -81,8 +82,8 @@ public record FireType(
 		public static final Codec<DamageSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.FLOAT.optionalFieldOf("damage", 1F).forGetter(DamageSettings::damage),
 			Codec.FLOAT.optionalFieldOf("vulnerable_damage", 1F).forGetter(DamageSettings::vulnerableDamage),
-			RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).optionalFieldOf("vulnerable_entity_types", HolderSet.empty()).forGetter(DamageSettings::vulnerableEntityTypes),
-			RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).optionalFieldOf("damage_immune_entity_types", HolderSet.empty()).forGetter(DamageSettings::damageImmuneEntityTypes)
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("vulnerable_entity_types", HolderSet.empty()).forGetter(DamageSettings::vulnerableEntityTypes),
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("damage_immune_entity_types", HolderSet.empty()).forGetter(DamageSettings::damageImmuneEntityTypes)
 		).apply(instance, DamageSettings::new));
 	}
 
@@ -97,8 +98,8 @@ public record FireType(
 			Codec.BOOL.optionalFieldOf("spreads_from_zombie_attack", true).forGetter(SpreadSettings::spreadsFromZombieAttack),
 			Codec.BOOL.optionalFieldOf("spreads_from_ignite_enchantments", true).forGetter(SpreadSettings::spreadsFromIgniteEnchantments),
 			Codec.BOOL.optionalFieldOf("replaceable_by_other_fire_types", true).forGetter(SpreadSettings::replaceableByOtherFireTypes),
-			RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).optionalFieldOf("always_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::alwaysApplyToEntityTypes),
-			RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE).optionalFieldOf("cannot_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::cannotApplyToEntityTypes)
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("always_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::alwaysApplyToEntityTypes),
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("cannot_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::cannotApplyToEntityTypes)
 		).apply(instance, SpreadSettings::new));
 	}
 

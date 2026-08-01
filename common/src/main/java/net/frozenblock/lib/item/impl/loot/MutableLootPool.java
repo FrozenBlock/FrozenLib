@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
+import net.frozenblock.lib.item.mixin.loot.LootPoolAccessor;
+import net.minecraft.core.Holder;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -35,17 +37,18 @@ import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 @UnstableApi
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
-	public ArrayList<LootItemCondition> conditions = new ArrayList<>();
-	public ArrayList<LootItemFunction> functions = new ArrayList<>();
-	public NumberProvider rolls;
-	public NumberProvider bonusRolls;
+	public ArrayList<Holder<LootItemCondition>> conditions = new ArrayList<>();
+	public ArrayList<Holder<LootItemFunction>> functions = new ArrayList<>();
+	public Holder<NumberProvider> rolls;
+	public Holder<NumberProvider> bonusRolls;
 
 	public MutableLootPool(LootPool lootPool) {
+		final LootPoolAccessor accessor = (LootPoolAccessor) lootPool;
 		this.entries.addAll(lootPool.entries);
-		this.conditions.addAll(lootPool.conditions);
-		this.functions.addAll(lootPool.functions);
-		this.rolls = lootPool.rolls;
-		this.bonusRolls = lootPool.bonusRolls;
+		accessor.frozenLib$getCondition().ifPresent(this.conditions::add);
+		accessor.frozenLib$getModifier().ifPresent(this.functions::add);
+		this.rolls = accessor.frozenLib$getRolls();
+		this.bonusRolls = accessor.frozenLib$getBonusRolls();
 	}
 
 	public LootPool build() {

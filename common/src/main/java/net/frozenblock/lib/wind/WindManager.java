@@ -49,7 +49,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.level.levelgen.synth.PerlinNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -101,7 +101,7 @@ public class WindManager {
 	public double laggedWindY;
 	public double laggedWindZ;
 	private Optional<Long> seed = Optional.empty();
-	public ImprovedNoise noise;
+	public PerlinNoise noise;
 
 	private WindManager() {
 		this.level = null;
@@ -496,9 +496,9 @@ public class WindManager {
 	private Vec3 sampleAt(double x, double y, double z) {
 		if (!this.usable()) return Vec3.ZERO;
 		if (this.windOverride.isPresent()) return this.windOverride.get();
-		final double windX = this.noise.noise(x, 0D, 0D);
-		final double windY = this.noise.noise(0D, y, 0D);
-		final double windZ = this.noise.noise(0D, 0D, z);
+		final double windX = this.noise.get(x, 0D, 0D);
+		final double windY = this.noise.get(0D, y, 0D);
+		final double windZ = this.noise.get(0D, 0D, z);
 		return new Vec3(windX, windY, windZ);
 	}
 

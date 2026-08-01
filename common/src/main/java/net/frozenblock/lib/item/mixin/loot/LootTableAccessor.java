@@ -15,15 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.registry;
+package net.frozenblock.lib.item.mixin.loot;
 
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
-import net.minecraft.world.level.ItemLike;
+import java.util.Optional;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public final class CompostableRegistry {
+@Mixin(LootTable.class)
+public interface LootTableAccessor {
 
-	@PlatformImpl
-	public static void register(ItemLike item, float chance) {
-		throw new AssertionError();
-	}
+	@Accessor("modifier")
+	Optional<Holder<LootItemFunction>> frozenLib$getModifier();
 }

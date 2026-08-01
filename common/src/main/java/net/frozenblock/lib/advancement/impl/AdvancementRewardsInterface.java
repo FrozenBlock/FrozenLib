@@ -18,16 +18,17 @@
 package net.frozenblock.lib.advancement.impl;
 
 import java.util.List;
+import net.minecraft.core.HolderSet;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public interface AdvancementRewardsInterface {
-	default List<ResourceKey<LootTable>> frozenLib$getLoot() {
+	default HolderSet<LootTable> frozenLib$getLoot() {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$setLoot(List<ResourceKey<LootTable>> loot) {
+	default void frozenLib$setLoot(HolderSet<LootTable> loot) {
 		throw new AssertionError();
 	}
 

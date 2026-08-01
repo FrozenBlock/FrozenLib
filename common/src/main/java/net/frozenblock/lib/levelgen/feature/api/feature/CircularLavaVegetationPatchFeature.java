@@ -18,7 +18,6 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
 import com.mojang.serialization.MapCodec;

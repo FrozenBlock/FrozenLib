@@ -7,7 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
     "component.BlockTransformerMappingsMixin",
     "component.BundleContentsMixin",
@@ -17,11 +16,13 @@
     "cooldown.ItemCooldownsMixin",
     "cooldown.ServerItemCooldownsMixin",
     "cooldown.ServerPlayerMixin",
+    "loot.LootPoolAccessor",
+    "loot.LootPoolEntryContainerAccessor",
+    "loot.LootTableAccessor",
     "loot.LootTableBuilderMixin",
     "loot.LootTableMixin",
-    "recipe.RecipeBuilderMixin",
-    "sherd.DecoratedPotPatternsMixin",
-    "shovel.ShovelItemMixin"
+    "loot.UniformContainerBaseAccessor",
+    "recipe.RecipeBuilderMixin"
   ],
   "client": [
     "client.LevelExtractorMixin"

@@ -20,6 +20,7 @@ package net.frozenblock.lib.advancement.mixin;
 import java.util.List;
 import net.frozenblock.lib.advancement.impl.AdvancementRewardsInterface;
 import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.core.HolderSet;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -33,7 +34,7 @@ public class AdvancementRewardsMixin implements AdvancementRewardsInterface {
 	@Mutable
 	@Final
 	@Shadow
-	private List<ResourceKey<LootTable>> loot;
+	private HolderSet<LootTable> loot;
 
 	@Mutable
 	@Final
@@ -46,12 +47,12 @@ public class AdvancementRewardsMixin implements AdvancementRewardsInterface {
 	private int experience;
 
 	@Override
-	public List<ResourceKey<LootTable>> frozenLib$getLoot() {
+	public HolderSet<LootTable> frozenLib$getLoot() {
 		return this.loot;
 	}
 
 	@Override
-	public void frozenLib$setLoot(List<ResourceKey<LootTable>> loot) {
+	public void frozenLib$setLoot(HolderSet<LootTable> loot) {
 		this.loot = loot;
 	}
 

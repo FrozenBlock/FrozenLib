@@ -24,7 +24,7 @@ import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -33,7 +33,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 
 public record StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors, Optional<ConfigPredicate> enabledWhen) {
 	public static final Codec<StructureProcessorListAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureProcessorListAddition::structures),
+		RegistryCodecs.holderSet(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureProcessorListAddition::structures),
 		StructureProcessorType.LIST_CODEC.fieldOf("processors").forGetter(StructureProcessorListAddition::processors),
 		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(StructureProcessorListAddition::enabledWhen)
 	).apply(instance, StructureProcessorListAddition::new));
