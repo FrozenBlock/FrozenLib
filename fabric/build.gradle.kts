@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.possible_triangle.gradle.ModVersionProperties
 
 plugins {
     id("net.frozenblock.triangle.fabric")
@@ -18,8 +17,6 @@ withKotlin()
 val fabric_loader_version: String by project
 val min_fabric_loader_version: String by project
 
-val mod_version: String by project
-val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
@@ -42,9 +39,6 @@ base {
     archivesName.set(archives_base_name)
 }
 
-val release = findProperty("releaseType") == "stable"
-
-version = getModVersion()
 group = maven_group
 
 val testmod by sourceSets.registering {
@@ -237,7 +231,7 @@ tasks {
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
-        archiveFileName.set("$archives_base_name-${getModVersion()}-fabric.jar")
+        archiveFileName.set("$archives_base_name-${mod.versionStrategy.get().artifactVersion(mod as ModVersionProperties)}-fabric.jar")
         dependencies {
             exclude {
                 it.moduleGroup.contains("fabric")
@@ -298,16 +292,6 @@ java {
 artifacts {
     archives(sourcesJar)
     archives(javadocJar)
-}
-
-fun getModVersion(): String {
-    var version = "$mod_version-mc$minecraft_version"
-
-    if (!release) {
-        version += "-unstable"
-    }
-
-    return version
 }
 
 val dev by configurations.creating {

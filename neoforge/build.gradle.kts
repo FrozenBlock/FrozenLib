@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.possible_triangle.gradle.ModVersionProperties
 
 plugins {
     id("net.frozenblock.triangle.neoforge")
@@ -16,8 +15,6 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
-val mod_version: String by project
-val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
@@ -39,9 +36,6 @@ base {
     archivesName.set(archives_base_name)
 }
 
-val release = findProperty("releaseType") == "stable"
-
-version = getModVersion()
 group = maven_group
 
 repositories {
@@ -69,25 +63,6 @@ tasks {
 
             include("**//*.java")
             include("**//*.kt")
-        }
-    }
-}
-
-val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
-val loaderVariants = setOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements")
-configurations.all {
-    if (name in loaderVariants) {
-        attributes {
-            attribute(loaderAttribute, "neoforge")
-        }
-    }
-}
-sourceSets.configureEach {
-    listOf(compileClasspathConfigurationName, runtimeClasspathConfigurationName).forEach { variant ->
-        configurations.named(variant) {
-            attributes {
-                attribute(loaderAttribute, "neoforge")
-            }
         }
     }
 }
@@ -129,7 +104,6 @@ dependencies {
 tasks {
     processResources {
         val properties = HashMap<String, Any>()
-        properties["mod_version"] = getModVersion()
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -144,7 +118,7 @@ tasks {
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         archiveClassifier = ""
-        archiveFileName.set("$archives_base_name-${getModVersion()}-neoforge.jar")
+        archiveFileName.set("$archives_base_name-${mod.versionStrategy.get().artifactVersion(mod as ModVersionProperties)}-neoforge.jar")
         from(named("jarJar"))
         dependencies {
             exclude {
@@ -160,6 +134,7 @@ tasks {
         exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
 
         relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
+        relocate("tools.jackson", "net.frozenblock.lib.shadow.tools.jackson")
     }
 
     named<Jar>("sourcesJar") {
@@ -189,16 +164,6 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
-}
-
-fun getModVersion(): String {
-    var version = "$mod_version-mc$minecraft_version"
-
-    if (!release) {
-        version += "-unstable"
-    }
-
-    return version
 }
 
 val changelogText = run {
