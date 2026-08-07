@@ -39,7 +39,7 @@ run/
 runclient/
 runserver/
 /remappedSrc/
-/common/src/main/generated/.cache
+/common/src/generated/resources/.cache
 /fabric/src/testmod/generated/.cache
 /config/
 /fabric/run
