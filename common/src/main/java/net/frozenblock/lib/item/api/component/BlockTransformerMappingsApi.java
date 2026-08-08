@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.api.component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
@@ -26,6 +27,7 @@ import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.world.item.component.BlockTransformerMappings;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateProvider;
 
 /**
@@ -58,8 +60,8 @@ public class BlockTransformerMappingsApi {
 	 * this event cuts down the amount of duplicate implementation required.
 	 */
 	public static final Event<ModifyAxeStrippablesBuilder> MODIFY_AXE_STRIPPABLE = EventRegistry.createEnvironmentEvent(ModifyAxeStrippablesBuilder.class,
-		callbacks -> (builder) -> {
-			for (var callback : callbacks) callback.modifyAxeStrippablesBuilder(builder);
+		callbacks -> (builder, addStrippable) -> {
+			for (var callback : callbacks) callback.modifyAxeStrippablesBuilder(builder, addStrippable);
 		});
 
 	/**
@@ -82,7 +84,7 @@ public class BlockTransformerMappingsApi {
 
 	@FunctionalInterface
 	public interface ModifyAxeStrippablesBuilder extends CommonEventEntrypoint {
-		void modifyAxeStrippablesBuilder(RuleBasedStateProvider.Builder builder);
+		void modifyAxeStrippablesBuilder(RuleBasedStateProvider.Builder builder, BiFunction<Block, Block, RuleBasedStateProvider.Builder> addStrippable);
 	}
 
 	@FunctionalInterface

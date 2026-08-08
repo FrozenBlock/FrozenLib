@@ -21,6 +21,8 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.item.api.component.BlockTransformerMappingsApi;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.world.item.component.BlockTransformerMappings;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.stateproviders.CopyPropertiesProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateProvider;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -68,7 +70,10 @@ public class BlockTransformerMappingsMixin {
 		)
 	)
 	private static RuleBasedStateProvider.Builder frozenLib$modifyAxeStrippablesBuilder(RuleBasedStateProvider.Builder builder) {
-		BlockTransformerMappingsApi.MODIFY_AXE_STRIPPABLE.invoker().modifyAxeStrippablesBuilder(builder);
+		BlockTransformerMappingsApi.MODIFY_AXE_STRIPPABLE.invoker().modifyAxeStrippablesBuilder(
+			builder,
+			(fromBlock, toBlock) -> builder.ifTrueThenProvide(BlockPredicate.matchesBlocks(fromBlock), new CopyPropertiesProvider(toBlock))
+		);
 		return builder;
 	}
 
