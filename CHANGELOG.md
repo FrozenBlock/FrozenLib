@@ -65,3 +65,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `predicate`: The Config Predicate to use if the required Config Entry is present.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
+- Added the `frozenlib:strict_rule_based_state_provider` Block State Provider in 26.3+, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.

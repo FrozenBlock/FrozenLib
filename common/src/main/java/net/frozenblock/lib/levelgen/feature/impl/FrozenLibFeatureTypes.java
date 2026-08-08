@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api;
+package net.frozenblock.lib.levelgen.feature.impl;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchFeature;
@@ -34,11 +34,13 @@ import net.frozenblock.lib.levelgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.NoisePathFeature;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
-public class FrozenLibFeatureTypes {
+@ApiStatus.Internal
+public final class FrozenLibFeatureTypes {
 
 	public static void init() {
-		var register = FrozenDeferredRegister.create(
+		final var register = FrozenDeferredRegister.create(
 			Registries.FEATURE_TYPE,
 			FrozenLibConstants.MOD_ID
 		);

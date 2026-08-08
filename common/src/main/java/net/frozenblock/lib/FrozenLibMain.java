@@ -36,7 +36,8 @@ import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes
 import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
-import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
+import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
+import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
@@ -102,6 +103,7 @@ public final class FrozenLibMain {
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibDataComponents.init();
 		FrozenLibFeatureTypes.init();
+		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
 		FrozenLibSpawnConditions.init();
 		WindManager.init();
