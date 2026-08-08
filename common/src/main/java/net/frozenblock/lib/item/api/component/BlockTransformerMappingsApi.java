@@ -26,6 +26,7 @@ import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.world.item.component.BlockTransformerMappings;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateProvider;
 
 /**
  * Allows for the modification of {@link BlockTransformer}s defined in the {@link BlockTransformerMappings} class.
@@ -51,6 +52,17 @@ public class BlockTransformerMappingsApi {
 	});
 
 	/**
+	 * An event used to modify {@code AXE_STRIPPABLES}' {@link RuleBasedStateProvider.Builder}.
+	 * <p>
+	 * While you can still use {@link BlockTransformerMappingsApi#MODIFY_AXE} and add strippable transformations that way,
+	 * this event cuts down the amount of duplicate implementation required.
+	 */
+	public static final Event<ModifyAxeStrippablesBuilder> MODIFY_AXE_STRIPPABLE = EventRegistry.createEnvironmentEvent(ModifyAxeStrippablesBuilder.class,
+		callbacks -> (builder) -> {
+			for (var callback : callbacks) callback.modifyAxeStrippablesBuilder(builder);
+		});
+
+	/**
 	 * An event used to modify the Hoe's {@link BlockTransformer}s.
 	 */
 	public static final Event<ModifyHoeBlockTransformer> MODIFY_HOE = EventRegistry.createEnvironmentEvent(ModifyHoeBlockTransformer.class,
@@ -66,6 +78,11 @@ public class BlockTransformerMappingsApi {
 	@FunctionalInterface
 	public interface ModifyAxeBlockTransformer extends CommonEventEntrypoint {
 		void modifyAxeBlockTransformer(Context context);
+	}
+
+	@FunctionalInterface
+	public interface ModifyAxeStrippablesBuilder extends CommonEventEntrypoint {
+		void modifyAxeStrippablesBuilder(RuleBasedStateProvider.Builder builder);
 	}
 
 	@FunctionalInterface

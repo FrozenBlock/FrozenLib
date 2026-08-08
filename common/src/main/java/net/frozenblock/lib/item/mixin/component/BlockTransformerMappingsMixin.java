@@ -21,6 +21,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.item.api.component.BlockTransformerMappingsApi;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.world.item.component.BlockTransformerMappings;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateProvider;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -49,6 +50,26 @@ public class BlockTransformerMappingsMixin {
 		final BlockTransformerMappingsApi.Context context = BlockTransformerMappingsApi.createContext(original);
 		BlockTransformerMappingsApi.MODIFY_SHOVEL.invoker().modifyShovelBlockTransformer(context);
 		return context.toBlockTransformer();
+	}
+
+	@ModifyExpressionValue(
+		method = "<clinit>",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/levelgen/feature/stateproviders/RuleBasedStateProvider;builder()Lnet/minecraft/world/level/levelgen/feature/stateproviders/RuleBasedStateProvider$Builder;",
+			ordinal = 0
+		),
+		slice = @Slice(
+			from = @At(
+				value = "FIELD",
+				target = "Lnet/minecraft/world/item/component/BlockTransformerMappings;SHOVEL:Lnet/minecraft/core/component/BlockTransformer;",
+				opcode = Opcodes.PUTSTATIC
+			)
+		)
+	)
+	private static RuleBasedStateProvider.Builder frozenLib$modifyAxeStrippablesBuilder(RuleBasedStateProvider.Builder builder) {
+		BlockTransformerMappingsApi.MODIFY_AXE_STRIPPABLE.invoker().modifyAxeStrippablesBuilder(builder);
+		return builder;
 	}
 
 	@ModifyExpressionValue(
