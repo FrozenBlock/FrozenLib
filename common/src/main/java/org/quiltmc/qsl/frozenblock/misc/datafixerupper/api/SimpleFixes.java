@@ -33,10 +33,10 @@ import net.minecraft.util.Util;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.AdvancementsRenameFix;
 import net.minecraft.util.datafix.fixes.BlockEntityRenameFix;
-import net.minecraft.util.datafix.fixes.BlockPropertyRenameAndFix;
-import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.CriteriaRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
+import net.minecraft.util.datafix.fixes.LegacyBlockPropertyRenameAndFix;
+import net.minecraft.util.datafix.fixes.LegacyBlockRenameFix;
 import net.minecraft.util.datafix.fixes.NamespacedTypeRenameFix;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.util.datafix.fixes.SimplestEntityRenameFix;
@@ -57,14 +57,14 @@ public final class SimpleFixes {
      * @param oldId The block's old identifier
      * @param newId The block's new identifier
      * @param schema The schema this fixer should be a part of
-     * @see BlockRenameFix
+     * @see LegacyBlockRenameFix
      */
-    public static void addBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
+    public static void addLegacyBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
         requireNonNull(name, "Fix name cannot be null");
         requireNonNull(schema, "Schema cannot be null");
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
-		builder.addFixer(BlockRenameFix.create(schema, name, DataFixers.createRenamer(Map.of(oldIdStr, newIdStr))));
+		builder.addFixer(LegacyBlockRenameFix.create(schema, name, DataFixers.createRenamer(Map.of(oldIdStr, newIdStr))));
     }
 
 	/**
@@ -75,15 +75,15 @@ public final class SimpleFixes {
 	 * @param oldId The block's old identifier
 	 * @param newIds The new ids to randomly pick from
 	 * @param schema The schema this fixer should be a part of
-	 * @see BlockRenameFix
+	 * @see LegacyBlockRenameFix
 	 */
-	public static void addRandomBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, List<Identifier> newIds, Schema schema) {
+	public static void addRandomLegacyBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, List<Identifier> newIds, Schema schema) {
 		Objects.requireNonNull(name, "Fix name cannot be null");
 		Objects.requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString();
 		builder.addFixer(
-			BlockRenameFix.create(
+			LegacyBlockRenameFix.create(
 				schema,
 				name,
 				inputName -> Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? Util.getRandom(newIds, AdvancedMath.random()).toString() : inputName
@@ -166,16 +166,16 @@ public final class SimpleFixes {
 	 * @param oldId The block and item's old identifier
 	 * @param newId The block and item's new identifier
 	 * @param schema The schema this fixer should be a part of
-	 * @see BlockRenameFix
+	 * @see LegacyBlockRenameFix
 	 * @see ItemRenameFix
 	 */
-	public static void addBlockItemRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
+	public static void addLegacyBlockItemRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
 		requireNonNull(name, "Fix name cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
 		final UnaryOperator<String> renamer = DataFixers.createRenamer(Map.of(oldIdStr, newIdStr));
-		builder.addFixer(BlockRenameFix.create(schema, name, renamer));
+		builder.addFixer(LegacyBlockRenameFix.create(schema, name, renamer));
 		builder.addFixer(ItemRenameFix.create(schema, name, renamer));
 	}
 
@@ -187,16 +187,16 @@ public final class SimpleFixes {
 	 * @param oldId The block and item and entity's old identifier
 	 * @param newId The block and item and entity's new identifier
 	 * @param schema The schema this fixer should be a part of
-	 * @see BlockRenameFix
+	 * @see LegacyBlockRenameFix
 	 * @see ItemRenameFix
 	 */
-	public static void addBlockItemEntityRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
+	public static void addLegacyBlockItemEntityRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
 		requireNonNull(name, "Fix name cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
 		final UnaryOperator<String> renamer = DataFixers.createRenamer(Map.of(oldIdStr, newIdStr));
-		builder.addFixer(BlockRenameFix.create(schema, name, renamer));
+		builder.addFixer(LegacyBlockRenameFix.create(schema, name, renamer));
 		builder.addFixer(ItemRenameFix.create(schema, name, renamer));
 		builder.addFixer(BlockEntityRenameFix.create(schema, name, renamer));
 	}
@@ -220,7 +220,7 @@ public final class SimpleFixes {
 	}
 
 	/**
-	 * Adds a {@link BlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
+	 * Adds a {@link LegacyBlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
 	 *
 	 * @param builder The builder
 	 * @param name The fix's name
@@ -229,20 +229,20 @@ public final class SimpleFixes {
 	 * @param newPropertyName The property's new name
 	 * @param schema The schema this fixer should be a part of
 	 * @param valueFixer A {@link UnaryOperator} to fix the value's name
-	 * @see BlockPropertyRenameAndFix
+	 * @see LegacyBlockPropertyRenameAndFix
 	 */
-	public static void addBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, UnaryOperator<String> valueFixer, Schema schema) {
+	public static void addLegacyBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, UnaryOperator<String> valueFixer, Schema schema) {
 		requireNonNull(name, "Fix name cannot be null");
 		requireNonNull(oldPropertyName, "Old property cannot be null");
 		requireNonNull(newPropertyName, "New property cannot be null");
 		requireNonNull(valueFixer, "Value fixer cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
-		builder.addFixer(new BlockPropertyRenameAndFix(schema, name, blockId.toString(), oldPropertyName, newPropertyName, valueFixer));
+		builder.addFixer(new LegacyBlockPropertyRenameAndFix(schema, name, blockId.toString(), oldPropertyName, newPropertyName, valueFixer));
 	}
 
 	/**
-	 * Adds a {@link BlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
+	 * Adds a {@link LegacyBlockPropertyRenameAndFix} to the builder, in case a property's name is changed.
 	 *
 	 * @param builder The builder
 	 * @param name The fix's name
@@ -251,11 +251,11 @@ public final class SimpleFixes {
 	 * @param newPropertyName The property's new name
 	 * @param schema The schema this fixer should be a part of
 	 * @param defaultValue The property's default value, in case it is not found
-	 * @see BlockPropertyRenameAndFix
+	 * @see LegacyBlockPropertyRenameAndFix
 	 */
-	public static void addBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, String defaultValue, Schema schema) {
+	public static void addLegacyBlockPropertyRenameAndFix(DataFixerBuilder builder, String name, Identifier blockId, String oldPropertyName, String newPropertyName, String defaultValue, Schema schema) {
 		requireNonNull(defaultValue, "Default value cannot be null");
-		addBlockPropertyRenameAndFix(builder, name, blockId, oldPropertyName, newPropertyName, string -> StringUtil.isNullOrEmpty(string) ? defaultValue : string, schema);
+		addLegacyBlockPropertyRenameAndFix(builder, name, blockId, oldPropertyName, newPropertyName, string -> StringUtil.isNullOrEmpty(string) ? defaultValue : string, schema);
 	}
 
     /**
