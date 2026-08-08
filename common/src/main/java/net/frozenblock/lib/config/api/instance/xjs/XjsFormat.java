@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.function.Function;
-import net.minecraft.util.StringRepresentable;
 import xjs.compat.serialization.util.UBTyping;
 import xjs.compat.serialization.writer.HjsonWriter;
 import xjs.compat.serialization.writer.JsoncWriter;
@@ -32,7 +31,7 @@ import xjs.data.serialization.writer.DjsWriter;
 import xjs.data.serialization.writer.JsonWriter;
 import xjs.data.serialization.writer.ValueWriter;
 
-public enum XjsFormat implements StringRepresentable {
+public enum XjsFormat {
 	/**
 	 * Pretty prints regular JSON with whitespace.
 	 */
@@ -108,7 +107,6 @@ public enum XjsFormat implements StringRepresentable {
 		this.writer = writer;
 	}
 
-	@Override
 	public String getSerializedName() {
 		return this.name;
 	}

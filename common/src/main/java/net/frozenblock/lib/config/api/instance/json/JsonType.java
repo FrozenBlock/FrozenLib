@@ -19,9 +19,8 @@ package net.frozenblock.lib.config.api.instance.json;
 
 import blue.endless.jankson.JsonGrammar;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
-import net.minecraft.util.StringRepresentable;
 
-public enum JsonType implements StringRepresentable {
+public enum JsonType {
 	JSON("json", JsonGrammar.STRICT),
 	JSON5("json5", JsonGrammar.JSON5),
 	/**
@@ -41,7 +40,6 @@ public enum JsonType implements StringRepresentable {
 		this.grammar = grammar;
 	}
 
-	@Override
 	public String getSerializedName() {
 		return this.name;
 	}
