@@ -40,6 +40,7 @@ import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
+import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructurePlacementExclusionApi;
 import net.frozenblock.lib.levelgen.structure.api.pools.TemplatePoolApi;
@@ -116,6 +117,7 @@ public final class FrozenLibMain {
 		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
+		StructureSetApi.init();
 		TemplatePoolApi.init();
 
 		final var matCon = FrozenDeferredRegister.create(
