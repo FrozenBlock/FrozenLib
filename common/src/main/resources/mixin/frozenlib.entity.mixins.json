@@ -18,7 +18,6 @@
   ],
   "client": [
     "client.rendering.EntityRendererExtractNameMixin",
-    "client.rendering.LivingEntityRendererMixin",
-    "client.suffocation.HudMixin"
+    "client.rendering.LivingEntityRendererMixin"
   ]
 }
