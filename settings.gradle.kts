@@ -72,7 +72,7 @@ localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enable
 
 localPluginRepository(
     "GradleHelper",
-    enabled = false
+    enabled = true
 )
 
 fun localPluginRepository(repo: String, enabled: Boolean = true) {
