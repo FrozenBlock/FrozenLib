@@ -18,15 +18,16 @@
 package net.frozenblock.lib.config.v2.entry.getter;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.mojang.serialization.DataResult;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 
 public class ConfigEntryGetter<T> {
-	public static final Codec<ConfigEntryGetter<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ID.CODEC.fieldOf("entry").forGetter(getter -> getter.id)
-	).apply(instance, ConfigEntryGetter::new));
+	public static final Codec<ConfigEntryGetter> CODEC = ID.CODEC.flatXmap(
+		id -> DataResult.success(new ConfigEntryGetter(id)),
+		entryGetter -> DataResult.success(entryGetter.id)
+	);
 	final ID id;
 	final ConfigEntry<T> entry;
 

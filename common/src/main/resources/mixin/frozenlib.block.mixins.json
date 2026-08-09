@@ -42,7 +42,6 @@
     "waterlike.FlowingFluidMixin",
     "waterlike.HoglinMixin",
     "waterlike.LevelMixin",
-    "waterlike.LivingEntityMixin",
     "waterlike.MonsterMixin",
     "waterlike.PlayerMixin",
     "waterlike.ServerPlayerGameModeMixin"
