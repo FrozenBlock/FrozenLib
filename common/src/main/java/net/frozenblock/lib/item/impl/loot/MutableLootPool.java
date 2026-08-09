@@ -62,30 +62,39 @@ public class MutableLootPool {
 	}
 
 	/**
-	 * Adds one item to the loot pool
+	 * Adds an entry to the pool.
 	 *
-	 * @param item    item to add
-	 * @param weight  how likely the item is to get drawn from the pool
-	 * @param builder idk lol
+	 * @param entry The {@link LootPoolEntryContainer} to add, in {@code builder} form.
 	 * @return this
 	 */
-	public MutableLootPool add(ItemLike item, int weight, LootItemFunction.Builder builder) {
-		this.entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
+	public MutableLootPool add(LootPoolEntryContainer.Builder<?> entry) {
+		this.entries.add(entry.build());
 		return this;
 	}
 
 	/**
-	 * Adds one or more items to the loot pool with the same weight
+	 * Adds one {@link Item} to the loot pool.
 	 *
-	 * @param items   items to add
-	 * @param weight  how likely the items are to get drawn from the pool
-	 * @param builder idk lol
+	 * @param item The {@link Item} entry to add.
+	 * @param weight The weight of the entry being added.
+	 * @param function The {@link LootItemFunction}s to apply to the new entry, in {@code builder} form.
 	 * @return this
 	 */
-	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike ... items) {
-		for (ItemLike item : items) {
-			this.entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
-		}
+	public MutableLootPool add(ItemLike item, int weight, LootItemFunction.Builder function) {
+		this.entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(function).build());
+		return this;
+	}
+
+	/**
+	 * Adds one or more {@link Item}s to the loot pool.
+	 *
+	 * @param weight The weight of the entry being added.
+	 * @param function The {@link LootItemFunction}s to apply to the new entry, in {@code builder} form.
+	 * @param items The {@link Item} entries to add.
+	 * @return this
+	 */
+	public MutableLootPool addAll(int weight, LootItemFunction.Builder function, ItemLike ... items) {
+		for (ItemLike item : items) this.add(item, weight, function);
 		return this;
 	}
 
