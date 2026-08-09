@@ -61,9 +61,9 @@ dependencies {
 
     compileOnlyApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 
-    compileOnly("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
-    compileOnly("org.exjson:xjs-compat:$xjs_compat_version")
-    compileOnly("com.personthecat:fresult:$fresult_version")
+    compileOnlyApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
+    compileOnlyApi("org.exjson:xjs-compat:$xjs_compat_version")
+    compileOnlyApi("com.personthecat:fresult:$fresult_version")
 
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 }
