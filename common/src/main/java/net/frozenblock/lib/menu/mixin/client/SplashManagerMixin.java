@@ -17,12 +17,13 @@
 
 package net.frozenblock.lib.menu.mixin.client;
 
+import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.menu.api.SplashTextAPI;
+import net.frozenblock.lib.menu.api.SplashTextEvents;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.network.chat.Component;
@@ -43,23 +44,9 @@ public class SplashManagerMixin {
 	public List<Component> frozenLib$addSplashFiles(List<Component> original, ResourceManager manager, ProfilerFiller profiler) {
 		final ArrayList<Component> splashes = new ArrayList<>(original);
 
-		splashes.addAll(
-			SplashTextAPI.getAdditions()
-				.stream()
-				.map(String::trim)
-				.map(SplashManager::literalSplash)
-				.toList()
-		);
-
-		splashes.removeAll(
-			SplashTextAPI.getRemovals()
-				.stream()
-				.map(String::trim)
-				.map(SplashManager::literalSplash)
-				.toList()
-		);
-
-		for (Identifier splashLocation : SplashTextAPI.getSplashFiles()) {
+		final ImmutableList.Builder<Identifier> sourceFileAdditions = ImmutableList.builder();
+		SplashTextEvents.ADD_SOURCE_FILES.invoker().collectSourceFileAdditions(sourceFileAdditions);
+		for (Identifier splashLocation : sourceFileAdditions.build()) {
 			try (BufferedReader bufferedReader = manager.openAsReader(splashLocation)) {
 				splashes.addAll(
 					bufferedReader.lines()
@@ -69,6 +56,26 @@ public class SplashManagerMixin {
 				);
 			} catch (IOException ignored) {}
 		}
+
+		final ImmutableList.Builder<String> additions = ImmutableList.builder();
+		SplashTextEvents.ADD.invoker().collectAdditions(additions);
+		splashes.addAll(
+			additions.build()
+				.stream()
+				.map(String::trim)
+				.map(SplashManager::literalSplash)
+				.toList()
+		);
+
+		final ImmutableList.Builder<String> removals = ImmutableList.builder();
+		SplashTextEvents.REMOVE.invoker().collectRemovals(removals);
+		splashes.removeAll(
+			removals.build()
+				.stream()
+				.map(String::trim)
+				.map(SplashManager::literalSplash)
+				.toList()
+		);
 
 		return splashes;
 	}

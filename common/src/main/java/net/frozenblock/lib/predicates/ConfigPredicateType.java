@@ -15,14 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.v2.entry.predicates;
+package net.frozenblock.lib.predicates;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.predicates.AllMatchPredicate;
-import net.frozenblock.lib.predicates.AllOfPredicate;
-import net.frozenblock.lib.predicates.AnyOfPredicate;
-import net.frozenblock.lib.predicates.NotPredicate;
-import net.frozenblock.lib.predicates.SelectorPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.EqualToPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ExistsPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.GreaterThanOrEqualToPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.GreaterThanPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.LessThanOrEqualToPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.LessThanPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.WithFallbackPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 
