@@ -17,38 +17,54 @@
 
 package net.frozenblock.lib.levelgen.structure.api.placement;
 
-import com.google.common.collect.ImmutableList;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
+import net.frozenblock.lib.event.api.EventRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
 public class StructureGenerationConditionApi {
-	private static final Map<Identifier, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
+	/**
+	 * An event used to add new conditions for a {@link StructureSet} to generate.
+	 */
+	public static final Event<AddGenerationCondition> ADD_GENERATION_CONDITIONS = EventRegistry.createEnvironmentEvent(AddGenerationCondition.class,
+		callbacks -> (structureSet, context) -> {
+			for (var callback : callbacks) callback.addGenerationConditions(structureSet, context);
+		});
 
 	public static void init() {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
 			registryAccess.lookup(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
-				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
-					structureSetEntry.getValue().frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().identifier()));
+				structureSetRegistry.listElements().forEach(structureSet -> {
+					final Context context = new Context();
+					ADD_GENERATION_CONDITIONS.invoker().addGenerationConditions(structureSet, context);
+					structureSet.value().frozenLib$addGenerationConditions(context.conditions);
 				});
 			});
 		});
 	}
 
-	public static void addGenerationCondition(Identifier structureSet, Supplier<Boolean> generationCondition) {
-		final List<Supplier<Boolean>> list = STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, new ArrayList<>());
-		list.add(generationCondition);
-		STRUCTURE_SET_TO_SUPPLIER_MAP.put(structureSet, list);
+	@FunctionalInterface
+	public interface AddGenerationCondition extends CommonEventEntrypoint {
+		void addGenerationConditions(Holder<StructureSet> structureSet, Context context);
 	}
 
-	public static List<Supplier<Boolean>> getGenerationConditions(Identifier structureSet) {
-		return STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, ImmutableList.of());
+	public final class Context {
+		private final List<Supplier<Boolean>> conditions;
+
+		private Context() {
+			this.conditions = new ArrayList<>();
+		}
+
+		public void add(Supplier<Boolean> condition) {
+			this.conditions.add(condition);
+		}
 	}
 }

@@ -25,7 +25,7 @@ import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class FrozenLibPlacementModifiers {
+public final class FrozenLibPlacementModifiers {
 
 	public static void init() {
 		final var register = FrozenDeferredRegister.create(

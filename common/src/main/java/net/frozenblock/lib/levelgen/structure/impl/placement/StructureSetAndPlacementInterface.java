@@ -20,8 +20,7 @@ package net.frozenblock.lib.levelgen.structure.impl.placement;
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.Identifier;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public interface StructureSetAndPlacementInterface {
@@ -33,7 +32,7 @@ public interface StructureSetAndPlacementInterface {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets) {
+	default void frozenLib$addExclusions(List<Pair<Holder<StructureSet>, Integer>> exclusions) {
 		throw new AssertionError();
 	}
 }

@@ -34,7 +34,7 @@ public class StructureSetApi {
 	/**
 	 * An event used to add new {@link Structure}s to {@link StructureSet}s.
 	 */
-	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_STRUCTURES = EventRegistry.createEnvironmentEvent(AddAdditionalTemplatePools.class,
+	public static final Event<AddAdditionalStructures> ADD_ADDITIONAL_STRUCTURES = EventRegistry.createEnvironmentEvent(AddAdditionalStructures.class,
 		callbacks -> (registry, structureSet, context) -> {
 			for (var callback : callbacks) callback.addAdditionalStructures(registry, structureSet, context);
 	});
@@ -53,7 +53,7 @@ public class StructureSetApi {
 	}
 
 	@FunctionalInterface
-	public interface AddAdditionalTemplatePools extends CommonEventEntrypoint {
+	public interface AddAdditionalStructures extends CommonEventEntrypoint {
 		void addAdditionalStructures(HolderLookup.RegistryLookup<Structure> structures, Holder<StructureSet> structureSet, StructureSetAdditionInterface context);
 	}
 }

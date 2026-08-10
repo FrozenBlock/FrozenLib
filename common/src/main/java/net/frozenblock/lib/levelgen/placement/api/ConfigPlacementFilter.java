@@ -18,17 +18,16 @@
 package net.frozenblock.lib.levelgen.placement.api;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 
-public class ConfigPlacementFilter<T> implements PlacementFilter {
-	public static final MapCodec<ConfigPlacementFilter<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
-	).apply(instance, ConfigPlacementFilter::new));
+public class ConfigPlacementFilter implements PlacementFilter {
+	public static final MapCodec<ConfigPlacementFilter> CODEC = ConfigPredicate.CODEC
+		.fieldOf("config_predicate")
+		.xmap(ConfigPlacementFilter::new, config -> config.configPredicate);
 	private final ConfigPredicate configPredicate;
 
 	public ConfigPlacementFilter(ConfigPredicate configPredicate) {
@@ -41,7 +40,7 @@ public class ConfigPlacementFilter<T> implements PlacementFilter {
 	}
 
 	@Override
-	public MapCodec<ConfigPlacementFilter<?>> codec() {
+	public MapCodec<ConfigPlacementFilter> codec() {
 		return CODEC;
 	}
 }

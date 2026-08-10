@@ -162,7 +162,7 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 	}
 
 	default PlacementFilter asPlacementFilter() {
-		return new ConfigPlacementFilter<>(this);
+		return new ConfigPlacementFilter(this);
 	}
 
 	default LootItemCondition asLootCondition() {

@@ -24,8 +24,6 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.levelgen.structure.impl.StructureSetAdditionInterface;
 import net.frozenblock.lib.levelgen.structure.impl.placement.StructureSetAndPlacementInterface;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
@@ -63,25 +61,19 @@ public abstract class StructureSetMixin implements StructureSetAndPlacementInter
 	@Unique
 	@Override
 	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
-		if (this.placement() instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-			structureSetAndPlacementInterface.frozenLib$addGenerationConditions(generationConditions);
-		}
+		if (this.placement() instanceof StructureSetAndPlacementInterface placementInterface) placementInterface.frozenLib$addGenerationConditions(generationConditions);
 	}
 
 	@Unique
 	@Override
 	public synchronized List<Supplier<Boolean>> frozenLib$getGenerationConditions() {
-		if (this.placement() instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-			return structureSetAndPlacementInterface.frozenLib$getGenerationConditions();
-		}
+		if (this.placement() instanceof StructureSetAndPlacementInterface placementInterface) return placementInterface.frozenLib$getGenerationConditions();
 		return List.of();
 	}
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets) {
-		if (this.placement() instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-			structureSetAndPlacementInterface.frozenLib$addExclusions(exclusions, structureSets);
-		}
+	public synchronized void frozenLib$addExclusions(List<Pair<Holder<StructureSet>, Integer>> exclusions) {
+		if (this.placement() instanceof StructureSetAndPlacementInterface placementInterface) placementInterface.frozenLib$addExclusions(exclusions);
 	}
 }

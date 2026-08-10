@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.frozenblock.lib.levelgen.structure.impl.placement.StructureSetAndPlacementInterface;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.AbstractSpreadingStructurePlacement;
@@ -60,14 +56,9 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets) {
+	public synchronized void frozenLib$addExclusions(List<Pair<Holder<StructureSet>, Integer>> exclusions) {
 		this.frozenLib$addedExclusions.clear();
-		exclusions.forEach(pair -> {
-			structureSets.get(ResourceKey.create(Registries.STRUCTURE_SET, pair.getFirst()))
-				.ifPresent(structureSet -> {
-					this.frozenLib$addedExclusions.add(Pair.of(structureSet, pair.getSecond()));
-				});
-		});
+		this.frozenLib$addedExclusions.addAll(exclusions);
 	}
 
 	@Inject(method = "isStructureChunk", at = @At("HEAD"), cancellable = true)
