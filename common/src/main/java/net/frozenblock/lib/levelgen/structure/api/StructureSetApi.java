@@ -32,11 +32,11 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 @UtilityClass
 public class StructureSetApi {
 	/**
-	 * An event used to add new {@link Structure}s to {@link StructureSet}s.
+	 * An event used to add or remove {@link Structure}s to/from {@link StructureSet}s.
 	 */
-	public static final Event<AddAdditionalStructures> ADD_ADDITIONAL_STRUCTURES = EventRegistry.createEnvironmentEvent(AddAdditionalStructures.class,
+	public static final Event<AddOrRemoveStructures> ADD_OR_REMOVE_STRUCTURES = EventRegistry.createEnvironmentEvent(AddOrRemoveStructures.class,
 		callbacks -> (registry, structureSet, context) -> {
-			for (var callback : callbacks) callback.addAdditionalStructures(registry, structureSet, context);
+			for (var callback : callbacks) callback.addOrRemoveStructures(registry, structureSet, context);
 	});
 
 	public static void init() {
@@ -45,7 +45,7 @@ public class StructureSetApi {
 				registryAccess.lookup(Registries.STRUCTURE).ifPresent(structures -> {
 					structureSets.forEach(structureSet -> {
 						if (!((Object)structureSet instanceof StructureSetAdditionInterface additionInterface)) return;
-						ADD_ADDITIONAL_STRUCTURES.invoker().addAdditionalStructures(structures, structureSets.wrapAsHolder(structureSet), additionInterface);
+						ADD_OR_REMOVE_STRUCTURES.invoker().addOrRemoveStructures(structures, structureSets.wrapAsHolder(structureSet), additionInterface);
 					});
 				});
 			});
@@ -53,7 +53,7 @@ public class StructureSetApi {
 	}
 
 	@FunctionalInterface
-	public interface AddAdditionalStructures extends CommonEventEntrypoint {
-		void addAdditionalStructures(HolderLookup.RegistryLookup<Structure> structures, Holder<StructureSet> structureSet, StructureSetAdditionInterface context);
+	public interface AddOrRemoveStructures extends CommonEventEntrypoint {
+		void addOrRemoveStructures(HolderLookup.RegistryLookup<Structure> structures, Holder<StructureSet> structureSet, StructureSetAdditionInterface context);
 	}
 }

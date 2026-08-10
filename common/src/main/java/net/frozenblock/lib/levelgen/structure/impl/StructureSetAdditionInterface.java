@@ -22,4 +22,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 
 public interface StructureSetAdditionInterface {
 	void frozenLib$addOrModifyStructureSelectionEntry(Holder<Structure> structure, int weight);
+
+	void frozenLib$removeStructureSelectionEntry(Holder<Structure> structure);
 }

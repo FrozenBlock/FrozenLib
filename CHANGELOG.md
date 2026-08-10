@@ -6,7 +6,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Fixed an issue that could cause the number of Wind Manager Extensions on the client to increase dramatically over time.
 - `DataMarkerProcessableSinglePoolElement` and `DataMarkerProcessableLegacySinglePoolElement` are now both abstract classes.
   - This change allows for easy handling of Data Markers without the need for mixins.
-- Added the `StructureSetApi` class, allowing modders to easily add new `Structure`s to `StructureSet`s.
+- Added the `StructureSetApi` class, allowing modders to easily add or remove `Structure`s to/from `StructureSet`s.
 - Added `RuleSourceAddition`s, replacing the previous API used to add new `RuleSource`s to Levels.
   - Added the `frozenlib:rule_source_addition` Dynamic Registry, with the following format:
     - `dimensions`: A Dimension Type's ID, a list of Dimension Type IDs, or a Dimenion Type Tag that `rule_sources` will be added to.

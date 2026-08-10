@@ -60,6 +60,14 @@ public abstract class StructureSetMixin implements StructureSetAndPlacementInter
 
 	@Unique
 	@Override
+	public synchronized void frozenLib$removeStructureSelectionEntry(Holder<Structure> structure) {
+		final List<StructureSet.StructureSelectionEntry> entries = new ArrayList<>(this.structures);
+		entries.removeIf(entry -> entry.structure().is(structure));
+		this.structures = List.copyOf(entries);
+	}
+
+	@Unique
+	@Override
 	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
 		if (this.placement() instanceof StructureSetAndPlacementInterface placementInterface) placementInterface.frozenLib$addGenerationConditions(generationConditions);
 	}
