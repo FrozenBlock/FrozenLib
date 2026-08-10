@@ -15,25 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.predicates;
+package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 
-import java.util.List;
-import java.util.function.Function;
+public class NotPredicate implements ConfigPredicate {
+	public static final MapCodec<NotPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("predicate").forGetter(predicate -> predicate.predicate)
+	).apply(instance, NotPredicate::new));
+	private final ConfigPredicate predicate;
 
-public abstract class CombiningPredicate implements ConfigPredicate {
-	protected final List<ConfigPredicate> predicates;
-
-	protected CombiningPredicate(List<ConfigPredicate> predicates) {
-		this.predicates = predicates;
+	public NotPredicate(ConfigPredicate predicate) {
+		this.predicate = predicate;
 	}
 
-	public static <T extends CombiningPredicate> MapCodec<T> codec(Function<List<ConfigPredicate>, T> constructor) {
-		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			ConfigPredicate.CODEC.listOf().fieldOf("predicates").forGetter(predicate -> predicate.predicates)
-		).apply(instance, constructor));
+	@Override
+	public Boolean get() {
+		return !this.predicate.get();
+	}
+
+	@Override
+	public ConfigPredicateType<?> type() {
+		return ConfigPredicateType.NOT;
 	}
 }

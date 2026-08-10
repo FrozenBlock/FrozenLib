@@ -15,31 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.predicates;
+package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 
-import java.util.List;
+public class TrueConfigPredicate implements ConfigPredicate {
+	public static TrueConfigPredicate INSTANCE = new TrueConfigPredicate();
+	public static final MapCodec<TrueConfigPredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
-public class AnyOfPredicate extends CombiningPredicate {
-	public static final MapCodec<AnyOfPredicate> CODEC = codec(AnyOfPredicate::new);
-
-	public AnyOfPredicate(List<ConfigPredicate> predicates) {
-		super(predicates);
-	}
+	private TrueConfigPredicate() {}
 
 	@Override
 	public Boolean get() {
-		for (ConfigPredicate predicate : this.predicates) {
-			if (predicate.get()) return true;
-		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.ANY_OF;
+		return ConfigPredicateType.TRUE;
 	}
 }

@@ -27,12 +27,6 @@ import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
-import net.frozenblock.lib.predicates.AllMatchPredicate;
-import net.frozenblock.lib.predicates.AllOfPredicate;
-import net.frozenblock.lib.predicates.AnyOfPredicate;
-import net.frozenblock.lib.predicates.NotPredicate;
-import net.frozenblock.lib.predicates.SelectorPredicate;
-import net.frozenblock.lib.predicates.TruePredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -158,7 +152,7 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 	}
 
 	static ConfigPredicate alwaysTrue() {
-		return TruePredicate.INSTANCE;
+		return TrueConfigPredicate.INSTANCE;
 	}
 
 	default BlockPredicate asBlockPredicate() {

@@ -15,12 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.predicates;
+package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 
 public class SelectorPredicate implements ConfigPredicate {
 	public static final MapCodec<SelectorPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
