@@ -39,29 +39,31 @@ public class NeoLootTableEventBridge {
 	}
 
 	private static void onLootTableLoad(LootTableLoadEvent event) {
-		ResourceKey<LootTable> key = event.getKey();
-		LootTable original = event.getTable();
-		HolderLookup.Provider registries = event.getRegistries();
+		final ResourceKey<LootTable> key = event.getKey();
+		final LootTable original = event.getTable();
+		final HolderLookup.Provider registries = event.getRegistries();
 
 		LootTableSource source = NeoLootUtil.SOURCES.get().getOrDefault(key.identifier(), LootTableSource.DATA_PACK);
 
-		LootTable replaced = LootTableEvents.REPLACE.invoker().replaceLootTable(key, original, source, registries);
+		final LootTable replaced = LootTableEvents.REPLACE.invoker().replaceLootTable(key, original, source, registries);
 		LootTable table = original;
 		if (replaced != null) {
 			table = replaced;
 			source = LootTableSource.REPLACED;
 		}
 
-		LootTable.Builder builder = toBuilder(table);
+		final LootTable.Builder builder = toBuilder(table);
 
+		// FIXME: I dont work on Neo for some reason :(
 		LootTableEvents.MODIFY.invoker().modifyLootTable(key, builder, source, registries);
 		event.setTable(builder.build());
 	}
 
-	public static LootTable.Builder toBuilder(LootTable lootTable) {
-		LootTableAccessor accessor = (LootTableAccessor) lootTable;
-		LootTable.Builder builder = LootTable.lootTable();
-		builder.setParamSet(lootTable.getParamSet());
+	public static LootTable.Builder toBuilder(LootTable original) {
+		final LootTableAccessor accessor = (LootTableAccessor) original;
+		final LootTable.Builder builder = LootTable.lootTable();
+
+		builder.setParamSet(original.getParamSet());
 		accessor.frozenLib$getRandomSequence().ifPresent(builder::setRandomSequence);
 		((LootTableBuilderAccessor) builder).frozenLib$getPools().addAll(accessor.frozenLib$getPools());
 		((LootTableBuilderAccessor) builder).frozenLib$getFunctions().addAll(accessor.frozenLib$getFunctions());
