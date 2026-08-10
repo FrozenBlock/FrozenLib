@@ -15,23 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.v2.entry.predicates;
+package net.frozenblock.lib.predicates;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
+
 import java.util.List;
-import java.util.function.Function;
 
-public abstract class CombiningPredicate implements ConfigPredicate {
-	protected final List<ConfigPredicate> predicates;
+public class AllOfPredicate extends CombiningPredicate {
+	public static final MapCodec<AllOfPredicate> CODEC = codec(AllOfPredicate::new);
 
-	protected CombiningPredicate(List<ConfigPredicate> predicates) {
-		this.predicates = predicates;
+	public AllOfPredicate(List<ConfigPredicate> predicates) {
+		super(predicates);
 	}
 
-	public static <T extends CombiningPredicate> MapCodec<T> codec(Function<List<ConfigPredicate>, T> constructor) {
-		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			ConfigPredicate.CODEC.listOf().fieldOf("predicates").forGetter(predicate -> predicate.predicates)
-		).apply(instance, constructor));
+	@Override
+	public Boolean get() {
+		for (ConfigPredicate predicate : this.predicates) {
+			if (!predicate.get()) return false;
+		}
+		return true;
+	}
+
+	@Override
+	public ConfigPredicateType<?> type() {
+		return ConfigPredicateType.ALL_OF;
 	}
 }
