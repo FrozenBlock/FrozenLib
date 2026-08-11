@@ -28,6 +28,7 @@ import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.platform.RegistryHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -80,6 +81,7 @@ public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<SuffocationType>> SUFFOCATION_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("suffocation_type"));
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
+	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = ResourceKey.createRegistryKey(FrozenLibConstants.id("biome_environment_attribute_modification"));
 	public static final ResourceKey<Registry<VariantSpawnInjection>> VARIANT_SPAWN_INJECTION = ResourceKey.createRegistryKey(FrozenLibConstants.id("variant_spawn_injection"));
 
 	public static void setup() {
@@ -89,6 +91,7 @@ public final class FrozenLibRegistries {
 		RegistryHelper.registerSyncedDynamicRegistry(SUFFOCATION_TYPE, SuffocationType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);
 		RegistryHelper.registerDynamicRegistry(VARIANT_SPAWN_INJECTION, VariantSpawnInjection.CODEC);
 	}
 
