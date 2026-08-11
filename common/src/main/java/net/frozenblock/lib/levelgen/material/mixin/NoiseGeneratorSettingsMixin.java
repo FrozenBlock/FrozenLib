@@ -38,7 +38,6 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorSettingsInterf
 	@ModifyReturnValue(method = "materialRule", at = @At("RETURN"))
 	private Holder<SurfaceRules.RuleSource> frozenLib$modifyRules(Holder<SurfaceRules.RuleSource> original) {
 		if (this.frozenLib$ruleSourceAddition == null) return original;
-		// TODO: check if this works
 		return Holder.direct(SurfaceRules.sequence(this.frozenLib$ruleSourceAddition, original.value()));
 	}
 

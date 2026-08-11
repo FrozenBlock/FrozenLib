@@ -32,7 +32,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public class FrozenLibPlacedFeatureUtil {
+public final class FrozenLibPlacedFeatureUtil {
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
@@ -77,7 +77,6 @@ public class FrozenLibPlacedFeatureUtil {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}
 
-	// TODO: see if this 26.3 change affects anything
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
 		return VanillaRegistries.createWorldLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
 	}

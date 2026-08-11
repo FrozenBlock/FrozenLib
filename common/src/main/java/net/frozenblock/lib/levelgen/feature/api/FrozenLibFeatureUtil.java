@@ -36,7 +36,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public class FrozenLibFeatureUtil {
+public final class FrozenLibFeatureUtil {
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
 
 	public static boolean isBlockExposed(LevelAccessor level, BlockPos pos) {
@@ -108,7 +108,6 @@ public class FrozenLibFeatureUtil {
 		return configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(feature).orElseThrow());
 	}
 
-	// TODO: see if this 26.3 change affects anything
 	public static Holder<Feature> getHolder(ResourceKey<Feature> resourceKey) {
 		return VanillaRegistries.createWorldLookup().lookupOrThrow(Registries.FEATURE).getOrThrow(resourceKey);
 	}

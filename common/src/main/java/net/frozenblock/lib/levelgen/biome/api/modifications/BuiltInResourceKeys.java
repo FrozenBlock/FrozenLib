@@ -46,7 +46,6 @@ import net.minecraft.world.level.biome.Biome;
  */
 @UtilityClass
 public final class BuiltInResourceKeys {
-	// TODO: see if this 26.3 change affects anything
 	private static final HolderLookup.Provider VANILLA_REGISTRIES = VanillaRegistries.createWorldLookup();
 
 	public static boolean isBuiltinBiome(ResourceKey<Biome> key) {
