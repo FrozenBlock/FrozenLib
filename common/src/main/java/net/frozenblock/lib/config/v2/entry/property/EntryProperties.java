@@ -138,8 +138,7 @@ public class EntryProperties {
 		private VisibilityPredicate visibilityPredicate = null;
 		private boolean requireRestart = false;
 
-		private Builder() {
-		}
+		private Builder() {}
 
 		public Builder syncable(boolean syncable) {
 			this.syncable = syncable;

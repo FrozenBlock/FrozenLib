@@ -40,6 +40,9 @@ public class ConfigPredicateTypes {
 		register("exists", ExistsPredicate.CODEC);
 		register("selector", SelectorPredicate.CODEC);
 		register("with_fallback", WithFallbackPredicate.CODEC);
+		register("fabric", FabricPredicate.CODEC);
+		register("neoforge", NeoForgePredicate.CODEC);
+		register("mod", ModPredicate.CODEC);
 		register("true", TruePredicate.CODEC);
 	}
 

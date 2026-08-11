@@ -66,7 +66,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
 - Renamed `SplashTextAPI` to `SplashTextEvents` and migrated its functionality to events.
-- Added the `frozenlib:strict_rule_based_state_provider` Block State Provider in 26.3+, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
-- Migrated `StructureGenerationConditionApi` to an event in 26.3+.
-- Migrated `StructurePlacementExclusionApi` to an event in 26.3+.
-- Added `NumberProviderProvider` (pardon the odd name) in 26.3+, allowing the creation of Number Providers via datagen without encountering issues.
+
+### 26.3+
+- Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
+- Migrated `StructureGenerationConditionApi` to an event.
+- Migrated `StructurePlacementExclusionApi` to an event.
+- Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.
+- Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
+- Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
+- Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.
