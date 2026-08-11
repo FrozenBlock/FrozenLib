@@ -17,27 +17,38 @@
 
 package net.frozenblock.lib.item.mixin.recipe;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.item.api.recipe.RecipeExportNamespaceFix;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.Recipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import java.util.Optional;
 
 @Mixin(RecipeBuilder.class)
 public interface RecipeBuilderMixin {
 
-	@ModifyVariable(
-		method = "save(Lnet/minecraft/data/recipes/RecipeOutput;Ljava/lang/String;)V",
-		at = @At("HEAD"),
-		argsOnly = true,
-		ordinal = 0
+	@WrapOperation(
+		method = {
+			"save(Lnet/minecraft/data/recipes/RecipeOutput;)V",
+			"save(Lnet/minecraft/data/recipes/RecipeOutput;Ljava/lang/String;)V"
+		},
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/data/recipes/RecipeBuilder;save(Lnet/minecraft/data/recipes/RecipeOutput;Lnet/minecraft/resources/ResourceKey;)V"
+		)
 	)
-	default String frozenLib$save(String id) {
-		if (RecipeExportNamespaceFix.getCurrentGeneratingModId().isEmpty()) return id;
+	default void frozenLib$save(RecipeBuilder instance, RecipeOutput recipeOutput, ResourceKey<Recipe<?>> recipeResourceKey, Operation<Void> original) {
+		final Optional<String> modId = RecipeExportNamespaceFix.getCurrentGeneratingModId();
+		if (modId.isPresent()) {
+			recipeResourceKey = ResourceKey.create(Registries.RECIPE, Identifier.fromNamespaceAndPath(modId.get(), recipeResourceKey.identifier().getPath()));
+		}
 
-		final Identifier originalLocation = Identifier.tryParse(id);
-		final Identifier newLocation = Identifier.fromNamespaceAndPath(RecipeExportNamespaceFix.getCurrentGeneratingModId().get(), originalLocation.getPath());
-		return newLocation.toString();
+		original.call(instance, recipeOutput, recipeResourceKey);
 	}
 }
