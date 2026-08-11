@@ -70,14 +70,7 @@ public final class ServerPackets {
 	 */
 	public record End() implements CustomPacketPayload {
 		public static final Type<End> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/end"));
-		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.ofMember(End::write, End::new);
-
-		public End(FriendlyByteBuf buf) {
-			this();
-		}
-
-		public void write(FriendlyByteBuf buf) {
-		}
+		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.unit(new End());
 
 		@Override
 		public Type<?> type() {
@@ -100,12 +93,9 @@ public final class ServerPackets {
 	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
 		public static final Type<ErrorStyle> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/error_style"));
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.composite(
-			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC,
-			ErrorStyle::errorHeader,
-			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC,
-			ErrorStyle::errorFooter,
-			ByteBufCodecs.BOOL,
-			ErrorStyle::showError,
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC, ErrorStyle::errorHeader,
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC, ErrorStyle::errorFooter,
+			ByteBufCodecs.BOOL, ErrorStyle::showError,
 			ErrorStyle::new
 		);
 
@@ -134,10 +124,8 @@ public final class ServerPackets {
 	public record ModProtocol(String prioritizedId, List<ModProtocolDef> protocols) implements CustomPacketPayload {
 		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/mod_protocol"));
 		public static final StreamCodec<FriendlyByteBuf, ModProtocol> STREAM_CODEC = StreamCodec.composite(
-			ByteBufCodecs.STRING_UTF8,
-			ModProtocol::prioritizedId,
-			ModProtocolDef.STREAM_CODEC.apply(ByteBufCodecs.list()),
-			ModProtocol::protocols,
+			ByteBufCodecs.STRING_UTF8, ModProtocol::prioritizedId,
+			ModProtocolDef.STREAM_CODEC.apply(ByteBufCodecs.list()), ModProtocol::protocols,
 			ModProtocol::new
 		);
 

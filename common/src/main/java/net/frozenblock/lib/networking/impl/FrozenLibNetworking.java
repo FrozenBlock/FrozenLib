@@ -65,8 +65,8 @@ public final class FrozenLibNetworking {
 			if (ConfigEntrySyncPacket.hasPermissionsToSendSync(player, true)) ConfigEntrySyncPacket.receive(packet, player, server);
 		});
 
-		NetworkingHelper.registerS2CLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
-		NetworkingHelper.registerC2SLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
+		NetworkingHelper.registerS2CLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
+		NetworkingHelper.registerC2SLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
 		NetworkingHelper.registerGlobalServerReceiver(FileTransferPacket.PACKET_TYPE, (packet, server, player) -> {
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();

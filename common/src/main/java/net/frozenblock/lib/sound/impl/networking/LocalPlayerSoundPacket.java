@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,21 +27,12 @@ import net.minecraft.sounds.SoundEvent;
 
 public record LocalPlayerSoundPacket(Holder<SoundEvent> sound, float volume, float pitch) implements CustomPacketPayload {
 	public static final Type<LocalPlayerSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("local_player_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, LocalPlayerSoundPacket> CODEC = StreamCodec.ofMember(LocalPlayerSoundPacket::write, LocalPlayerSoundPacket::new);
-
-	public LocalPlayerSoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readFloat(),
-			buf.readFloat()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, LocalPlayerSoundPacket> CODEC = StreamCodec.composite(
+		SoundEvent.STREAM_CODEC, LocalPlayerSoundPacket::sound,
+		ByteBufCodecs.FLOAT, LocalPlayerSoundPacket::volume,
+		ByteBufCodecs.FLOAT, LocalPlayerSoundPacket::pitch,
+		LocalPlayerSoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

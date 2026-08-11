@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +28,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public record StartingMovingRestrictionSoundLoopPacket(
-	int id,
+	int entityId,
 	Holder<SoundEvent> startingSound,
 	Holder<SoundEvent> sound,
 	SoundSource source,
@@ -39,31 +38,17 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	boolean stopOnDeath
 ) implements CustomPacketPayload {
 	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("starting_moving_restriction_looping_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.ofMember(StartingMovingRestrictionSoundLoopPacket::write, StartingMovingRestrictionSoundLoopPacket::new);
-
-	public StartingMovingRestrictionSoundLoopPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			buf.readVarInt(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat(),
-			buf.readIdentifier(),
-			buf.readBoolean()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.startingSound);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.source);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-		buf.writeIdentifier(predicateId);
-		buf.writeBoolean(this.stopOnDeath);
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.VAR_INT, StartingMovingRestrictionSoundLoopPacket::entityId,
+		SoundEvent.STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::startingSound,
+		SoundEvent.STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::sound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::source,
+		ByteBufCodecs.FLOAT, StartingMovingRestrictionSoundLoopPacket::volume,
+		ByteBufCodecs.FLOAT, StartingMovingRestrictionSoundLoopPacket::pitch,
+		Identifier.STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::predicateId,
+		ByteBufCodecs.BOOL, StartingMovingRestrictionSoundLoopPacket::stopOnDeath,
+		StartingMovingRestrictionSoundLoopPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

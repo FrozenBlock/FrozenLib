@@ -28,7 +28,6 @@ import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.tag.api.FrozenLibItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -41,7 +40,7 @@ public record SerializableItemCooldowns(List<ItemCooldown> cooldowns) {
 	public static final Codec<SerializableItemCooldowns> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		ItemCooldown.CODEC.listOf().fieldOf("serializableItemCooldowns").forGetter(SerializableItemCooldowns::cooldowns)
 	).apply(instance, SerializableItemCooldowns::new));
-	public static final StreamCodec<RegistryFriendlyByteBuf, SerializableItemCooldowns> STREAM_CODEC = StreamCodec.composite(
+	public static final StreamCodec<FriendlyByteBuf, SerializableItemCooldowns> STREAM_CODEC = StreamCodec.composite(
 		ItemCooldown.STREAM_CODEC.apply(ByteBufCodecs.list()), SerializableItemCooldowns::cooldowns,
 		SerializableItemCooldowns::new
 	);

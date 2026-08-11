@@ -20,7 +20,6 @@ package net.frozenblock.lib.sound.impl.networking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,25 +29,14 @@ import net.minecraft.sounds.SoundSource;
 
 public record RelativeMovingSoundPacket(BlockPos pos, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) implements CustomPacketPayload {
 	public static final Type<RelativeMovingSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("relative_moving_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, RelativeMovingSoundPacket> CODEC = StreamCodec.ofMember(RelativeMovingSoundPacket::write, RelativeMovingSoundPacket::new);
-
-	public RelativeMovingSoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			buf.readBlockPos(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeBlockPos(this.pos());
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.source());
-		buf.writeFloat(this.volume());
-		buf.writeFloat(this.pitch());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, RelativeMovingSoundPacket> CODEC = StreamCodec.composite(
+		BlockPos.STREAM_CODEC, RelativeMovingSoundPacket::pos,
+		SoundEvent.STREAM_CODEC, RelativeMovingSoundPacket::sound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, RelativeMovingSoundPacket::source,
+		ByteBufCodecs.FLOAT, RelativeMovingSoundPacket::volume,
+		ByteBufCodecs.FLOAT, RelativeMovingSoundPacket::pitch,
+		RelativeMovingSoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

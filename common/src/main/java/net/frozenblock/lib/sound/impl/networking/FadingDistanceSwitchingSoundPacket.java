@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,31 +38,17 @@ public record FadingDistanceSwitchingSoundPacket(
 	float maxDist
 ) implements CustomPacketPayload {
 	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("fading_distance_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, FadingDistanceSwitchingSoundPacket> CODEC = StreamCodec.ofMember(FadingDistanceSwitchingSoundPacket::write, FadingDistanceSwitchingSoundPacket::new);
-
-	public FadingDistanceSwitchingSoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			Vec3.STREAM_CODEC.decode(buf),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat(),
-			buf.readFloat(),
-			buf.readFloat()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		Vec3.STREAM_CODEC.encode(buf, this.pos());
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.closeSound());
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.farSound());
-		buf.writeEnum(this.source());
-		buf.writeFloat(this.volume());
-		buf.writeFloat(this.pitch());
-		buf.writeFloat(this.fadeDist());
-		buf.writeFloat(this.maxDist());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, FadingDistanceSwitchingSoundPacket> CODEC = StreamCodec.composite(
+		Vec3.STREAM_CODEC, FadingDistanceSwitchingSoundPacket::pos,
+		SoundEvent.STREAM_CODEC, FadingDistanceSwitchingSoundPacket::closeSound,
+		SoundEvent.STREAM_CODEC, FadingDistanceSwitchingSoundPacket::farSound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, FadingDistanceSwitchingSoundPacket::source,
+		ByteBufCodecs.FLOAT, FadingDistanceSwitchingSoundPacket::volume,
+		ByteBufCodecs.FLOAT, FadingDistanceSwitchingSoundPacket::pitch,
+		ByteBufCodecs.FLOAT, FadingDistanceSwitchingSoundPacket::fadeDist,
+		ByteBufCodecs.FLOAT, FadingDistanceSwitchingSoundPacket::maxDist,
+		FadingDistanceSwitchingSoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

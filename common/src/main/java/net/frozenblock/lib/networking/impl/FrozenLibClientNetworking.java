@@ -148,7 +148,7 @@ public final class FrozenLibClientNetworking {
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.id());
+			final T entity = (T) level.getEntity(packet.entityId());
 			if (entity == null) return;
 
 			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
@@ -164,7 +164,7 @@ public final class FrozenLibClientNetworking {
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.id());
+			final T entity = (T) level.getEntity(packet.entityId());
 			if (entity == null) return;
 
 			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
@@ -187,7 +187,7 @@ public final class FrozenLibClientNetworking {
 		ClientNetworkingHelper.registerGlobalClientReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final SoundManager soundManager = minecraft.getSoundManager();
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.id());
+			final T entity = (T) level.getEntity(packet.entityId());
 			if (entity == null) return;
 
 			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
@@ -204,7 +204,7 @@ public final class FrozenLibClientNetworking {
 	private static void receiveFlyBySoundPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = (ClientLevel) player.level();
-			final Entity entity = level.getEntity(packet.id());
+			final Entity entity = level.getEntity(packet.entityId());
 			if (entity == null) return;
 
 			final FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.source(), packet.sound().value());

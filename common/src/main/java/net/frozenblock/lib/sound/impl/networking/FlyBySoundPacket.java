@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,27 +26,16 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
-public record FlyBySoundPacket(int id, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) implements CustomPacketPayload {
+public record FlyBySoundPacket(int entityId, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) implements CustomPacketPayload {
 	public static final Type<FlyBySoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("flyby_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.ofMember(FlyBySoundPacket::write, FlyBySoundPacket::new);
-
-	public FlyBySoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			buf.readVarInt(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.source);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.VAR_INT, FlyBySoundPacket::entityId,
+		SoundEvent.STREAM_CODEC, FlyBySoundPacket::sound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, FlyBySoundPacket::source,
+		ByteBufCodecs.FLOAT, FlyBySoundPacket::volume,
+		ByteBufCodecs.FLOAT, FlyBySoundPacket::pitch,
+		FlyBySoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

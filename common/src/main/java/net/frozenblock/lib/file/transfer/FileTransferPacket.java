@@ -25,7 +25,6 @@ import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -49,17 +48,12 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	@ApiStatus.Internal
 	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("file_transfer"));
 	@ApiStatus.Internal
-	public static final StreamCodec<RegistryFriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.composite(
-		ByteBufCodecs.STRING_UTF8,
-		FileTransferPacket::transferPath,
-		ByteBufCodecs.STRING_UTF8,
-		FileTransferPacket::fileName,
-		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
-		FileTransferPacket::fileExtensions,
-		ByteBufCodecs.BOOL,
-		FileTransferPacket::request,
-		ByteBufCodecs.BYTE_ARRAY,
-		FileTransferPacket::data,
+	public static final StreamCodec<RegistryFriendlyByteBuf, FileTransferPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.STRING_UTF8, FileTransferPacket::transferPath,
+		ByteBufCodecs.STRING_UTF8, FileTransferPacket::fileName,
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), FileTransferPacket::fileExtensions,
+		ByteBufCodecs.BOOL, FileTransferPacket::request,
+		ByteBufCodecs.BYTE_ARRAY, FileTransferPacket::data,
 		FileTransferPacket::new
 	);
 	public static final int MAX_SIZE_PER_TRANSFER = 1835008; // 1.75MB
@@ -115,15 +109,6 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
 		NetworkingHelper.sendToPlayer(player, create(destPath, file));
-	}
-
-	@ApiStatus.Internal
-	private void write(FriendlyByteBuf buf) {
-		buf.writeUtf(this.transferPath);
-		buf.writeUtf(this.fileName);
-		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()).encode(buf, this.fileExtensions);
-		buf.writeBoolean(this.request);
-		buf.writeByteArray(this.data);
 	}
 
 	@ApiStatus.Internal

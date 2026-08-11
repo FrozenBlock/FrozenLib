@@ -19,21 +19,17 @@ package net.frozenblock.lib.item.impl.cooldown;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public record SerializableItemCooldownsSyncPacket(int tickCount, SerializableItemCooldowns serializableItemCooldowns) implements CustomPacketPayload {
 	public static final Type<SerializableItemCooldownsSyncPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("serializable_item_cooldowns_sync"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, SerializableItemCooldownsSyncPacket> CODEC = StreamCodec.ofMember(SerializableItemCooldownsSyncPacket::write, SerializableItemCooldownsSyncPacket::new);
-
-	public SerializableItemCooldownsSyncPacket(RegistryFriendlyByteBuf buf) {
-		this(buf.readVarInt(), SerializableItemCooldowns.STREAM_CODEC.decode(buf));
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVarInt(this.tickCount());
-		SerializableItemCooldowns.STREAM_CODEC.encode(buf, this.serializableItemCooldowns());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, SerializableItemCooldownsSyncPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.VAR_INT, SerializableItemCooldownsSyncPacket::tickCount,
+		SerializableItemCooldowns.STREAM_CODEC, SerializableItemCooldownsSyncPacket::serializableItemCooldowns,
+		SerializableItemCooldownsSyncPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

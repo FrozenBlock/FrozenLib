@@ -21,7 +21,6 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -31,8 +30,7 @@ import net.minecraft.server.level.ServerPlayer;
 public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPayload {
 	public static final Type<CapeCustomizePacket> TYPE = new Type<>(FrozenLibConstants.id("customize_cape"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.composite(
-		Cape.NETWORK_CODEC,
-		CapeCustomizePacket::cape,
+		Cape.NETWORK_CODEC, CapeCustomizePacket::cape,
 		CapeCustomizePacket::new
 	);
 

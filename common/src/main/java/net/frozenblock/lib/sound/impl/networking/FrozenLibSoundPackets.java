@@ -25,6 +25,8 @@ import net.frozenblock.lib.sound.api.type.MovingLoopingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,6 +38,10 @@ import net.minecraft.world.phys.Vec3;
 
 @UtilityClass
 public final class FrozenLibSoundPackets {
+	public static final StreamCodec<FriendlyByteBuf, SoundSource> SOUND_SOURCE_STREAM_CODEC = StreamCodec.of(
+		FriendlyByteBuf::writeEnum,
+		buf -> buf.readEnum(SoundSource.class)
+	);
 
 	public static void createAndSendLocalSound(
 		Level level,

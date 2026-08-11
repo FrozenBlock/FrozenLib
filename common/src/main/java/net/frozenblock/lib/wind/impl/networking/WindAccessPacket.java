@@ -18,22 +18,17 @@
 package net.frozenblock.lib.wind.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 
 public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
 	public static final Type<WindAccessPacket> TYPE = new Type<>(FrozenLibConstants.id("wind_access"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, WindAccessPacket> CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
-
-	public static WindAccessPacket create(FriendlyByteBuf buf) {
-        return new WindAccessPacket(Vec3.STREAM_CODEC.decode(buf));
-	}
-
-	public void write(FriendlyByteBuf buf) {
-		Vec3.STREAM_CODEC.encode(buf, this.accessPos());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, WindAccessPacket> CODEC = StreamCodec.composite(
+		Vec3.STREAM_CODEC, WindAccessPacket::accessPos,
+		WindAccessPacket::new
+	);
 
 	@Override
 	public Type<? extends CustomPacketPayload> type() {

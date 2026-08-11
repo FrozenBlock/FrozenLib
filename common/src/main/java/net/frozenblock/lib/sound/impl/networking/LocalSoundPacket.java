@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,27 +29,15 @@ import net.minecraft.world.phys.Vec3;
 
 public record LocalSoundPacket(Vec3 pos, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, boolean distanceDelay) implements CustomPacketPayload {
 	public static final Type<LocalSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("local_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, LocalSoundPacket> CODEC = StreamCodec.ofMember(LocalSoundPacket::write, LocalSoundPacket::new);
-
-	public LocalSoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			Vec3.STREAM_CODEC.decode(buf),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat(),
-			buf.readBoolean()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		Vec3.STREAM_CODEC.encode(buf, this.pos());
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound());
-		buf.writeEnum(this.source());
-		buf.writeFloat(this.volume());
-		buf.writeFloat(this.pitch());
-		buf.writeBoolean(this.distanceDelay());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, LocalSoundPacket> CODEC = StreamCodec.composite(
+		Vec3.STREAM_CODEC, LocalSoundPacket::pos,
+		SoundEvent.STREAM_CODEC, LocalSoundPacket::sound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, LocalSoundPacket::source,
+		ByteBufCodecs.FLOAT, LocalSoundPacket::volume,
+		ByteBufCodecs.FLOAT, LocalSoundPacket::pitch,
+		ByteBufCodecs.BOOL, LocalSoundPacket::distanceDelay,
+		LocalSoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

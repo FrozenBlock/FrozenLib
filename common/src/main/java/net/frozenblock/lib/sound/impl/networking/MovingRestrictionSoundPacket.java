@@ -19,7 +19,6 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +28,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public record MovingRestrictionSoundPacket(
-	int id,
+	int entityId,
 	Holder<SoundEvent> sound,
 	SoundSource source,
 	float volume,
@@ -39,31 +38,17 @@ public record MovingRestrictionSoundPacket(
 	boolean looping
 ) implements CustomPacketPayload {
 	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("moving_restriction_sound"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, MovingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingRestrictionSoundPacket::write, MovingRestrictionSoundPacket::new);
-
-	public MovingRestrictionSoundPacket(RegistryFriendlyByteBuf buf) {
-		this(
-			buf.readVarInt(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			buf.readEnum(SoundSource.class),
-			buf.readFloat(),
-			buf.readFloat(),
-			buf.readIdentifier(),
-			buf.readBoolean(),
-			buf.readBoolean()
-		);
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.source);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-		buf.writeIdentifier(predicateId);
-		buf.writeBoolean(this.stopOnDeath);
-		buf.writeBoolean(this.looping);
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, MovingRestrictionSoundPacket> CODEC = StreamCodec.composite(
+		ByteBufCodecs.VAR_INT, MovingRestrictionSoundPacket::entityId,
+		SoundEvent.STREAM_CODEC, MovingRestrictionSoundPacket::sound,
+		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, MovingRestrictionSoundPacket::source,
+		ByteBufCodecs.FLOAT, MovingRestrictionSoundPacket::volume,
+		ByteBufCodecs.FLOAT, MovingRestrictionSoundPacket::pitch,
+		Identifier.STREAM_CODEC, MovingRestrictionSoundPacket::predicateId,
+		ByteBufCodecs.BOOL, MovingRestrictionSoundPacket::stopOnDeath,
+		ByteBufCodecs.BOOL, MovingRestrictionSoundPacket::looping,
+		MovingRestrictionSoundPacket::new
+	);
 
 	@Override
 	public Type<?> type() {

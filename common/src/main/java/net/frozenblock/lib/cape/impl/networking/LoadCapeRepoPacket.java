@@ -26,8 +26,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record LoadCapeRepoPacket(String capeRepo) implements CustomPacketPayload {
 	public static final Type<LoadCapeRepoPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("load_cape_repo"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, LoadCapeRepoPacket> CODEC = StreamCodec.composite(
-		ByteBufCodecs.STRING_UTF8,
-		LoadCapeRepoPacket::capeRepo,
+		ByteBufCodecs.STRING_UTF8, LoadCapeRepoPacket::capeRepo,
 		LoadCapeRepoPacket::new
 	);
 

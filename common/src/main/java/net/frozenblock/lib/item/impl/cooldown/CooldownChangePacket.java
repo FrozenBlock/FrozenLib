@@ -19,22 +19,18 @@ package net.frozenblock.lib.item.impl.cooldown;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
 public record CooldownChangePacket(Identifier cooldownGroup, int additional) implements CustomPacketPayload {
 	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
-
-	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {
-		this(buf.readIdentifier(), buf.readVarInt());
-	}
-
-	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeIdentifier(this.cooldownGroup);
-		buf.writeVarInt(this.additional());
-	}
+	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.composite(
+		Identifier.STREAM_CODEC, CooldownChangePacket::cooldownGroup,
+		ByteBufCodecs.VAR_INT, CooldownChangePacket::additional,
+		CooldownChangePacket::new
+	);
 
 	@Override
 	public Type<?> type() {

@@ -36,37 +36,37 @@ public final class NbtFileUtils {
 	/**
 	 * Saves an NBT file to the config directory.
 	 *
-	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param tag The {@link CompoundTag} to save.
 	 * @param fileName The name to use for the file, excluding the file extension.
 	 */
-	public static void saveToConfigFile(CompoundTag compoundTag, String fileName) {
+	public static void saveToConfigFile(CompoundTag tag, String fileName) {
 		CONFIG_PATH.mkdirs();
-		saveToFile(compoundTag, new File(CONFIG_PATH, withNBTExtension(fileName)));
+		saveToFile(tag, new File(CONFIG_PATH, withNBTExtension(fileName)));
 	}
 
 	/**
 	 * Saves an NBT file within a directory.
 	 *
-	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param tag The {@link CompoundTag} to save.
 	 * @param file The directory to save to.
 	 * @param fileName The file name to save to, excluding the file extension.
 	 */
-	public static void saveToFile(CompoundTag compoundTag, File file, String fileName) {
+	public static void saveToFile(CompoundTag tag, File file, String fileName) {
 		file.mkdirs();
 		final File destFile = new File(file, withNBTExtension(fileName));
-		saveToFile(compoundTag, destFile);
+		saveToFile(tag, destFile);
 	}
 
 	/**
 	 * Saves an NBT file.
 	 *
-	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param tag The {@link CompoundTag} to save.
 	 * @param file The file to save to.
 	 */
-	public static void saveToFile(CompoundTag compoundTag, File file) {
+	public static void saveToFile(CompoundTag tag, File file) {
 		file.getParentFile().mkdirs();
 		try {
-			NbtIo.writeCompressed(compoundTag, file.toPath());
+			NbtIo.writeCompressed(tag, file.toPath());
 		} catch (IOException iOException) {
 			FrozenLibConstants.LOGGER.error("Could not save data {}", file, iOException);
 		}
