@@ -24,9 +24,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.biome.Biome;
 
-public abstract class FrozenBiomeTagProvider extends FabricTagsProvider<Biome> {
+public abstract class BiomeTagsProvider extends FabricTagsProvider<Biome> {
 
-	public FrozenBiomeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public BiomeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, Registries.BIOME, registries);
 	}
 }

@@ -69,3 +69,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:strict_rule_based_state_provider` Block State Provider in 26.3+, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
 - Migrated `StructureGenerationConditionApi` to an event in 26.3+.
 - Migrated `StructurePlacementExclusionApi` to an event in 26.3+.
+- Added `NumberProviderProvider` (pardon the odd name) in 26.3+, allowing the creation of Number Providers via datagen without encountering issues.

@@ -39,7 +39,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Unmodifiable;
 
 @ClientOnly
-public class FrozenLibModelHelper {
+public final class FrozenLibModelHelper {
 	public static final Map<Direction, VariantMutator> MULTIFACE_GENERATOR_NO_UV_LOCK = ImmutableMap.of(
 		Direction.NORTH, BlockModelGenerators.NOP,
 		Direction.EAST, BlockModelGenerators.Y_ROT_90,
@@ -50,19 +50,19 @@ public class FrozenLibModelHelper {
 	);
 	public static final TexturedModel.Provider TINTED_FLOWERBED_1 = TexturedModel.createDefault(
 		TextureMapping::flowerbed,
-		createModelTemplate("tinted_flowerbed_1", "_1", TextureSlot.FLOWERBED, TextureSlot.STEM)
+		createBlockModelTemplate("tinted_flowerbed_1", "_1", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 	public static final TexturedModel.Provider TINTED_FLOWERBED_2 = TexturedModel.createDefault(
 		TextureMapping::flowerbed,
-		createModelTemplate("tinted_flowerbed_2", "_2", TextureSlot.FLOWERBED, TextureSlot.STEM)
+		createBlockModelTemplate("tinted_flowerbed_2", "_2", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 	public static final TexturedModel.Provider TINTED_FLOWERBED_3 = TexturedModel.createDefault(
 		TextureMapping::flowerbed,
-		createModelTemplate("tinted_flowerbed_3", "_3", TextureSlot.FLOWERBED, TextureSlot.STEM)
+		createBlockModelTemplate("tinted_flowerbed_3", "_3", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 	public static final TexturedModel.Provider TINTED_FLOWERBED_4 = TexturedModel.createDefault(
 		TextureMapping::flowerbed,
-		createModelTemplate("tinted_flowerbed_4", "_4", TextureSlot.FLOWERBED, TextureSlot.STEM)
+		createBlockModelTemplate("tinted_flowerbed_4", "_4", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 
 	public static void createTintedFlowerBed(BlockModelGenerators generator, Block block) {
@@ -98,7 +98,7 @@ public class FrozenLibModelHelper {
 		return builder.build();
 	}
 
-	private static ModelTemplate createModelTemplate(String string, String string2, TextureSlot... textureSlots) {
-		return new ModelTemplate(Optional.of(FrozenLibConstants.id("block/" + string)), Optional.of(string2), textureSlots);
+	private static ModelTemplate createBlockModelTemplate(String name, String suffix, TextureSlot... textureSlots) {
+		return new ModelTemplate(Optional.of(FrozenLibConstants.id("block/" + name)), Optional.of(suffix), textureSlots);
 	}
 }

@@ -35,7 +35,7 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 
-public class EntityLootHelper {
+public final class EntityLootHelper {
 	public static AnyOfCondition.Builder shouldSmeltLoot(HolderLookup.Provider registries) {
 		HolderLookup.RegistryLookup<Enchantment> registryLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
 		return AnyOfCondition.anyOf(
