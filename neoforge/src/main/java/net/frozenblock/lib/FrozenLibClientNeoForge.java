@@ -30,6 +30,7 @@ import net.frozenblock.lib.renderer.hud.platform.HudElementRegistryImpl;
 import net.frozenblock.lib.renderer.model.platform.ModelLayerRegistryImpl;
 import net.frozenblock.lib.particle.client.api.platform.ParticleProviderRegistryImpl;
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
+import net.frozenblock.lib.renderer.special.platform.SpecialModelRendererRegistryImpl;
 import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.resource.client.api.pack.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
@@ -45,6 +46,7 @@ import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -65,6 +67,7 @@ public final class FrozenLibClientNeoForge {
 		modBus.addListener(EntityRenderersEvent.RegisterLayerDefinitions.class, ModelLayerRegistryImpl::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, BlockEntityRendererRegistryImpl::flush);
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, EntityRendererRegistryImpl::flush);
+		modBus.addListener(RegisterSpecialModelRendererEvent.class, SpecialModelRendererRegistryImpl::flush);
 		modBus.addListener(RegisterParticleProvidersEvent.class, ParticleProviderRegistryImpl::flush);
 
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->

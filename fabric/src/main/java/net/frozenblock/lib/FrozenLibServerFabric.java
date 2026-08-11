@@ -24,7 +24,7 @@ import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.platform.api.ServerOnly;
 
 @ServerOnly
-public class FrozenLibServerFabric implements DedicatedServerModInitializer {
+public final class FrozenLibServerFabric implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
