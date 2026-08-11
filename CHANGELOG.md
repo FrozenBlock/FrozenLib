@@ -34,6 +34,13 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
 - Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+- Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
+- Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
+- Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.
+- Added the `frozenlib:biome_environment_attribute_modification` Dynamic Registry, with the following format:
+  - `biomes`: The id, a list of ids, or a tag of Biomes to modify.
+  - `attributes`: A map of Environment Attributes to merge into the given `biomes`.
+  - `enabled_when`: A Config Predicate, determining whether this instance can be used or should be skipped.
 - Migrated Serializable Item Cooldowns to Data Attachments and optimized its network performance.
 - Added the `frozenlib:variant_spawn_injection` Dynamic Registry, with the following format:
   - `registry`: The id of the variant registry.
@@ -72,6 +79,3 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
 - Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.
-- Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
-- Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
-- Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.

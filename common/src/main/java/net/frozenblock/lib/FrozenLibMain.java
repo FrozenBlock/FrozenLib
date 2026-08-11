@@ -34,6 +34,7 @@ import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
+import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
@@ -72,6 +73,7 @@ public final class FrozenLibMain {
 		SerializableItemCooldowns.init();
 		SoundTypeOverrides.init();
 		SuffocationData.init();
+		BiomeEnvironmentAttributeModification.init();
 	}
 
 	public static void quiltSetup() {

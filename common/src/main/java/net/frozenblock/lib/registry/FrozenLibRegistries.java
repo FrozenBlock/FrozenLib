@@ -30,6 +30,7 @@ import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
 import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
 import net.frozenblock.lib.levelgen.structure.impl.processor.StructureProcessorListAddition;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
@@ -87,6 +88,7 @@ public class FrozenLibRegistries {
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
+	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = ResourceKey.createRegistryKey(FrozenLibConstants.id("biome_environment_attribute_modification"));
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
 	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
@@ -99,6 +101,7 @@ public class FrozenLibRegistries {
 	public static void setup() {
 		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);

@@ -57,6 +57,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.FeatureSorter;
+import org.apache.commons.lang3.function.TriConsumer;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +77,12 @@ public class BiomeModificationImpl {
 		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.register(server -> INSTANCE.finalizeWorldGen(server.registryAccess()));
 	}
 
-	public void addModifier(Identifier id, ModificationPhase phase, Predicate<BiomeSelectionContext> selector, BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier) {
+	public void addModifier(
+		Identifier id,
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		TriConsumer<RegistryAccess, BiomeSelectionContext, BiomeModificationContext> modifier
+	) {
 		Objects.requireNonNull(selector);
 		Objects.requireNonNull(modifier);
 
@@ -84,7 +90,25 @@ public class BiomeModificationImpl {
 		modifiersUnsorted = true;
 	}
 
-	public void addModifier(Identifier id, ModificationPhase phase, Predicate<BiomeSelectionContext> selector, Consumer<BiomeModificationContext> modifier) {
+	public void addModifier(
+		Identifier id,
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier
+	) {
+		Objects.requireNonNull(selector);
+		Objects.requireNonNull(modifier);
+
+		modifiers.add(new ModifierRecord(phase, id, selector, modifier));
+		modifiersUnsorted = true;
+	}
+
+	public void addModifier(
+		Identifier id,
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		Consumer<BiomeModificationContext> modifier
+	) {
 		Objects.requireNonNull(selector);
 		Objects.requireNonNull(modifier);
 
@@ -97,11 +121,8 @@ public class BiomeModificationImpl {
 	 */
 	void changeOrder(Identifier id, int order) {
 		modifiersUnsorted = true;
-
 		for (ModifierRecord modifierRecord : modifiers) {
-			if (id.equals(modifierRecord.id)) {
-				modifierRecord.setOrder(order);
-			}
+			if (id.equals(modifierRecord.id)) modifierRecord.setOrder(order);
 		}
 	}
 
@@ -122,7 +143,7 @@ public class BiomeModificationImpl {
 	}
 
 	public void finalizeWorldGen(RegistryAccess impl) {
-		Stopwatch sw = Stopwatch.createStarted();
+		final Stopwatch sw = Stopwatch.createStarted();
 
 		// Now that we apply biome modifications inside the MinecraftServer constructor, we should only ever do
 		// this once for a RegistryAccess. Marking the RegistryAccess as modified ensures a crash
@@ -130,29 +151,29 @@ public class BiomeModificationImpl {
 		BiomeModificationMarker modificationTracker = (BiomeModificationMarker) impl;
 		modificationTracker.frozenLib$markModified();
 
-		Registry<Biome> biomes = impl.lookupOrThrow(Registries.BIOME);
+		final Registry<Biome> biomes = impl.lookupOrThrow(Registries.BIOME);
 
 		// Build a list of all biome keys in ascending order of their raw-id to get a consistent result in case
 		// someone does something stupid.
-		List<ResourceKey<Biome>> keys = biomes.entrySet().stream()
+		final List<ResourceKey<Biome>> keys = biomes.entrySet().stream()
 			.map(Map.Entry::getKey)
 			.sorted(Comparator.comparingInt(key -> biomes.getId(biomes.getValueOrThrow(key))))
 			.toList();
 
-		List<ModifierRecord> sortedModifiers = getSortedModifiers();
+		final List<ModifierRecord> sortedModifiers = getSortedModifiers();
 
 		int biomesChanged = 0;
 		int biomesProcessed = 0;
 		int modifiersApplied = 0;
 
 		for (ResourceKey<Biome> key : keys) {
-			Biome biome = biomes.getValueOrThrow(key);
+			final Biome biome = biomes.getValueOrThrow(key);
 
 			biomesProcessed++;
 
 			// Make a copy of the biome to allow selection contexts to see it unmodified,
 			// But do so only once it's known anything wants to modify the biome at all
-			BiomeSelectionContext context = new BiomeSelectionContextImpl(impl, key, biome);
+			final BiomeSelectionContext context = new BiomeSelectionContextImpl(impl, key, biome);
 			BiomeModificationContextImpl modificationContext = null;
 
 			for (ModifierRecord modifier : sortedModifiers) {
@@ -165,7 +186,7 @@ public class BiomeModificationImpl {
 						modificationContext = new BiomeModificationContextImpl(impl, biome);
 					}
 
-					modifier.apply(context, modificationContext);
+					modifier.apply(impl, context, modificationContext);
 					modifiersApplied++;
 				}
 			}
@@ -187,63 +208,85 @@ public class BiomeModificationImpl {
 				}
 
 				if (biomes instanceof MappedRegistry<Biome> registry) {
-					RegistrationInfo info = registry.registrationInfos.get(key);
-					RegistrationInfo newInfo = new RegistrationInfo(Optional.empty(), info.lifecycle());
+					final RegistrationInfo info = registry.registrationInfos.get(key);
+					final RegistrationInfo newInfo = new RegistrationInfo(Optional.empty(), info.lifecycle());
 					registry.registrationInfos.put(key, newInfo);
 				}
 			}
 		}
 
 		if (biomesProcessed > 0) {
-			LOGGER.info("Applied {} biome modifications to {} of {} new biomes in {}", modifiersApplied, biomesChanged,
-				biomesProcessed, sw);
+			LOGGER.info("Applied {} biome modifications to {} of {} new biomes in {}", modifiersApplied, biomesChanged, biomesProcessed, sw);
 		}
 	}
 
 	private static class ModifierRecord {
 		private final ModificationPhase phase;
-
 		private final Identifier id;
-
 		private final Predicate<BiomeSelectionContext> selector;
-
+		private final TriConsumer<RegistryAccess, BiomeSelectionContext, BiomeModificationContext> registryAndContextSensitiveModifier;
 		private final BiConsumer<BiomeSelectionContext, BiomeModificationContext> contextSensitiveModifier;
-
 		private final Consumer<BiomeModificationContext> modifier;
 
 		// Whenever this is modified, the modifiers need to be resorted
 		private int order;
 
-		ModifierRecord(ModificationPhase phase, Identifier id, Predicate<BiomeSelectionContext> selector, Consumer<BiomeModificationContext> modifier) {
+		ModifierRecord(
+			ModificationPhase phase,
+			Identifier id,
+			Predicate<BiomeSelectionContext> selector,
+			Consumer<BiomeModificationContext> modifier
+		) {
 			this.phase = phase;
 			this.id = id;
 			this.selector = selector;
 			this.modifier = modifier;
 			this.contextSensitiveModifier = null;
+			this.registryAndContextSensitiveModifier = null;
 		}
 
-		ModifierRecord(ModificationPhase phase, Identifier id, Predicate<BiomeSelectionContext> selector, BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier) {
+		ModifierRecord(
+			ModificationPhase phase,
+			Identifier id,
+			Predicate<BiomeSelectionContext> selector,
+			BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier
+		) {
 			this.phase = phase;
 			this.id = id;
 			this.selector = selector;
 			this.contextSensitiveModifier = modifier;
 			this.modifier = null;
+			this.registryAndContextSensitiveModifier = null;
+		}
+
+		ModifierRecord(
+			ModificationPhase phase,
+			Identifier id,
+			Predicate<BiomeSelectionContext> selector,
+			TriConsumer<RegistryAccess, BiomeSelectionContext, BiomeModificationContext> modifier
+		) {
+			this.phase = phase;
+			this.id = id;
+			this.selector = selector;
+			this.registryAndContextSensitiveModifier = modifier;
+			this.modifier = null;
+			this.contextSensitiveModifier = null;
 		}
 
 		@Override
 		public String toString() {
-			if (modifier != null) {
-				return modifier.toString();
-			} else {
-				return contextSensitiveModifier.toString();
-			}
+			return this.registryAndContextSensitiveModifier != null ? this.registryAndContextSensitiveModifier.toString()
+				: this.contextSensitiveModifier != null ? this.contextSensitiveModifier.toString()
+				: this.modifier.toString();
 		}
 
-		public void apply(BiomeSelectionContext context, BiomeModificationContextImpl modificationContext) {
-			if (contextSensitiveModifier != null) {
-				contextSensitiveModifier.accept(context, modificationContext);
+		public void apply(RegistryAccess registryAccess, BiomeSelectionContext context, BiomeModificationContextImpl modificationContext) {
+			if (this.registryAndContextSensitiveModifier != null) {
+				this.registryAndContextSensitiveModifier.accept(registryAccess, context, modificationContext);
+			} else if (this.contextSensitiveModifier != null) {
+				this.contextSensitiveModifier.accept(context, modificationContext);
 			} else {
-				modifier.accept(modificationContext);
+				this.modifier.accept(modificationContext);
 			}
 		}
 

@@ -38,7 +38,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
+import org.apache.commons.lang3.function.TriConsumer;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -65,7 +67,7 @@ public class BiomeModification {
 		Predicate<BiomeSelectionContext> selector,
 		Consumer<BiomeModificationContext> modifier
 	) {
-		BiomeModificationImpl.INSTANCE.addModifier(id, phase, selector, modifier);
+		BiomeModificationImpl.INSTANCE.addModifier(this.id, phase, selector, modifier);
 		return this;
 	}
 
@@ -82,7 +84,20 @@ public class BiomeModification {
 		Predicate<BiomeSelectionContext> selector,
 		BiConsumer<BiomeSelectionContext, BiomeModificationContext> modifier
 	) {
-		BiomeModificationImpl.INSTANCE.addModifier(id, phase, selector, modifier);
+		BiomeModificationImpl.INSTANCE.addModifier(this.id, phase, selector, modifier);
+		return this;
+	}
+
+	/**
+	 * Adds a modifier that is sensitive to the current state of the biome when it is applied, and has access to registries.
+	 * @see #add(ModificationPhase, Predicate, BiConsumer) this method's docs for further explanation.
+	 */
+	public BiomeModification add(
+		ModificationPhase phase,
+		Predicate<BiomeSelectionContext> selector,
+		TriConsumer<RegistryAccess, BiomeSelectionContext, BiomeModificationContext> modifier
+	) {
+		BiomeModificationImpl.INSTANCE.addModifier(this.id, phase, selector, modifier);
 		return this;
 	}
 }
