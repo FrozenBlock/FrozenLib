@@ -35,7 +35,7 @@ public class ModPredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public MapCodec<ModPredicate> codec() {
-		return CODEC;
+	public ConfigPredicateType<?> type() {
+		return ConfigPredicateType.MOD;
 	}
 }

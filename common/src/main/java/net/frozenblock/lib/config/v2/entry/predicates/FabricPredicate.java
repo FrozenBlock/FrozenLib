@@ -32,7 +32,7 @@ public class FabricPredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public MapCodec<FabricPredicate> codec() {
-		return CODEC;
+	public ConfigPredicateType<?> type() {
+		return ConfigPredicateType.FABRIC;
 	}
 }

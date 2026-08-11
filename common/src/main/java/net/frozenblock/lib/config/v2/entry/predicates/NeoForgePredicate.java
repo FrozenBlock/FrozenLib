@@ -32,7 +32,7 @@ public class NeoForgePredicate implements ConfigPredicate {
 	}
 
 	@Override
-	public MapCodec<NeoForgePredicate> codec() {
-		return CODEC;
+	public ConfigPredicateType<?> type() {
+		return ConfigPredicateType.NEOFORGE;
 	}
 }
