@@ -34,6 +34,9 @@ public interface ConfigPredicateType<P extends ConfigPredicate> {
 	ConfigPredicateType<ExistsPredicate> EXISTS = register("exists", ExistsPredicate.CODEC);
 	ConfigPredicateType<SelectorPredicate> SELECTOR = register("selector", SelectorPredicate.CODEC);
 	ConfigPredicateType<WithFallbackPredicate> WITH_FALLBACK = register("with_fallback", WithFallbackPredicate.CODEC);
+	ConfigPredicateType<FabricPredicate> FABRIC = register("fabric", FabricPredicate.CODEC);
+	ConfigPredicateType<NeoForgePredicate> NEOFORGE = register("neoforge", NeoForgePredicate.CODEC);
+	ConfigPredicateType<ModPredicate> MOD = register("mod", ModPredicate.CODEC);
 	ConfigPredicateType<NotPredicate> TRUE = register("true", NotPredicate.CODEC);
 
 	MapCodec<P> codec();

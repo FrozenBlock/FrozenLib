@@ -17,27 +17,25 @@
 
 package net.frozenblock.lib.config.v2.entry.predicates;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.v2.registry.ID;
+import net.frozenblock.lib.platform.ModLoader;
 
-public class ExistsPredicate implements ConfigPredicate {
-	public static final MapCodec<ExistsPredicate> CODEC = ID.CODEC.fieldOf("entry").xmap(ExistsPredicate::new, predicate -> predicate.id);
-	private final ID id;
-	private Boolean exists = null;
+public class ModPredicate implements ConfigPredicate {
+	public static final MapCodec<ModPredicate> CODEC = Codec.STRING.fieldOf("id").xmap(ModPredicate::new, predicate -> predicate.modId);
+	private final String modId;
 
-	public ExistsPredicate(ID id) {
-		this.id = id;
+	public ModPredicate(String modId) {
+		this.modId = modId;
 	}
 
 	@Override
 	public Boolean get() {
-		if (this.exists == null) this.exists = ConfigV2Registry.getEntry(this.id) != null;
-		return this.exists;
+		return ModLoader.isModLoaded(this.modId);
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.EXISTS;
+	public MapCodec<ModPredicate> codec() {
+		return CODEC;
 	}
 }

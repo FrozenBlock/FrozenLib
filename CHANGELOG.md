@@ -2,6 +2,9 @@ Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+- Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
+- Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
+- Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.
 - Migrated Serializable Item Cooldowns to Data Attachments and optimized its network performance.
 - Added the `frozenlib:variant_spawn_injection` Dynamic Registry, with the following format:
   - `registry`: The id of the variant registry.
@@ -34,3 +37,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
 - Renamed `SplashTextAPI` to `SplashTextEvents` and migrated its functionality to events.
+
+### 26.3+
+- Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
+- Migrated `StructureGenerationConditionApi` to an event.
+- Migrated `StructurePlacementExclusionApi` to an event.
+- Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.

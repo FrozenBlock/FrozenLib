@@ -18,26 +18,21 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.v2.registry.ID;
+import net.frozenblock.lib.platform.ModLoader;
 
-public class ExistsPredicate implements ConfigPredicate {
-	public static final MapCodec<ExistsPredicate> CODEC = ID.CODEC.fieldOf("entry").xmap(ExistsPredicate::new, predicate -> predicate.id);
-	private final ID id;
-	private Boolean exists = null;
+public class NeoForgePredicate implements ConfigPredicate {
+	public static NeoForgePredicate INSTANCE = new NeoForgePredicate();
+	public static final MapCodec<NeoForgePredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
-	public ExistsPredicate(ID id) {
-		this.id = id;
-	}
+	private NeoForgePredicate() {}
 
 	@Override
 	public Boolean get() {
-		if (this.exists == null) this.exists = ConfigV2Registry.getEntry(this.id) != null;
-		return this.exists;
+		return ModLoader.isNeoForge();
 	}
 
 	@Override
-	public ConfigPredicateType<?> type() {
-		return ConfigPredicateType.EXISTS;
+	public MapCodec<NeoForgePredicate> codec() {
+		return CODEC;
 	}
 }
