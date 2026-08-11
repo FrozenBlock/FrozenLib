@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncClientUtil;
@@ -228,6 +229,39 @@ public class ConfigEntry<T> implements Supplier<T> {
 
 	public StreamCodec<? extends ByteBuf, T> streamCodec() {
 		return this.type.getStreamCodec();
+	}
+
+	// CONFIG PREDICATES
+	public ConfigPredicate equalTo(T value) {
+		return ConfigPredicate.equalTo(this, value);
+	}
+
+	public ConfigPredicate notEqualTo(T value) {
+		return ConfigPredicate.notEqualTo(this, value);
+	}
+
+	public ConfigPredicate greaterThan(T value) {
+		return ConfigPredicate.greaterThan(this, value);
+	}
+
+	public ConfigPredicate greaterThanOrEqualTo(T value) {
+		return ConfigPredicate.greaterThanOrEqualTo(this, value);
+	}
+
+	public ConfigPredicate lessThan(T value) {
+		return ConfigPredicate.lessThan(this, value);
+	}
+
+	public ConfigPredicate lessThanOrEqualTo(T value) {
+		return ConfigPredicate.lessThanOrEqualTo(this, value);
+	}
+
+	public ConfigPredicate existsPredicate() {
+		return ConfigPredicate.exists(this);
+	}
+
+	public ConfigPredicate asPredicateWithFallback(ConfigPredicate predicate, ConfigPredicate fallback) {
+		return ConfigPredicate.withFallback(this, predicate, fallback);
 	}
 
 	public static class Builder<T> {
