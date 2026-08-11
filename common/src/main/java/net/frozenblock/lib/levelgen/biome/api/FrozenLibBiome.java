@@ -37,8 +37,6 @@ import org.jetbrains.annotations.Unmodifiable;
 
 public abstract class FrozenLibBiome {
 	private static final List<FrozenLibBiome> BIOMES = new ArrayList<>();
-	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(this.modID(), this.biomeID()));
-
 	private boolean enabled = true;
 
 	protected FrozenLibBiome() {
@@ -184,14 +182,14 @@ public abstract class FrozenLibBiome {
 	 * @return whether the biome can be automatically injected into worldgen.
 	 */
 	public boolean isEnabled() {
-		return enabled;
+		return this.enabled;
 	}
 
 	/**
 	 * @return the {@link ResourceKey} of the biome.
 	 */
 	public ResourceKey<Biome> getKey() {
-		return this.key;
+		return ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(this.modID(), this.biomeID()));
 	}
 
 	/**
