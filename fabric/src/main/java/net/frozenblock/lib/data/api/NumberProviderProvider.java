@@ -52,18 +52,12 @@ public abstract class NumberProviderProvider implements DataProvider {
 
 	public abstract void generateNumberProvider(HolderLookup.Provider registryLookup, Consumer<Holder> consumer);
 
-	public abstract String namespace();
-
 	public static Holder create(Identifier id, NumberProvider provider) {
 		return new Holder(id, provider);
 	}
 
 	public static Holder create(ResourceKey<NumberProvider> key, NumberProvider provider) {
 		return create(key.identifier(), provider);
-	}
-
-	public Holder create(String name, NumberProvider provider) {
-		return create(Identifier.fromNamespaceAndPath(this.namespace(), name), provider);
 	}
 
 	@Override
