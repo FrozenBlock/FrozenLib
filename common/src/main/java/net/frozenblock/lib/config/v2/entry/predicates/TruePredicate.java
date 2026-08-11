@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 import com.mojang.serialization.MapCodec;
 
 public class TruePredicate implements ConfigPredicate {
-	public static TruePredicate INSTANCE = new TruePredicate();
+	public static final TruePredicate INSTANCE = new TruePredicate();
 	public static final MapCodec<TruePredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
 	private TruePredicate() {}

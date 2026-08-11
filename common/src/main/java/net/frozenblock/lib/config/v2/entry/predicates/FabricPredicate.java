@@ -21,7 +21,7 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.ModLoader;
 
 public class FabricPredicate implements ConfigPredicate {
-	public static FabricPredicate INSTANCE = new FabricPredicate();
+	public static final FabricPredicate INSTANCE = new FabricPredicate();
 	public static final MapCodec<FabricPredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
 	private FabricPredicate() {}

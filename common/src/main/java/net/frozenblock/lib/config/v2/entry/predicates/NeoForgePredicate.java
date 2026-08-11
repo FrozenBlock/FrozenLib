@@ -21,7 +21,7 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.ModLoader;
 
 public class NeoForgePredicate implements ConfigPredicate {
-	public static NeoForgePredicate INSTANCE = new NeoForgePredicate();
+	public static final NeoForgePredicate INSTANCE = new NeoForgePredicate();
 	public static final MapCodec<NeoForgePredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
 	private NeoForgePredicate() {}

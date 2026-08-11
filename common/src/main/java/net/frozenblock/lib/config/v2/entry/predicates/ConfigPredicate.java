@@ -157,6 +157,22 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return TruePredicate.INSTANCE;
 	}
 
+	static ConfigPredicate isFabric() {
+		return FabricPredicate.INSTANCE;
+	}
+
+	static ConfigPredicate isNeoForge() {
+		return NeoForgePredicate.INSTANCE;
+	}
+
+	static ConfigPredicate modLoaded(String modId) {
+		return new ModPredicate(modId);
+	}
+
+	static ConfigPredicate modNotLoaded(String modId) {
+		return not(new ModPredicate(modId));
+	}
+
 	default BlockPredicate asBlockPredicate() {
 		return new ConfigBlockPredicate(this);
 	}
