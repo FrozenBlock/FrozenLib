@@ -16,15 +16,14 @@
  */
 
 @file:JvmName("FrozenClothConfigKt")
-@file:Environment(EnvType.CLIENT)
+@file:ClientOnly
 
 package net.frozenblock.lib.config.clothconfig
 
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.v2.entry.ConfigEntry
+import net.mehvahdjukaar.candlelight.api.ClientOnly
 
 fun <T, A : AbstractConfigListEntry<T>, B : AbstractFieldBuilder<T, A, B>> B.entry(entry: ConfigEntry<T>): A
     = FrozenLibClothConfigGuiHelper.entry(this, entry)
