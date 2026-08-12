@@ -37,7 +37,7 @@ public interface ConfigPredicateType<P extends ConfigPredicate> {
 	ConfigPredicateType<FabricPredicate> FABRIC = register("fabric", FabricPredicate.CODEC);
 	ConfigPredicateType<NeoForgePredicate> NEOFORGE = register("neoforge", NeoForgePredicate.CODEC);
 	ConfigPredicateType<ModPredicate> MOD = register("mod", ModPredicate.CODEC);
-	ConfigPredicateType<NotPredicate> TRUE = register("true", NotPredicate.CODEC);
+	ConfigPredicateType<TrueConfigPredicate> TRUE = register("true", TrueConfigPredicate.CODEC);
 
 	MapCodec<P> codec();
 
