@@ -15,4 +15,4 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package frozenblock.lib.config.api.client.gui;
+package net.frozenblock.lib.config.api.client.gui;

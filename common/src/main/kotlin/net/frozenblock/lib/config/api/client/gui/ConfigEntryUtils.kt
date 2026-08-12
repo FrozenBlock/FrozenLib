@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Environment(EnvType.CLIENT)
+@file:ClientOnly
 @file:Suppress("experimental")
 
 package net.frozenblock.lib.config.api.client.gui
@@ -24,10 +24,9 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import me.shedaniel.clothconfig2.gui.entries.NestedListListEntry
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface
 import net.frozenblock.lib.config.v2.entry.ConfigEntry
+import net.mehvahdjukaar.candlelight.api.ClientOnly
 import net.minecraft.network.chat.Component
 import java.util.*
 import java.util.function.BiFunction
