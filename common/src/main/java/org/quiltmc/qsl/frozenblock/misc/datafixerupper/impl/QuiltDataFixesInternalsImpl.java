@@ -39,7 +39,6 @@ import org.jetbrains.annotations.Range;
 @ApiStatus.Internal
 public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     private final Schema latestVanillaSchema;
-
     private Map<String, DataFixerEntry> modDataFixers;
 	private Map<String, DataFixerEntry> modMinecraftDataFixers;
     private boolean frozen;
@@ -96,7 +95,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isEmpty()) continue;
 
-			function.apply(entry.getKey(), modDataVersion.get());
+			function.apply(entry.getKey() + "_Minecraft", modDataVersion.get());
 		}
 
 		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
@@ -115,7 +114,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 	public void forEachFixer(BiFunction<String, Integer, Integer> function) {
 		// Minecraft fixer added by FrozenBlock
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			function.apply(entry.getKey(), entry.getValue().currentVersion());
+			function.apply(entry.getKey() + "_Minecraft", entry.getValue().currentVersion());
 		}
 
 		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
@@ -131,7 +130,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
 			// Changed to Optional by FrozenBlock
 			final Optional<Integer> modDataVersion = hasExistingDataVersions
-				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey()))
+				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey() + "_Minecraft"))
 				: getModMinecraftDataVersion(current, entry.getKey());
 
 			// Check implemented by FrozenBlock for performance.
@@ -151,7 +150,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 			// Changed to Optional by FrozenBlock
 			final Optional<Integer> modDataVersion = hasExistingDataVersions
 				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey()))
-				: getModMinecraftDataVersion(current, entry.getKey());
+				: getModDataVersion(current, entry.getKey());
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
