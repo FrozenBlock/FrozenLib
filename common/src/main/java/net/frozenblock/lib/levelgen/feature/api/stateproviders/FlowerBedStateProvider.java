@@ -48,6 +48,10 @@ public record FlowerBedStateProvider(Holder<Block> block, int minSegment, int ma
 		this(block, 1, maxSegment);
 	}
 
+	public FlowerBedStateProvider(Block block) {
+		this(block, 1, 4);
+	}
+
 	@Override
 	public MapCodec<FlowerBedStateProvider> codec() {
 		return CODEC;
