@@ -20,17 +20,15 @@ package net.frozenblock.lib.levelgen.feature.api;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.minecraft.core.Holder;
-import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeafLitterBlock;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
-import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.PlaceOnGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -60,15 +58,7 @@ public class FrozenLibTreeFeature {
 			tries,
 			radius,
 			height,
-			new WeightedStateProvider(
-				VegetationFeatures.segmentedBlockPatchBuilder(
-					leafLitterBlock,
-					1,
-					maxSegments,
-					LeafLitterBlock.AMOUNT,
-					LeafLitterBlock.FACING
-				)
-			)
+			new LeafLitterStateProvider(leafLitterBlock, maxSegments)
 		);
 	}
 

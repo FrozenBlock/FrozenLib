@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.impl.stateproviders;
 
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.StrictRuleBasedStateProvider;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
@@ -33,6 +34,7 @@ public final class FrozenLibBlockStateProviderTypes {
 		);
 
 		register.register("strict_rule_based_state_provider", () -> StrictRuleBasedStateProvider.CODEC);
+		register.register("leaf_litter_provider", () -> LeafLitterStateProvider.CODEC);
 
 		register.register();
 	}

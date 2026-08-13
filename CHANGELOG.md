@@ -76,6 +76,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 
 ### 26.3+
 - Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
+- Added the `frozenlib:leaf_litter_provider` Block State Provider, with the following format:
+  - `block`: The block's id or its Block State.
+  - `min_segment` (Optional): The minimum amount of segments to provide, in a range of 1-4.
+    - Provides 1 if empty.
+  - `max_segment`: The maximum amount of segments to provide, in a range of 1-4.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
 - Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.
