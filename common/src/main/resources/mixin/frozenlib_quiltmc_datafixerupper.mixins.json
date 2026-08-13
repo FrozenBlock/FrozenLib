@@ -8,7 +8,9 @@
     "DataFixTypesAccessor",
     "NbtUtilsMixin",
     "RegionStorageUpgraderMixin",
-    "SimpleRegionStorageMixin"
+    "SimpleRegionStorageMixin",
+    "fixes.LegacyAbstractBlockPropertyFixMixin",
+    "fixes.LegacyBlockRenameFixMixin"
   ],
   "client": [
   ],

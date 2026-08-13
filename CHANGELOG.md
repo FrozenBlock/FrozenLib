@@ -92,3 +92,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `decorator`: The Tree Decorator to generate.
   - `probability`: The probability for `decorator` to generate.
 - Added the `ParticleSpawner` class, assisting in setting up client-sided particle spawners, e.g., Pollen particles spawning from Pollen blocks.
+- Added new implementations of `BlockRenameFix` and `BlockPropertyRenameAndFix` that work on 26.3-snapshot-7+.
