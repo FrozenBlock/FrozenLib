@@ -49,7 +49,7 @@ public interface SegmentableBlockStateProvider {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
 			RegistryCodecs.holder(Registries.BLOCK).fieldOf("block").forGetter(SegmentableBlockStateProvider::block),
 			ExtraCodecs.intRange(SegmentableBlock.MIN_SEGMENT, SegmentableBlock.MAX_SEGMENT).optionalFieldOf("min_segment", SegmentableBlock.MIN_SEGMENT).forGetter(SegmentableBlockStateProvider::minSegment),
-			ExtraCodecs.intRange(SegmentableBlock.MIN_SEGMENT, SegmentableBlock.MAX_SEGMENT).fieldOf("max_segment").forGetter(SegmentableBlockStateProvider::maxSegment)
+			ExtraCodecs.intRange(SegmentableBlock.MIN_SEGMENT, SegmentableBlock.MAX_SEGMENT).optionalFieldOf("max_segment", 4).forGetter(SegmentableBlockStateProvider::maxSegment)
 		).apply(instance, constructor));
 	}
 }
