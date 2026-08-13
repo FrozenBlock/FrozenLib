@@ -25,4 +25,9 @@ public final class DataAttachmentHelper {
 	public static <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
 		throw new AssertionError();
 	}
+
+	@PlatformImpl
+	public static String getAttachmentsNBTKey() {
+		throw new AssertionError();
+	}
 }
