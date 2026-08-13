@@ -17,23 +17,27 @@
 
 package net.frozenblock.lib.levelgen.feature.impl.stateproviders;
 
+import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.levelgen.feature.api.stateproviders.FlowerBedStateProvider;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.StrictRuleBasedStateProvider;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class FrozenLibBlockStateProviderTypes {
 
 	public static void init() {
-		final var register = FrozenDeferredRegister.create(
+		final FrozenDeferredRegister<MapCodec<? extends BlockStateProvider>> register = FrozenDeferredRegister.create(
 			Registries.BLOCK_STATE_PROVIDER_TYPE,
 			FrozenLibConstants.MOD_ID
 		);
 
 		register.register("strict_rule_based_state_provider", () -> StrictRuleBasedStateProvider.CODEC);
+		register.register("flower_bed_provider", () -> FlowerBedStateProvider.CODEC);
 		register.register("leaf_litter_provider", () -> LeafLitterStateProvider.CODEC);
 
 		register.register();

@@ -24,43 +24,43 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeafLitterBlock;
+import net.minecraft.world.level.block.FlowerBedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 /**
- * Provides all {@link BlockState}s of {@link LeafLitterBlock}s.
+ * Provides all {@link BlockState}s of {@link FlowerBedBlock}s.
  * @param block The {@link Block} to generate (in {@link Holder} form).
- * @param minSegment The minimum {@link LeafLitterBlock#AMOUNT segment amount}.
+ * @param minSegment The minimum {@link FlowerBedBlock#AMOUNT segment amount}.
  * <p>
  * Defaults to 1.
- * @param maxSegment The maximum {@link LeafLitterBlock#AMOUNT segment amount}.
+ * @param maxSegment The maximum {@link FlowerBedBlock#AMOUNT segment amount}.
  */
-public record LeafLitterStateProvider(Holder<Block> block, int minSegment, int maxSegment) implements BlockStateProvider, SegmentableBlockStateProvider {
-	public static final MapCodec<LeafLitterStateProvider> CODEC = SegmentableBlockStateProvider.codec(LeafLitterStateProvider::new);
+public record FlowerBedStateProvider(Holder<Block> block, int minSegment, int maxSegment) implements BlockStateProvider, SegmentableBlockStateProvider {
+	public static final MapCodec<FlowerBedStateProvider> CODEC = SegmentableBlockStateProvider.codec(FlowerBedStateProvider::new);
 
-	public LeafLitterStateProvider(Block block, int minSegment, int maxSegment) {
+	public FlowerBedStateProvider(Block block, int minSegment, int maxSegment) {
 		this(block.builtInRegistryHolder(), minSegment, maxSegment);
 	}
 
-	public LeafLitterStateProvider(Block block, int maxSegment) {
+	public FlowerBedStateProvider(Block block, int maxSegment) {
 		this(block, 1, maxSegment);
 	}
 
 	@Override
-	public MapCodec<LeafLitterStateProvider> codec() {
+	public MapCodec<FlowerBedStateProvider> codec() {
 		return CODEC;
 	}
 
 	@Override
 	public BlockState getState(LevelAccessor level, RandomSource random, BlockPos pos) {
-		return this.getState(random).trySetValue(LeafLitterBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
+		return this.getState(random).trySetValue(FlowerBedBlock.FACING, Direction.Plane.HORIZONTAL.getRandomDirection(random));
 	}
 
 	@Override
 	public IntegerProperty segmentAmountProperty() {
-		return LeafLitterBlock.AMOUNT;
+		return FlowerBedBlock.AMOUNT;
 	}
 
 	@Override
