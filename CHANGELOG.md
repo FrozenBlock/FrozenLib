@@ -90,3 +90,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:probability` Tree Decorator, with the following format:
   - `decorator`: The Tree Decorator to generate.
   - `probability`: The probability for `decorator` to generate.
+- Added the `ParticleSpawner` class, assisting in setting up client-sided particle spawners, e.g., Pollen particles spawning from Pollen blocks.
