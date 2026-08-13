@@ -112,6 +112,18 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 	}
 
 	@Override
+	public void forEachFixer(BiFunction<String, Integer, Integer> function) {
+		// Minecraft fixer added by FrozenBlock
+		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
+			function.apply(entry.getKey(), entry.getValue().currentVersion());
+		}
+
+		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
+			function.apply(entry.getKey(), entry.getValue().currentVersion());
+		}
+	}
+
+	@Override
 	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions) {
 		final boolean hasExistingDataVersions = !moddedDataVersions.isEmpty();
 

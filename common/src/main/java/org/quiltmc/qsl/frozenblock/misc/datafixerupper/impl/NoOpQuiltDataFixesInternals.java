@@ -79,6 +79,9 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
 	public void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function) {}
 
 	@Override
+	public void forEachFixer(BiFunction<String, Integer, Integer> function) {}
+
+	@Override
 	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions) {
 		return new Dynamic<>(current.getOps(), current.getValue());
 	}

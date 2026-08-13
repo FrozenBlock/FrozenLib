@@ -108,6 +108,8 @@ public abstract class QuiltDataFixesInternals {
 
 	public abstract void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function);
 
+	public abstract void forEachFixer(BiFunction<String, Integer, Integer> function);
+
 	public abstract <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions);
 
     public abstract CompoundTag addModDataVersions(CompoundTag tag);
