@@ -39,6 +39,7 @@ import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationIm
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
+import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
@@ -106,6 +107,7 @@ public final class FrozenLibMain {
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibDataComponents.init();
 		FrozenLibFeatureTypes.init();
+		FrozenLibTreeDecoratorTypes.init();
 		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
 		FrozenLibSpawnConditions.init();

@@ -79,3 +79,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
 - Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.
+- Added the `frozenlib:config_predicate` Tree Decorator, with the following format:
+  - `decorator`: The Tree Decorator to generate.
+  - `predicate`: The Config Predicate to test, determining whether `decorator` can generate.
