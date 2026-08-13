@@ -15,9 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.particle.client.api;
+package net.frozenblock.lib.particle.api;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.util.Mth;
@@ -26,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Supplier;
 
-@ClientOnly
 public abstract class ParticleSpawner {
 	private final Supplier<Float> spawnProbability;
 	private final int spawnAttempts;
