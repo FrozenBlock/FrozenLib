@@ -82,3 +82,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:config_predicate` Tree Decorator, with the following format:
   - `decorator`: The Tree Decorator to generate.
   - `predicate`: The Config Predicate to test, determining whether `decorator` can generate.
+- Added the `frozenlib:probability` Tree Decorator, with the following format:
+  - `decorator`: The Tree Decorator to generate.
+  - `probability`: The probability for `decorator` to generate.

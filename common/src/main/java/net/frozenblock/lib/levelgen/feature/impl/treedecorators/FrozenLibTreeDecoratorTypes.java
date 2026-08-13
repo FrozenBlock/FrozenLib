@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.feature.impl.treedecorators;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ConfigPredicateDecorator;
+import net.frozenblock.lib.levelgen.feature.api.treedecorators.ProbabilityDecorator;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.registries.Registries;
@@ -37,6 +38,10 @@ public final class FrozenLibTreeDecoratorTypes {
 	public static final FrozenHolder<TreeDecoratorType<?>, TreeDecoratorType<ConfigPredicateDecorator>> CONFIG_PREDICATE = register(
 		"config_predicate",
 		() -> new TreeDecoratorType<>(ConfigPredicateDecorator.CODEC)
+	);
+	public static final FrozenHolder<TreeDecoratorType<?>, TreeDecoratorType<ProbabilityDecorator>> PROBABILITY = register(
+		"probability",
+		() -> new TreeDecoratorType<>(ProbabilityDecorator.CODEC)
 	);
 
 	static {
