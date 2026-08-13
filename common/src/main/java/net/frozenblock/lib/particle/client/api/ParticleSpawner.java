@@ -24,10 +24,11 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import java.util.function.Supplier;
 
 @ClientOnly
 public abstract class ParticleSpawner {
-	private final float spawnProbability;
+	private final Supplier<Float> spawnProbability;
 	private final int spawnAttempts;
 	private final int horizontalDistance;
 	private final int minVerticalDistance;
@@ -35,7 +36,7 @@ public abstract class ParticleSpawner {
 	private final boolean canSpawnInBlocks;
 
 	protected ParticleSpawner(
-		float spawnProbability,
+		Supplier<Float> spawnProbability,
 		int spawnAttempts,
 		int horizontalDistance,
 		int minVerticalDistance,
@@ -51,6 +52,37 @@ public abstract class ParticleSpawner {
 		this.canSpawnInBlocks = canSpawnInBlocks;
 	}
 
+	protected ParticleSpawner(
+		Supplier<Float> spawnProbability,
+		int spawnAttempts,
+		int horizontalDistance,
+		int minVerticalDistance,
+		int maxVerticalDistance
+	) {
+		this(spawnProbability, spawnAttempts, horizontalDistance, minVerticalDistance, maxVerticalDistance, false);
+	}
+
+	protected ParticleSpawner(
+		float spawnProbability,
+		int spawnAttempts,
+		int horizontalDistance,
+		int minVerticalDistance,
+		int maxVerticalDistance,
+		boolean canSpawnInBlocks
+	) {
+		this(() -> spawnProbability, spawnAttempts, horizontalDistance, minVerticalDistance, maxVerticalDistance, canSpawnInBlocks);
+	}
+
+	protected ParticleSpawner(
+		float spawnProbability,
+		int spawnAttempts,
+		int horizontalDistance,
+		int minVerticalDistance,
+		int maxVerticalDistance
+	) {
+		this(spawnProbability, spawnAttempts, horizontalDistance, minVerticalDistance, maxVerticalDistance, false);
+	}
+
 	public abstract boolean canSpawnAtPos(Level level, BlockPos pos);
 
 	public abstract ParticleOptions selectParticleOptions(Level level, BlockPos pos, RandomSource random);
@@ -58,7 +90,7 @@ public abstract class ParticleSpawner {
 	public void tick(Level level, BlockPos pos, RandomSource random) {
 		final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 		for (int i = 0; i < this.spawnAttempts; ++i) {
-			if (random.nextFloat() >= this.spawnProbability) continue;
+			if (random.nextFloat() >= this.spawnProbability.get()) continue;
 			mutable.setWithOffset(
 				pos,
 				Mth.nextInt(random, -this.horizontalDistance, this.horizontalDistance),
