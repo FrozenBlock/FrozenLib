@@ -84,6 +84,10 @@ public class FrozenLibPlacedFeature {
 		return this;
 	}
 
+	public FrozenLibPlacedFeature makeAndSetHolder(Feature configuredHolder, List<PlacementModifier> modifiers) {
+		return this.makeAndSetHolder(Holder.direct(configuredHolder), modifiers);
+	}
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public FrozenLibPlacedFeature makeAndSetHolder(FrozenLibFeature configuredFeature, List<PlacementModifier> modifiers) {
 		return this.makeAndSetHolder(configuredFeature.getHolder(), modifiers);
@@ -91,6 +95,10 @@ public class FrozenLibPlacedFeature {
 
 	public FrozenLibPlacedFeature makeAndSetHolder(Holder<Feature> configuredHolder, PlacementModifier... modifiers) {
 		return this.makeAndSetHolder(configuredHolder, List.of(modifiers));
+	}
+
+	public FrozenLibPlacedFeature makeAndSetHolder(Feature configuredHolder, PlacementModifier... modifiers) {
+		return this.makeAndSetHolder(Holder.direct(configuredHolder), List.of(modifiers));
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

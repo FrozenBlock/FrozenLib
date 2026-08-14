@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.util.random.Weighted;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -66,6 +67,14 @@ public class FrozenLibPlacedTreeFeature {
 
 	public WeightedPlacedFeature litterAsWeightedPlacedFeature(float chance) {
 		return new WeightedPlacedFeature(this.getLitterVariantHolder(), chance);
+	}
+
+	public Weighted asWeighted(int weight) {
+		return new Weighted(this.getHolder(), weight);
+	}
+
+	public Weighted litterAsWeighted(int weight) {
+		return new Weighted(this.getLitterVariantHolder(), weight);
 	}
 
 	public FrozenLibPlacedTreeFeature makeAndSetHolders(List<PlacementModifier> modifiers) {
