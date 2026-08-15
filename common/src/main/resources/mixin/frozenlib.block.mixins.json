@@ -13,6 +13,7 @@
     "clipgroup.EntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
+    "fire.AbstractHurtingProjectileMixin",
     "fire.BaseFireBlockMixin",
     "fire.BlazeAttackGoalMixin",
     "fire.BlazeMixin",
