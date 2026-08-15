@@ -61,10 +61,10 @@ public class BlazeMixin {
 	public void frozenLib$useFireTypeSmoke(Level instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd, Operation<Void> original) {
 		final Blaze blaze = Blaze.class.cast(this);
 		final FireData fireData = FireData.ATTACHMENT.get(blaze);
-		if (fireData == null) return;
-
-		final FireType.ParticleSettings particleSettings = fireData.type().value().particleSettings();
-		particle = particleSettings.getLargeSmokeParticle(particle);
+		if (fireData != null) {
+			final FireType.ParticleSettings particleSettings = fireData.type().value().particleSettings();
+			particle = particleSettings.getLargeSmokeParticle(particle);
+		}
 
 		original.call(instance, particle, x, y, z, xd, yd, zd);
 	}
