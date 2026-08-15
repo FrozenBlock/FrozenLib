@@ -109,32 +109,7 @@ public final class FireTypes {
 		register(
 			context,
 			FIRE,
-			FireType.builder()
-				.fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS))
+			FireType.builder().fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS))
 		);
-
-		/*
-		register(
-			context,
-			SOUL_FIRE,
-			FireType.builder()
-				.fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.SOUL_FIRE_BLOCKS))
-				.supportingBlocks(blocks.getOrThrow(BlockTags.SOUL_FIRE_BASE_BLOCKS))
-				.damage(2F)
-				.textures(Identifier.withDefaultNamespace("soul_fire_0"), Identifier.withDefaultNamespace("soul_fire_1"))
-				.enabledWhen(noNNOrFireTypeConfigEnabled)
-				.smokeParticles(
-					ColoredSmokeParticleOptions.smoke(0F, 0.1F, 0.1F),
-					ColoredSmokeParticleOptions.largeSmoke(0F, 0.1F, 0.1F),
-					noNNOrNNParticleConfigEnabled
-				)
-				.campfireSmokeParticles(
-					ColoredSmokeParticleOptions.campfireCosy(-0.3F, 0F, 0F),
-					ColoredSmokeParticleOptions.campfireSignal(-0.3F, 0F, 0F),
-					noNNOrNNParticleConfigEnabled
-				)
-				.lavaParticle(FrozenLibParticleTypes.SOUL_LAVA, noNNOrNNParticleConfigEnabled)
-		);
-		 */
 	}
 }

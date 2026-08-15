@@ -31,6 +31,7 @@ public class FrozenLibEntityTypeTags {
 	public static final TagKey<EntityType<?>> BLAZES = bind("blazes");
 	public static final TagKey<EntityType<?>> HOGLINS = bind("hoglins");
 	public static final TagKey<EntityType<?>> GHOST_LIKE = bind("ghost_like");
+	public static final TagKey<EntityType<?>> FIRE_LIKE = bind("fire_like");
 
     private static TagKey<EntityType<?>> bind(String path) {
         return TagKey.create(Registries.ENTITY_TYPE, FrozenLibConstants.id(path));

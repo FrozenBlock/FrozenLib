@@ -14,6 +14,7 @@
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
     "fire.BaseFireBlockMixin",
+    "fire.BlazeAttackGoalMixin",
     "fire.BlazeMixin",
     "fire.CampfireBlockMixin",
     "fire.ConversionTypeMixin",

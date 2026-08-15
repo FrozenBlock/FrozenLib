@@ -41,6 +41,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
 - Renamed `SplashTextAPI` to `SplashTextEvents` and migrated its functionality to events.
+- Fire Types now work as intended on Blazes.
+- Added the `#frozenlib:fire_like` Entity Type Tag, defining which Entity Types are fire-like.
+  - Contains `#frozenlib:blazes` by default.
+  - Entities in this Tag will not remove their attached Fire Type if their `remainingFireTicks` field is zero or less.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+

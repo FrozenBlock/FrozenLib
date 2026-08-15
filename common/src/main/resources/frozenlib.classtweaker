@@ -233,6 +233,7 @@ transitive-accessible field net/minecraft/world/entity/Mob goalSelector Lnet/min
 transitive-accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible field net/minecraft/world/entity/ai/navigation/WallClimberNavigation pathToPosition Lnet/minecraft/core/BlockPos;
 transitive-accessible class net/minecraft/world/entity/monster/warden/Warden$VibrationUser
+transitive-accessible class net/minecraft/world/entity/monster/Blaze$BlazeAttackGoal
 
 # Registry
 transitive-accessible method net/minecraft/world/entity/EntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/EntityType$Builder;)Lnet/minecraft/world/entity/EntityType;
