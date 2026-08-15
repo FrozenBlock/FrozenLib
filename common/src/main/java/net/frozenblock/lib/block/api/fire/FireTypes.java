@@ -76,11 +76,11 @@ public final class FireTypes {
 					final FireType.SpreadSettings spreadSettings = fireType.spreadSettings();
 					final int cannotApplyToEffectStrength = activeEffects.stream()
 						.filter(effect -> spreadSettings.cannotApplyToMobEffects().contains(effect.getEffect()))
-						.mapToInt(MobEffectInstance::getAmplifier)
+						.mapToInt(effect -> effect.getAmplifier() + 1)
 						.sum();
 					final int alwaysApplyToEffectStrength = activeEffects.stream()
 						.filter(effect -> spreadSettings.alwaysApplyToMobEffects().contains(effect.getEffect()))
-						.mapToInt(MobEffectInstance::getAmplifier)
+						.mapToInt(effect -> effect.getAmplifier() + 1)
 						.sum();
 
 					if (cannotApplyToEffectStrength >= alwaysApplyToEffectStrength) return false;
