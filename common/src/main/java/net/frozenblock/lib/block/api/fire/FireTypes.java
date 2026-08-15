@@ -74,6 +74,8 @@ public final class FireTypes {
 					if (!fireType.isEnabled()) return false;
 
 					final FireType.SpreadSettings spreadSettings = fireType.spreadSettings();
+					if (spreadSettings.cannotApplyToEntityTypes().contains(entity.typeHolder())) return false;
+
 					final int cannotApplyToEffectStrength = activeEffects.stream()
 						.filter(effect -> spreadSettings.cannotApplyToMobEffects().contains(effect.getEffect()))
 						.mapToInt(effect -> effect.getAmplifier() + 1)
