@@ -119,6 +119,8 @@ public record FireType(
 		Optional<ParticleOptions> campfireCosySmokeParticle,
 		Optional<ParticleOptions> campfireSignalSmokeParticle,
 		Optional<ConfigPredicate> campfireSmokeEnabledWhen,
+		Optional<ParticleOptions> flameParticle,
+		Optional<ConfigPredicate> flameEnabledWhen,
 		Optional<ParticleOptions> lavaParticle,
 		Optional<ConfigPredicate> lavaEnabledWhen
 	) {
@@ -129,6 +131,8 @@ public record FireType(
 			ParticleTypes.CODEC.optionalFieldOf("campfire_cosy_smoke_particle").forGetter(ParticleSettings::campfireCosySmokeParticle),
 			ParticleTypes.CODEC.optionalFieldOf("campfire_signal_smoke_particle").forGetter(ParticleSettings::campfireSignalSmokeParticle),
 			ConfigPredicate.CODEC.optionalFieldOf("campfire_smoke_config_predicate").forGetter(ParticleSettings::campfireSmokeEnabledWhen),
+			ParticleTypes.CODEC.optionalFieldOf("flame_particle").forGetter(ParticleSettings::flameParticle),
+			ConfigPredicate.CODEC.optionalFieldOf("flame_config_predicate").forGetter(ParticleSettings::flameEnabledWhen),
 			ParticleTypes.CODEC.optionalFieldOf("lava_particle").forGetter(ParticleSettings::lavaParticle),
 			ConfigPredicate.CODEC.optionalFieldOf("lava_config_predicate").forGetter(ParticleSettings::lavaEnabledWhen)
 		).apply(instance, ParticleSettings::new));
@@ -159,6 +163,15 @@ public record FireType(
 		public ParticleOptions getCampfireSignalSmokeParticle(ParticleOptions original) {
 			if (this.campfireSignalSmokeParticle.isEmpty()) return original;
 			return this.campfireSmokeEnabled() ? this.campfireSignalSmokeParticle.get() : original;
+		}
+
+		public boolean flameEnabled() {
+			return this.flameEnabledWhen.map(ConfigPredicate::test).orElse(true);
+		}
+
+		public ParticleOptions getFlameParticle(ParticleOptions original) {
+			if (this.flameParticle.isEmpty()) return original;
+			return this.flameEnabled() ? this.flameParticle.get() : original;
 		}
 
 		public boolean lavaEnabled() {
@@ -196,6 +209,8 @@ public record FireType(
 		ParticleOptions campfireCosySmokeParticle = null;
 		ParticleOptions campfireSignalSmokeParticle = null;
 		ConfigPredicate campfireSmokeEnabledWhen = null;
+		ParticleOptions flameParticle = null;
+		ConfigPredicate flameEnabledWhen = null;
 		ParticleOptions lavaParticle = null;
 		ConfigPredicate lavaEnabledWhen = null;
 		// ENABLED
@@ -284,6 +299,17 @@ public record FireType(
 			return this;
 		}
 
+		public Builder flameParticle(ParticleOptions flameParticle) {
+			this.flameParticle = flameParticle;
+			return this;
+		}
+
+		public Builder flameParticle(ParticleOptions flameParticle, ConfigPredicate flameEnabledWhen) {
+			this.flameParticle(flameParticle);
+			this.flameEnabledWhen = flameEnabledWhen;
+			return this;
+		}
+
 		public Builder lavaParticle(ParticleOptions lavaParticle) {
 			this.lavaParticle = lavaParticle;
 			return this;
@@ -330,6 +356,8 @@ public record FireType(
 					Optional.ofNullable(this.campfireCosySmokeParticle),
 					Optional.ofNullable(this.campfireSignalSmokeParticle),
 					Optional.ofNullable(this.campfireSmokeEnabledWhen),
+					Optional.ofNullable(this.flameParticle),
+					Optional.ofNullable(this.flameEnabledWhen),
 					Optional.ofNullable(this.lavaParticle),
 					Optional.ofNullable(this.lavaEnabledWhen)
 				),
