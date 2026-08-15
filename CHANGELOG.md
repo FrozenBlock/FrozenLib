@@ -41,10 +41,21 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
 - Renamed `SplashTextAPI` to `SplashTextEvents` and migrated its functionality to events.
+- Added the following fields to Fire Types:
+  - Additions to `damage_settings`:
+    - `vulnerable_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity vulnerable to this Fire Type's damage.
+    - `damage_immune_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity immune to this Fire Type's damage.
+  - Additions to `spread_settings`:
+    - `always_apply_to_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity use this Fire Type if caught on fire.
+    - `cannot_apply_to_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make this Fire Type unable to be applied to an Entity.
+  - If conflicting Mob Effects are present, their total power will be summed by category (`always_apply` vs. `cannot_apply`) and the category with the highest power will be chosen.
+    - If their power is equal, the `cannot_apply` category will be chosen.
 - Fire Types now work as intended on Blazes, Fireballs, and Small Fireballs.
 - Added the `#frozenlib:on_fire` Entity Type Tag, defining which Entity Types are fire-like.
   - Contains `#frozenlib:blazes`, `minecraft:fireball`, and `minecraft:small_fireball` by default.
-  - Entities in this Tag will not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
+  - Entities in this Tag will:
+    - Set their Fire Type upon spawning, instead of waiting to be set on fire.
+    - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+

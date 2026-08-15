@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.api.fire;
 
+import java.util.Collection;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
@@ -30,7 +31,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,17 +58,42 @@ public final class FireTypes {
 		return getTypeHolderForBlock(registryAccess, block, ignoreEnabled).flatMap(Holder::unwrapKey);
 	}
 
-	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity) {
-		return entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity, boolean useMobEffect) {
+		final Optional<Holder<FireType>> entityFireType = entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
 			.flatMap(registry -> registry.stream()
 				.filter(fireType -> fireType.isEnabled() && entity.is(fireType.spreadSettings().alwaysApplyToEntityTypes()))
 				.findFirst()
 				.map(registry::wrapAsHolder)
 			);
+		if (!(entity instanceof LivingEntity livingEntity) || !useMobEffect) return entityFireType;
+
+		final Collection<MobEffectInstance> activeEffects = livingEntity.getActiveEffects();
+		final Optional<Holder<FireType>> mobEffectFireType = livingEntity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+			.flatMap(registry -> registry.stream()
+				.filter(fireType -> {
+					if (!fireType.isEnabled()) return false;
+
+					final FireType.SpreadSettings spreadSettings = fireType.spreadSettings();
+					final int cannotApplyToEffectStrength = activeEffects.stream()
+						.filter(effect -> spreadSettings.cannotApplyToMobEffects().contains(effect.getEffect()))
+						.mapToInt(MobEffectInstance::getAmplifier)
+						.sum();
+					final int alwaysApplyToEffectStrength = activeEffects.stream()
+						.filter(effect -> spreadSettings.alwaysApplyToMobEffects().contains(effect.getEffect()))
+						.mapToInt(MobEffectInstance::getAmplifier)
+						.sum();
+
+					if (cannotApplyToEffectStrength >= alwaysApplyToEffectStrength) return false;
+					return alwaysApplyToEffectStrength >= 1;
+				})
+				.findFirst()
+				.map(registry::wrapAsHolder)
+			);
+		return mobEffectFireType.or(() -> entityFireType);
 	}
 
-	public static Optional<ResourceKey<FireType>> getTypeKeyForEntity(Entity entity) {
-		return getTypeHolderForEntity(entity).flatMap(Holder::unwrapKey);
+	public static Optional<ResourceKey<FireType>> getTypeKeyForEntity(Entity entity, boolean useMobEffect) {
+		return getTypeHolderForEntity(entity, useMobEffect).flatMap(Holder::unwrapKey);
 	}
 
 	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {

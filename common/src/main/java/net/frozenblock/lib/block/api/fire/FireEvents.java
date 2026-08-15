@@ -52,7 +52,7 @@ public final class FireEvents {
 				if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
 			}
 
-			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity);
+			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity, true);
 			if (entityBasedType.isPresent()) type = entityBasedType.get();
 
 			for (var callback : callbacks) {

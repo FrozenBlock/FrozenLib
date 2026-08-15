@@ -21,11 +21,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
+import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,6 +37,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
 public class EntityMixin {
+
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void frozenLib$setFireTypeOnLoadIfFireEntity(EntityType<?> type, Level level, CallbackInfo info) {
+		if (level.isClientSide() || !type.builtInRegistryHolder().is(FrozenLibEntityTypeTags.ON_FIRE)) return;
+
+		final Entity entity = Entity.class.cast(this);
+		FireTypes.getTypeHolderForEntity(entity, false).ifPresent(fireType -> FireData.tryForceSetIfNotDefault(entity, fireType));
+	}
 
 	@Inject(
 		method = "lavaIgnite",

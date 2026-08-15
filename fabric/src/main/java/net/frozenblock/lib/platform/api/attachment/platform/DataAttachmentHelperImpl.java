@@ -26,6 +26,7 @@ import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentSync;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
 import net.frozenblock.lib.networking.api.PlayerLookup;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentSyncPredicate;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.minecraft.resources.Identifier;
@@ -36,15 +37,14 @@ import org.jetbrains.annotations.Nullable;
 public final class DataAttachmentHelperImpl {
 
 	public static <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
-		final var syncPredicate = builder.syncPredicate();
-		AttachmentType<T> attachmentType = AttachmentRegistry.create(builder.id(), attachmentBuilder -> {
+		final DataAttachmentSyncPredicate syncPredicate = builder.syncPredicate();
+		final AttachmentType<T> type = AttachmentRegistry.create(builder.id(), attachmentBuilder -> {
 			if (builder.codec() != null) attachmentBuilder.persistent(builder.codec());
 			if (builder.initializer() != null) attachmentBuilder.initializer(builder.initializer());
 			if (builder.isCopyOnDeath()) attachmentBuilder.copyOnDeath();
-			if (builder.streamCodec() != null && syncPredicate != null)
-				attachmentBuilder.syncWith(builder.streamCodec(), syncPredicate::test);
+			if (builder.streamCodec() != null && syncPredicate != null) attachmentBuilder.syncWith(builder.streamCodec(), syncPredicate::test);
 		});
-		return new FabricDataAttachmentType<>(attachmentType);
+		return new FabricDataAttachmentType<>(type);
 	}
 
 	private record FabricDataAttachmentType<T>(AttachmentType<T> type) implements DataAttachmentType<T> {
