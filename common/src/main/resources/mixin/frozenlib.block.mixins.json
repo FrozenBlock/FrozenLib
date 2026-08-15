@@ -22,6 +22,7 @@
     "fire.EntityMixin",
     "fire.IgniteMixin",
     "fire.LivingEntityMixin",
+    "fire.MobMixin",
     "fire.SmallFireballMixin",
     "fire.WitherSkeletonMixin",
     "fire.ZombieMixin",
