@@ -48,7 +48,8 @@ public class CampfireBlockMixin {
 			entity,
 			Optional.of(CampfireBlock.class.cast(this)),
 			Optional.empty(),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(entity, fireType);
 	}

@@ -51,7 +51,8 @@ public class IgniteMixin {
 			entity,
 			Optional.empty(),
 			Optional.ofNullable(includeOwner ? item.owner() : null),
-			Optional.of(item.itemStack())
+			Optional.of(item.itemStack()),
+			true
 		);
 		FireData.trySet(entity, fireType);
 	}

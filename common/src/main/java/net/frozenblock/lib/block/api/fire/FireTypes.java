@@ -58,14 +58,14 @@ public final class FireTypes {
 		return getTypeHolderForBlock(registryAccess, block, ignoreEnabled).flatMap(Holder::unwrapKey);
 	}
 
-	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity, boolean useMobEffect) {
+	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity, boolean useMobEffects) {
 		final Optional<Holder<FireType>> entityFireType = entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
 			.flatMap(registry -> registry.stream()
 				.filter(fireType -> fireType.isEnabled() && entity.is(fireType.spreadSettings().alwaysApplyToEntityTypes()))
 				.findFirst()
 				.map(registry::wrapAsHolder)
 			);
-		if (!(entity instanceof LivingEntity livingEntity) || !useMobEffect) return entityFireType;
+		if (!(entity instanceof LivingEntity livingEntity) || !useMobEffects) return entityFireType;
 
 		final Collection<MobEffectInstance> activeEffects = livingEntity.getActiveEffects();
 		final Optional<Holder<FireType>> mobEffectFireType = livingEntity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
@@ -94,8 +94,8 @@ public final class FireTypes {
 		return mobEffectFireType.or(() -> entityFireType);
 	}
 
-	public static Optional<ResourceKey<FireType>> getTypeKeyForEntity(Entity entity, boolean useMobEffect) {
-		return getTypeHolderForEntity(entity, useMobEffect).flatMap(Holder::unwrapKey);
+	public static Optional<ResourceKey<FireType>> getTypeKeyForEntity(Entity entity, boolean useMobEffects) {
+		return getTypeHolderForEntity(entity, useMobEffects).flatMap(Holder::unwrapKey);
 	}
 
 	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {

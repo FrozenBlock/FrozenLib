@@ -59,7 +59,8 @@ public class EntityMixin {
 			entity,
 			Optional.of(Blocks.LAVA),
 			Optional.empty(),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(entity, fireType);
 	}
@@ -77,7 +78,8 @@ public class EntityMixin {
 			entity,
 			Optional.empty(),
 			Optional.empty(),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(entity, fireType);
 	}

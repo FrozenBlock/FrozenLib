@@ -25,6 +25,7 @@ import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -39,7 +40,7 @@ public final class FireEvents {
 	 */
 	public static final Event<SelectFireType> SELECT_FIRE_TYPE = EventRegistry.createEnvironmentEvent(
 		SelectFireType.class,
-		(callbacks) -> (entity, sourceBlock, sourceEntity, sourceItem) -> {
+		(callbacks) -> (entity, sourceBlock, sourceEntity, sourceItem, useMobEffects) -> {
 			ResourceKey<FireType> type = FireTypes.DEFAULT;
 
 			if (sourceBlock.isPresent()) {
@@ -52,11 +53,11 @@ public final class FireEvents {
 				if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
 			}
 
-			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity, true);
+			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity, useMobEffects);
 			if (entityBasedType.isPresent()) type = entityBasedType.get();
 
 			for (var callback : callbacks) {
-				final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem);
+				final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem, useMobEffects);
 				if (eventType != null) type = eventType;
 			}
 
@@ -111,9 +112,9 @@ public final class FireEvents {
 		 * @param sourceBlock the source {@link Block} of the fire, if available
 		 * @param sourceEntity the source {@link Entity} of the fire, if available
 		 * @param sourceItem the source {@link ItemStack} of the fire, if available
+		 * @param useMobEffects whether {@link MobEffect}s should be taken into account
 		 */
-		@Nullable
-		ResourceKey<FireType> selectFireType(Entity entity, Optional<Block> sourceBlock, Optional<Entity> sourceEntity, Optional<ItemStack> sourceItem);
+		ResourceKey<FireType> selectFireType(Entity entity, Optional<Block> sourceBlock, Optional<Entity> sourceEntity, Optional<ItemStack> sourceItem, boolean useMobEffects);
 	}
 
 	/**

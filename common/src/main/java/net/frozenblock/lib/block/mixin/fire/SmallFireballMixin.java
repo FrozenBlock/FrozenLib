@@ -46,7 +46,8 @@ public class SmallFireballMixin {
 			hitResult.getEntity(),
 			Optional.empty(),
 			Optional.of(SmallFireball.class.cast(this)),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(hitResult.getEntity(), fireType);
 	}
