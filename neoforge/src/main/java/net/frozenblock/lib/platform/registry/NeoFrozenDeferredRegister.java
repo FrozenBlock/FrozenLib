@@ -124,6 +124,11 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 	}
 
+	@Override
+	public String namespace() {
+		return this.inner.getNamespace();
+	}
+
 	public static void tryRegisterFailedRegisters() {
 		FAILED_REGISTERS.removeIf(register -> {
 			register.register();
@@ -182,51 +187,6 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		public <I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Function<Identifier, ? extends I> func, Consumer<I> also) {
 			return new FrozenDeferredBlock<>(super.register(key, func, also));
 		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
-			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key))));
-		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties, Consumer<B> also) {
-			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key)), also));
-		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
-			return registerBlock(key, func, () -> propertiesOp.apply(BlockBehaviour.Properties.of()));
-		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties, Consumer<B> also) {
-			return registerBlock(key, func, () -> properties.apply(BlockBehaviour.Properties.of()), also);
-		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func) {
-			return registerBlock(key, func, BlockBehaviour.Properties::of);
-		}
-
-		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also) {
-			return registerBlock(key, func, BlockBehaviour.Properties::of, also);
-		}
-
-		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties) {
-			return registerBlock(key, Block::new, properties);
-		}
-
-		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
-			return registerBlock(key, Block::new, propertiesOp);
-		}
-
-		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key) {
-			return registerBlock(key, Block::new);
-		}
 	}
 
 	public static class Items extends NeoFrozenDeferredRegister<Item> implements FrozenDeferredRegister.Items {
@@ -273,112 +233,6 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		@Override
 		public <I extends Item> FrozenDeferredItem<I> register(ResourceKey<Item> key, Function<Identifier, ? extends I> func, Consumer<I> also) {
 			return new FrozenDeferredItem<>(super.register(key, func, also));
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
-			var id = Identifier.fromNamespaceAndPath(this.inner.getNamespace(), name);
-			return new FrozenDeferredItem<>(register(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.ITEM, id)))));
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerItem(name, func, () -> propertiesOp.apply(new Item.Properties()));
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func) {
-			return registerItem(name, func, Item.Properties::new);
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
-			return registerItem(key.identifier().getPath(), func, properties);
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerItem(key.identifier().getPath(), func, propertiesOp);
-		}
-
-		@Override
-		public <I extends Item> FrozenDeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func) {
-			return registerItem(key.identifier().getPath(), func);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(String name, Supplier<Item.Properties> properties) {
-			return registerItem(name, Item::new, properties);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(String name, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerItem(name, Item::new, propertiesOp);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(String name) {
-			return registerItem(name, Item::new);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, Supplier<Item.Properties> properties) {
-			return registerItem(key, Item::new, properties);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerItem(key, Item::new, propertiesOp);
-		}
-
-		@Override
-		public FrozenDeferredItem<Item> registerSimpleItem(ResourceKey<Item> key) {
-			return registerItem(key, Item::new);
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
-			return registerItem(name, props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix());
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerSimpleBlockItem(name, block, () -> propertiesOp.apply(new Item.Properties()));
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block) {
-			return registerSimpleBlockItem(name, block, Item.Properties::new);
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
-			return registerSimpleBlockItem(name.item().identifier().getPath(), block, properties);
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerSimpleBlockItem(name, block, () -> propertiesOp.apply(new Item.Properties()));
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId name, Supplier<? extends Block> block) {
-			return registerSimpleBlockItem(name, block, Item.Properties::new);
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, Supplier<Item.Properties> properties) {
-			return registerSimpleBlockItem(block.unwrapKey().orElseThrow().identifier().getPath(), block::value, properties);
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, UnaryOperator<Item.Properties> propertiesOp) {
-			return registerSimpleBlockItem(block, () -> propertiesOp.apply(new Item.Properties()));
-		}
-
-		@Override
-		public FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block) {
-			return registerSimpleBlockItem(block, Item.Properties::new);
 		}
 	}
 
