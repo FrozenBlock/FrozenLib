@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Set;
 import net.frozenblock.lib.block.api.blockentity.BlockEntityTypeExtension;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockEntityType.class)
-public class BlockEntityTypeMixin implements BlockEntityTypeExtension {
+public class BlockEntityTypeMixin<T extends BlockEntity> implements BlockEntityTypeExtension {
 
 	@Mutable
 	@Shadow
@@ -53,8 +54,9 @@ public class BlockEntityTypeMixin implements BlockEntityTypeExtension {
 
 	@Unique
 	@Override
-	public void frozenLib$setOpOnlyCustomData() {
+	public BlockEntityType<T> frozenLib$setOpOnlyCustomData() {
 		this.frozenLib$opOnlyCustomData = true;
+		return BlockEntityType.class.cast(this);
 	}
 
 	@Inject(method = "onlyOpCanSetNbt", at = @At("HEAD"), cancellable = true)
