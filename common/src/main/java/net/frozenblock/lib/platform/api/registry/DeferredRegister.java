@@ -19,6 +19,7 @@ package net.frozenblock.lib.platform.api.registry;
 
 import com.mojang.serialization.Codec;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,6 +32,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.references.BlockItemId;
+import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
@@ -43,10 +45,23 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.block.state.properties.WoodType;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -282,19 +297,162 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredBlock<StairBlock> registerLegacyStair(BlockItemId id, Supplier<? extends Block> base) {
-			return this.registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
+			return this.registerLegacyCopy(id, p -> new StairBlock(base.get().defaultBlockState(), p), base);
 		}
 
 		default DeferredBlock<StairBlock> registerStair(BlockItemId id, Supplier<? extends Block> base) {
-			return this.registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofFullCopy(base.get()));
+			return this.registerFullCopy(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), base);
 		}
 
 		default DeferredBlock<SlabBlock> registerSlab(BlockItemId id, Supplier<? extends Block> base) {
-			return this.registerBlock(id.block(), SlabBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
+			return this.registerLegacyCopy(id.block(), SlabBlock::new, base);
 		}
 
 		default DeferredBlock<WallBlock> registerWall(BlockItemId id, Supplier<? extends Block> base) {
-			return this.registerBlock(id.block(), WallBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()).forceSolidOn());
+			return this.registerLegacyCopy(id.block(), WallBlock::new, base, BlockBehaviour.Properties::forceSolidOn);
+		}
+
+		default DeferredBlock<FenceBlock> registerFence(BlockItemId id, Supplier<? extends Block> base) {
+			return this.registerLegacyCopy(id.block(), FenceBlock::new, base);
+		}
+
+		default DeferredBlock<FenceGateBlock> registerFenceGate(BlockItemId id, WoodType woodType, Supplier<? extends Block> base) {
+			return this.registerLegacyCopy(id.block(), properties -> new FenceGateBlock(woodType, properties), base, BlockBehaviour.Properties::forceSolidOn);
+		}
+
+		default DeferredBlock<PressurePlateBlock> registerPressurePlate(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
+			return this.registerLegacyCopy(
+				id.block(),
+				properties -> new PressurePlateBlock(blockSetType, properties),
+				base,
+				properties -> properties.forceSolidOn().noCollision().strength(0.5F).pushReaction(PushReaction.DESTROY)
+			);
+		}
+
+		default DeferredBlock<ButtonBlock> registerButton(BlockItemId id, BlockSetType blockSetType, int ticksToStayPressed) {
+			return this.registerBlock(
+				id.block(),
+				properties -> new ButtonBlock(blockSetType, ticksToStayPressed, properties),
+				net.minecraft.world.level.block.Blocks::buttonProperties
+			);
+		}
+
+		default DeferredBlock<ButtonBlock> registerWoodenButton(BlockItemId id, BlockSetType blockSetType) {
+			return this.registerButton(id, blockSetType, 30);
+		}
+
+		default DeferredBlock<ButtonBlock> registerStoneButton(BlockItemId id, BlockSetType blockSetType) {
+			return this.registerButton(id, blockSetType, 20);
+		}
+
+		private DeferredBlock<DoorBlock> registerDoor(
+			BlockItemId id,
+			BlockSetType blockSetType,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+		) {
+			return this.registerLegacyCopy(
+				id.block(),
+				properties -> new DoorBlock(blockSetType, properties),
+				base,
+				properties -> propertiesOp.apply(properties.noOcclusion().pushReaction(PushReaction.DESTROY))
+			);
+		}
+
+		default DeferredBlock<DoorBlock> registerWoodenDoor(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
+			return this.registerDoor(id, blockSetType, base, properties -> properties.strength(3F));
+		}
+
+		default DeferredBlock<DoorBlock> registerMetalDoor(
+			BlockItemId id,
+			BlockSetType blockSetType,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+		) {
+			return this.registerBlock(
+				id.block(),
+				properties -> new DoorBlock(blockSetType, properties),
+				() -> propertiesOp.apply(
+					BlockBehaviour.Properties.of()
+						.mapColor(base.get().defaultMapColor())
+						.strength(base.get().properties().destroyTime)
+						.noOcclusion()
+						.pushReaction(PushReaction.DESTROY)
+				)
+			);
+		}
+
+		default DeferredBlock<DoorBlock> registerMetalDoor(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
+			return this.registerMetalDoor(id, blockSetType, base, properties -> properties);
+		}
+
+		private DeferredBlock<TrapDoorBlock> registerTrapDoor(
+			BlockItemId id,
+			BlockSetType blockSetType,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+		) {
+			return this.registerLegacyCopy(
+				id.block(),
+				properties -> new TrapDoorBlock(blockSetType, properties),
+				base,
+				properties -> propertiesOp.apply(properties.noOcclusion().isValidSpawn(net.minecraft.world.level.block.Blocks::never))
+			);
+		}
+
+		default DeferredBlock<TrapDoorBlock> registerWoodenTrapDoor(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
+			return this.registerTrapDoor(id, blockSetType, base, properties -> properties.strength(3F));
+		}
+
+		default DeferredBlock<TrapDoorBlock> registerMetalTrapDoor(
+			BlockItemId id,
+			BlockSetType blockSetType,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+		) {
+			return this.registerBlock(
+				id.block(),
+				properties -> new DoorBlock(blockSetType, properties),
+				() -> propertiesOp.apply(
+					BlockBehaviour.Properties.of()
+						.mapColor(base.get().defaultMapColor())
+						.requiresCorrectToolForDrops()
+						.strength(base.get().properties().destroyTime)
+						.noOcclusion()
+						.isValidSpawn(net.minecraft.world.level.block.Blocks::never)
+				)
+			);
+		}
+
+		default DeferredBlock<TrapDoorBlock> registerMetalTrapDoor(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
+			return this.registerMetalTrapDoor(id, blockSetType, base, properties -> properties);
+		}
+
+		// FULL COPY
+		default <B extends Block> DeferredBlock<B> registerFullCopy(
+			ResourceKey<Block> key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> properties
+		) {
+			return this.registerBlock(key, func, () -> properties.apply(BlockBehaviour.Properties.ofFullCopy(base.get())), null);
+		}
+
+		default <B extends Block> DeferredBlock<B> registerFullCopy(
+			ResourceKey<Block> key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base
+		) {
+			return this.registerFullCopy(key, func, base, properties -> properties);
+		}
+
+		default <B extends Block> DeferredBlock<B> registerFullCopy(
+			BlockItemId key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> properties
+		) {
+			return this.registerFullCopy(key.block(), func, base, properties);
 		}
 
 		default <B extends Block> DeferredBlock<B> registerFullCopy(
@@ -302,11 +460,50 @@ public interface DeferredRegister<T> {
 			Function<BlockBehaviour.Properties, ? extends B> func,
 			Supplier<? extends Block> base
 		) {
-			return this.registerBlock(key, func, () -> BlockBehaviour.Properties.ofFullCopy(base.get()), null);
+			return this.registerFullCopy(key.block(), func, base);
+		}
+
+		default DeferredBlock<Block> registerSimpleFullCopy(ResourceKey<Block> key, Supplier<? extends Block> base, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return this.registerFullCopy(key, Block::new, base, properties);
+		}
+
+		default DeferredBlock<Block> registerSimpleFullCopy(ResourceKey<Block> key, Supplier<? extends Block> base) {
+			return this.registerSimpleFullCopy(key, base, properties -> properties);
+		}
+
+		default DeferredBlock<Block> registerSimpleFullCopy(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return this.registerSimpleFullCopy(key.block(), base, properties);
 		}
 
 		default DeferredBlock<Block> registerSimpleFullCopy(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerFullCopy(key, Block::new, base);
+			return this.registerSimpleFullCopy(key.block(), base);
+		}
+
+		// LEGACY COPY
+		default <B extends Block> DeferredBlock<B> registerLegacyCopy(
+			ResourceKey<Block> key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> properties
+		) {
+			return this.registerBlock(key, func, () -> properties.apply(BlockBehaviour.Properties.ofLegacyCopy(base.get())), null);
+		}
+
+		default <B extends Block> DeferredBlock<B> registerLegacyCopy(
+			ResourceKey<Block> key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base
+		) {
+			return this.registerLegacyCopy(key, func, base, properties -> properties);
+		}
+
+		default <B extends Block> DeferredBlock<B> registerLegacyCopy(
+			BlockItemId key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base,
+			UnaryOperator<BlockBehaviour.Properties> properties
+		) {
+			return this.registerLegacyCopy(key.block(), func, base, properties);
 		}
 
 		default <B extends Block> DeferredBlock<B> registerLegacyCopy(
@@ -314,11 +511,23 @@ public interface DeferredRegister<T> {
 			Function<BlockBehaviour.Properties, ? extends B> func,
 			Supplier<? extends Block> base
 		) {
-			return this.registerBlock(key, func, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()), null);
+			return this.registerLegacyCopy(key.block(), func, base);
+		}
+
+		default DeferredBlock<Block> registerSimpleLegacyCopy(ResourceKey<Block> key, Supplier<? extends Block> base, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return this.registerLegacyCopy(key, Block::new, base, properties);
+		}
+
+		default DeferredBlock<Block> registerSimpleLegacyCopy(ResourceKey<Block> key, Supplier<? extends Block> base) {
+			return this.registerSimpleLegacyCopy(key, base, properties -> properties);
+		}
+
+		default DeferredBlock<Block> registerSimpleLegacyCopy(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return this.registerSimpleLegacyCopy(key.block(), base, properties);
 		}
 
 		default DeferredBlock<Block> registerSimpleLegacyCopy(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerLegacyCopy(key, Block::new, base);
+			return this.registerSimpleLegacyCopy(key.block(), base);
 		}
 	}
 
@@ -405,12 +614,48 @@ public interface DeferredRegister<T> {
 			return this.registerItem(key, Item::new);
 		}
 
-		default DeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
-			return this.registerItem(name, props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix());
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			String name,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block,
+			Supplier<Item.Properties> properties
+		) {
+			return this.registerItem(name, props -> func.apply(props, block.get()), () -> properties.get().useBlockDescriptionPrefix());
 		}
 
-		default DeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId key, Supplier<? extends Block> block, Supplier<Item.Properties> properties) {
-			return this.registerItem(key.item(), props -> new BlockItem(block.get(), props), () -> properties.get().useBlockDescriptionPrefix());
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			BlockItemId key,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block,
+			Supplier<Item.Properties> properties
+		) {
+			return this.registerItem(key.item(), props -> func.apply(props, block.get()), () -> properties.get().useBlockDescriptionPrefix());
+		}
+
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			String name,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block,
+			UnaryOperator<Item.Properties> properties
+		) {
+			return this.registerBlockItem(name, func, block, () -> properties.apply(new Item.Properties()));
+		}
+
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			BlockItemId key,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block,
+			UnaryOperator<Item.Properties> properties
+		) {
+			return this.registerBlockItem(key, func, block, () -> properties.apply(new Item.Properties()));
+		}
+
+		default DeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> base, Supplier<Item.Properties> properties) {
+			return this.registerBlockItem(name, (props, block) -> new BlockItem(block, props), base, properties);
+		}
+
+		default DeferredItem<BlockItem> registerSimpleBlockItem(BlockItemId key, Supplier<? extends Block> base, Supplier<Item.Properties> properties) {
+			return this.registerBlockItem(key, (props, block) -> new BlockItem(block, props), base, properties);
 		}
 
 		default DeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> properties) {
