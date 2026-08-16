@@ -21,13 +21,13 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.processor.BlockStateRespectingRuleProcessor;
 import net.frozenblock.lib.levelgen.structure.api.processor.MarkForPostProcessingProcessor;
 import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcessor;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 
 public final class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
-		final var register = FrozenDeferredRegister.create(
+		final var register = DeferredRegister.create(
 			Registries.STRUCTURE_PROCESSOR,
 			FrozenLibConstants.MOD_ID
 		);

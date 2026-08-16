@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.client.api.platform;
 import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
+import net.frozenblock.lib.platform.api.registry.DeferredBlock;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.Block;
 @ClientOnly
 public final class BlockColorRegistryImpl {
 
-	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
-		BlockColorRegistry.register(tintSources, Arrays.stream(blocks).map(FrozenDeferredBlock::get).toArray(Block[]::new));
+	public static void register(List<BlockTintSource> tintSources, DeferredBlock<?>... blocks) {
+		BlockColorRegistry.register(tintSources, Arrays.stream(blocks).map(DeferredBlock::get).toArray(Block[]::new));
 	}
 }

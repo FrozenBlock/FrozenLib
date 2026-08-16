@@ -20,19 +20,19 @@ package net.frozenblock.lib.levelgen.structure.impl.processor;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.processor.AppendSherds;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 
 public final class FrozenLibRuleBlockEntityModifiers {
-	private static final FrozenDeferredRegister<RuleBlockEntityModifierType<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<RuleBlockEntityModifierType<?>> REGISTER = DeferredRegister.create(
 		Registries.RULE_BLOCK_ENTITY_MODIFIER,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<AppendSherds>> APPEND_SHERDS = register(
+	public static final DeferredHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<AppendSherds>> APPEND_SHERDS = register(
 		"append_sherds", AppendSherds.CODEC
 	);
 
@@ -42,7 +42,7 @@ public final class FrozenLibRuleBlockEntityModifiers {
 
 	public static void init() {}
 
-	private static <P extends RuleBlockEntityModifier> FrozenHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<P>> register(
+	private static <P extends RuleBlockEntityModifier> DeferredHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<P>> register(
 		String name, MapCodec<P> codec
 	) {
 		return REGISTER.register(name, () -> () -> codec);

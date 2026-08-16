@@ -51,7 +51,7 @@ import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
 import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -84,7 +84,7 @@ public final class FrozenLibMain {
 	}
 
 	public static void setup() {
-		FrozenDeferredRegister<ArgumentTypeInfo<?, ?>> argTypes = FrozenDeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
+		DeferredRegister<ArgumentTypeInfo<?, ?>> argTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
 
 		argTypes.register(
 			"tag_key",
@@ -125,7 +125,7 @@ public final class FrozenLibMain {
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
 
-		var matCon = FrozenDeferredRegister.create(
+		var matCon = DeferredRegister.create(
 			Registries.MATERIAL_CONDITION,
 			FrozenLibConstants.MOD_ID
 		);

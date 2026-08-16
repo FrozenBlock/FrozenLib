@@ -19,8 +19,8 @@ package net.frozenblock.lib.levelgen.attribute.api;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.attribute.AttributeRange;
 import net.minecraft.world.attribute.AttributeTypes;
@@ -28,12 +28,12 @@ import net.minecraft.world.attribute.EnvironmentAttribute;
 
 @UtilityClass
 public final class FrozenLibEnvironmentAttributes {
-	private static final FrozenDeferredRegister<EnvironmentAttribute<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<EnvironmentAttribute<?>> REGISTER = DeferredRegister.create(
 		Registries.ENVIRONMENT_ATTRIBUTE,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Float>> LIGHTMAP_BRIGHTNESS = register(
+	public static final DeferredHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Float>> LIGHTMAP_BRIGHTNESS = register(
 		"visual/lightmap_brightness",
 		EnvironmentAttribute.builder(AttributeTypes.FLOAT).defaultValue(1F).valueRange(AttributeRange.UNIT_FLOAT).spatiallyInterpolated().syncable()
 	);
@@ -44,7 +44,7 @@ public final class FrozenLibEnvironmentAttributes {
 
 	public static void init() {}
 
-	private static <Value> FrozenHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Value>> register(String name, EnvironmentAttribute.Builder<Value> attributeBuilder) {
+	private static <Value> DeferredHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Value>> register(String name, EnvironmentAttribute.Builder<Value> attributeBuilder) {
 		return REGISTER.register(name, attributeBuilder::build);
 	}
 }

@@ -15,51 +15,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.registry;
+package net.frozenblock.lib.platform.api.registry;
 
-import java.util.function.Consumer;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.sounds.SoundEvent;
 
-public class NeoFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
-	private final DeferredHolder<R, T> delegate;
-	private final Consumer<T> consumer;
+public class DeferredSoundEvent implements DeferredHolder<SoundEvent, SoundEvent> {
+	private final DeferredHolder<SoundEvent, SoundEvent> holder;
 
-	public NeoFrozenHolder(DeferredHolder<R, T> delegate) {
-		this.delegate = delegate;
-		this.consumer = null;
-	}
-
-	public NeoFrozenHolder(DeferredHolder<R, T> delegate, Consumer<T> consumer) {
-		this.delegate = delegate;
-		this.consumer = consumer;
+	public DeferredSoundEvent(DeferredHolder<SoundEvent, SoundEvent> holder) {
+		this.holder = holder;
 	}
 
 	@Override
-	public T get() {
-		return this.delegate.get();
+	public SoundEvent get() {
+		return this.holder.get();
 	}
 
 	@Override
-	public ResourceKey<R> getKey() {
-		return this.delegate.getKey();
+	public ResourceKey<SoundEvent> getKey() {
+		return this.holder.getKey();
 	}
 
 	@Override
 	public Identifier getId() {
-		return this.delegate.getId();
+		return this.holder.getId();
 	}
 
 	@Override
 	public boolean isBound() {
-		return this.delegate.isBound();
+		return this.holder.isBound();
 	}
 
 	@Override
-	public Holder<R> asHolder() {
-		return this.delegate;
+	public Holder<SoundEvent> asHolder() {
+		return this.holder.asHolder();
 	}
 }

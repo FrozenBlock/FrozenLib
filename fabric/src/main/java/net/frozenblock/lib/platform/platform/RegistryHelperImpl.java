@@ -22,9 +22,9 @@ import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.frozenblock.lib.platform.FabricFrozenDeferredRegister;
+import net.frozenblock.lib.platform.FabricDeferredRegister;
 import net.frozenblock.lib.platform.RegistryHelper;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -33,24 +33,40 @@ import org.jetbrains.annotations.Nullable;
 
 public final class RegistryHelperImpl {
 
-	public static <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new FabricFrozenDeferredRegister<>(registryKey, namespace);
+	public static <T> DeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+		return new FabricDeferredRegister<>(registryKey, namespace);
 	}
 
-	public static FrozenDeferredRegister.Items createDeferredItemsRegister(String namespace) {
-		return new FabricFrozenDeferredRegister.Items(namespace);
+	public static DeferredRegister.Items createDeferredItemsRegister(String namespace) {
+		return new FabricDeferredRegister.Items(namespace);
 	}
 
-	public static FrozenDeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
-		return new FabricFrozenDeferredRegister.Blocks(namespace);
+	public static DeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
+		return new FabricDeferredRegister.Blocks(namespace);
 	}
 
-	public static FrozenDeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
-		return new FabricFrozenDeferredRegister.DataComponents(Registries.DATA_COMPONENT_TYPE, namespace);
+	public static DeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
+		return new FabricDeferredRegister.DataComponents(Registries.DATA_COMPONENT_TYPE, namespace);
 	}
 
-	public static FrozenDeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
-		return new FabricFrozenDeferredRegister.Entities(namespace);
+	public static DeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
+		return new FabricDeferredRegister.Entities(namespace);
+	}
+
+	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
+		return new FabricDeferredRegister.SoundEvents(namespace);
+	}
+
+	public static DeferredRegister.ParticleTypes createDeferredParticleTypesRegister(String namespace) {
+		return new FabricDeferredRegister.ParticleTypes(namespace);
+	}
+
+	public static DeferredRegister.MemoryModuleTypes createDeferredMemoryModuleTypesRegister(String namespace) {
+		return new FabricDeferredRegister.MemoryModuleTypes(namespace);
+	}
+
+	public static DeferredRegister.Activities createDeferredActivitiesRegister(String namespace) {
+		return new FabricDeferredRegister.Activities(namespace);
 	}
 
 	public static <T> MappedRegistry<T> createSimpleRegistry(

@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.platform;
 
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
-public class FabricFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
+public class FabricDeferredHolder<R, T extends R> implements DeferredHolder<R, T> {
 
 	private Holder.Reference<T> reference;
 

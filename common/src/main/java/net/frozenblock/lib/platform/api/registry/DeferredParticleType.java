@@ -17,28 +17,41 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
-import java.util.function.Supplier;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
-/**
- * A cross-platform lazy holder for a registered object.
- * Safe to store as a static field before {@link FrozenDeferredRegister#register()} is called.
- *
- * @param <R> the registry object type
- * @param <T> the concrete subtype, extends R
- */
-public interface FrozenHolder<R, T extends R> extends Supplier<T> {
+public class DeferredParticleType<T extends ParticleOptions> implements DeferredHolder<ParticleType<?>, ParticleType<T>> {
+	private final DeferredHolder<ParticleType<?>, ParticleType<T>> holder;
+
+	public DeferredParticleType(DeferredHolder<ParticleType<?>, ParticleType<T>> holder) {
+		this.holder = holder;
+	}
 
 	@Override
-	T get();
+	public ParticleType<T> get() {
+		return this.holder.get();
+	}
 
-	ResourceKey<R> getKey();
+	@Override
+	public ResourceKey<ParticleType<?>> getKey() {
+		return this.holder.getKey();
+	}
 
-	Identifier getId();
+	@Override
+	public Identifier getId() {
+		return this.holder.getId();
+	}
 
-	boolean isBound();
+	@Override
+	public boolean isBound() {
+		return this.holder.isBound();
+	}
 
-	Holder<R> asHolder();
+	@Override
+	public Holder<ParticleType<?>> asHolder() {
+		return this.holder.asHolder();
+	}
 }

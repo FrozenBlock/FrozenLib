@@ -23,13 +23,11 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 
-public class FrozenDeferredBlock<T extends Block> implements FrozenHolder<Block, T>, ItemLike {
+public class DeferredItem<T extends Item> implements DeferredHolder<Item, T>, ItemLike {
+	private final DeferredHolder<Item, T> holder;
 
-	private final FrozenHolder<Block, T> holder;
-
-	public FrozenDeferredBlock(FrozenHolder<Block, T> holder) {
+	public DeferredItem(DeferredHolder<Item, T> holder) {
 		this.holder = holder;
 	}
 
@@ -39,7 +37,7 @@ public class FrozenDeferredBlock<T extends Block> implements FrozenHolder<Block,
 	}
 
 	@Override
-	public ResourceKey<Block> getKey() {
+	public ResourceKey<Item> getKey() {
 		return this.holder.getKey();
 	}
 
@@ -54,13 +52,13 @@ public class FrozenDeferredBlock<T extends Block> implements FrozenHolder<Block,
 	}
 
 	@Override
-	public Holder<Block> asHolder() {
+	public Holder<Item> asHolder() {
 		return this.holder.asHolder();
 	}
 
 	@Override
 	public Item asItem() {
-		return get().asItem();
+		return get();
 	}
 
 	public ItemStack toStack() {
@@ -69,7 +67,7 @@ public class FrozenDeferredBlock<T extends Block> implements FrozenHolder<Block,
 
 	public ItemStack toStack(int count) {
 		var stack = asItem().getDefaultInstance();
-		if (stack.isEmpty()) throw new IllegalStateException("Block does not have a corresponding item: " + this.holder.getKey());
+		if (stack.isEmpty()) throw new IllegalStateException("Obtained empty item stack; incorrect getDefaultInstance() call?");
 		stack.setCount(count);
 		return stack;
 	}

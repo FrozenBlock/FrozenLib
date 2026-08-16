@@ -22,23 +22,23 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.pools.DataMarkerProcessableLegacySinglePoolElement;
 import net.frozenblock.lib.levelgen.structure.api.pools.DataMarkerProcessableSinglePoolElement;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 
 public final class FrozenLibStructurePoolElementTypes {
-	private static final FrozenDeferredRegister<StructurePoolElementType<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<StructurePoolElementType<?>> REGISTER = DeferredRegister.create(
 		Registries.STRUCTURE_POOL_ELEMENT,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement>> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
+	public static final DeferredHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement>> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
 		"data_marker_processable_legacy_single_pool_element",
 		() -> DataMarkerProcessableLegacySinglePoolElement.CODEC
 	);
-	public static final FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableSinglePoolElement>> DATA_MARKER_PROCESSABLE_SINGLE = register(
+	public static final DeferredHolder<StructurePoolElementType<?>, StructurePoolElementType<DataMarkerProcessableSinglePoolElement>> DATA_MARKER_PROCESSABLE_SINGLE = register(
 		"data_marker_processable_single_pool_element",
 		() -> DataMarkerProcessableSinglePoolElement.CODEC
 	);
@@ -49,7 +49,7 @@ public final class FrozenLibStructurePoolElementTypes {
 
 	public static void init() {}
 
-	private static <P extends StructurePoolElement> FrozenHolder<StructurePoolElementType<?>, StructurePoolElementType<P>> register(String name, Supplier<MapCodec<P>> codec) {
+	private static <P extends StructurePoolElement> DeferredHolder<StructurePoolElementType<?>, StructurePoolElementType<P>> register(String name, Supplier<MapCodec<P>> codec) {
 		return REGISTER.register(name, () -> codec::get);
 	}
 }

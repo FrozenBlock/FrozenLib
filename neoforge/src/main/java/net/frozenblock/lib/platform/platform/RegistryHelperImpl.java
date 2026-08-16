@@ -22,8 +22,8 @@ import com.mojang.serialization.Lifecycle;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.platform.RegistryHelper;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.platform.registry.NeoDeferredRegister;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -37,24 +37,40 @@ public final class RegistryHelperImpl {
 	private static final List<Registry<?>> PENDING_REGISTRIES = new ArrayList<>();
 	private static final List<DynamicRegistryEntry<?>> PENDING_DYNAMIC_REGISTRIES = new ArrayList<>();
 
-	public static <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new NeoFrozenDeferredRegister<>(registryKey, namespace);
+	public static <T> DeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+		return new NeoDeferredRegister<>(registryKey, namespace);
 	}
 
-	public static FrozenDeferredRegister.Items createDeferredItemsRegister(String namespace) {
-		return new NeoFrozenDeferredRegister.Items(namespace);
+	public static DeferredRegister.Items createDeferredItemsRegister(String namespace) {
+		return new NeoDeferredRegister.Items(namespace);
 	}
 
-	public static FrozenDeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
-		return new NeoFrozenDeferredRegister.Blocks(namespace);
+	public static DeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
+		return new NeoDeferredRegister.Blocks(namespace);
 	}
 
-	public static FrozenDeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
-		return new NeoFrozenDeferredRegister.DataComponents(Registries.DATA_COMPONENT_TYPE, namespace);
+	public static DeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
+		return new NeoDeferredRegister.DataComponents(Registries.DATA_COMPONENT_TYPE, namespace);
 	}
 
-	public static FrozenDeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
-		return new NeoFrozenDeferredRegister.Entities(namespace);
+	public static DeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
+		return new NeoDeferredRegister.Entities(namespace);
+	}
+
+	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
+		return new NeoDeferredRegister.SoundEvents(namespace);
+	}
+
+	public static DeferredRegister.ParticleTypes createDeferredParticleTypesRegister(String namespace) {
+		return new NeoDeferredRegister.ParticleTypes(namespace);
+	}
+
+	public static DeferredRegister.MemoryModuleTypes createDeferredMemoryModuleTypesRegister(String namespace) {
+		return new NeoDeferredRegister.MemoryModuleTypes(namespace);
+	}
+
+	public static DeferredRegister.Activities createDeferredActivitiesRegister(String namespace) {
+		return new NeoDeferredRegister.Activities(namespace);
 	}
 
 	public static <T> MappedRegistry<T> createSimpleRegistry(

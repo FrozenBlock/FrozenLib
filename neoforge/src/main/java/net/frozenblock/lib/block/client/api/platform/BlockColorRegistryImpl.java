@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.api.platform;
 
 import java.util.Arrays;
 import java.util.List;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
+import net.frozenblock.lib.platform.api.registry.DeferredBlock;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
@@ -29,9 +29,9 @@ import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 @ClientOnly
 public final class BlockColorRegistryImpl {
 
-	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
+	public static void register(List<BlockTintSource> tintSources, DeferredBlock<?>... blocks) {
 		ModLoadingContext.get().getActiveContainer().getEventBus().addListener((RegisterColorHandlersEvent.BlockTintSources event) -> {
-			event.register(tintSources, Arrays.stream(blocks).map(FrozenDeferredBlock::get).toArray(Block[]::new));
+			event.register(tintSources, Arrays.stream(blocks).map(DeferredBlock::get).toArray(Block[]::new));
 		});
 	}
 }

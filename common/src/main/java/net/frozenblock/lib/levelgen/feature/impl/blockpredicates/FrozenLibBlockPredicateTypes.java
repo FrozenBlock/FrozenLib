@@ -24,22 +24,22 @@ import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredi
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInAreaBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInDirectionBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.TouchingBlockPredicate;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 
 public final class FrozenLibBlockPredicateTypes {
-	private static final FrozenDeferredRegister<BlockPredicateType<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<BlockPredicateType<?>> REGISTER = DeferredRegister.create(
 		Registries.BLOCK_PREDICATE_TYPE,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<BlockPredicateType<?>, BlockPredicateType<SearchInDirectionBlockPredicate>> SEARCH_IN_DIRECTION = register("search_in_direction", () -> SearchInDirectionBlockPredicate.CODEC);
-	public static final FrozenHolder<BlockPredicateType<?>, BlockPredicateType<SearchInAreaBlockPredicate>> SEARCH_IN_AREA = register("search_in_area", () -> SearchInAreaBlockPredicate.CODEC);
-	public static final FrozenHolder<BlockPredicateType<?>, BlockPredicateType<TouchingBlockPredicate>> TOUCHING = register("touching", () -> TouchingBlockPredicate.CODEC);
-	public static final FrozenHolder<BlockPredicateType<?>, BlockPredicateType<ConfigBlockPredicate>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigBlockPredicate.CODEC);
+	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<SearchInDirectionBlockPredicate>> SEARCH_IN_DIRECTION = register("search_in_direction", () -> SearchInDirectionBlockPredicate.CODEC);
+	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<SearchInAreaBlockPredicate>> SEARCH_IN_AREA = register("search_in_area", () -> SearchInAreaBlockPredicate.CODEC);
+	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<TouchingBlockPredicate>> TOUCHING = register("touching", () -> TouchingBlockPredicate.CODEC);
+	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<ConfigBlockPredicate>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigBlockPredicate.CODEC);
 
 	static {
 		REGISTER.register();
@@ -47,7 +47,7 @@ public final class FrozenLibBlockPredicateTypes {
 
 	public static void init() {}
 
-	private static <P extends BlockPredicate> FrozenHolder<BlockPredicateType<?>, BlockPredicateType<P>> register(String name, Supplier<MapCodec<P>> mapCodec) {
+	private static <P extends BlockPredicate> DeferredHolder<BlockPredicateType<?>, BlockPredicateType<P>> register(String name, Supplier<MapCodec<P>> mapCodec) {
 		return REGISTER.register(name, () -> mapCodec::get);
 	}
 }

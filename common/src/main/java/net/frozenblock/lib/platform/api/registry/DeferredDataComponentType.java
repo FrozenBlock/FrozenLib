@@ -18,27 +18,24 @@
 package net.frozenblock.lib.platform.api.registry;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 
-public class FrozenDeferredItem<T extends Item> implements FrozenHolder<Item, T>, ItemLike {
+public class DeferredDataComponentType<T> implements DeferredHolder<DataComponentType<?>, DataComponentType<T>> {
+	private final DeferredHolder<DataComponentType<?>, DataComponentType<T>> holder;
 
-	private final FrozenHolder<Item, T> holder;
-
-	public FrozenDeferredItem(FrozenHolder<Item, T> holder) {
+	public DeferredDataComponentType(DeferredHolder<DataComponentType<?>, DataComponentType<T>> holder) {
 		this.holder = holder;
 	}
 
 	@Override
-	public T get() {
+	public DataComponentType<T> get() {
 		return this.holder.get();
 	}
 
 	@Override
-	public ResourceKey<Item> getKey() {
+	public ResourceKey<DataComponentType<?>> getKey() {
 		return this.holder.getKey();
 	}
 
@@ -53,23 +50,7 @@ public class FrozenDeferredItem<T extends Item> implements FrozenHolder<Item, T>
 	}
 
 	@Override
-	public Holder<Item> asHolder() {
+	public Holder<DataComponentType<?>> asHolder() {
 		return this.holder.asHolder();
-	}
-
-	@Override
-	public Item asItem() {
-		return get();
-	}
-
-	public ItemStack toStack() {
-		return toStack(1);
-	}
-
-	public ItemStack toStack(int count) {
-		var stack = asItem().getDefaultInstance();
-		if (stack.isEmpty()) throw new IllegalStateException("Obtained empty item stack; incorrect getDefaultInstance() call?");
-		stack.setCount(count);
-		return stack;
 	}
 }

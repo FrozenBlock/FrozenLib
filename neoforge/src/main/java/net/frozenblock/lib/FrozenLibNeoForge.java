@@ -26,7 +26,7 @@ import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.networking.api.platform.NetworkingHelperImpl;
 import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
 import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
-import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
+import net.frozenblock.lib.platform.registry.NeoDeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
@@ -77,7 +77,7 @@ public final class FrozenLibNeoForge {
 		modBus.addListener(AddPackFindersEvent.class, ResourceLoaderHelperImpl::flushPackFinders);
 		modBus.addListener(EntityAttributeCreationEvent.class, DefaultAttributeRegistryImpl::flush);
 
-		NeoFrozenDeferredRegister.tryRegisterFailedRegisters();
+		NeoDeferredRegister.tryRegisterFailedRegisters();
 		FrozenLibMain.preQuiltSetup();
 		FrozenLibMain.quiltSetup();
 		FrozenLibMain.setup();

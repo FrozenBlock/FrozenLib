@@ -22,20 +22,20 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class FrozenLibPlacementModifiers {
-	private static final FrozenDeferredRegister<PlacementModifierType<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<PlacementModifierType<?>> REGISTER = DeferredRegister.create(
 		Registries.PLACEMENT_MODIFIER_TYPE,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<PlacementModifierType<?>, PlacementModifierType<ConfigPlacementFilter<?>>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigPlacementFilter.CODEC);
-	public static final FrozenHolder<PlacementModifierType<?>, PlacementModifierType<NoisePlacementFilter>> NOISE_FILTER = register("noise_filter", () -> NoisePlacementFilter.CODEC);
+	public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<ConfigPlacementFilter<?>>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigPlacementFilter.CODEC);
+	public static final DeferredHolder<PlacementModifierType<?>, PlacementModifierType<NoisePlacementFilter>> NOISE_FILTER = register("noise_filter", () -> NoisePlacementFilter.CODEC);
 
 	static {
 		REGISTER.register();
@@ -43,7 +43,7 @@ public class FrozenLibPlacementModifiers {
 
 	public static void init() {}
 
-	private static <P extends PlacementModifier> FrozenHolder<PlacementModifierType<?>, PlacementModifierType<P>> register(String name, Supplier<MapCodec<P>> codec) {
+	private static <P extends PlacementModifier> DeferredHolder<PlacementModifierType<?>, PlacementModifierType<P>> register(String name, Supplier<MapCodec<P>> codec) {
 		return REGISTER.register(name, () -> codec::get);
 	}
 }
