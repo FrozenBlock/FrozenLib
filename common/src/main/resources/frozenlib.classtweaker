@@ -88,6 +88,8 @@ transitive-accessible method net/minecraft/world/level/block/Blocks logPropertie
 transitive-accessible method net/minecraft/world/level/block/Blocks leavesProperties (Lnet/minecraft/world/level/block/SoundType;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks flowerPotProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks netherStemProperties (Lnet/minecraft/world/level/material/MapColor;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks litBlockEmission (I)Ljava/util/function/ToIntFunction;
 
 # Block Updates & Property Predicates
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
