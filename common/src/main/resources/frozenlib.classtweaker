@@ -11,7 +11,7 @@ transitive-accessible method net/minecraft/client/gui/components/debug/DebugScre
 transitive-accessible method net/minecraft/data/registries/VanillaRegistries validateThatAllBiomeFeaturesHaveBiomeFilter (Lnet/minecraft/core/HolderLookup$Provider;)V
 transitive-accessible method net/minecraft/data/Main bindRegistries (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible method net/minecraft/core/MappedRegistry getOrCreateHolderOrThrow (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
-accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
+transitive-accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
 transitive-accessible method net/minecraft/core/registries/BuiltInRegistries freeze ()V
 transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljava/lang/Object;)V
 transitive-accessible method net/minecraft/core/RegistrySetBuilder$LazyHolder bindValue (Ljava/lang/Object;)V
@@ -80,7 +80,7 @@ transitive-inject-interface net/minecraft/client/multiplayer/ServerData org/quil
 # State & Properties
 transitive-accessible method net/minecraft/world/level/block/Block registerDefaultState (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/state/StateHolder propertyKeys [Lnet/minecraft/world/level/block/state/properties/Property;
-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties destroyTime F
+transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties destroyTime F
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties instrument Lnet/minecraft/world/level/block/state/properties/NoteBlockInstrument;
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
 transitive-accessible class net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase$Cache
@@ -118,6 +118,7 @@ transitive-accessible method net/minecraft/world/level/block/PressurePlateBlock 
 transitive-accessible method net/minecraft/world/level/block/SaplingBlock <init> (Lnet/minecraft/world/level/block/grower/TreeGrower;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/TrapDoorBlock <init> (Lnet/minecraft/world/level/block/state/properties/BlockSetType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/IronBarsBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible class net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
