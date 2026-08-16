@@ -35,6 +35,7 @@ import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -46,6 +47,7 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -289,6 +291,14 @@ public interface DeferredRegister<T> {
 
 		default DeferredBlock<Block> registerSimpleBlock(BlockItemId key) {
 			return this.registerSimpleBlock(key.block());
+		}
+
+		default DeferredBlock<DropExperienceBlock> registerDropExperienceBlock(ResourceKey<Block> key, IntProvider xpRange, Supplier<BlockBehaviour.Properties> properties) {
+			return this.registerBlock(key, props -> new DropExperienceBlock(xpRange, props), properties);
+		}
+
+		default DeferredBlock<DropExperienceBlock> registerDropExperienceBlock(BlockItemId key, IntProvider xpRange, Supplier<BlockBehaviour.Properties> properties) {
+			return this.registerDropExperienceBlock(key.block(), xpRange, properties);
 		}
 
 		default DeferredBlock<StairBlock> registerLegacyStair(BlockItemId id, Supplier<? extends Block> base) {
