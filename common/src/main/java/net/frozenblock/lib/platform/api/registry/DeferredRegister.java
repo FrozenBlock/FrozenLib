@@ -62,7 +62,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
-import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -540,9 +539,9 @@ public interface DeferredRegister<T> {
 		}
 
 		// COPPER
-		default <WaxedBlock extends Block, WeatheringBlock extends Block & WeatheringCopper, Id> WeatheringCopperCollection<DeferredBlock<?>> registerWeatheringCopperCollection(
+		default <WaxedBlock extends Block, WeatheringBlock extends Block & WeatheringCopper, Id> WeatheringCopperCollection<DeferredBlock<? extends Block>> registerWeatheringCopperCollection(
 			WeatheringCopperCollection<Id> ids,
-			Function4<Blocks, Id, Function<BlockBehaviour.Properties, Block>, BlockBehaviour.Properties, DeferredBlock<?>> register,
+			Function4<Blocks, Id, Function<BlockBehaviour.Properties, Block>, Supplier<BlockBehaviour.Properties>, DeferredBlock<?>> register,
 			BiFunction<WeatheringCopper.WeatherState, BlockBehaviour.Properties, WaxedBlock> waxedBlockFactory,
 			BiFunction<WeatheringCopper.WeatherState, BlockBehaviour.Properties, WeatheringBlock> weatheringFactory,
 			Function<WeatheringCopper.WeatherState, BlockBehaviour.Properties> propertiesSupplier
@@ -551,12 +550,12 @@ public interface DeferredRegister<T> {
 				weatheringIds -> WeatheringCopperCollection.zipMap(
 					WeatheringCopperCollection.STATES,
 					weatheringIds,
-					(state, id) -> register.apply(this, id, p -> weatheringFactory.apply(state, p), propertiesSupplier.apply(state))
+					(state, id) -> register.apply(this, id, p -> weatheringFactory.apply(state, p), () -> propertiesSupplier.apply(state))
 				),
 				waxedIds -> WeatheringCopperCollection.zipMap(
 					WeatheringCopperCollection.STATES,
 					waxedIds,
-					(state, id) -> register.apply(this, id, p -> waxedBlockFactory.apply(state, p), propertiesSupplier.apply(state))
+					(state, id) -> register.apply(this, id, p -> waxedBlockFactory.apply(state, p), () -> propertiesSupplier.apply(state))
 				)
 			);
 		}
