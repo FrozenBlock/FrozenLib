@@ -136,9 +136,21 @@ public interface FrozenDeferredRegister<T> {
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties);
 
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId key, Supplier<BlockBehaviour.Properties> properties) {
+			return this.registerSimpleBlock(key.block(), properties);
+		}
+
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> properties);
 
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId key, UnaryOperator<BlockBehaviour.Properties> properties) {
+			return this.registerSimpleBlock(key.block(), properties);
+		}
+
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key);
+
+		default FrozenDeferredBlock<Block> registerSimpleBlock(BlockItemId key) {
+			return this.registerSimpleBlock(key.block());
+		}
 
 		default FrozenDeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Supplier<? extends Block> base) {
 			return registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
