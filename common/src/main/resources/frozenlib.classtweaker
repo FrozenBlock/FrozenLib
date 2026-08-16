@@ -119,6 +119,7 @@ transitive-accessible method net/minecraft/world/level/block/SaplingBlock <init>
 transitive-accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/TrapDoorBlock <init> (Lnet/minecraft/world/level/block/state/properties/BlockSetType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/IronBarsBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/WeightedPressurePlateBlock <init> (ILnet/minecraft/world/level/block/state/properties/BlockSetType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible class net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
