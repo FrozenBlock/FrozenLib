@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
+import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import java.util.Optional;
 import java.util.function.BiFunction;
@@ -55,10 +56,13 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
+import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
+import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -533,6 +537,28 @@ public interface DeferredRegister<T> {
 
 		default DeferredBlock<Block> registerSimpleLegacyCopy(BlockItemId key, Supplier<? extends Block> base) {
 			return this.registerSimpleLegacyCopy(key.block(), base);
+		}
+
+		// COPPER
+		default <WaxedBlock extends Block, WeatheringBlock extends Block & WeatheringCopper, Id> WeatheringCopperCollection<DeferredBlock<?>> registerWeatheringCopperCollection(
+			WeatheringCopperCollection<Id> ids,
+			Function4<Blocks, Id, Function<BlockBehaviour.Properties, Block>, BlockBehaviour.Properties, DeferredBlock<?>> register,
+			BiFunction<WeatheringCopper.WeatherState, BlockBehaviour.Properties, WaxedBlock> waxedBlockFactory,
+			BiFunction<WeatheringCopper.WeatherState, BlockBehaviour.Properties, WeatheringBlock> weatheringFactory,
+			Function<WeatheringCopper.WeatherState, BlockBehaviour.Properties> propertiesSupplier
+		) {
+			return ids.apply(
+				weatheringIds -> WeatheringCopperCollection.zipMap(
+					WeatheringCopperCollection.STATES,
+					weatheringIds,
+					(state, id) -> register.apply(this, id, p -> weatheringFactory.apply(state, p), propertiesSupplier.apply(state))
+				),
+				waxedIds -> WeatheringCopperCollection.zipMap(
+					WeatheringCopperCollection.STATES,
+					waxedIds,
+					(state, id) -> register.apply(this, id, p -> waxedBlockFactory.apply(state, p), propertiesSupplier.apply(state))
+				)
+			);
 		}
 	}
 
