@@ -490,11 +490,11 @@ public interface DeferredRegister<T> {
 
 	interface ParticleTypes extends DeferredRegister<ParticleType<?>> {
 
-		default DeferredParticleType<SimpleParticleType> register(String name, boolean overrideLimiter) {
-			return new DeferredParticleType<>(this.register(name, () -> ParticleTypeHelper.simple(overrideLimiter)));
+		default DeferredSimpleParticleType register(String name, boolean overrideLimiter) {
+			return new DeferredSimpleParticleType(this.register(name, () -> ParticleTypeHelper.simple(overrideLimiter)));
 		}
 
-		default DeferredParticleType<SimpleParticleType> register(String name) {
+		default DeferredSimpleParticleType register(String name) {
 			return this.register(name, false);
 		}
 
