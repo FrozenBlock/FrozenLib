@@ -23,17 +23,13 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.RegistryHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -285,20 +281,44 @@ public interface DeferredRegister<T> {
 			return this.registerSimpleBlock(key.block());
 		}
 
-		default DeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Supplier<? extends Block> base) {
+		default DeferredBlock<StairBlock> registerLegacyStair(BlockItemId id, Supplier<? extends Block> base) {
 			return this.registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
 		}
 
-		default DeferredBlock<StairBlock> registerStair(final BlockItemId id, final Supplier<? extends Block> base) {
+		default DeferredBlock<StairBlock> registerStair(BlockItemId id, Supplier<? extends Block> base) {
 			return this.registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofFullCopy(base.get()));
 		}
 
-		default DeferredBlock<SlabBlock> registerSlab(final BlockItemId id, final Supplier<? extends Block> base) {
+		default DeferredBlock<SlabBlock> registerSlab(BlockItemId id, Supplier<? extends Block> base) {
 			return this.registerBlock(id.block(), SlabBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
 		}
 
-		default DeferredBlock<WallBlock> registerWall(final BlockItemId id, final Supplier<? extends Block> base) {
+		default DeferredBlock<WallBlock> registerWall(BlockItemId id, Supplier<? extends Block> base) {
 			return this.registerBlock(id.block(), WallBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()).forceSolidOn());
+		}
+
+		default <B extends Block> DeferredBlock<B> registerFullCopy(
+			BlockItemId key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base
+		) {
+			return this.registerBlock(key, func, () -> BlockBehaviour.Properties.ofFullCopy(base.get()), null);
+		}
+
+		default DeferredBlock<Block> registerSimpleFullCopy(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerFullCopy(key, Block::new, base);
+		}
+
+		default <B extends Block> DeferredBlock<B> registerLegacyCopy(
+			BlockItemId key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<? extends Block> base
+		) {
+			return this.registerBlock(key, func, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()), null);
+		}
+
+		default DeferredBlock<Block> registerSimpleLegacyCopy(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerLegacyCopy(key, Block::new, base);
 		}
 	}
 
