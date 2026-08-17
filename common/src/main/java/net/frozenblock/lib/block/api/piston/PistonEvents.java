@@ -93,8 +93,8 @@ public final class PistonEvents {
 	 * I do know this sounds confusing. An example of this can be found in the {@code Drill} {@link Block} from {@code Netherier Nether}.
 	 */
 	public static final Event<OnPushFail> ON_PUSH_FAIL = EventRegistry.createEnvironmentEvent(OnPushFail.class,
-		callbacks -> (level, pos, state, direction, extending) -> {
-		for (var callback : callbacks) callback.onPushFail(level, pos, state, direction, extending);
+		callbacks -> (level, pos, state, direction) -> {
+		for (var callback : callbacks) callback.onPushFail(level, pos, state, direction);
 	});
 
 	/**
@@ -188,9 +188,8 @@ public final class PistonEvents {
 		 * @param pos the {@link BlockPos} of the block that failed to push
 		 * @param state the {@link BlockState} of the block that failed to push
 		 * @param direction the {@link Direction} of the attempted push
-		 * @param extending whether the Piston was extending or retracting.
 		 */
-		void onPushFail(Level level, BlockPos pos, BlockState state, Direction direction, boolean extending);
+		void onPushFail(Level level, BlockPos pos, BlockState state, Direction direction);
 	}
 
 	public enum PushResult {
