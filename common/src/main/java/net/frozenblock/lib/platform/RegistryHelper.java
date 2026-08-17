@@ -74,6 +74,11 @@ public final class RegistryHelper {
 	}
 
 	@PlatformImpl
+	public static DeferredRegister.SensorTypes createDeferredSensorTypesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
 	public static <T> MappedRegistry<T> createSimpleRegistry(
 		ResourceKey<? extends Registry<T>> key,
 		Lifecycle lifecycle,

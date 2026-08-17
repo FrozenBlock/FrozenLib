@@ -41,6 +41,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.ai.sensing.Sensor;
+import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
@@ -123,6 +125,10 @@ public interface DeferredRegister<T> {
 
 	static Activities createActivities(String namespace) {
 		return RegistryHelper.createDeferredActivitiesRegister(namespace);
+	}
+
+	static SensorTypes createSensorTypes(String namespace) {
+		return RegistryHelper.createDeferredSensorTypesRegister(namespace);
 	}
 
 	<I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also);
@@ -888,6 +894,12 @@ public interface DeferredRegister<T> {
 	interface Activities extends DeferredRegister<Activity> {
 		default DeferredActivity register(String name) {
 			return new DeferredActivity(this.register(name, () -> new Activity(this.namespace() + "_" + name)));
+		}
+	}
+
+	interface SensorTypes extends DeferredRegister<SensorType<?>> {
+		default <U extends Sensor<?>> DeferredSensorType<U> registerSensorType(String name, Supplier<U> factory) {
+			return new DeferredSensorType<>(this.register(name, () -> new SensorType<>(factory)));
 		}
 	}
 }

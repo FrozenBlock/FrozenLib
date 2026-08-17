@@ -73,6 +73,10 @@ public final class RegistryHelperImpl {
 		return new NeoDeferredRegister.Activities(namespace);
 	}
 
+	public static DeferredRegister.SensorTypes createDeferredSensorTypesRegister(String namespace) {
+		return new NeoDeferredRegister.SensorTypes(namespace);
+	}
+
 	public static <T> MappedRegistry<T> createSimpleRegistry(
 		ResourceKey<? extends Registry<T>> key,
 		Lifecycle lifecycle,
