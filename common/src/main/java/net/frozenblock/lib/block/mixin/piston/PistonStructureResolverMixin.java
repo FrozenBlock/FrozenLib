@@ -43,6 +43,10 @@ public class PistonStructureResolverMixin {
 	@Final
 	private Level level;
 
+	@Shadow
+	@Final
+	private boolean extending;
+
 	@WrapOperation(
 		method = "resolve",
 		at = @At(
@@ -52,7 +56,7 @@ public class PistonStructureResolverMixin {
 	)
 	public boolean frozenLib$onPushFail(PistonStructureResolver instance, BlockPos start, Direction direction, Operation<Boolean> original) {
 		final boolean resolved = original.call(instance, start, direction);
-		if (!resolved) PistonEvents.ON_PUSH_FAIL.invoker().onPushFail(this.level, start, this.level.getBlockState(start), direction);
+		if (!resolved) PistonEvents.ON_PUSH_FAIL.invoker().onPushFail(this.level, start, this.level.getBlockState(start), direction, this.extending);
 		return resolved;
 	}
 
