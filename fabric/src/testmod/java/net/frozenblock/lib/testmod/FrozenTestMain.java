@@ -23,7 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
-import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
+import net.frozenblock.lib.block.api.tick.BlockTickEvents;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
@@ -66,8 +66,7 @@ public final class FrozenTestMain implements ModInitializer {
 		Holder<SoundEvent> sound = TestConfig.randomSound.get();
         LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow());
 
-        BlockScheduledTicks.addToBlock(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
-                        Blocks.BEDROCK.defaultBlockState(), 3));
+		BlockTickEvents.TICK.register((state, level, pos, player) -> level.setBlockAndUpdate(pos, Blocks.BEDROCK.defaultBlockState()));
 
 		GravityAPI.MODIFICATIONS.register((ctx) -> {
 			if (ctx.y < 300 && ctx.entity instanceof Player) {
