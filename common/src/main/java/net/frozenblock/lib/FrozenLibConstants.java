@@ -36,6 +36,13 @@ public final class FrozenLibConstants {
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
 	public static final Path FROZENLIB_GAME_DIRECTORY = ModLoader.getGameDir().resolve(MOD_ID);
+	public static final String WILDER_WILD_MOD_ID = "wilderwild";
+	public static final String TRAILIER_TALES_MOD_ID = "trailertales";
+	public static final String THE_COPPERIER_AGE_MOD_ID = "thecopperierage";
+	public static final String CHAOS_HYPERCUBED_MOD_ID = "chaoshypercubed";
+	public static final String NETHERIER_NETHER_MOD_ID = "netheriernether";
+	public static final String SPRINGIER_LIFE_MOD_ID = "springierlife";
+	public static final String SIMPLE_COPPER_PIPES_MOD_ID = "simple_copper_pipes";
 
 	// DEBUG
 	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");

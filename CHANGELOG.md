@@ -56,6 +56,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Entities in this Tag will:
     - Set their Fire Type upon spawning, instead of waiting to be set on fire.
     - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
+- Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` class.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+
