@@ -43,10 +43,15 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DoubleHighBlockItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SignItem;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
@@ -682,6 +687,22 @@ public interface DeferredRegister<T> {
 			return this.registerBlockItem(key, func, block, () -> properties.apply(new Item.Properties()));
 		}
 
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			String name,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block
+		) {
+			return this.registerBlockItem(name, func, block, properties -> properties);
+		}
+
+		default <I extends BlockItem> DeferredItem<I> registerBlockItem(
+			BlockItemId key,
+			BiFunction<Item.Properties, Block, ? extends I> func,
+			Supplier<? extends Block> block
+		) {
+			return this.registerBlockItem(key, func, block, properties -> properties);
+		}
+
 		default DeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> base, Supplier<Item.Properties> properties) {
 			return this.registerBlockItem(name, (props, block) -> new BlockItem(block, props), base, properties);
 		}
@@ -716,6 +737,48 @@ public interface DeferredRegister<T> {
 
 		default DeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block) {
 			return this.registerSimpleBlockItem(block, Item.Properties::new);
+		}
+
+		default DeferredItem<PlaceOnWaterBlockItem> registerPlaceOnWaterBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
+			return this.registerBlockItem(key, (properties, block) -> new PlaceOnWaterBlockItem(block, properties), base, propertiesOp);
+		}
+
+		default DeferredItem<PlaceOnWaterBlockItem> registerPlaceOnWaterBlockItem(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerPlaceOnWaterBlockItem(key, base, properties -> properties);
+		}
+
+		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
+			return this.registerBlockItem(key, (properties, block) -> new DoubleHighBlockItem(block, properties), base, propertiesOp);
+		}
+
+		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlockItem(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerDoubleHighBlockItem(key, base, properties -> properties);
+		}
+
+		default DeferredItem<SignItem> registerSignItem(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
+			return this.registerBlockItem(
+				key,
+				(properties, block) -> new SignItem(block, wallSign.get(), properties),
+				sign,
+				() -> new Item.Properties().stacksTo(16)
+			);
+		}
+
+		default DeferredItem<HangingSignItem> registerHangingSignItem(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
+			return this.registerBlockItem(
+				key,
+				(properties, block) -> new HangingSignItem(block, wallHangingSign.get(), properties),
+				hangingSign,
+				() -> new Item.Properties().stacksTo(16)
+			);
+		}
+
+		default DeferredItem<BlockItem> registerShelfItem(BlockItemId key, Supplier<? extends Block> block) {
+			return this.registerSimpleBlockItem(
+				key,
+				block,
+				properties -> properties.component(net.minecraft.core.component.DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+			);
 		}
 
 		default DeferredItem<Item> registerMusicDisc(ResourceKey<Item> key, ResourceKey<JukeboxSong> song) {

@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.api.creative.platform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -31,6 +32,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 
 public final class CreativeModeTabSorterImpl {
+
+	public static void removeIf(ResourceKey<CreativeModeTab> tab, Predicate<? super ItemStack> predicate, CreativeModeTab.TabVisibility tabVisibility) {
+		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.getDisplayStacks().removeIf(predicate));
+	}
 
 	public static void insert(ResourceKey<CreativeModeTab> tab, ItemLike item) {
 		CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.accept(new ItemStack(item)));

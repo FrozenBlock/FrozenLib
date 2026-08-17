@@ -25,8 +25,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Instrument;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import java.util.function.Predicate;
 
 /**
  * A class used for adding items to {@link CreativeModeTab}s.
@@ -35,6 +37,22 @@ import net.minecraft.world.level.ItemLike;
  */
 @UtilityClass
 public final class CreativeModeTabSorter {
+
+	/**
+	 * @param predicate Determines if the {@link ItemStack} should be removed
+	 * @param tabVisibility The required {@link CreativeModeTab.TabVisibility} of the {@link ItemStack} to be removed
+	 */
+	public static void removeIf(Predicate<? super ItemStack> predicate, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab>... tabs) {
+		if (predicate == null) return;
+		for (ResourceKey<CreativeModeTab> tab : tabs) removeIf(tab, predicate, tabVisibility);
+	}
+
+	/**
+	 * @param predicate Determines if the {@link ItemStack} should be removed
+	 */
+	public static void removeIf(Predicate<? super ItemStack> predicate, ResourceKey<CreativeModeTab>... tabs) {
+		removeIf(predicate, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
+	}
 
 	public static void insert(ItemLike item, ResourceKey<CreativeModeTab> ... tabs) {
 		if (item == null) return;
@@ -173,6 +191,11 @@ public final class CreativeModeTabSorter {
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			addInstrumentAfter(tab, comparedItem, instrument, tagKey, tabVisibility);
 		}
+	}
+
+	@PlatformImpl
+	public static void removeIf(ResourceKey<CreativeModeTab> tab, Predicate<? super ItemStack> predicate, CreativeModeTab.TabVisibility tabVisibility) {
+		throw new AssertionError();
 	}
 
 	@PlatformImpl
