@@ -44,6 +44,8 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
@@ -716,8 +718,16 @@ public interface DeferredRegister<T> {
 			return this.registerSimpleBlockItem(block, Item.Properties::new);
 		}
 
+		default DeferredItem<Item> registerMusicDisc(ResourceKey<Item> key, ResourceKey<JukeboxSong> song) {
+			return this.registerSimpleItem(key, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(song));
+		}
+
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type) {
-			return registerItem(key, SpawnEggItem::new, () -> new Item.Properties().spawnEgg(type.get()));
+			return this.registerItem(key, SpawnEggItem::new, () -> new Item.Properties().spawnEgg(type.get()));
+		}
+
+		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type) {
+			return this.registerSpawnEgg(key, type::get);
 		}
 	}
 
