@@ -21,10 +21,12 @@ import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.api.client.particle.PendingParticleProvider;
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.platform.api.registry.DeferredSimpleParticleType;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
 @ClientOnly
 @UtilityClass
@@ -35,8 +37,16 @@ public class ParticleProviderRegistry {
 		throw new AssertionError();
 	}
 
+	public static void register(DeferredSimpleParticleType type, ParticleProvider<SimpleParticleType> provider) {
+		register(type::get, provider);
+	}
+
 	@PlatformImpl
 	public static <T extends ParticleOptions> void register(Supplier<ParticleType<T>> type, PendingParticleProvider<T> provider) {
 		throw new AssertionError();
+	}
+
+	public static <T extends ParticleOptions> void register(DeferredSimpleParticleType type, PendingParticleProvider<SimpleParticleType> provider) {
+		register(type::get, provider);
 	}
 }
