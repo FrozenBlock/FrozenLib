@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
  * NeoForge: Copies Fabric's implementation.
  */
 @ClientOnly
-public interface FrozenLibModel {
+public interface ModelExtension {
 
 	default void frozenLib$calculateChildParts(ModelPart root) {
 		throw new AssertionError();

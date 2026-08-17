@@ -22,5 +22,4 @@ package net.frozenblock.lib.entrypoint.api;
  * <p>
  * On Fabric, defined with the {@code frozenlib:server_events} key in {@code fabric.mod.json}.
  */
-public interface ServerEventEntrypoint {
-}
+public interface ServerEventEntrypoint {}

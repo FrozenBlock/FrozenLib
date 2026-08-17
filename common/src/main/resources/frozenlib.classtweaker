@@ -595,7 +595,7 @@ transitive-accessible method net/minecraft/client/data/models/BlockModelGenerato
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
 transitive-accessible method net/minecraft/client/model/geom/ModelPart addAllChildren (Ljava/util/function/BiConsumer;)V
 
-transitive-inject-interface net/minecraft/client/model/Model net/frozenblock/lib/renderer/model/FrozenLibModel
+transitive-inject-interface net/minecraft/client/model/Model net/frozenblock/lib/renderer/model/ModelExtension
 transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/model/InvertibleModelPart
 transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/model/InvertibleModelPart
 transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/model/InvertibleModelPart

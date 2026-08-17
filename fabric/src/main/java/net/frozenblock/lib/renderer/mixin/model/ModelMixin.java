@@ -19,7 +19,7 @@ package net.frozenblock.lib.renderer.mixin.model;
 
 import net.fabricmc.fabric.impl.client.rendering.ModelExtensions;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.frozenblock.lib.renderer.model.FrozenLibModel;
+import net.frozenblock.lib.renderer.model.ModelExtension;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
 @Mixin(Model.class)
-public class ModelMixin implements FrozenLibModel { // In common mixins.json
+public class ModelMixin implements ModelExtension { // In common mixins.json
 
 	@Unique
 	@Override

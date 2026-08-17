@@ -18,6 +18,7 @@
 package net.frozenblock.lib.block.api.clipgroup;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.HolderSet;
@@ -27,8 +28,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 
+@UtilityClass
 public final class ClipGroups {
 
+	/**
+	 * @return all currently-registered {@link ClipGroup}s.
+	 */
 	public static List<ClipGroup> getAll(RegistryAccess registryAccess) {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.CLIP_GROUP).stream().toList();
 	}

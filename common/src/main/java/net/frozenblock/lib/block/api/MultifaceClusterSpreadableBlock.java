@@ -47,7 +47,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public abstract class MultifaceClusterSpreadableBlock extends MultifaceSpreadeableBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty UP = BlockStateProperties.UP;
-
     protected final VoxelShape northShape;
     protected final VoxelShape southShape;
     protected final VoxelShape eastShape;

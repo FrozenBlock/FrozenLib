@@ -62,35 +62,83 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A {@link Block} that has similar properties to Water.
+ */
 public interface WaterLikeBlock {
+	/**
+	 * The {@link EnumProperty property} required for Bubble Column support.
+	 * <p>
+	 * Should be added via extending Blocks' {@code createBlockStateDefinition} methods if Bubble Column support is needed.
+	 */
 	EnumProperty<BubbleColumnDirection> BUBBLE_COLUMN_DIRECTION = EnumProperty.create("bubble_column_direction", BubbleColumnDirection.class);
 	float ENTITY_WITHIN_COLLISION_FROM_SIDE = 0.25F;
 	int AMBIENT_WHIRLPOOL_SOUND_CHANCE = 200;
 
+	/**
+	 * @return the {@link ResourceKey} of this Block's {@link WaterLikeType}.
+	 */
 	ResourceKey<WaterLikeType> myWaterLikeType();
 
+	/**
+	 * @return the {@link WaterLikeType} of this Block.
+	 */
 	default WaterLikeType myWaterLikeType(RegistryAccess registryAccess) {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.WATER_LIKE_TYPE).getOrThrow(this.myWaterLikeType()).value();
 	}
 
+	/**
+	 * @return the {@link ColorRGBA} to use in place of Water's color, as needed.
+	 * <p>
+	 * For example, Water fog and Suspended Water particles.
+	 */
 	ColorRGBA waterLikeColor();
 
+	/**
+	 * @return the relative distance (in a 0-1 scale) Water fog will appear at while inside this Block.
+	 */
 	float waterFogDistance();
 
+	/**
+	 * @return the {@link ParticleOptions} to use for dripping.
+	 */
 	ParticleOptions dripParticle();
 
+	/**
+	 * @return the chance for a drip particle to spawn.
+	 * <p>
+	 * The higher the value, the less often the particle will spawn.
+	 */
 	int dripParticleChance();
 
+	/**
+	 * @return the {@link ParticleOptions} to use for bubbles.
+	 */
 	ParticleOptions bubbleParticle();
 
+	/**
+	 * @return the {@link ParticleOptions} to use for splashing.
+	 */
 	ParticleOptions splashParticle();
 
+	/**
+	 * @return whether this supports Bubble Columns.
+	 */
 	boolean supportsBubbleColumns();
 
+	/**
+	 * @return the {@link ParticleOptions} to use for upward Bubble Columns.
+	 */
 	Optional<ParticleOptions> bubbleColumnUpParticle();
 
+	/**
+	 * @return the {@link ParticleOptions} to use for downward Bubble Columns.
+	 */
 	Optional<ParticleOptions> currentDownParticle();
 
+	/**
+	 * @return whether the given {@link BlockState} is a {@link WaterLikeBlock} that supports Bubble Columns.
+	 */
 	static boolean supportsBubbleColumns(BlockState state) {
 		return state.getBlock() instanceof WaterLikeBlock waterLikeBlock && waterLikeBlock.supportsBubbleColumns();
 	}
@@ -143,6 +191,9 @@ public interface WaterLikeBlock {
 			&& occupyFluid.getAmount() >= FluidState.AMOUNT_FULL;
 	}
 
+	/**
+	 * Should be implemented within extending Blocks' {@code entityInside} methods.
+	 */
 	default void tryEntityInsideAsBubbleColumn(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
 		if (!isPrecise || !this.supportsBubbleColumns()) return;
 
@@ -174,10 +225,19 @@ public interface WaterLikeBlock {
 		return supportsBubbleColumns(state) && state.getValueOrElse(BUBBLE_COLUMN_DIRECTION, BubbleColumnDirection.NONE) == BubbleColumnDirection.DOWN;
 	}
 
+	/**
+	 * @return whether this can evaporate when placed in areas where {@link EnvironmentAttributes#WATER_EVAPORATES} is {@code true}.
+	 */
 	boolean canEvaporateOnPlace();
 
+	/**
+	 * @return the {@link SoundEvent} to play upon evaporating.
+	 */
 	Optional<SoundEvent> evaporateSound();
 
+	/**
+	 * Should be implemented within extending Blocks' {@code onPlace} methods.
+	 */
 	default void onPlaceForWaterLike(Block block, BlockState state, Level level, BlockPos pos, BlockState replacingState, boolean movedByPiston) {
 		if (this.canEvaporateOnPlace() && level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) {
 			level.destroyBlock(pos, false);
@@ -196,10 +256,19 @@ public interface WaterLikeBlock {
 		if (canOccupyAsBubbleColumn(state) && canBubbleColumnSurvive(level, pos)) level.scheduleTick(pos, block, BubbleColumnBlock.CHECK_PERIOD);
 	}
 
+	/**
+	 * @return a {@link TagKey} of {@link EntityType}s that collide with the edges of this Block (of groups of this Block) while inside it.
+	 */
 	Optional<TagKey<EntityType<?>>> entityTypesThatStayWithinMe(BlockState state);
 
+	/**
+	 * @return whether the {@link EntityType}s defined by {@link #entityTypesThatStayWithinMe(BlockState)} can exit through the top face of this Block.
+	 */
 	boolean canWithinEntityTypesExitFromTop(BlockState state);
 
+	/**
+	 * Should be implemented in extending Blocks' {@code getCollisionShape} methods.
+	 */
 	default VoxelShape getCollisionShapeForWaterLike(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		VoxelShape shape = Shapes.empty();
 		if (!(context instanceof EntityCollisionContext entityCollisionContext)) return shape;
@@ -220,6 +289,9 @@ public interface WaterLikeBlock {
 		return shape;
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code getStateForPlacement} methods.
+	 */
 	default BlockState getPlacementStateForWaterLike(BlockPlaceContext context, BlockState defaultBlockState) {
 		final BlockState replacingState = context.getLevel().getBlockState(context.getClickedPos());
 		return defaultBlockState.trySetValue(
@@ -230,6 +302,9 @@ public interface WaterLikeBlock {
 			);
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code updateShape} methods.
+	 */
 	default void onUpdateShapeForWaterLike(
 		Block block,
 		BlockState state,
@@ -253,6 +328,9 @@ public interface WaterLikeBlock {
 		}
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code neighborChanged} methods.
+	 */
 	default void neighborChangedForWaterLike(
 		Block block,
 		BlockState state,
@@ -265,11 +343,17 @@ public interface WaterLikeBlock {
 		if (this.supportsBubbleColumns()) level.scheduleTick(pos, block, BubbleColumnBlock.CHECK_PERIOD);
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code tick} methods.
+	 */
 	default void tickForWaterLike(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 		if (!this.supportsBubbleColumns()) return;
 		updateAsBubbleColumn(level, pos, state, level.getBlockState(pos.below()));
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code animateTick} methods.
+	 */
 	default void animateTickForWaterLike(BlockState state, Level level, BlockPos pos, RandomSource random) {
 		final Optional<Direction> optionalDragDirection = getDirectionAsBubbleColumn(state);
 		if (optionalDragDirection.isEmpty()) return;
@@ -327,6 +411,9 @@ public interface WaterLikeBlock {
 		}
 	}
 
+	/**
+	 * Should be implemented in extending Blocks' {@code getFluidState} methods.
+	 */
 	default FluidState getFluidStateForWaterLike() {
 		return Fluids.WATER.getSource(false);
 	}

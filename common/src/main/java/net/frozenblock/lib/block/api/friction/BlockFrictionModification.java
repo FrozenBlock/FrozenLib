@@ -17,20 +17,31 @@
 
 package net.frozenblock.lib.block.api.friction;
 
+import net.frozenblock.lib.block.impl.friction.FrictionContext;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.Block;
 
-public class BlockFrictionAPI {
-
-	public static final Event<FrictionModification> MODIFICATIONS = EventRegistry.createEnvironmentEvent(
-		FrictionModification.class,
+public final class BlockFrictionModification {
+	/**
+	 * The event that is triggered in order to modify the friction experienced by a given {@link LivingEntity} on a {@link Block}.
+	 */
+	public static final Event<FrictionModification> MODIFY = EventRegistry.createEnvironmentEvent(FrictionModification.class,
 		callbacks -> context -> {
-			for (FrictionModification modification : callbacks) modification.modifyFriction(context);
-		});
+		for (FrictionModification modification : callbacks) modification.modifyFriction(context);
+	});
 
 	@FunctionalInterface
 	public interface FrictionModification extends CommonEventEntrypoint {
+		/**
+		 * Modifies the friction experienced by a given {@link LivingEntity} on a {@link Block}.
+		 * @param context all factors related to the currently-determined friction.
+		 * <p> Enables the modification of the final friction value.
+		 */
 		void modifyFriction(FrictionContext context);
 	}
+
+	private BlockFrictionModification() {}
 }

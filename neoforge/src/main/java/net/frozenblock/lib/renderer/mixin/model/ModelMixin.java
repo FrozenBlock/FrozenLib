@@ -35,7 +35,7 @@ package net.frozenblock.lib.renderer.mixin.model;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.frozenblock.lib.renderer.model.FrozenLibModel;
+import net.frozenblock.lib.renderer.model.ModelExtension;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.rendertype.RenderType;
@@ -52,7 +52,7 @@ import java.util.function.Function;
 
 @ClientOnly
 @Mixin(Model.class)
-public abstract class ModelMixin implements FrozenLibModel { // In common mixins.json
+public abstract class ModelMixin implements ModelExtension { // In common mixins.json
 
 	@Shadow
 	public abstract ModelPart root();

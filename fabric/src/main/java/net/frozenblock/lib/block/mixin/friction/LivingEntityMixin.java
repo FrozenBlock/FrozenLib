@@ -20,8 +20,8 @@ package net.frozenblock.lib.block.mixin.friction;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.block.api.friction.BlockFrictionAPI;
-import net.frozenblock.lib.block.api.friction.FrictionContext;
+import net.frozenblock.lib.block.api.friction.BlockFrictionModification;
+import net.frozenblock.lib.block.impl.friction.FrictionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
@@ -50,7 +50,7 @@ public class LivingEntityMixin {
 			entity.level().getBlockState(posBelow),
 			original.call(instance)
 		);
-		BlockFrictionAPI.MODIFICATIONS.invoker().modifyFriction(frictionContext);
+		BlockFrictionModification.MODIFY.invoker().modifyFriction(frictionContext);
 
 		return frictionContext.friction;
 	}
