@@ -20,7 +20,6 @@ package net.frozenblock.lib.platform.api.registry;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.schedule.Activity;
 
 public class DeferredActivity implements DeferredHolder<Activity, Activity> {
