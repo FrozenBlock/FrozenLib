@@ -27,7 +27,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 
 @UtilityClass
-public class ParticleTypeHelper {
+public final class ParticleTypeHelper {
 
 	public static SimpleParticleType simple() {
 		return simple(false);
