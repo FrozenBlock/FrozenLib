@@ -52,7 +52,7 @@ import java.util.function.Function;
 
 @ClientOnly
 @Mixin(Model.class)
-public abstract class ModelMixin<S> implements FrozenLibModel<S> { // In common mixins.json
+public abstract class ModelMixin implements FrozenLibModel { // In common mixins.json
 
 	@Shadow
 	public abstract ModelPart root();

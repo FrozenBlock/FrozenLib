@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
 @Mixin(Model.class)
-public class ModelMixin<S> implements FrozenLibModel<S> { // In common mixins.json
+public class ModelMixin implements FrozenLibModel { // In common mixins.json
 
 	@Unique
 	@Override
