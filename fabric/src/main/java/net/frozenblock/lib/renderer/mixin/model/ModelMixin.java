@@ -15,31 +15,37 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.mixin.camera;
+package net.frozenblock.lib.renderer.mixin.model;
 
-import net.frozenblock.lib.renderer.camera.CameraRenderStateHorizontalStorage;
+import net.fabricmc.fabric.impl.client.rendering.ModelExtensions;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import org.joml.Quaternionf;
+import net.frozenblock.lib.renderer.model.FrozenLibModel;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
-@Mixin(CameraRenderState.class)
-public class CameraRenderStateMixin implements CameraRenderStateHorizontalStorage {
-
-	@Unique
-	private Quaternionf frozenLib$horizontalOrientation = new Quaternionf();
+@Mixin(Model.class)
+public class ModelMixin<S> implements FrozenLibModel<S> { // In common mixins.json
 
 	@Unique
 	@Override
-	public void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
-		this.frozenLib$horizontalOrientation = orientation;
+	public void frozenLib$calculateChildParts(ModelPart root) {
+		if (Model.class.cast(this) instanceof ModelExtensions modelExtensions) modelExtensions.fabric$calculateChildParts(root);
+	}
+
+	@Unique
+	@Nullable
+	@Override
+	public ModelPart frozenLib$getChildPart(String name) {
+		return Model.class.cast(this).getChildPart(name);
 	}
 
 	@Unique
 	@Override
-	public Quaternionf frozenLib$horizontalOrientation() {
-		return this.frozenLib$horizontalOrientation;
+	public void frozenLib$copyTransforms(Model<?> model) {
+		Model.class.cast(this).copyTransforms(model);
 	}
 }

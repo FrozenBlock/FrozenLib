@@ -593,18 +593,23 @@ transitive-accessible method net/minecraft/client/data/models/BlockModelGenerato
 
 # Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
+transitive-accessible method net/minecraft/client/model/geom/ModelPart addAllChildren (Ljava/util/function/BiConsumer;)V
 
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Polygon net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+transitive-inject-interface net/minecraft/client/model/Model net/frozenblock/lib/renderer/model/FrozenLibModel
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Polygon net/frozenblock/lib/renderer/model/InvertibleModelPart
 
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V
 transitive-accessible field net/minecraft/client/Camera xRot F
 transitive-accessible field net/minecraft/client/Camera yRot F
 
-transitive-inject-interface net/minecraft/client/renderer/state/level/CameraRenderState net/frozenblock/lib/renderer/impl/CameraRenderStateInterface
+transitive-inject-interface net/minecraft/client/renderer/state/level/CameraRenderState net/frozenblock/lib/renderer/camera/CameraRenderStateHorizontalStorage
+
+# Lightmap
+accessible field net/minecraft/util/LightCoordsUtil MAX_SMOOTH_LIGHT_LEVEL I
 
 # Render Types & Shaders
 transitive-accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;

@@ -15,13 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.impl;
+package net.frozenblock.lib.renderer.camera;
 
 import net.frozenblock.lib.platform.api.ClientOnly;
 import org.joml.Quaternionf;
 
 @ClientOnly
-public interface CameraRenderStateInterface {
+public interface CameraRenderStateHorizontalStorage {
 	default void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
 		throw new AssertionError();
 	}

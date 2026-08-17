@@ -15,13 +15,33 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.impl;
+package net.frozenblock.lib.renderer.model;
 
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.minecraft.client.model.Model;
+import net.minecraft.client.model.geom.ModelPart;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * Implemented separately on Fabric and NeoForge.
+ * <p>
+ * Fabric: Redirects to {@code FabricModel} and {@code ModelExtensions}.
+ * <p>
+ * NeoForge: Copies Fabric's implementation.
+ */
 @ClientOnly
-public interface ModelPartInvertInterface {
-	default void frozenLib$setInverted() {
+public interface FrozenLibModel<S> {
+
+	default void frozenLib$calculateChildParts(ModelPart root) {
+		throw new AssertionError();
+	}
+
+	@Nullable
+	default ModelPart frozenLib$getChildPart(String name) {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$copyTransforms(Model<?> model) {
 		throw new AssertionError();
 	}
 }

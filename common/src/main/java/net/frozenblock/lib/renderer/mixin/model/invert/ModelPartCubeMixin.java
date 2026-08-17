@@ -15,28 +15,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.mixin.invert;
+package net.frozenblock.lib.renderer.mixin.model.invert;
 
-import net.frozenblock.lib.renderer.impl.ModelPartInvertInterface;
+import net.frozenblock.lib.renderer.model.InvertibleModelPart;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
 @Mixin(ModelPart.Cube.class)
-public class ModelPartCubeMixin implements ModelPartInvertInterface {
+public class ModelPartCubeMixin implements InvertibleModelPart {
 
 	@Shadow
 	@Final
 	public ModelPart.Polygon[] polygons;
 
+	@Unique
 	@Override
-	public void frozenLib$setInverted() {
+	public void frozenLib$invert() {
 		for (ModelPart.Polygon polygon : polygons) {
-			if (!(((Object)polygon) instanceof ModelPartInvertInterface invertInterface)) continue;
-			invertInterface.frozenLib$setInverted();
+			if (!(((Object)polygon) instanceof InvertibleModelPart invertInterface)) continue;
+			invertInterface.frozenLib$invert();
 		}
 	}
 }

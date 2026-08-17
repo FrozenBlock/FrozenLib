@@ -15,33 +15,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.mixin.invert;
+package net.frozenblock.lib.renderer.mixin.model.invert;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.renderer.impl.ModelPartInvertInterface;
+import java.util.ArrayList;
+import java.util.List;
+import net.frozenblock.lib.renderer.model.InvertibleModelPart;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
 
 @ClientOnly
-@Mixin(PartDefinition.class)
-public class PartDefinitionMixin implements ModelPartInvertInterface {
+@Mixin(ModelPart.Polygon.class)
+public class PolygonMixin implements InvertibleModelPart {
+
+	@Mutable
+	@Shadow
+	@Final
+	private ModelPart.Vertex[] vertices;
 
 	@Unique
-	private boolean frozenLib$inverted;
-
-	@ModifyReturnValue(method = "bake", at = @At("RETURN"))
-	public ModelPart frozenLib$invertModelParts(ModelPart modelPart) {
-		if (!this.frozenLib$inverted) return modelPart;
-		if ((Object)modelPart instanceof ModelPartInvertInterface invertInterface) invertInterface.frozenLib$setInverted();
-		return modelPart;
-	}
-
 	@Override
-	public void frozenLib$setInverted() {
-		this.frozenLib$inverted = true;
+	public void frozenLib$invert() {
+		final List<ModelPart.Vertex> newVertices = new ArrayList<>();
+		for (int i = 0; i < this.vertices.length; ++i) {
+			newVertices.add(this.vertices[(this.vertices.length - 1) - i]);
+		}
+		this.vertices = newVertices.toArray(new ModelPart.Vertex[0]);
 	}
 }

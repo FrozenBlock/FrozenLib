@@ -15,31 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.mixin.camera;
+package net.frozenblock.lib.renderer.mixin.model.invert;
 
-import net.frozenblock.lib.renderer.camera.CameraRenderStateHorizontalStorage;
+import java.util.List;
+import net.frozenblock.lib.renderer.model.InvertibleModelPart;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
-import org.joml.Quaternionf;
+import net.minecraft.client.model.geom.ModelPart;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
-@Mixin(CameraRenderState.class)
-public class CameraRenderStateMixin implements CameraRenderStateHorizontalStorage {
+@Mixin(ModelPart.class)
+public class ModelPartMixin implements InvertibleModelPart {
 
-	@Unique
-	private Quaternionf frozenLib$horizontalOrientation = new Quaternionf();
-
-	@Unique
-	@Override
-	public void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
-		this.frozenLib$horizontalOrientation = orientation;
-	}
+	@Shadow
+	@Final
+	private List<ModelPart.Cube> cubes;
 
 	@Unique
 	@Override
-	public Quaternionf frozenLib$horizontalOrientation() {
-		return this.frozenLib$horizontalOrientation;
+	public void frozenLib$invert() {
+		for (ModelPart.Cube cube : cubes) {
+			if (!(cube instanceof InvertibleModelPart invertInterface)) continue;
+			invertInterface.frozenLib$invert();
+		}
 	}
 }
