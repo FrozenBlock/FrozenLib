@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.oxidation.platform;
+package net.frozenblock.lib.block.api.registry.platform;
 
 import net.fabricmc.fabric.api.registry.OxidizableBlocksRegistry;
 import net.minecraft.world.level.block.Block;

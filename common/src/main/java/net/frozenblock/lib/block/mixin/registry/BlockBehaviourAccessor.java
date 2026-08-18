@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2025-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.registry.mixin.neoforge;
+package net.frozenblock.lib.block.mixin.registry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.world.level.block.WeatheringCopper;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(value = WeatheringCopper.class, priority = 1020)
-public interface WeatheringCopperMixin {
-
-	@ModifyReturnValue(method = "lambda$static$0", at = @At("RETURN"))
-	private static BiMap frozenLib$mutableOxidationMap(BiMap original) {
-		return HashBiMap.create(original);
-	}
+@Mixin(BlockBehaviour.class)
+public interface BlockBehaviourAccessor {
+	/**
+	 * @reason Extending access via AW/AT will crash, as extending implementations of this are almost exclusively protected.
+	 */
+	@Invoker("isRandomlyTicking")
+	boolean frozenLib$isRandomlyTicking(BlockState state);
 }

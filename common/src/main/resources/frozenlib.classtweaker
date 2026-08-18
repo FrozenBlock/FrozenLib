@@ -91,6 +91,8 @@ transitive-accessible method net/minecraft/world/level/block/Blocks buttonProper
 transitive-accessible method net/minecraft/world/level/block/Blocks netherStemProperties (Lnet/minecraft/world/level/material/MapColor;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks litBlockEmission (I)Ljava/util/function/ToIntFunction;
 
+transitive-inject-interface net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase net/frozenblock/lib/block/impl/registry/BlockStateBaseExtension
+
 # Block Updates & Property Predicates
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
 transitive-accessible method net/minecraft/world/level/block/SculkSensorBlock updateNeighbours (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V

@@ -33,6 +33,8 @@
     "piston.lectern.LecternBlockEntityMixin",
     "piston.shelf.ShelfBlockMixin",
     "piston.shelf.ShelfBlockUnpowerOnMoveMixin",
+    "registry.BlockBehaviourAccessor",
+    "registry.BlockStateBaseMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",

@@ -15,20 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.registry.mixin.neoforge;
+package net.frozenblock.lib.block.api.registry;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.minecraft.world.level.block.WeatheringCopper;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
+import lombok.experimental.UtilityClass;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopperCollection;
 
-@Mixin(value = WeatheringCopper.class, priority = 1020)
-public interface WeatheringCopperMixin {
+@UtilityClass
+public final class OxidizableBlocksRegistry {
 
-	@ModifyReturnValue(method = "lambda$static$0", at = @At("RETURN"))
-	private static BiMap frozenLib$mutableOxidationMap(BiMap original) {
-		return HashBiMap.create(original);
+	@PlatformImpl
+	public static void registerNextStage(Block from, Block to) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void registerWaxable(Block unwaxed, Block waxed) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void registerWeatheringCopperBlocks(WeatheringCopperCollection<Block> copperBlocks) {
+		throw new AssertionError();
 	}
 }

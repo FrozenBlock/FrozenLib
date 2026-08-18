@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.oxidation.platform;
+package net.frozenblock.lib.block.api.registry.platform;
 
 /*
  * Copyright (c) 2016, 2017, 2018, 2019 FabricMC
@@ -63,8 +63,6 @@ public final class OxidizableBlocksRegistryImpl {
 	}
 
 	private static void refreshRandomTickCache(Block block) {
-		for (BlockState state : block.getStateDefinition().getPossibleStates()) {
-			state.initCache(); // todo optimize
-		}
+		for (BlockState state : block.getStateDefinition().getPossibleStates()) state.frozenLib$refreshIsRandomlyTicking();
 	}
 }
