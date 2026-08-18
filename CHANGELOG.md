@@ -56,7 +56,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Entities in this Tag will:
     - Set their Fire Type upon spawning, instead of waiting to be set on fire.
     - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
-- Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` class.
 - Added the `#frozenlib:spawner` Item Tag, used to define which Items should display the `Interact with Spawn Egg: Sets Mob Type` tooltip.
 - Added the `frozenlib:damage` Consume Effect Type, with the following format:
   - `amount`: How much damage (must be above 0) to inflict upon the user.
@@ -67,8 +66,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Only the `REGISTER` event in `BlockAttachmentEvents` should be used to attach new data to Blocks.
   - Are cleared each time Tags are loaded/reloaded.
     - The `REGISTER` event is called whenever this occurs, as to keep attachments that may depend on Tags up-to-date.
+- Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` and `BlockTickRegistry` classes.
+  - `BlockTickEvents` provides events that trigger regardless of the Block.
+  - `BlockTickRegistry` uses the new Block Attachment system, and provides a simple way to add new Block-specific behavior.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
-]()
+
 ### 26.3+
 - Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
 - Migrated `StructureGenerationConditionApi` to an event.

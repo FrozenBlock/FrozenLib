@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.mixin.tick;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.block.api.tick.BlockTickEvents;
+import net.frozenblock.lib.block.api.tick.BlockTickRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -41,6 +42,7 @@ public class BlockStateBaseMixin {
 	)
 	public void frozenLib$invokeTick(Block instance, BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
 		BlockTickEvents.TICK.invoker().onTick(state, level, pos, random);
+		BlockTickRegistry.onTick(state, level, pos, random);
 		original.call(instance, state, level, pos, random);
 	}
 
@@ -53,6 +55,7 @@ public class BlockStateBaseMixin {
 	)
 	public void frozenLib$invokeRandomTick(Block instance, BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
 		BlockTickEvents.RANDOM_TICK.invoker().onRandomTick(state, level, pos, random);
+		BlockTickRegistry.onRandomTick(state, level, pos, random);
 		original.call(instance, state, level, pos, random);
 	}
 }

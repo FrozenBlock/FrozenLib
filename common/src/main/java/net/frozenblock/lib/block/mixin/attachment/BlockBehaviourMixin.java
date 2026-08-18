@@ -47,7 +47,7 @@ public class BlockBehaviourMixin implements BlockAttachmentHolder {
 	@Nullable
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T frozenLib$getAttachedOrDefault(BlockAttachmentKey<T> key, T defaultValue) {
+	public <T> T frozenLib$getAttachedOrDefault(BlockAttachmentKey<T> key, @Nullable T defaultValue) {
 		if (this.frozenLib$attachments == null) return defaultValue;
 		return (T) this.frozenLib$attachments.getOrDefault(key, defaultValue);
 	}

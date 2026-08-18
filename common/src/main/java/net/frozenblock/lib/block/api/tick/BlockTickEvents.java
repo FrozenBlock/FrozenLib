@@ -30,6 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Lets you add custom behavior to be run upon a block being ticked.
+ * <p>
+ * If you would like to add custom behavior to specific blocks, see {@link BlockTickRegistry}.
  */
 @UtilityClass
 public final class BlockTickEvents {

@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.mixin.client.tick;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.block.api.tick.BlockTickEvents;
+import net.frozenblock.lib.block.api.tick.BlockTickRegistry;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -43,6 +44,7 @@ public class ClientLevelMixin {
 	)
 	public void frozenLib$doAnimateTick(Block instance, BlockState state, Level level, BlockPos pos, RandomSource random, Operation<Void> original) {
 		BlockTickEvents.ANIMATE_TICK.invoker().onAnimateTick(state, level, pos, random);
+		BlockTickRegistry.onAnimateTick(state, level, pos, random);
 		original.call(instance, state, level, pos, random);
 	}
 }

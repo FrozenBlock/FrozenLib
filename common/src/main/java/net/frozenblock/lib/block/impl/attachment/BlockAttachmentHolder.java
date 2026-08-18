@@ -55,10 +55,10 @@ public interface BlockAttachmentHolder {
 	 * @param key the {@link BlockAttachmentKey} of the attachment.
 	 * @param defaultValue the value to return if the attachment cannot be found.
 	 * @param <T> the type of the attachment.
-	 * @return the attachment, or {@code null} if it cannot be found.
+	 * @return the attachment, or the provided {@code default value} if it cannot be found.
 	 */
 	@Nullable
-	default <T> T frozenLib$getAttachedOrDefault(BlockAttachmentKey<T> key, T defaultValue) {
+	default <T> T frozenLib$getAttachedOrDefault(BlockAttachmentKey<T> key, @Nullable T defaultValue) {
 		throw new AssertionError();
 	}
 

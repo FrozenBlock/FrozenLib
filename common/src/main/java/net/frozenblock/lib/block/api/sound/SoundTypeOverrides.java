@@ -37,7 +37,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class SoundTypeOverrides {
-	public static final BlockAttachmentKey<List<SoundTypeOverride>> ATTACHMENT_KEY = BlockAttachmentKey.create(() -> "SoundTypeOverride");
+	private static final BlockAttachmentKey<List<SoundTypeOverride>> ATTACHMENT_KEY = BlockAttachmentKey.create(() -> "SoundTypeOverride");
 
 	public static Optional<SoundType> getSoundType(BlockState state) {
 		final List<SoundTypeOverride> overrides = state.getBlock().frozenLib$getAttached(ATTACHMENT_KEY);
