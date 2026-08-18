@@ -57,6 +57,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - Set their Fire Type upon spawning, instead of waiting to be set on fire.
     - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
 - Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` class.
+- Added the `#frozenlib:spawner` Item Tag, used to define which Items should display the `Interact with Spawn Egg: Sets Mob Type` tooltip.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+

@@ -21,7 +21,8 @@
     "recipe.RecipeBuilderMixin",
     "registry.PotionBrewingBuilderMixin",
     "sherd.DecoratedPotPatternsMixin",
-    "shovel.ShovelItemMixin"
+    "shovel.ShovelItemMixin",
+    "tag.ItemStackMixin"
   ],
   "client": [
     "client.LevelExtractorMixin"
