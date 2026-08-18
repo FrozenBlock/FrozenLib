@@ -23,21 +23,13 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ServerPlayerGameMode.class)
-public abstract class ServerPlayerGameModeMixin { // added to common mixins.json
-
-	@Shadow
-	@Final
-	protected ServerPlayer player;
+public class ServerPlayerGameModeMixin { // In common mixins.json
 
 	@WrapOperation(
 		method = "destroyBlock",
@@ -50,8 +42,8 @@ public abstract class ServerPlayerGameModeMixin { // added to common mixins.json
 		ServerLevel instance, BlockPos pos, boolean movedByPiston, Operation<Boolean> original,
 		@Local(name = "adjustedState") BlockState adjustedState
 	) {
-		if (adjustedState.getBlock() instanceof WaterLikeBlock) {
-			instance.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+		if (adjustedState.getBlock() instanceof WaterLikeBlock waterLikeBlock) {
+			instance.setBlockAndUpdate(pos, waterLikeBlock.postDestroyState());
 			return true;
 		}
 		return original.call(instance, pos, movedByPiston);

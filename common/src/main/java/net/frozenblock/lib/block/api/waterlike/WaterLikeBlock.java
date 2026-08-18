@@ -137,6 +137,13 @@ public interface WaterLikeBlock {
 	Optional<ParticleOptions> currentDownParticle();
 
 	/**
+	 * @return the {@link BlockState} to replace this Block with after it is broken.
+	 */
+	default BlockState postDestroyState() {
+		return Blocks.AIR.defaultBlockState();
+	}
+
+	/**
 	 * @return whether the given {@link BlockState} is a {@link WaterLikeBlock} that supports Bubble Columns.
 	 */
 	static boolean supportsBubbleColumns(BlockState state) {
