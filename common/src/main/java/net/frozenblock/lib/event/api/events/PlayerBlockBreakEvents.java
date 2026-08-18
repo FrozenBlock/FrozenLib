@@ -38,9 +38,14 @@ import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -81,6 +86,29 @@ public final class PlayerBlockBreakEvents {
 	public static final Event<Canceled> CANCELED = EventRegistry.createEnvironmentEvent(Canceled.class, callbacks -> (level, player, pos, state, entity) -> {
 		for (Canceled event : callbacks) event.onBlockBreakCanceled(level, player, pos, state, entity);
 	});
+
+	/**
+	 * Should be called upon destroying a {@link Block} logged within another {@link Block}.
+	 * @param level the level where the block was broken
+	 * @param player the player who broke the block
+	 * @param pos the position where the block was broken
+	 * @param loggedState the block state <strong>contained within the block</strong> that is being broken
+	 * @param blockEntity the block entity of the broken block, can be {@code null}
+	 */
+	// New method added by FrozenBlock (AViewFromTheTop)
+	public static void onDestroyLoggedBlock(Level level, Player player, BlockPos pos, BlockState loggedState, @Nullable BlockEntity blockEntity) {
+		level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(loggedState));
+		level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, loggedState));
+
+		if (level.isClientSide()) return;
+
+		if (!player.preventsBlockDrops() && player.hasCorrectToolForDrops(loggedState)) {
+			final ItemStack itemStack = player.getMainHandItem();
+			final ItemStack destroyedWith = itemStack.copy();
+			itemStack.mineBlock(level, loggedState, pos, player);
+			Blocks.SNOW.playerDestroy(level, player, pos, loggedState, blockEntity, destroyedWith);
+		}
+	}
 
 	@FunctionalInterface
 	public interface Before {
