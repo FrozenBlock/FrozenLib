@@ -112,6 +112,11 @@ public final class ModLoader {
 		String getName();
 
 		/**
+		 * Returns this mod's version, as reported by the current loader.
+		 */
+		String getVersion();
+
+		/**
 		 * Returns the custom data value for the given top-level key, if present.
 		 * The value is returned as a {@link JsonElement} regardless of the underlying format.
 		 */

@@ -105,6 +105,11 @@ public final class ModLoaderImpl {
 				}
 
 				@Override
+				public String getVersion() {
+					return metadata.getVersion().getFriendlyString();
+				}
+
+				@Override
 				public Optional<JsonElement> getCustomData(String key) {
 					CustomValue value = metadata.getCustomValue(key);
 					if (value == null) return Optional.empty();

@@ -127,6 +127,11 @@ public final class ModLoaderImpl {
 				}
 
 				@Override
+				public String getVersion() {
+					return modInfo.getVersion().toString();
+				}
+
+				@Override
 				public Optional<JsonElement> getCustomData(String key) {
 					return Optional.empty();
 				}
