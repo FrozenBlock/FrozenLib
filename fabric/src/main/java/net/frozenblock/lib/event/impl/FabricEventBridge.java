@@ -34,6 +34,7 @@ public final class FabricEventBridge {
 		FabricEntityLifecycleEventsBridge.init();
 		FabricBlockEntityLifecycleEventsBridge.init();
 		FabricChunkLifecycleEventsBridge.init();
+		FabricCommonLifecycleEventsBridge.init();
 		FabricPotionBrewingEventBridge.init();
 		FabricPlayerBlockBreakEventsBridge.init();
 

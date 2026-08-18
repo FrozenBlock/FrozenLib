@@ -40,6 +40,6 @@ public final class FrozenLibDataComponents {
 	public static void init() {}
 
 	private static <T> DeferredDataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
-		return REGISTER.register(name, builder);
+		return REGISTER.registerComponent(name, builder);
 	}
 }

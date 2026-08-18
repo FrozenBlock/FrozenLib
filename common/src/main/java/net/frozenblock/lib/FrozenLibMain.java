@@ -70,7 +70,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenLibMain {
 
-	public static void preQuiltSetup() {
+	public static void preQuiltInit() {
 		FireData.init();
 		SerializableItemCooldowns.init();
 		SoundTypeOverrides.init();
@@ -78,13 +78,13 @@ public final class FrozenLibMain {
 		BiomeEnvironmentAttributeModification.init();
 	}
 
-	public static void quiltSetup() {
+	public static void quiltInit() {
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
 		ServerRegistrySync.registerHandlers();
 	}
 
-	public static void setup() {
+	public static void init() {
 		DeferredRegister<ArgumentTypeInfo<?, ?>> argTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
 
 		argTypes.register(

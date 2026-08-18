@@ -38,6 +38,7 @@ public final class NeoEventBridge {
 		NeoEntityTrackingEventBridge.init();
 		NeoEntityLifecycleEventBridge.init();
 		NeoChunkLifecycleEventBridge.init();
+		NeoCommonLifecycleEventsBridge.init();
 		NeoPotionBrewingEventBridge.init();
 
 		NeoForge.EVENT_BUS.addListener(EventPriority.HIGH, ServerAboutToStartEvent.class, event -> {

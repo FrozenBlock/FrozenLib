@@ -78,9 +78,9 @@ public final class FrozenLibNeoForge {
 		modBus.addListener(EntityAttributeCreationEvent.class, DefaultAttributeRegistryImpl::flush);
 
 		NeoDeferredRegister.tryRegisterFailedRegisters();
-		FrozenLibMain.preQuiltSetup();
-		FrozenLibMain.quiltSetup();
-		FrozenLibMain.setup();
+		FrozenLibMain.preQuiltInit();
+		FrozenLibMain.quiltInit();
+		FrozenLibMain.init();
 
 		DataAttachmentHelperImpl.register(modBus);
 		NeoEventBridge.initModStage(modBus);
