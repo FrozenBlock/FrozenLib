@@ -10,6 +10,7 @@
     "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
     "bundle.BundleContentsMixin",
+    "component.ItemMixin",
     "component.removable.AbstractContainerMenuMixin",
     "component.removable.ItemStackMixin",
     "cooldown.EntityMixin",

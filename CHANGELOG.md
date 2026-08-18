@@ -1,7 +1,7 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+[- Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
 - Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
 - Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
 - Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.
@@ -58,8 +58,13 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
 - Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` class.
 - Added the `#frozenlib:spawner` Item Tag, used to define which Items should display the `Interact with Spawn Egg: Sets Mob Type` tooltip.
+- Added the `frozenlib:damage_on_consume` Data Component Type, with the following format:
+  - `amount`: How much damage (must be above 0) to inflict upon the user.
+  - `sound` (Optional): The id of the Sound to play upon damaging the user.
+  - `type`: The id of the Damage Type to damage the user with.
+- Removed `DamageOnUseItem` and `DamageOnUseBlockItem`, as their functionality has been superseded by the `frozenlib:damage_on_consume` Data Component Type.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
-
+]()
 ### 26.3+
 - Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
 - Migrated `StructureGenerationConditionApi` to an event.
