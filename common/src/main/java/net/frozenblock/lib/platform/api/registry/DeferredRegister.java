@@ -801,7 +801,8 @@ public interface DeferredRegister<T> {
 	}
 
 	interface DataComponents extends DeferredRegister<DataComponentType<?>> {
-		default <T> DeferredDataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+		// Cannot be named 'register' because UnaryOperator conflicts with Function
+		default <T> DeferredDataComponentType<T> registerComponent(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
 			return new DeferredDataComponentType<>(register(name, () -> builder.apply(DataComponentType.builder()).build()));
 		}
 	}
@@ -828,17 +829,8 @@ public interface DeferredRegister<T> {
 			);
 		}
 
-		default <E extends Entity> DeferredEntityType<E> register(
-			String name,
-			EntityType.EntityFactory<E> factory,
-			MobCategory category,
-			@Nullable Consumer<EntityType<E>> also
-		) {
-			return this.register(name, factory, category, type -> type, also);
-		}
-
 		default <E extends Entity> DeferredEntityType<E> register(String name, EntityType.EntityFactory<E> factory, MobCategory category) {
-			return this.register(name, factory, category, type -> {});
+			return this.register(name, factory, category, type -> type, null);
 		}
 
 		default <E extends Entity> DeferredEntityType<E> register(
