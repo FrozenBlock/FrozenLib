@@ -9,7 +9,8 @@
   "mixins": [
     "BlockBreakMixin",
     "BlockEntityLifecycleMixin",
-    "QuiltSyncTaskMixin"
+    "QuiltSyncTaskMixin",
+    "ReloadableServerResourcesMixin"
   ],
   "client": [
     "client.MinecraftMixin",
