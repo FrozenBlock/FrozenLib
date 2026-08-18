@@ -63,6 +63,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `sound` (Optional): The id of the Sound to play upon damaging the user.
   - `type`: The id of the Damage Type to damage the user with.
 - Removed `DamageOnUseItem` and `DamageOnUseBlockItem`, as their functionality has been superseded by the `frozenlib:damage` Consume Effect Type.
+- Added Block Attachments, allowing data to be injected into Blocks for quick retrieval.
+  - Only the `REGISTER` event in `BlockAttachmentEvents` should be used to attach new data to Blocks.
+  - Are cleared each time Tags are loaded/reloaded.
+    - The `REGISTER` event is called whenever this occurs, as to keep attachments that may depend on Tags up-to-date.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 ]()
 ### 26.3+

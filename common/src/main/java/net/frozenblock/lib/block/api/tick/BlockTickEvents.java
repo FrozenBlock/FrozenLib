@@ -38,8 +38,8 @@ public final class BlockTickEvents {
 	 */
 	public static final Event<Tick> TICK = EventRegistry.createEnvironmentEvent(Tick.class,
 		callbacks -> (state, level, pos, random) -> {
-			for (var callback : callbacks) callback.onTick(state, level, pos, random);
-		});
+		for (var callback : callbacks) callback.onTick(state, level, pos, random);
+	});
 
 	/**
 	 * The event that is triggered when {@link BlockState#randomTick(ServerLevel, BlockPos, RandomSource) randomTick} is called.
@@ -54,8 +54,8 @@ public final class BlockTickEvents {
 	 */
 	public static final Event<AnimateTick> ANIMATE_TICK = EventRegistry.createEnvironmentEvent(AnimateTick.class,
 		callbacks -> (state, level, pos, random) -> {
-			for (var callback : callbacks) callback.onAnimateTick(state, level, pos, random);
-		});
+		for (var callback : callbacks) callback.onAnimateTick(state, level, pos, random);
+	});
 
 	/**
 	 * A functional interface representing a Tick event.

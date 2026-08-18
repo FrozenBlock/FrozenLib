@@ -130,6 +130,8 @@ transitive-accessible method net/minecraft/world/level/block/NetherFungusBlock <
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible class net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
+transitive-inject-interface net/minecraft/world/level/block/state/BlockBehaviour net/frozenblock/lib/block/impl/attachment/BlockAttachmentHolder
+
 # Loot
 transitive-accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_STICK_CHANCES [F
 
