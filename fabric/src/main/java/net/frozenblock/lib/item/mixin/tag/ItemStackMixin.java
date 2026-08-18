@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(ItemStack.class)
-public class ItemStackMixin {
+public class ItemStackMixin { // In common mixins.json
 
 	@ModifyExpressionValue(
 		method = "addDetailsToTooltip",
