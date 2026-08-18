@@ -49,12 +49,13 @@ import org.jspecify.annotations.Nullable;
  * Fabric: Redirects to {@code PlayerBlockBreakEvents}.
  * <p>
  * NeoForge: Copies Fabric's implementation via mixin, as NeoForge's {@code BreakBlockEvent} doesn't provide the same functionality and is called at a different time.
+ * <p>
+ * Unlike Fabric, these events are also called from the client. Be sure to use {@link Level#isClientSide()} to determine the environment as needed.
  */
 @UtilityClass
 public final class PlayerBlockBreakEvents {
 	/**
 	 * Callback before a block is broken.
-	 * Only called on the server, however updates are synced with the client.
 	 * <p>
 	 * If any listener cancels a block breaking action, that block breaking action is cancelled and {@link #CANCELED} event is fired.
 	 * Otherwise, the {@link #AFTER} event is fired.</p>
@@ -68,9 +69,7 @@ public final class PlayerBlockBreakEvents {
 	});
 
 	/**
-	 * Callback after a block is broken server side.
-	 * <p>
-	 * Only called on a logical server
+	 * Callback after a block is broken.
 	 */
 	public static final Event<After> AFTER = EventRegistry.createEnvironmentEvent(After.class, callbacks -> (level, player, pos, state, entity) -> {
 		for (After event : callbacks) event.afterBlockBreak(level, player, pos, state, entity);
@@ -78,8 +77,6 @@ public final class PlayerBlockBreakEvents {
 
 	/**
 	 * Callback when a block break has been canceled.
-	 * <p>
-	 * Only called on a logical server. May be used to send packets to revert client-side block changes.
 	 */
 	public static final Event<Canceled> CANCELED = EventRegistry.createEnvironmentEvent(Canceled.class, callbacks -> (level, player, pos, state, entity) -> {
 		for (Canceled event : callbacks) event.onBlockBreakCanceled(level, player, pos, state, entity);

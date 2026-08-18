@@ -12,6 +12,7 @@
     "QuiltSyncTaskMixin"
   ],
   "client": [
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.MultiPlayerGameModeMixin"
   ]
 }
