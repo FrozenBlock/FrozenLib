@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.cape.api.CapeUtil;
@@ -43,8 +44,8 @@ import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructurePlacementExclusionApi;
 import net.frozenblock.lib.levelgen.structure.api.pools.TemplatePoolApi;
-import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.pools.FrozenLibStructurePoolElementTypes;
+import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
@@ -71,6 +72,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
+		BlockAttachmentEvents.init();
 		FireData.init();
 		SerializableItemCooldowns.init();
 		SoundTypeOverrides.init();
@@ -85,18 +87,13 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		DeferredRegister<ArgumentTypeInfo<?, ?>> argTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
-
-		argTypes.register(
+		final DeferredRegister<ArgumentTypeInfo<?, ?>> argumentTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
+		argumentTypes.register(
 			"tag_key",
 			() -> new TagKeyArgument.Info<>(),
-			info -> ArgumentTypeInfos.BY_CLASS.put(
-				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
-				info
-			)
+			info -> ArgumentTypeInfos.BY_CLASS.put(ArgumentTypeInfos.fixClassType(TagKeyArgument.class), info)
 		);
-
-		argTypes.register();
+		argumentTypes.register();
 
 		CapeUtil.init();
 		SpottingIcons.init();
@@ -127,10 +124,7 @@ public final class FrozenLibMain {
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
 
-		var matCon = DeferredRegister.create(
-			Registries.MATERIAL_CONDITION,
-			FrozenLibConstants.MOD_ID
-		);
+		final var matCon = DeferredRegister.create(Registries.MATERIAL_CONDITION, FrozenLibConstants.MOD_ID);
 		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);
 		matCon.register();
 

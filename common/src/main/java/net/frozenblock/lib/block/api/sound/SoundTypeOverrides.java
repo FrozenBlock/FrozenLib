@@ -18,8 +18,11 @@
 package net.frozenblock.lib.block.api.sound;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
+import net.frozenblock.lib.block.api.attachment.BlockAttachmentKey;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -31,17 +34,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
 public final class SoundTypeOverrides {
-	private static final ArrayList<SoundTypeOverride> SOUND_TYPE_OVERRIDES = new ArrayList<>();
+	public static final BlockAttachmentKey<List<SoundTypeOverride>> ATTACHMENT_KEY = BlockAttachmentKey.create(() -> "SoundTypeOverride");
 
 	public static Optional<SoundType> getSoundType(BlockState state) {
-		return SOUND_TYPE_OVERRIDES.stream()
-			.filter(override -> override.matches(state))
-			.findAny()
-			.map(SoundTypeOverride::getSoundType);
+		final List<SoundTypeOverride> overrides = state.getBlock().frozenLib$getAttached(ATTACHMENT_KEY);
+		if (overrides == null) return Optional.empty();
+
+		return overrides.stream().filter(SoundTypeOverride::enabled).findFirst().map(SoundTypeOverride::soundType);
 	}
 
 	public static ResourceKey<SoundTypeOverride> createKey(Identifier id) {
@@ -79,11 +81,16 @@ public final class SoundTypeOverrides {
 
 	@ApiStatus.Internal
 	public static void init() {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
-			registryAccess.lookup(FrozenLibRegistries.SOUND_TYPE_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
-				SOUND_TYPE_OVERRIDES.clear();
-				soundTypeOverrideRegistry.forEach(SOUND_TYPE_OVERRIDES::add);
+		BlockAttachmentEvents.REGISTER.register((registries -> {
+			registries.lookup(FrozenLibRegistries.SOUND_TYPE_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
+				soundTypeOverrideRegistry.forEach(override -> {
+					override.blocks().forEach(block -> {
+						final List<SoundTypeOverride> overrides = block.value().frozenLib$getAttachedOrDefault(ATTACHMENT_KEY, new ArrayList<>());
+						overrides.add(override);
+						block.value().frozenLib$setAttached(ATTACHMENT_KEY, overrides);
+					});
+				});
 			});
-		});
+		}));
 	}
 }

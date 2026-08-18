@@ -45,8 +45,16 @@ public class SoundTypeOverride {
 		this.configPredicate = configPredicate;
 	}
 
-	public SoundType getSoundType() {
+	public SoundType soundType() {
 		return this.soundType;
+	}
+
+	public HolderSet<Block> blocks() {
+		return this.blocks;
+	}
+
+	public boolean enabled() {
+		return this.configPredicate.isPresent();
 	}
 
 	public boolean matches(BlockState state) {

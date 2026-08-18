@@ -17,19 +17,19 @@
 
 package net.frozenblock.lib.block.api.attachment;
 
+import java.util.function.BiConsumer;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.impl.attachment.BlockAttachmentHolder;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.frozenblock.lib.event.api.events.CommonLifecycleEvents;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Level;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Events pertaining to {@link BlockAttachmentHolder}.
@@ -37,11 +37,11 @@ import net.minecraft.world.level.block.state.BlockState;
 @UtilityClass
 public final class BlockAttachmentEvents {
 	/**
-	 * The event that is triggered when {@link Block#animateTick(BlockState, Level, BlockPos, RandomSource) animateTick} is called.
+	 * The event that is triggered after {@link CommonLifecycleEvents#TAGS_LOADED} causes all {@link Block}s to clear their attached data.
 	 */
 	public static final Event<Register> REGISTER = EventRegistry.createEnvironmentEvent(Register.class,
-		callbacks -> (block, registries) -> {
-		for (var callback : callbacks) callback.register(block, registries);
+		callbacks -> registries -> {
+		for (var callback : callbacks) callback.register(registries);
 	});
 
 	/**
@@ -52,13 +52,25 @@ public final class BlockAttachmentEvents {
 		for (var callback : callbacks) callback.onSet(block, key, value);
 	});
 
+	@ApiStatus.Internal
 	public static void init() {
 		CommonLifecycleEvents.TAGS_LOADED.register(((registries, client) -> {
-			BuiltInRegistries.BLOCK.forEach(block -> {
-				block.frozenLib$clearAttachments();
-				REGISTER.invoker().register(block, registries);
-			});
+			BuiltInRegistries.BLOCK.forEach(BlockAttachmentHolder::frozenLib$clearAttachments);
+			REGISTER.invoker().register(registries);
 		}));
+	}
+
+	/**
+	 * Runs a {@link BiConsumer} for all {@link Block}s in a given {@link TagKey Block Tag} upon {@link #REGISTER} being called.
+	 * @param tag the {@link TagKey Block Tag} containing the {@link Block}s to run the {@link BiConsumer} on.
+	 * @param callback the {@link BiConsumer} to run per-{@link Block}.
+	 */
+	public static void forAllInTag(TagKey<Block> tag, BiConsumer<Block, RegistryAccess> callback) {
+		REGISTER.register(registries -> {
+			registries.lookup(Registries.BLOCK).ifPresent(blocks -> {
+				blocks.getTagOrEmpty(tag).forEach(block -> callback.accept(block.value(), registries));
+			});
+		});
 	}
 
 	/**
@@ -69,11 +81,10 @@ public final class BlockAttachmentEvents {
 		/**
 		 * Runs after {@link CommonLifecycleEvents#TAGS_LOADED} causes all {@link Block}s to clear their attached data.
 		 * <p>
-		 * Is invoked per-{@link Block}, and should only be used for setting up new attached data for said {@link Block}.
-		 * @param block the {@link Block} to register attached data to.
+		 * Should only be used for setting up attached data for {@link Block}s.
 		 * @param registries the current {@link RegistryAccess}.
 		 */
-		void register(Block block, RegistryAccess registries);
+		void register(RegistryAccess registries);
 	}
 
 	/**
