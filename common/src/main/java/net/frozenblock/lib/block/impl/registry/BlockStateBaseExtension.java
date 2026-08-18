@@ -18,5 +18,7 @@
 package net.frozenblock.lib.block.impl.registry;
 
 public interface BlockStateBaseExtension {
-	void frozenLib$refreshIsRandomlyTicking();
+	default void frozenLib$refreshIsRandomlyTicking() {
+		throw new AssertionError();
+	}
 }

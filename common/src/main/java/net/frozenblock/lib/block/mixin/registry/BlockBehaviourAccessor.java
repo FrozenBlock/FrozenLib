@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(BlockBehaviour.class)
 public interface BlockBehaviourAccessor {
 	/**
-	 * @reason Extending access via AW/AT will crash, as extending implementations of this are almost exclusively protected.
+	 * Extending access via AW/AT will crash, as extending implementations of this are almost exclusively protected.
 	 */
 	@Invoker("isRandomlyTicking")
 	boolean frozenLib$isRandomlyTicking(BlockState state);
