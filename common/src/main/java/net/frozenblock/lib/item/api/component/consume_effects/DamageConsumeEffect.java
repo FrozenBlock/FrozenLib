@@ -15,11 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api.component;
+package net.frozenblock.lib.item.api.component.consume_effects;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
+import net.frozenblock.lib.item.impl.component.consume_effects.FrozenLibConsumeEffects;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -36,39 +37,47 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.consume_effects.ConsumeEffect;
 import net.minecraft.world.level.Level;
 
-public record DamageOnConsume(float amount, Optional<Holder<SoundEvent>> sound, Holder<DamageType> type) {
-	public static final Codec<DamageOnConsume> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ExtraCodecs.POSITIVE_FLOAT.fieldOf("amount").forGetter(DamageOnConsume::amount),
-		SoundEvent.CODEC.optionalFieldOf("sound").forGetter(DamageOnConsume::sound),
-		DamageType.CODEC.fieldOf("type").forGetter(DamageOnConsume::type)
-	).apply(instance, DamageOnConsume::new));
-	public static final StreamCodec<RegistryFriendlyByteBuf, DamageOnConsume> STREAM_CODEC = StreamCodec.composite(
-		ByteBufCodecs.FLOAT, DamageOnConsume::amount,
-		SoundEvent.STREAM_CODEC.apply(ByteBufCodecs::optional), DamageOnConsume::sound,
-		DamageType.STREAM_CODEC, DamageOnConsume::type,
-		DamageOnConsume::new
+public record DamageConsumeEffect(float amount, Optional<Holder<SoundEvent>> sound, Holder<DamageType> type) implements ConsumeEffect {
+	public static final MapCodec<DamageConsumeEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ExtraCodecs.POSITIVE_FLOAT.fieldOf("amount").forGetter(DamageConsumeEffect::amount),
+		SoundEvent.CODEC.optionalFieldOf("sound").forGetter(DamageConsumeEffect::sound),
+		DamageType.CODEC.fieldOf("type").forGetter(DamageConsumeEffect::type)
+	).apply(instance, DamageConsumeEffect::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf, DamageConsumeEffect> STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.FLOAT, DamageConsumeEffect::amount,
+		SoundEvent.STREAM_CODEC.apply(ByteBufCodecs::optional), DamageConsumeEffect::sound,
+		DamageType.STREAM_CODEC, DamageConsumeEffect::type,
+		DamageConsumeEffect::new
 	);
 
-	public void onConsume(ItemStack itemStack, Level level, LivingEntity user) {
-		if (!(level instanceof ServerLevel serverLevel)) return;
-		if (!user.hurtServer(serverLevel, new DamageSource(this.type), this.amount)) return;
+	@Override
+	public Type<? extends ConsumeEffect> getType() {
+		return FrozenLibConsumeEffects.DAMAGE.get();
+	}
+
+	@Override
+	public boolean apply(Level level, ItemStack itemStack, LivingEntity livingEntity) {
+		if (!(level instanceof ServerLevel serverLevel)) return true;
+		if (!livingEntity.hurtServer(serverLevel, new DamageSource(this.type), this.amount)) return false;
 		this.sound
-			.filter(holder -> !user.isSilent())
+			.filter(holder -> !livingEntity.isSilent())
 			.ifPresent(sound -> {
 				final Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
 				final boolean isDrink = consumable != null && consumable.animation() == ItemUseAnimation.DRINK;
-				final RandomSource random = user.getRandom();
+				final RandomSource random = livingEntity.getRandom();
 
 				serverLevel.playSound(
 					null,
-					user.getX(), user.getY(), user.getZ(),
+					livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
 					sound.value(),
-					user.getSoundSource(),
+					livingEntity.getSoundSource(),
 					isDrink ? 0.5F : random.nextBoolean() ? 0.5F : 1.0F,
 					isDrink ? Mth.randomBetween(random, 0.9F, 1F) : random.triangle(1F, 0.2F)
 				);
 			});
+		return true;
 	}
 }

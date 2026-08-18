@@ -31,6 +31,7 @@ import net.frozenblock.lib.entity.impl.variant.FrozenLibSpawnConditions;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.component.consume_effects.FrozenLibConsumeEffects;
 import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
@@ -109,6 +110,7 @@ public final class FrozenLibMain {
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
 		FrozenLibDataComponents.init();
+		FrozenLibConsumeEffects.init();
 		FrozenLibFeatures.init();
 		ConfigPredicateType.init();
 		FrozenLibSpawnConditions.init();

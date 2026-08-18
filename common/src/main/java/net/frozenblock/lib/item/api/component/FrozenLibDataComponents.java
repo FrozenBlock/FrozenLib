@@ -18,18 +18,16 @@
 package net.frozenblock.lib.item.api.component;
 
 import java.util.function.UnaryOperator;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredDataComponentType;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.component.DataComponentType;
 
+@UtilityClass
 public final class FrozenLibDataComponents {
 	private static final DeferredRegister.DataComponents REGISTER = DeferredRegister.createDataComponents(FrozenLibConstants.MOD_ID);
 
-	public static final DeferredDataComponentType<DamageOnConsume> DAMAGE_ON_CONSUME = register(
-		"damage_on_consume",
-		builder -> builder.persistent(DamageOnConsume.CODEC).networkSynchronized(DamageOnConsume.STREAM_CODEC).cacheEncoding()
-	);
 	public static final DeferredDataComponentType<BundleWeightOverride> BUNDLE_WEIGHT_OVERRIDE = register(
 		"bundle_weight_override",
 		builder -> builder.persistent(BundleWeightOverride.CODEC).networkSynchronized(BundleWeightOverride.STREAM_CODEC)

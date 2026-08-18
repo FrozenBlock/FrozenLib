@@ -58,11 +58,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
 - Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` class.
 - Added the `#frozenlib:spawner` Item Tag, used to define which Items should display the `Interact with Spawn Egg: Sets Mob Type` tooltip.
-- Added the `frozenlib:damage_on_consume` Data Component Type, with the following format:
+- Added the `frozenlib:damage` Consume Effect Type, with the following format:
   - `amount`: How much damage (must be above 0) to inflict upon the user.
   - `sound` (Optional): The id of the Sound to play upon damaging the user.
   - `type`: The id of the Damage Type to damage the user with.
-- Removed `DamageOnUseItem` and `DamageOnUseBlockItem`, as their functionality has been superseded by the `frozenlib:damage_on_consume` Data Component Type.
+- Removed `DamageOnUseItem` and `DamageOnUseBlockItem`, as their functionality has been superseded by the `frozenlib:damage` Consume Effect Type.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 ]()
 ### 26.3+
