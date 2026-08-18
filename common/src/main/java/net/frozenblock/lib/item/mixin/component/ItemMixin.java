@@ -42,7 +42,7 @@ public class ItemMixin {
 		ItemStack itemStack, Level level, LivingEntity entity
 	) {
 		final DamageOnConsume damageOnConsume = itemStack.get(FrozenLibDataComponents.DAMAGE_ON_CONSUME.get());
-		if (damageOnConsume != null) damageOnConsume.onConsume(level, entity);
+		if (damageOnConsume != null) damageOnConsume.onConsume(itemStack, level, entity);
 		return original;
 	}
 }

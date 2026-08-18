@@ -21,14 +21,21 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 
 public record DamageOnConsume(float amount, Optional<Holder<SoundEvent>> sound, Holder<DamageType> type) {
@@ -44,10 +51,24 @@ public record DamageOnConsume(float amount, Optional<Holder<SoundEvent>> sound, 
 		DamageOnConsume::new
 	);
 
-	public void onConsume(Level level, LivingEntity user) {
-		user.hurt(new DamageSource(this.type), this.amount);
+	public void onConsume(ItemStack itemStack, Level level, LivingEntity user) {
+		if (!(level instanceof ServerLevel serverLevel)) return;
+		if (!user.hurtServer(serverLevel, new DamageSource(this.type), this.amount)) return;
 		this.sound
 			.filter(holder -> !user.isSilent())
-			.ifPresent(sound -> user.playSound(sound.value(), 0.5F, 0.9F + (level.getRandom().nextFloat() * 0.2F)));
+			.ifPresent(sound -> {
+				final Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
+				final boolean isDrink = consumable != null && consumable.animation() == ItemUseAnimation.DRINK;
+				final RandomSource random = user.getRandom();
+
+				serverLevel.playSound(
+					null,
+					user.getX(), user.getY(), user.getZ(),
+					sound.value(),
+					user.getSoundSource(),
+					isDrink ? 0.5F : random.nextBoolean() ? 0.5F : 1.0F,
+					isDrink ? Mth.randomBetween(random, 0.9F, 1F) : random.triangle(1F, 0.2F)
+				);
+			});
 	}
 }
