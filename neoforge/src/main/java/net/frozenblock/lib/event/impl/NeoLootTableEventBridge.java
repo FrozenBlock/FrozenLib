@@ -54,9 +54,11 @@ public class NeoLootTableEventBridge {
 
 		final LootTable.Builder builder = toBuilder(table);
 
-		// FIXME: I dont work on Neo for some reason :(
 		LootTableEvents.MODIFY.invoker().modifyLootTable(key, builder, source, registries);
-		event.setTable(builder.build());
+
+		final LootTable built = builder.build();
+		built.setLootTableId(key.identifier());
+		event.setTable(built);
 	}
 
 	public static LootTable.Builder toBuilder(LootTable original) {
