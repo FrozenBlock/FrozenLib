@@ -25,7 +25,7 @@ import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
-import net.frozenblock.lib.platform.api.registry.ParticleTypeHelper;
+import net.frozenblock.lib.particle.api.ParticleTypeHelper;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;

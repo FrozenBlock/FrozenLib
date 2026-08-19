@@ -17,14 +17,17 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
+import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
+import net.frozenblock.lib.particle.api.ParticleTypeHelper;
 import net.frozenblock.lib.platform.RegistryHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -43,6 +46,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
@@ -68,6 +72,7 @@ import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
@@ -129,6 +134,10 @@ public interface DeferredRegister<T> {
 
 	static SensorTypes createSensorTypes(String namespace) {
 		return RegistryHelper.createDeferredSensorTypesRegister(namespace);
+	}
+
+	static PoiTypes createPoiTypes(String namespace) {
+		return RegistryHelper.createDeferredPoiTypesRegister(namespace);
 	}
 
 	<I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also);
@@ -892,6 +901,21 @@ public interface DeferredRegister<T> {
 	interface SensorTypes extends DeferredRegister<SensorType<?>> {
 		default <U extends Sensor<?>> DeferredSensorType<U> registerSensorType(String name, Supplier<U> factory) {
 			return new DeferredSensorType<>(this.register(name, () -> new SensorType<>(factory)));
+		}
+	}
+
+	interface PoiTypes extends DeferredRegister<PoiType> {
+
+		default DeferredPoiType register(String name, int maxTickets, int validRange, Supplier<Iterable<BlockState>> matchingStates) {
+			final ImmutableSet.Builder<BlockState> builder = ImmutableSet.builder();
+			return new DeferredPoiType(this.register(name, () -> new PoiType(builder.addAll(matchingStates.get()).build(), maxTickets, validRange)));
+		}
+
+		default DeferredPoiType register(String name, int maxTickets, int validRange, Supplier<? extends Block>... matchingBlocks) {
+			final ImmutableSet.Builder<BlockState> builder = ImmutableSet.builder();
+			Arrays.stream(matchingBlocks).forEach(block -> builder.addAll(block.get().getStateDefinition().getPossibleStates()));
+
+			return this.register(name, maxTickets, validRange, () -> builder.build());
 		}
 	}
 }

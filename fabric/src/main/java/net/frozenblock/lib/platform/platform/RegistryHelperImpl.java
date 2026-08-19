@@ -73,6 +73,10 @@ public final class RegistryHelperImpl {
 		return new FabricDeferredRegister.SensorTypes(namespace);
 	}
 
+	public static DeferredRegister.PoiTypes createDeferredPoiTypesRegister(String namespace) {
+		return new FabricDeferredRegister.PoiTypes(namespace);
+	}
+
 	public static <T> MappedRegistry<T> createSimpleRegistry(
 		ResourceKey<? extends Registry<T>> key,
 		Lifecycle lifecycle,

@@ -22,6 +22,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 
+// TODO: migrate to events
 @UtilityClass
 public class VibrationParticleVisibilityApi {
 	private static final List<VibrationParticleVisibilityTest> VISIBILITY_TESTS = new ArrayList<>();

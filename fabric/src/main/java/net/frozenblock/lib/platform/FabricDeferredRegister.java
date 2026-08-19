@@ -36,6 +36,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -189,6 +190,12 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 	public static class SensorTypes extends FabricDeferredRegister<SensorType<?>> implements DeferredRegister.SensorTypes {
 		public SensorTypes(String namespace) {
 			super(Registries.SENSOR_TYPE, namespace);
+		}
+	}
+
+	public static class PoiTypes extends FabricDeferredRegister<PoiType> implements DeferredRegister.PoiTypes {
+		public PoiTypes(String namespace) {
+			super(Registries.POINT_OF_INTEREST_TYPE, namespace);
 		}
 	}
 }

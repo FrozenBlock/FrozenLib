@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.api.registry;
+package net.frozenblock.lib.particle.api;
 
 import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
