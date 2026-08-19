@@ -38,6 +38,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -98,9 +99,21 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 	}
 
 	public static class Blocks extends FabricDeferredRegister<Block> implements DeferredRegister.Blocks {
+		private FeatureFlag[] requiredFeatures = null;
 
 		public Blocks(String namespace) {
 			super(Registries.BLOCK, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 
 		@Override
@@ -125,9 +138,21 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 	}
 
 	public static class Items extends FabricDeferredRegister<Item> implements DeferredRegister.Items {
+		private FeatureFlag[] requiredFeatures = null;
 
 		public Items(String namespace) {
 			super(Registries.ITEM, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 
 		@Override
@@ -158,8 +183,21 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 	}
 
 	public static class Entities extends FabricDeferredRegister<EntityType<?>> implements DeferredRegister.Entities {
+		private FeatureFlag[] requiredFeatures = null;
+
 		public Entities(String namespace) {
 			super(Registries.ENTITY_TYPE, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 	}
 

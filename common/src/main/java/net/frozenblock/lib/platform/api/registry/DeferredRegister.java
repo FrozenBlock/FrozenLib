@@ -22,6 +22,7 @@ import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,6 +49,7 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.HangingSignItem;
@@ -168,7 +170,26 @@ public interface DeferredRegister<T> {
 
 	String namespace();
 
-	interface Blocks extends DeferredRegister<Block> {
+	interface FeatureFlagRegister {
+
+		default <T, D extends DeferredRegister<T>> D requiredFeatures(FeatureFlag... flags) {
+			this.setRequiredFeatures(flags);
+			return (D) this;
+		}
+
+		void setRequiredFeatures(FeatureFlag... flags);
+
+		@Nullable
+		FeatureFlag[] requiredFeatures();
+
+		default <T> T applyFeaturesIfNotDefault(T value, BiConsumer<FeatureFlag[], T> consumer) {
+			if (this.requiredFeatures() ==  null) return value;
+			consumer.accept(this.requiredFeatures(), value);
+			return value;
+		}
+	}
+
+	interface Blocks extends DeferredRegister<Block>, FeatureFlagRegister {
 
 		@Override
 		<I extends Block> DeferredBlock<I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also);
@@ -224,7 +245,15 @@ public interface DeferredRegister<T> {
 			Supplier<BlockBehaviour.Properties> properties,
 			@Nullable Consumer<B> also
 		) {
-			return new DeferredBlock<>(this.register(key, () -> func.apply(properties.get().setId(key)), also));
+			return new DeferredBlock<>(
+				this.register(
+					key,
+					() -> func.apply(
+						this.applyFeaturesIfNotDefault(properties.get(), (flags, p) -> p.requiredFeatures(flags)).setId(key)
+					),
+					also
+				)
+			);
 		}
 
 		default <B extends Block> DeferredBlock<B> registerBlock(
@@ -244,7 +273,11 @@ public interface DeferredRegister<T> {
 			return this.registerBlock(key.block(), func, properties, also);
 		}
 
-		default <B extends Block> DeferredBlock<B> registerBlock(BlockItemId key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
+		default <B extends Block> DeferredBlock<B> registerBlock(
+			BlockItemId key,
+			Function<BlockBehaviour.Properties, ? extends B> func,
+			Supplier<BlockBehaviour.Properties> properties
+		) {
 			return this.registerBlock(key, func, properties, null);
 		}
 
@@ -583,7 +616,7 @@ public interface DeferredRegister<T> {
 		}
 	}
 
-	interface Items extends DeferredRegister<Item> {
+	interface Items extends DeferredRegister<Item>, FeatureFlagRegister {
 
 		@Override
 		<I extends Item> DeferredItem<I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also);
@@ -617,9 +650,20 @@ public interface DeferredRegister<T> {
 			return this.register(key, func, null);
 		}
 
+		default <I extends Item> DeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
+			return new DeferredItem<>(
+				this.register(
+					key,
+					() -> func.apply(
+						this.applyFeaturesIfNotDefault(properties.get(), (flags, p) -> p.requiredFeatures(flags)).setId(key)
+					)
+				)
+			);
+		}
+
 		default <I extends Item> DeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
 			final ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(this.namespace(), name));
-			return new DeferredItem<>(this.register(name, () -> func.apply(properties.get().setId(key))));
+			return this.registerItem(key, func, properties);
 		}
 
 		default <I extends Item> DeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> properties) {
@@ -628,10 +672,6 @@ public interface DeferredRegister<T> {
 
 		default <I extends Item> DeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func) {
 			return this.registerItem(name, func, Item.Properties::new);
-		}
-
-		default <I extends Item> DeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties) {
-			return this.registerItem(key.identifier().getPath(), func, properties);
 		}
 
 		default <I extends Item> DeferredItem<I> registerItem(ResourceKey<Item> key, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> properties) {
@@ -816,10 +856,10 @@ public interface DeferredRegister<T> {
 		}
 	}
 
-	interface Entities extends DeferredRegister<EntityType<?>> {
+	interface Entities extends DeferredRegister<EntityType<?>>, FeatureFlagRegister {
 
 		default <E extends Entity> DeferredEntityType<E> register(
-			String name,
+			ResourceKey<EntityType<?>> key,
 			EntityType.EntityFactory<E> factory,
 			MobCategory category,
 			UnaryOperator<EntityType.Builder<E>> builder,
@@ -827,10 +867,10 @@ public interface DeferredRegister<T> {
 		) {
 			return new DeferredEntityType<>(
 				this.register(
-					name,
+					key,
 					() -> {
-						final ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE, Identifier.fromNamespaceAndPath(this.namespace(), name));
 						final EntityType.Builder<E> b = EntityType.Builder.of(factory, category);
+						this.applyFeaturesIfNotDefault(b, ((flags, entityBuilder) -> entityBuilder.requiredFeatures(flags)));
 						return builder.apply(b).build(key);
 					},
 					also
@@ -838,17 +878,17 @@ public interface DeferredRegister<T> {
 			);
 		}
 
-		default <E extends Entity> DeferredEntityType<E> register(String name, EntityType.EntityFactory<E> factory, MobCategory category) {
-			return this.register(name, factory, category, type -> type, null);
+		default <E extends Entity> DeferredEntityType<E> register(ResourceKey<EntityType<?>> key, EntityType.EntityFactory<E> factory, MobCategory category) {
+			return this.register(key, factory, category, type -> type, null);
 		}
 
 		default <E extends Entity> DeferredEntityType<E> register(
-			String name,
+			ResourceKey<EntityType<?>> key,
 			EntityType.EntityFactory<E> factory,
 			MobCategory category,
 			UnaryOperator<EntityType.Builder<E>> builder
 		) {
-			return this.register(name, factory, category, builder, null);
+			return this.register(key, factory, category, builder, null);
 		}
 	}
 

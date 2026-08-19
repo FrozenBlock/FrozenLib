@@ -27,9 +27,9 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.registry.DeferredBlock;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredItem;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
-import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.particles.ParticleType;
@@ -42,8 +42,10 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
@@ -51,7 +53,7 @@ import org.jetbrains.annotations.Nullable;
 public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 	private static final List<DeferredRegister<?>> FAILED_REGISTERS = new ArrayList<>();
 	protected final net.neoforged.neoforge.registries.DeferredRegister<T> inner;
-	private final Map<DeferredHolder<Object, Object>, Consumer<Object>> consumers = new Object2ObjectLinkedOpenHashMap<>();
+	private final Map<DeferredHolder<?, ?>, Consumer> consumers = new Object2ObjectLinkedOpenHashMap<>();
 
 	public NeoDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		this.inner = net.neoforged.neoforge.registries.DeferredRegister.create(registryKey, namespace);
@@ -59,36 +61,36 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 
 	@Override
 	public <I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also) {
-		final var holder = new NeoDeferredHolder<>(this.inner.register(name, supplier));
-		if (also != null) consumers.put((DeferredHolder) holder, (Consumer) also);
-		return (DeferredHolder<T, I>) holder;
+		final NeoDeferredHolder<T, I> holder = new NeoDeferredHolder<>(this.inner.register(name, supplier));
+		if (also != null) this.consumers.put(holder, also);
+		return holder;
 	}
 
 	@Override
 	public <I extends T> DeferredHolder<T, I> register(String name, Function<Identifier, ? extends I> func, @Nullable Consumer<I> also) {
-		var holder = new NeoDeferredHolder<>(this.inner.register(name, func));
-		if (also != null) consumers.put((DeferredHolder) holder, (Consumer) also);
-		return (DeferredHolder<T, I>) holder;
+		final NeoDeferredHolder<T, I> holder = new NeoDeferredHolder<>(this.inner.register(name, func));
+		if (also != null) this.consumers.put(holder, also);
+		return holder;
 	}
 
 	@Override
 	public <I extends T> DeferredHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, @Nullable Consumer<I> also) {
-		var holder = new NeoDeferredHolder<>(this.inner.register(key.identifier().getPath(), supplier));
-		if (also != null) consumers.put((DeferredHolder) holder, (Consumer) also);
-		return (DeferredHolder<T, I>) holder;
+		final NeoDeferredHolder<T, I> holder = new NeoDeferredHolder<>(this.inner.register(key.identifier().getPath(), supplier));
+		if (also != null) this.consumers.put(holder, also);
+		return holder;
 	}
 
 	@Override
 	public <I extends T> DeferredHolder<T, I> register(ResourceKey<T> key, Function<Identifier, ? extends I> func, @Nullable Consumer<I> also) {
-		var holder = new NeoDeferredHolder<>(this.inner.register(key.identifier().getPath(), func));
-		if (also != null) consumers.put((DeferredHolder) holder, (Consumer) also);
-		return (DeferredHolder<T, I>) holder;
+		final NeoDeferredHolder<T, I> holder = new NeoDeferredHolder<>(this.inner.register(key.identifier().getPath(), func));
+		if (also != null) this.consumers.put(holder, also);
+		return holder;
 	}
 
 	@Override
 	public void register() {
 		try	{
-			final var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+			final IEventBus bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 			this.inner.register(bus);
 			bus.addListener(this::runCallbacks);
 		} catch (Exception e) {
@@ -117,14 +119,27 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 
 	private void runCallbacks(RegisterEvent event) {
 		if (!event.getRegistryKey().equals(this.inner.getRegistryKey())) return;
+		this.consumers.forEach((holder, also) -> also.accept(holder.get()));
 
 		for (var consumer : consumers.entrySet()) consumer.getValue().accept(consumer.getKey().get());
 	}
 
 	public static class Blocks extends NeoDeferredRegister<Block> implements DeferredRegister.Blocks {
+		private FeatureFlag[] requiredFeatures = null;
 
 		public Blocks(String namespace) {
 			super(Registries.BLOCK, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 
 		@Override
@@ -149,9 +164,21 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 	}
 
 	public static class Items extends NeoDeferredRegister<Item> implements DeferredRegister.Items {
+		private FeatureFlag[] requiredFeatures = null;
 
 		public Items(String namespace) {
 			super(Registries.ITEM, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 
 		@Override
@@ -182,8 +209,21 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 	}
 
 	public static class Entities extends NeoDeferredRegister<EntityType<?>> implements DeferredRegister.Entities {
+		private FeatureFlag[] requiredFeatures = null;
+
 		public Entities(String namespace) {
 			super(Registries.ENTITY_TYPE, namespace);
+		}
+
+		@Override
+		public void setRequiredFeatures(FeatureFlag... flags) {
+			this.requiredFeatures = flags;
+		}
+
+		@Nullable
+		@Override
+		public FeatureFlag[] requiredFeatures() {
+			return this.requiredFeatures;
 		}
 	}
 
