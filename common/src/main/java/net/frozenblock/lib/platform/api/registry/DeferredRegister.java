@@ -973,10 +973,12 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredPoiType register(String name, int maxTickets, int validRange, Supplier<? extends Block>... matchingBlocks) {
-			final ImmutableSet.Builder<BlockState> builder = ImmutableSet.builder();
-			Arrays.stream(matchingBlocks).forEach(block -> builder.addAll(block.get().getStateDefinition().getPossibleStates()));
-
-			return this.register(name, maxTickets, validRange, () -> builder.build());
+			return this.register(name, maxTickets, validRange, () -> {
+				// block.get() MUST be inside here
+				final ImmutableSet.Builder<BlockState> builder = ImmutableSet.builder();
+				Arrays.stream(matchingBlocks).forEach(block -> builder.addAll(block.get().getStateDefinition().getPossibleStates()));
+				return builder.build();
+			});
 		}
 	}
 }
