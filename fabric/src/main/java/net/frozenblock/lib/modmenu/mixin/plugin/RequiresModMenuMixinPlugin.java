@@ -20,6 +20,7 @@ package net.frozenblock.lib.modmenu.mixin.plugin;
 import java.util.List;
 import java.util.Set;
 import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.platform.ModLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -36,7 +37,7 @@ public class RequiresModMenuMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		return FrozenBools.HAS_MODMENU;
+		return ModLoader.isModLoaded("modmenu");
 	}
 
 	@Override
