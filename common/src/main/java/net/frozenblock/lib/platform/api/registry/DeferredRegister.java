@@ -847,6 +847,27 @@ public interface DeferredRegister<T> {
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type) {
 			return this.registerSpawnEgg(key, type::get);
 		}
+
+		// COPPER
+		default <I extends BlockItem> WeatheringCopperCollection<DeferredItem<I>> registerWeatheringCopperCollection(
+			WeatheringCopperCollection<BlockItemId> ids,
+			WeatheringCopperCollection<DeferredBlock<? extends Block>> blocks,
+			BiFunction<Item.Properties, Block, ? extends I> itemFactory,
+			Supplier<Item.Properties> properties
+		) {
+			return WeatheringCopperCollection.zipMap(
+				ids,
+				blocks,
+				(id, block) -> this.registerBlockItem(id, itemFactory, block::get, properties)
+			);
+		}
+
+		default WeatheringCopperCollection<DeferredItem<BlockItem>> registerSimpleWeatheringCopperCollection(
+			WeatheringCopperCollection<BlockItemId> ids,
+			WeatheringCopperCollection<DeferredBlock<? extends Block>> blocks
+		) {
+			return this.registerWeatheringCopperCollection(ids, blocks, (properties, block) -> new BlockItem(block, properties), Item.Properties::new);
+		}
 	}
 
 	interface DataComponents extends DeferredRegister<DataComponentType<?>> {
