@@ -24,7 +24,7 @@ import net.frozenblock.lib.transfer.api.FluidContainerItem;
 import net.frozenblock.lib.transfer.api.FluidHandler;
 import net.frozenblock.lib.transfer.api.FluidHandlerCache;
 import net.frozenblock.lib.transfer.api.FluidStack;
-import net.frozenblock.lib.transfer.api.FluidVariant;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import net.frozenblock.lib.transfer.api.ItemHandler;
 import net.frozenblock.lib.transfer.api.ItemHandlerCache;
 import net.frozenblock.lib.transfer.api.TransferApi;
@@ -135,7 +135,7 @@ public final class TransferApiImpl {
 		return level.getCapability(Capabilities.Fluid.BLOCK, pos, direction) != null;
 	}
 
-	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FluidVariant variant, int maxAmount, boolean simulate) {
+	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FluidTransferVariant variant, int maxAmount, boolean simulate) {
 		ResourceHandler<FluidResource> handler = level.getCapability(Capabilities.Fluid.BLOCK, pos, direction);
 		if (handler == null || variant.isBlank() || maxAmount <= 0) return 0;
 
@@ -152,7 +152,7 @@ public final class TransferApiImpl {
 		Level level,
 		BlockPos pos,
 		@Nullable Direction direction,
-		@Nullable Predicate<FluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount,
 		boolean simulate
 	) {
@@ -176,7 +176,7 @@ public final class TransferApiImpl {
 		@Nullable Direction fromDirection,
 		BlockPos toPos,
 		@Nullable Direction toDirection,
-		@Nullable Predicate<FluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount
 	) {
 		ResourceHandler<FluidResource> from = level.getCapability(Capabilities.Fluid.BLOCK, fromPos, fromDirection);
@@ -208,12 +208,12 @@ public final class TransferApiImpl {
 		return false;
 	}
 
-	static FluidResource toNeoForge(FluidVariant variant) {
+	static FluidResource toNeoForge(FluidTransferVariant variant) {
 		return FluidResource.of(variant.fluid(), variant.components());
 	}
 
-	static FluidVariant fromNeoForge(FluidResource resource) {
-		return FluidVariant.of(resource.getFluid(), resource.getComponentsPatch());
+	static FluidTransferVariant fromNeoForge(FluidResource resource) {
+		return FluidTransferVariant.of(resource.getFluid(), resource.getComponentsPatch());
 	}
 
 	public static @Nullable ItemHandler getItemHandler(

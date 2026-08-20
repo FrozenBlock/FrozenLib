@@ -85,7 +85,7 @@ public final class TransferApi {
 	}
 
 	@PlatformImpl
-	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FluidVariant variant, int maxAmount, boolean simulate) {
+	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FluidTransferVariant variant, int maxAmount, boolean simulate) {
 		throw new AssertionError();
 	}
 
@@ -94,7 +94,7 @@ public final class TransferApi {
 		Level level,
 		BlockPos pos,
 		@Nullable Direction direction,
-		@Nullable Predicate<FluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount,
 		boolean simulate
 	) {
@@ -108,7 +108,7 @@ public final class TransferApi {
 		@Nullable Direction fromDirection,
 		BlockPos toPos,
 		@Nullable Direction toDirection,
-		@Nullable Predicate<FluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount
 	) {
 		throw new AssertionError();

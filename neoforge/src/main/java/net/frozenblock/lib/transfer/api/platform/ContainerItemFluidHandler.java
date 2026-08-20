@@ -18,7 +18,7 @@
 package net.frozenblock.lib.transfer.api.platform;
 
 import net.frozenblock.lib.transfer.api.FluidContainerItem;
-import net.frozenblock.lib.transfer.api.FluidVariant;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -44,7 +44,7 @@ public final class ContainerItemFluidHandler implements FluidContainerItem {
 	}
 
 	@Override
-	public FluidVariant getVariant(int index) {
+	public FluidTransferVariant getVariant(int index) {
 		return this.delegate.getVariant(index);
 	}
 
@@ -54,27 +54,27 @@ public final class ContainerItemFluidHandler implements FluidContainerItem {
 	}
 
 	@Override
-	public int getCapacity(int index, FluidVariant variant) {
+	public int getCapacity(int index, FluidTransferVariant variant) {
 		return this.delegate.getCapacity(index, variant);
 	}
 
 	@Override
-	public boolean isValid(int index, FluidVariant variant) {
+	public boolean isValid(int index, FluidTransferVariant variant) {
 		return this.delegate.isValid(index, variant);
 	}
 
 	@Override
-	public void setStack(int index, FluidVariant variant, int amount) {
+	public void setStack(int index, FluidTransferVariant variant, int amount) {
 		this.delegate.setStack(index, variant, amount);
 	}
 
 	@Override
-	public int insert(int index, FluidVariant variant, int amount, boolean simulate) {
+	public int insert(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		return this.delegate.insert(index, variant, amount, simulate);
 	}
 
 	@Override
-	public int extract(int index, FluidVariant variant, int amount, boolean simulate) {
+	public int extract(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		return this.delegate.extract(index, variant, amount, simulate);
 	}
 }

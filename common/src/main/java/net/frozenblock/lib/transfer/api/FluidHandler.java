@@ -21,20 +21,20 @@ public interface FluidHandler {
 
 	int size();
 
-	FluidVariant getVariant(int index);
+	FluidTransferVariant getVariant(int index);
 
 	int getAmount(int index);
 
-	int getCapacity(int index, FluidVariant variant);
+	int getCapacity(int index, FluidTransferVariant variant);
 
-	boolean isValid(int index, FluidVariant variant);
+	boolean isValid(int index, FluidTransferVariant variant);
 
-	void setStack(int index, FluidVariant variant, int amount);
+	void setStack(int index, FluidTransferVariant variant, int amount);
 
-	default int insert(int index, FluidVariant variant, int amount, boolean simulate) {
+	default int insert(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
-		FluidVariant current = getVariant(index);
+		FluidTransferVariant current = getVariant(index);
 		if (!current.isBlank() && !current.equals(variant)) return 0;
 		if (!isValid(index, variant)) return 0;
 
@@ -46,10 +46,10 @@ public interface FluidHandler {
 		return inserted;
 	}
 
-	default int extract(int index, FluidVariant variant, int amount, boolean simulate) {
+	default int extract(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
-		FluidVariant current = getVariant(index);
+		FluidTransferVariant current = getVariant(index);
 		if (!current.equals(variant)) return 0;
 
 		int currentAmount = getAmount(index);
@@ -58,7 +58,7 @@ public interface FluidHandler {
 
 		if (!simulate) {
 			int remaining = currentAmount - extracted;
-			setStack(index, remaining == 0 ? FluidVariant.BLANK : variant, remaining);
+			setStack(index, remaining == 0 ? FluidTransferVariant.BLANK : variant, remaining);
 		}
 		return extracted;
 	}

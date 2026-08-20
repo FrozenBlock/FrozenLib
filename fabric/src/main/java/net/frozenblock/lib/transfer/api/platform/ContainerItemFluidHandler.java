@@ -17,17 +17,19 @@
 
 package net.frozenblock.lib.transfer.api.platform;
 
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.frozenblock.lib.transfer.api.FrozenFluidContainerItem;
-import net.frozenblock.lib.transfer.api.FrozenFluidVariant;
+import net.frozenblock.lib.transfer.api.FluidContainerItem;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import net.minecraft.world.item.ItemStack;
 
-public final class ContainerItemFluidHandler implements FrozenFluidContainerItem {
+public final class ContainerItemFluidHandler implements FluidContainerItem {
 	private final MutableItemStackStorage stackStorage;
 	private final StorageFluidHandler delegate;
 
-	public ContainerItemFluidHandler(MutableItemStackStorage stackStorage, Storage<FluidVariant> fluidStorage) {
+	public ContainerItemFluidHandler(
+		MutableItemStackStorage stackStorage,
+		Storage<net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant> fluidStorage
+	) {
 		this.stackStorage = stackStorage;
 		this.delegate = new StorageFluidHandler(fluidStorage);
 	}
@@ -43,7 +45,7 @@ public final class ContainerItemFluidHandler implements FrozenFluidContainerItem
 	}
 
 	@Override
-	public FrozenFluidVariant getVariant(int index) {
+	public FluidTransferVariant getVariant(int index) {
 		return this.delegate.getVariant(index);
 	}
 
@@ -53,27 +55,27 @@ public final class ContainerItemFluidHandler implements FrozenFluidContainerItem
 	}
 
 	@Override
-	public int getCapacity(int index, FrozenFluidVariant variant) {
+	public int getCapacity(int index, FluidTransferVariant variant) {
 		return this.delegate.getCapacity(index, variant);
 	}
 
 	@Override
-	public boolean isValid(int index, FrozenFluidVariant variant) {
+	public boolean isValid(int index, FluidTransferVariant variant) {
 		return this.delegate.isValid(index, variant);
 	}
 
 	@Override
-	public void setStack(int index, FrozenFluidVariant variant, int amount) {
+	public void setStack(int index, FluidTransferVariant variant, int amount) {
 		this.delegate.setStack(index, variant, amount);
 	}
 
 	@Override
-	public int insert(int index, FrozenFluidVariant variant, int amount, boolean simulate) {
+	public int insert(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		return this.delegate.insert(index, variant, amount, simulate);
 	}
 
 	@Override
-	public int extract(int index, FrozenFluidVariant variant, int amount, boolean simulate) {
+	public int extract(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		return this.delegate.extract(index, variant, amount, simulate);
 	}
 }

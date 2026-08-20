@@ -19,7 +19,7 @@ package net.frozenblock.lib.transfer.api.platform;
 
 import net.frozenblock.lib.transfer.api.FluidHandler;
 import net.frozenblock.lib.transfer.api.FluidStack;
-import net.frozenblock.lib.transfer.api.FluidVariant;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.TransferPreconditions;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
@@ -54,7 +54,7 @@ public final class FluidHandlerResourceHandler implements ResourceHandler<FluidR
 
 	@Override
 	public long getCapacityAsLong(int index, FluidResource resource) {
-		return this.handler.getCapacity(index, resource.isEmpty() ? FluidVariant.BLANK : TransferApiImpl.fromNeoForge(resource));
+		return this.handler.getCapacity(index, resource.isEmpty() ? FluidTransferVariant.BLANK : TransferApiImpl.fromNeoForge(resource));
 	}
 
 	@Override
@@ -66,8 +66,8 @@ public final class FluidHandlerResourceHandler implements ResourceHandler<FluidR
 	public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
 		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
 
-		FluidVariant variant = TransferApiImpl.fromNeoForge(resource);
-		FluidVariant current = this.handler.getVariant(index);
+		FluidTransferVariant variant = TransferApiImpl.fromNeoForge(resource);
+		FluidTransferVariant current = this.handler.getVariant(index);
 		if (!current.isBlank() && !current.equals(variant)) return 0;
 		if (!this.handler.isValid(index, variant)) return 0;
 
@@ -84,8 +84,8 @@ public final class FluidHandlerResourceHandler implements ResourceHandler<FluidR
 	public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
 		TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
 
-		FluidVariant variant = TransferApiImpl.fromNeoForge(resource);
-		FluidVariant current = this.handler.getVariant(index);
+		FluidTransferVariant variant = TransferApiImpl.fromNeoForge(resource);
+		FluidTransferVariant current = this.handler.getVariant(index);
 		if (!current.equals(variant)) return 0;
 
 		int currentAmount = this.handler.getAmount(index);
@@ -94,7 +94,7 @@ public final class FluidHandlerResourceHandler implements ResourceHandler<FluidR
 
 		this.journals[index].updateSnapshots(transaction);
 		int remaining = currentAmount - extracted;
-		this.handler.setStack(index, remaining == 0 ? FluidVariant.BLANK : variant, remaining);
+		this.handler.setStack(index, remaining == 0 ? FluidTransferVariant.BLANK : variant, remaining);
 		return extracted;
 	}
 

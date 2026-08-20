@@ -29,12 +29,12 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.frozenblock.lib.transfer.api.FrozenFluidContainerItem;
-import net.frozenblock.lib.transfer.api.FrozenFluidHandler;
-import net.frozenblock.lib.transfer.api.FrozenFluidHandlerCache;
-import net.frozenblock.lib.transfer.api.FrozenFluidStack;
-import net.frozenblock.lib.transfer.api.FrozenFluidVariant;
-import net.frozenblock.lib.transfer.api.FrozenItemHandler;
+import net.frozenblock.lib.transfer.api.FluidStack;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
+import net.frozenblock.lib.transfer.api.FluidContainerItem;
+import net.frozenblock.lib.transfer.api.FluidHandler;
+import net.frozenblock.lib.transfer.api.FluidHandlerCache;
+import net.frozenblock.lib.transfer.api.ItemHandler;
 import net.frozenblock.lib.transfer.api.ItemHandlerCache;
 import net.frozenblock.lib.transfer.api.TransferApi;
 import net.minecraft.core.BlockPos;
@@ -127,7 +127,7 @@ public final class TransferApiImpl {
 		return FluidStorage.SIDED.find(level, pos, direction) != null;
 	}
 
-	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FrozenFluidVariant variant, int maxAmount, boolean simulate) {
+	public static int insertFluid(Level level, BlockPos pos, @Nullable Direction direction, FluidTransferVariant variant, int maxAmount, boolean simulate) {
 		Storage<FluidVariant> storage = FluidStorage.SIDED.find(level, pos, direction);
 		if (storage == null || variant.isBlank() || maxAmount <= 0) return 0;
 
@@ -140,28 +140,28 @@ public final class TransferApiImpl {
 		}
 	}
 
-	public static FrozenFluidStack extractFluid(
+	public static FluidStack extractFluid(
 		Level level,
 		BlockPos pos,
 		@Nullable Direction direction,
-		@Nullable Predicate<FrozenFluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount,
 		boolean simulate
 	) {
 		Storage<FluidVariant> storage = FluidStorage.SIDED.find(level, pos, direction);
-		if (storage == null || maxAmount <= 0) return FrozenFluidStack.EMPTY;
+		if (storage == null || maxAmount <= 0) return FluidStack.EMPTY;
 
 		Predicate<FluidVariant> variantFilter = filter == null ? variant -> true : variant -> filter.test(fromFabric(variant));
 
 		try (Transaction transaction = Transaction.openOuter()) {
 			FluidVariant resource = StorageUtil.findExtractableResource(storage, variantFilter, transaction);
-			if (resource == null) return FrozenFluidStack.EMPTY;
+			if (resource == null) return FluidStack.EMPTY;
 
 			long extracted = storage.extract(resource, millibucketsToDroplets(maxAmount), transaction);
-			if (extracted <= 0) return FrozenFluidStack.EMPTY;
+			if (extracted <= 0) return FluidStack.EMPTY;
 
 			if (!simulate) transaction.commit();
-			return new FrozenFluidStack(fromFabric(resource), dropletsToMillibuckets(extracted));
+			return new FluidStack(fromFabric(resource), dropletsToMillibuckets(extracted));
 		}
 	}
 
@@ -171,7 +171,7 @@ public final class TransferApiImpl {
 		@Nullable Direction fromDirection,
 		BlockPos toPos,
 		@Nullable Direction toDirection,
-		@Nullable Predicate<FrozenFluidVariant> filter,
+		@Nullable Predicate<FluidTransferVariant> filter,
 		int maxAmount
 	) {
 		Storage<FluidVariant> from = FluidStorage.SIDED.find(level, fromPos, fromDirection);
@@ -193,12 +193,12 @@ public final class TransferApiImpl {
 		return storage != null && storage.supportsExtraction();
 	}
 
-	static FluidVariant toFabric(FrozenFluidVariant variant) {
+	static FluidVariant toFabric(FluidTransferVariant variant) {
 		return FluidVariant.of(variant.fluid(), variant.components());
 	}
 
-	static FrozenFluidVariant fromFabric(FluidVariant variant) {
-		return FrozenFluidVariant.of(variant.getFluid(), variant.getComponentsPatch());
+	static FluidTransferVariant fromFabric(FluidVariant variant) {
+		return FluidTransferVariant.of(variant.getFluid(), variant.getComponentsPatch());
 	}
 
 	static long millibucketsToDroplets(int millibuckets) {
@@ -209,7 +209,7 @@ public final class TransferApiImpl {
 		return (int) (droplets / DROPLETS_PER_MILLIBUCKET);
 	}
 
-	public static @Nullable FrozenItemHandler getItemHandler(
+	public static @Nullable ItemHandler getItemHandler(
 		Level level,
 		BlockPos pos,
 		@Nullable BlockState state,
@@ -220,7 +220,7 @@ public final class TransferApiImpl {
 		return storage == null ? null : new StorageItemHandler(storage);
 	}
 
-	public static @Nullable FrozenFluidHandler getFluidHandler(
+	public static @Nullable FluidHandler getFluidHandler(
 		Level level,
 		BlockPos pos,
 		@Nullable BlockState state,
@@ -244,7 +244,7 @@ public final class TransferApiImpl {
 	public static <T extends BlockEntity> void registerFluidHandler(BlockEntityType<T> type, TransferApi.FluidHandlerProvider<T> provider) {
 		FluidStorage.SIDED.registerForBlockEntity(
 			(be, direction) -> {
-				FrozenFluidHandler handler = provider.get(be, direction);
+				FluidHandler handler = provider.get(be, direction);
 				return handler == null ? null : new FluidHandlerStorage(handler);
 			},
 			type
@@ -259,7 +259,7 @@ public final class TransferApiImpl {
 		};
 	}
 
-	public static FrozenFluidHandlerCache createFluidHandlerCache(ServerLevel level, BlockPos pos, @Nullable Direction direction) {
+	public static FluidHandlerCache createFluidHandlerCache(ServerLevel level, BlockPos pos, @Nullable Direction direction) {
 		BlockApiCache<Storage<FluidVariant>, @Nullable Direction> cache = BlockApiCache.create(FluidStorage.SIDED, level, pos);
 		return () -> {
 			Storage<FluidVariant> storage = cache.find(direction);
@@ -267,7 +267,7 @@ public final class TransferApiImpl {
 		};
 	}
 
-	public static @Nullable FrozenFluidContainerItem getFluidContainer(ItemStack stack) {
+	public static @Nullable FluidContainerItem getFluidContainer(ItemStack stack) {
 		if (stack.isEmpty()) return null;
 
 		MutableItemStackStorage stackStorage = new MutableItemStackStorage(stack.copy());

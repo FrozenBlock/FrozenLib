@@ -18,7 +18,7 @@
 package net.frozenblock.lib.transfer.api.platform;
 
 import net.frozenblock.lib.transfer.api.FluidHandler;
-import net.frozenblock.lib.transfer.api.FluidVariant;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -36,9 +36,9 @@ public final class ResourceHandlerFluidHandler implements FluidHandler {
 	}
 
 	@Override
-	public FluidVariant getVariant(int index) {
+	public FluidTransferVariant getVariant(int index) {
 		FluidResource resource = this.handler.getResource(index);
-		return resource.isEmpty() ? FluidVariant.BLANK : TransferApiImpl.fromNeoForge(resource);
+		return resource.isEmpty() ? FluidTransferVariant.BLANK : TransferApiImpl.fromNeoForge(resource);
 	}
 
 	@Override
@@ -47,18 +47,18 @@ public final class ResourceHandlerFluidHandler implements FluidHandler {
 	}
 
 	@Override
-	public int getCapacity(int index, FluidVariant variant) {
+	public int getCapacity(int index, FluidTransferVariant variant) {
 		return this.handler.getCapacityAsInt(index, TransferApiImpl.toNeoForge(variant));
 	}
 
 	@Override
-	public boolean isValid(int index, FluidVariant variant) {
+	public boolean isValid(int index, FluidTransferVariant variant) {
 		if (variant.isBlank()) return false;
 		return this.handler.isValid(index, TransferApiImpl.toNeoForge(variant));
 	}
 
 	@Override
-	public void setStack(int index, FluidVariant variant, int amount) {
+	public void setStack(int index, FluidTransferVariant variant, int amount) {
 		try (Transaction transaction = Transaction.open(null)) {
 			FluidResource current = this.handler.getResource(index);
 			if (!current.isEmpty()) this.handler.extract(index, current, this.handler.getAmountAsInt(index), transaction);
@@ -68,7 +68,7 @@ public final class ResourceHandlerFluidHandler implements FluidHandler {
 	}
 
 	@Override
-	public int insert(int index, FluidVariant variant, int amount, boolean simulate) {
+	public int insert(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
 		FluidResource resource = TransferApiImpl.toNeoForge(variant);
@@ -80,7 +80,7 @@ public final class ResourceHandlerFluidHandler implements FluidHandler {
 	}
 
 	@Override
-	public int extract(int index, FluidVariant variant, int amount, boolean simulate) {
+	public int extract(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
 		FluidResource resource = TransferApiImpl.toNeoForge(variant);

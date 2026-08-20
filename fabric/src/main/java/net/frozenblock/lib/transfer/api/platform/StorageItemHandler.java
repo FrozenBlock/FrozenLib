@@ -24,11 +24,11 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.frozenblock.lib.transfer.api.FrozenItemHandler;
+import net.frozenblock.lib.transfer.api.ItemHandler;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public final class StorageItemHandler implements FrozenItemHandler {
+public final class StorageItemHandler implements ItemHandler {
 	private final Storage<ItemVariant> storage;
 	private final @Nullable SlottedStorage<ItemVariant> slotted;
 

@@ -26,13 +26,13 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-import net.frozenblock.lib.transfer.api.FrozenFluidHandler;
-import net.frozenblock.lib.transfer.api.FrozenFluidVariant;
+import net.frozenblock.lib.transfer.api.FluidHandler;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 
 public final class FluidHandlerStorage implements SlottedStorage<FluidVariant> {
 	private final List<SingleSlotStorage<FluidVariant>> slots;
 
-	public FluidHandlerStorage(FrozenFluidHandler handler) {
+	public FluidHandlerStorage(FluidHandler handler) {
 		int size = handler.size();
 		List<SingleSlotStorage<FluidVariant>> slots = new ArrayList<>(size);
 		for (int index = 0; index < size; index++) slots.add(new Slot(handler, index));
@@ -75,14 +75,14 @@ public final class FluidHandlerStorage implements SlottedStorage<FluidVariant> {
 	}
 
 	private static final class Slot extends SingleVariantStorage<FluidVariant> {
-		private final FrozenFluidHandler handler;
+		private final FluidHandler handler;
 		private final int index;
 
-		Slot(FrozenFluidHandler handler, int index) {
+		Slot(FluidHandler handler, int index) {
 			this.handler = handler;
 			this.index = index;
 
-			FrozenFluidVariant variant = handler.getVariant(index);
+			FluidTransferVariant variant = handler.getVariant(index);
 			if (!variant.isBlank()) {
 				this.variant = TransferApiImpl.toFabric(variant);
 				this.amount = TransferApiImpl.millibucketsToDroplets(handler.getAmount(index));
@@ -96,7 +96,7 @@ public final class FluidHandlerStorage implements SlottedStorage<FluidVariant> {
 
 		@Override
 		protected long getCapacity(FluidVariant variant) {
-			FrozenFluidVariant frozenVariant = variant.isBlank() ? FrozenFluidVariant.BLANK : TransferApiImpl.fromFabric(variant);
+			FluidTransferVariant frozenVariant = variant.isBlank() ? FluidTransferVariant.BLANK : TransferApiImpl.fromFabric(variant);
 			return TransferApiImpl.millibucketsToDroplets(this.handler.getCapacity(this.index, frozenVariant));
 		}
 
@@ -107,7 +107,7 @@ public final class FluidHandlerStorage implements SlottedStorage<FluidVariant> {
 
 		@Override
 		protected void onFinalCommit() {
-			FrozenFluidVariant frozenVariant = this.variant.isBlank() ? FrozenFluidVariant.BLANK : TransferApiImpl.fromFabric(this.variant);
+			FluidTransferVariant frozenVariant = this.variant.isBlank() ? FluidTransferVariant.BLANK : TransferApiImpl.fromFabric(this.variant);
 			this.handler.setStack(this.index, frozenVariant, TransferApiImpl.dropletsToMillibuckets(this.amount));
 		}
 	}

@@ -24,11 +24,11 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.frozenblock.lib.transfer.api.FrozenFluidHandler;
-import net.frozenblock.lib.transfer.api.FrozenFluidVariant;
+import net.frozenblock.lib.transfer.api.FluidHandler;
+import net.frozenblock.lib.transfer.api.FluidTransferVariant;
 import org.jetbrains.annotations.Nullable;
 
-public final class StorageFluidHandler implements FrozenFluidHandler {
+public final class StorageFluidHandler implements FluidHandler {
 	private final Storage<FluidVariant> storage;
 	private final @Nullable SlottedStorage<FluidVariant> slotted;
 
@@ -52,10 +52,10 @@ public final class StorageFluidHandler implements FrozenFluidHandler {
 	}
 
 	@Override
-	public FrozenFluidVariant getVariant(int index) {
+	public FluidTransferVariant getVariant(int index) {
 		if (this.slotted != null) return TransferApiImpl.fromFabric(slot(index).getResource());
 		StorageView<FluidVariant> view = firstView();
-		return view == null ? FrozenFluidVariant.BLANK : TransferApiImpl.fromFabric(view.getResource());
+		return view == null ? FluidTransferVariant.BLANK : TransferApiImpl.fromFabric(view.getResource());
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public final class StorageFluidHandler implements FrozenFluidHandler {
 	}
 
 	@Override
-	public int getCapacity(int index, FrozenFluidVariant variant) {
+	public int getCapacity(int index, FluidTransferVariant variant) {
 		if (this.slotted != null) return TransferApiImpl.dropletsToMillibuckets(slot(index).getCapacity());
 		if (variant.isBlank()) return 0;
 
@@ -76,14 +76,14 @@ public final class StorageFluidHandler implements FrozenFluidHandler {
 	}
 
 	@Override
-	public boolean isValid(int index, FrozenFluidVariant variant) {
+	public boolean isValid(int index, FluidTransferVariant variant) {
 		if (variant.isBlank()) return false;
 		Storage<FluidVariant> target = this.slotted != null ? slot(index) : this.storage;
 		return StorageUtil.simulateInsert(target, TransferApiImpl.toFabric(variant), 1, null) > 0;
 	}
 
 	@Override
-	public void setStack(int index, FrozenFluidVariant variant, int amount) {
+	public void setStack(int index, FluidTransferVariant variant, int amount) {
 		Storage<FluidVariant> target;
 		FluidVariant current;
 		long currentAmount;
@@ -109,7 +109,7 @@ public final class StorageFluidHandler implements FrozenFluidHandler {
 	}
 
 	@Override
-	public int insert(int index, FrozenFluidVariant variant, int amount, boolean simulate) {
+	public int insert(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
 		Storage<FluidVariant> target = this.slotted != null ? slot(index) : this.storage;
@@ -124,7 +124,7 @@ public final class StorageFluidHandler implements FrozenFluidHandler {
 	}
 
 	@Override
-	public int extract(int index, FrozenFluidVariant variant, int amount, boolean simulate) {
+	public int extract(int index, FluidTransferVariant variant, int amount, boolean simulate) {
 		if (variant.isBlank() || amount <= 0) return 0;
 
 		Storage<FluidVariant> target = this.slotted != null ? slot(index) : this.storage;
