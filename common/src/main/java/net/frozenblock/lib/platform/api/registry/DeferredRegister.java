@@ -66,6 +66,7 @@ import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
@@ -489,6 +490,15 @@ public interface DeferredRegister<T> {
 
 		default DeferredBlock<TrapDoorBlock> registerMetalTrapDoor(BlockItemId id, BlockSetType blockSetType, Supplier<? extends Block> base) {
 			return this.registerMetalTrapDoor(id, blockSetType, base, properties -> properties);
+		}
+
+		default DeferredBlock<FlowerPotBlock> registerFlowerPot(ResourceKey<Block> key, Supplier<? extends Block> base) {
+			return this.registerBlock(
+				key,
+				(properties) -> new FlowerPotBlock(base.get(), properties),
+				net.minecraft.world.level.block.Blocks::flowerPotProperties,
+				null
+			);
 		}
 
 		// FULL COPY
