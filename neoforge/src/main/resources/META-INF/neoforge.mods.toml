@@ -89,6 +89,9 @@ config="mixin/frozenlib.registry.neoforge.mixins.json"
 config="mixin/frozenlib.renderer.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.renderer.neoforge.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.resource.mixins.json"
 
 [[mixins]]
