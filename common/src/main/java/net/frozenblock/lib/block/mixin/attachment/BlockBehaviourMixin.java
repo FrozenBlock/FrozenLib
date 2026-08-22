@@ -76,6 +76,9 @@ public class BlockBehaviourMixin implements BlockAttachmentHolder {
 	@Unique
 	@Override
 	public void frozenLib$clearAttachments() {
-		this.frozenLib$attachments = null;
+		if (this.frozenLib$attachments != null) {
+			this.frozenLib$attachments.keySet().removeIf(key -> !key.persistent());
+			if (this.frozenLib$attachments.isEmpty())  this.frozenLib$attachments = null;
+		}
 	}
 }

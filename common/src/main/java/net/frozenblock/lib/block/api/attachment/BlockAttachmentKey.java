@@ -24,10 +24,21 @@ import java.util.function.Supplier;
  * A key representing extra data to attach to a {@link Block}.
  */
 public final class BlockAttachmentKey<T> {
+	private final boolean persistent;
 	private final Supplier<String> name;
 
-	private BlockAttachmentKey(Supplier<String> debugName) {
+	private BlockAttachmentKey(boolean persistent, Supplier<String> debugName) {
+		this.persistent = persistent;
 		this.name = debugName;
+	}
+
+	/**
+	 * @param persistent Whether data associated with this key will remain when a {@link Block}'s attachment map is cleared.
+	 * @param debugName The name of this Block Attachment Key, shown in error messages.
+	 * @return a new Block Attachment Key.
+	 */
+	public static <T> BlockAttachmentKey<T> create(boolean persistent, Supplier<String> debugName) {
+		return new BlockAttachmentKey<>(persistent, debugName);
 	}
 
 	/**
@@ -35,14 +46,26 @@ public final class BlockAttachmentKey<T> {
 	 * @return a new Block Attachment Key.
 	 */
 	public static <T> BlockAttachmentKey<T> create(Supplier<String> debugName) {
-		return new BlockAttachmentKey<>(debugName);
+		return new BlockAttachmentKey<>(false, debugName);
+	}
+
+	/**
+	 * @param persistent Whether data associated with this key will remain when a {@link Block}'s attachment map is cleared.
+	 * @return a new Block Attachment Key.
+	 */
+	public static <T> BlockAttachmentKey<T> create(boolean persistent) {
+		return new BlockAttachmentKey<>(persistent, () -> "unnamed");
 	}
 
 	/**
 	 * @return a new Block Attachment Key.
 	 */
 	public static <T> BlockAttachmentKey<T> create() {
-		return new BlockAttachmentKey<>(() -> "unnamed");
+		return create(false);
+	}
+
+	public boolean persistent() {
+		return this.persistent;
 	}
 
 	@Override
