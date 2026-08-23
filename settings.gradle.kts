@@ -36,6 +36,16 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
     }
 }
 
+localPluginRepository(
+    "GradleHelper",
+    enabled = true
+)
+
+localPluginRepository(
+    "candlelight",
+    enabled = false
+)
+
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version("+")
     id("net.frozenblock.triangle.helper") version("+")
@@ -69,11 +79,6 @@ if (Constants.NEOFORGE) {
 }
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
-
-localPluginRepository(
-    "GradleHelper",
-    enabled = true
-)
 
 fun localPluginRepository(repo: String, enabled: Boolean = true) {
     if (!enabled) return
