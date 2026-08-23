@@ -168,8 +168,8 @@ subprojects {
                 includeGroup("maven.modrinth")
             }
         }
-        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
-            name = "SomethingCatchy (MehVahdJukaar)"
+        maven("https://maven.frozenblock.net/snapshot") { // Candlelight & Triangle
+            name = "FrozenBlock Snapshot"
         }
     }
 

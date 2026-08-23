@@ -16,10 +16,7 @@ pluginManagement {
         maven("https://jitpack.io") {
             name = "Jitpack"
         }
-        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
-            name = "SomethingCatchy (MehVahdJukaar)"
-        }
-        maven("https://maven.frozenblock.net/snapshot") {
+        maven("https://maven.frozenblock.net/snapshot") { // Candlelight & Triangle
             name = "FrozenBlock Snapshot"
         }
         mavenCentral()
