@@ -45,48 +45,35 @@ public abstract class FabricDataFixesInternals {
 
 	protected static final String DATA_VERSIONS_KEY = "_FabricDataVersions";
 
-    public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
+    public record DataFixerEntry(DataFixer dataFixer, int currentVersion, @Nullable String key) {}
+
+	static String storageKey(String modId, @Nullable String key) {
+		return key != null ? modId + '_' + key : modId;
+	}
 
     @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-    public static Optional<Integer> getModDataVersion(Dynamic<?> dynamic, String modId) {
+    public static Optional<Integer> getModDataVersion(Dynamic<?> dynamic, String modId, @Nullable String key) {
+		final String storageKey = storageKey(modId, key);
+
 		// LEGACY
-		final int legacyVersion = dynamic.get(modId + "_DataVersion").asInt(-1);
+		final int legacyVersion = dynamic.get(modId + "_DataVersion" + (key != null ? "_" + key : "")).asInt(-1);
 		if (legacyVersion != -1) return Optional.of(legacyVersion);
 
 		// GROUPED
-		final int version = dynamic.get(DATA_VERSIONS_KEY).get(modId).asInt(-1);
+		final int version = dynamic.get(DATA_VERSIONS_KEY).get(storageKey).asInt(-1);
 		return version != -1 ? Optional.of(version) : Optional.empty();
     }
 
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-	public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId) {
+	public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId, @Nullable String key) {
+		final String storageKey = storageKey(modId, key);
+
 		// LEGACY
-		final String legacyKey = modId + "_DataVersion";
+		final String legacyKey = modId + "_DataVersion" + (key != null ? "_" + key : "");
 		if (tag.contains(legacyKey)) return tag.getInt(legacyKey);
 
 		// GROUPED
-		return tag.getCompound(DATA_VERSIONS_KEY).flatMap(dataVersions -> dataVersions.getInt(modId));
-	}
-
-	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-	public static Optional<Integer> getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
-		// LEGACY
-		final int legacyVersion = dynamic.get(modId + "_DataVersion_Minecraft").asInt(-1);
-		if (legacyVersion != -1) return Optional.of(legacyVersion);
-
-		// GROUPED
-		final int version = dynamic.get(DATA_VERSIONS_KEY).get(modId + "_Minecraft").asInt(-1);
-		return version != -1 ? Optional.of(version) : Optional.empty();
-	}
-
-	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-	public static Optional<Integer> getModMinecraftDataVersion(CompoundTag tag, String modId) {
-		// LEGACY
-		final String legacyKey = modId + "_DataVersion_Minecraft";
-		if (tag.contains(legacyKey)) return tag.getInt(legacyKey);
-
-		// GROUPED
-		return tag.getCompound(DATA_VERSIONS_KEY).flatMap(dataVersions -> dataVersions.getInt(modId + "_Minecraft"));
+		return tag.getCompound(DATA_VERSIONS_KEY).flatMap(dataVersions -> dataVersions.getInt(storageKey));
 	}
 
     private static volatile FabricDataFixesInternals instance;
@@ -114,17 +101,12 @@ public abstract class FabricDataFixesInternals {
         return instance;
     }
 
-    public abstract void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer);
+    public abstract void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @Nullable String key, DataFixer dataFixer);
 
 	public abstract boolean isEmpty();
 
 	@Nullable
-    public abstract DataFixerEntry getFixerEntry(String modId);
-
-	public abstract void registerMinecraftFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer);
-
-	@Nullable
-	public abstract DataFixerEntry getMinecraftFixerEntry(String modId);
+    public abstract DataFixerEntry getFixerEntry(String modId, @Nullable String key);
 
     public abstract Schema createBaseSchema();
 

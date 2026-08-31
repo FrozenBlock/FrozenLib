@@ -48,7 +48,7 @@ public final class NoOpFabricDataFixesInternals extends FabricDataFixesInternals
     }
 
     @Override
-    public void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {}
+    public void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @Nullable String key, DataFixer dataFixer) {}
 
 	@Override
 	public boolean isEmpty() {
@@ -57,18 +57,9 @@ public final class NoOpFabricDataFixesInternals extends FabricDataFixesInternals
 
 	@Override
 	@Nullable
-    public DataFixerEntry getFixerEntry(String modId) {
+    public DataFixerEntry getFixerEntry(String modId, @Nullable String key) {
         return null;
     }
-
-	@Override
-	public void registerMinecraftFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {}
-
-	@Override
-	@Nullable
-	public DataFixerEntry getMinecraftFixerEntry(String modId) {
-		return null;
-	}
 
 	@Override
     public Schema createBaseSchema() {

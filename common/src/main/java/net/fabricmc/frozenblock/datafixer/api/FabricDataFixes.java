@@ -33,6 +33,7 @@ import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 
@@ -69,25 +70,25 @@ public class FabricDataFixes {
 		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
 		DataFixer dataFixer
 	) {
-        requireNonNull(modId, "modId cannot be null");
-        //noinspection ConstantConditions
-        checkArgument(currentVersion >= 0, "currentVersion must be positive");
-        requireNonNull(dataFixer, "dataFixer cannot be null");
-
-        if (isFrozen()) throw new IllegalStateException("Can't register data fixer after registry is frozen");
-        FabricDataFixesInternals.get().registerFixer(modId, currentVersion, dataFixer);
+        registerFixer(modId, currentVersion, null, dataFixer);
     }
 
 	/**
-	 * Registers a new data fixer for use with Minecraft version-specific datafixing.
+	 * Registers a new data fixer.
+	 * <p>
+	 * The optional {@code key} lets a single mod register more than one data fixer - for
+	 * example, one for its own data and another for a separate concern - each tracked under
+	 * its own saved data version.
 	 *
-	 * @param modId The mod identifier
-	 * @param currentVersion The current version of the mod's data
-	 * @param dataFixer The data fixer
+	 * @param modId          the mod identifier
+	 * @param currentVersion the current version of the mod's data
+	 * @param key            the optional key of the saved current version
+	 * @param dataFixer      the data fixer
 	 */
-	public static void registerMinecraftFixer(
+	public static void registerFixer(
 		String modId,
 		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+		@Nullable String key,
 		DataFixer dataFixer
 	) {
 		requireNonNull(modId, "modId cannot be null");
@@ -96,7 +97,7 @@ public class FabricDataFixes {
 		requireNonNull(dataFixer, "dataFixer cannot be null");
 
 		if (isFrozen()) throw new IllegalStateException("Can't register data fixer after registry is frozen");
-		FabricDataFixesInternals.get().registerMinecraftFixer(modId, currentVersion, dataFixer);
+		FabricDataFixesInternals.get().registerFixer(modId, currentVersion, key, dataFixer);
 	}
 
 	/**
@@ -109,23 +110,22 @@ public class FabricDataFixes {
 		String modId,
 		FabricDataFixerBuilder builder
 	) {
-		requireNonNull(modId, "modId cannot be null");
-		requireNonNull(builder, "data fixer builder cannot be null");
-
-		registerFixer(modId, builder.getDataVersion(), buildFixer(builder));
+		buildAndRegisterFixer(modId, null, builder);
 	}
 
 	/**
-	 * Builds and registers a new data fixer for use with Minecraft version-specific datafixing.
+	 * Builds and registers a new data fixer.
 	 *
 	 * @param modId The mod identifier
+	 * @param key The optional key of the saved current version
 	 * @param builder The data fixer builder
+	 * @see #registerFixer(String, int, String, DataFixer)
 	 */
-	public static void buildAndRegisterMinecraftFixer(String modId, FabricDataFixerBuilder builder) {
+	public static void buildAndRegisterFixer(String modId, @Nullable String key, FabricDataFixerBuilder builder) {
 		requireNonNull(modId, "modId cannot be null");
 		requireNonNull(builder, "data fixer builder cannot be null");
 
-		registerMinecraftFixer(modId, builder.getDataVersion(), buildFixer(builder));
+		registerFixer(modId, builder.getDataVersion(), key, buildFixer(builder));
 	}
 
 	/**
@@ -145,35 +145,33 @@ public class FabricDataFixes {
 	}
 
     /**
-     * Gets a mod's Minecraft version-specificdata fixer.
+     * Gets a mod's data fixer.
      *
      * @param modId The mod identifier
      * @return The mod's data fixer, or empty if the mod hasn't registered one
      */
     public static Optional<DataFixer> getFixer(String modId) {
-        requireNonNull(modId, "modId cannot be null");
-
-		final  FabricDataFixesInternals.DataFixerEntry entry = FabricDataFixesInternals.get().getFixerEntry(modId);
-        if (entry == null) return Optional.empty();
-        return Optional.of(entry.dataFixer());
+        return getFixer(modId, null);
     }
 
 	/**
-	 * Gets a mod's Minecraft version-specific data fixer.
+	 * Gets a mod's data fixer registered under the given key.
 	 *
 	 * @param modId The mod identifier
-	 * @return The mod's data fixer, or empty if the mod hasn't registered one
+	 * @param key The optional key the fixer was registered with
+	 * @return The mod's data fixer, or empty if the mod hasn't registered one under that key
+	 * @see #registerFixer(String, int, String, DataFixer)
 	 */
-	public static Optional<DataFixer> getMinecraftFixer(String modId) {
+	public static Optional<DataFixer> getFixer(String modId, @Nullable String key) {
 		requireNonNull(modId, "modId cannot be null");
 
-		final FabricDataFixesInternals.DataFixerEntry entry = FabricDataFixesInternals.get().getMinecraftFixerEntry(modId);
+		final FabricDataFixesInternals.DataFixerEntry entry = FabricDataFixesInternals.get().getFixerEntry(modId, key);
 		if (entry == null) return Optional.empty();
 		return Optional.of(entry.dataFixer());
 	}
 
 	/**
-	 * Gets a mod's Minecraft version-specific data version from a {@link Dynamic}.
+	 * Gets a mod's data version from a {@link Dynamic}.
 	 *
 	 * @param dynamic The dynamic
 	 * @param modId The mod identifier
@@ -182,26 +180,25 @@ public class FabricDataFixes {
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
 	public static int getModDataVersion(Dynamic<?> dynamic, String modId) {
-		requireNonNull(dynamic, "dynamic cannot be null");
-		requireNonNull(modId, "modId cannot be null");
-
-		return FabricDataFixesInternals.getModDataVersion(dynamic, modId).orElse(0);
+		return getModDataVersion(dynamic, modId, null);
 	}
 
     /**
-     * Gets a mod's Minecraft version-specific data version from a {@link Dynamic}.
+     * Gets a mod's data version from a {@link Dynamic}, for a fixer registered under the given key.
      *
      * @param dynamic The dynamic
      * @param modId The mod identifier
-     * @return The mod's data version, or {@code 0} if the dynamic has no data for that mod
+     * @param key The optional key the fixer was registered with
+     * @return The mod's data version, or {@code 0} if the dynamic has no data for that mod under that key
+     * @see #registerFixer(String, int, String, DataFixer)
      */
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE)
-    public static int getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
-        requireNonNull(dynamic, "tag cannot be null");
+    public static int getModDataVersion(Dynamic<?> dynamic, String modId, @Nullable String key) {
+        requireNonNull(dynamic, "dynamic cannot be null");
         requireNonNull(modId, "modId cannot be null");
 
-        return FabricDataFixesInternals.getModMinecraftDataVersion(dynamic, modId).orElse(0);
+        return FabricDataFixesInternals.getModDataVersion(dynamic, modId, key).orElse(0);
     }
 
     /**

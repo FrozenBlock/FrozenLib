@@ -23,8 +23,11 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import net.minecraft.nbt.CompoundTag;
@@ -39,45 +42,41 @@ import org.jetbrains.annotations.Range;
 @ApiStatus.Internal
 public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals {
     private final Schema latestVanillaSchema;
-    private Map<String, DataFixerEntry> modDataFixers;
-	private Map<String, DataFixerEntry> modMinecraftDataFixers;
+    private Map<String, List<DataFixerEntry>> modDataFixers;
     private boolean frozen;
 
     public FabricDataFixesInternalsImpl(Schema latestVanillaSchema) {
         this.latestVanillaSchema = latestVanillaSchema;
         this.modDataFixers = new Object2ReferenceOpenHashMap<>();
-		this.modMinecraftDataFixers = new Object2ReferenceOpenHashMap<>();
         this.frozen = false;
     }
 
     @Override
-    public synchronized void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {
-        if (this.modDataFixers.containsKey(modId)) throw new IllegalArgumentException("Mod '" + modId + "' already has a registered data fixer");
-        this.modDataFixers.put(modId, new DataFixerEntry(dataFixer, currentVersion));
+    public synchronized void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @Nullable String key, DataFixer dataFixer) {
+        final List<DataFixerEntry> entries = this.modDataFixers.computeIfAbsent(modId, id -> new ObjectArrayList<>());
+        if (entries.stream().anyMatch(entry -> Objects.equals(entry.key(), key))) {
+            throw new IllegalArgumentException(
+                "Mod '" + modId + "' already has a registered data fixer" + (key != null ? " with key '" + key + "'" : "")
+            );
+        }
+        entries.add(new DataFixerEntry(dataFixer, currentVersion, key));
     }
 
 	@Override
 	public boolean isEmpty() {
-		return this.modDataFixers.isEmpty() && this.modMinecraftDataFixers.isEmpty();
+		return this.modDataFixers.isEmpty();
 	}
 
 	@Override
 	@Nullable
-    public DataFixerEntry getFixerEntry(String modId) {
-        return modDataFixers.get(modId);
+    public DataFixerEntry getFixerEntry(String modId, @Nullable String key) {
+        final List<DataFixerEntry> entries = this.modDataFixers.get(modId);
+        if (entries == null) return null;
+        for (DataFixerEntry entry : entries) {
+            if (Objects.equals(entry.key(), key)) return entry;
+        }
+        return null;
     }
-
-	@Override
-	public synchronized void registerMinecraftFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {
-		if (this.modMinecraftDataFixers.containsKey(modId)) throw new IllegalArgumentException("Mod '" + modId + "' already has a registered Minecraft-version-based data fixer");
-		this.modMinecraftDataFixers.put(modId, new DataFixerEntry(dataFixer, currentVersion));
-	}
-
-	@Override
-	@Nullable
-	public DataFixerEntry getMinecraftFixerEntry(String modId) {
-		return modMinecraftDataFixers.get(modId);
-	}
 
 	@Override
     public Schema createBaseSchema() {
@@ -86,27 +85,17 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 
 	@Override
 	public void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function) {
-		// Minecraft fixer added by FrozenBlock
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModMinecraftDataVersion(dynamic, entry.getKey());
+		for (Map.Entry<String, List<DataFixerEntry>> modEntry : this.modDataFixers.entrySet()) {
+			for (DataFixerEntry entry : modEntry.getValue()) {
+				// Changed to Optional by FrozenBlock
+				final Optional<Integer> modDataVersion = getModDataVersion(dynamic, modEntry.getKey(), entry.key());
 
-			// Check implemented by FrozenBlock for performance.
-			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			if (modDataVersion.isEmpty()) continue;
+				// Check implemented by FrozenBlock for performance.
+				// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+				if (modDataVersion.isEmpty()) continue;
 
-			function.apply(entry.getKey() + "_Minecraft", modDataVersion.get());
-		}
-
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModDataVersion(dynamic, entry.getKey());
-
-			// Check implemented by FrozenBlock for performance.
-			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			if (modDataVersion.isEmpty()) continue;
-
-			function.apply(entry.getKey(), modDataVersion.get());
+				function.apply(storageKey(modEntry.getKey(), entry.key()), modDataVersion.get());
+			}
 		}
 	}
 
@@ -114,43 +103,24 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions) {
 		final boolean hasExistingDataVersions = !moddedDataVersions.isEmpty();
 
-		// Minecraft fixer added by FrozenBlock
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = hasExistingDataVersions
-				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey() + "_Minecraft"))
-				: getModMinecraftDataVersion(current, entry.getKey());
+		for (Map.Entry<String, List<DataFixerEntry>> modEntry : this.modDataFixers.entrySet()) {
+			for (DataFixerEntry entry : modEntry.getValue()) {
+				// Changed to Optional by FrozenBlock
+				final Optional<Integer> modDataVersion = hasExistingDataVersions
+					? Optional.ofNullable(moddedDataVersions.get().get(storageKey(modEntry.getKey(), entry.key())))
+					: getModDataVersion(current, modEntry.getKey(), entry.key());
 
-			// Check implemented by FrozenBlock for performance.
-			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			if (modDataVersion.isEmpty()) continue;
+				// Check implemented by FrozenBlock for performance.
+				// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+				if (modDataVersion.isEmpty()) continue;
 
-			final DataFixerEntry dataFixerEntry = entry.getValue();
-			current = dataFixerEntry.dataFixer().update(
-				type,
-				current,
-				modDataVersion.get(),
-				dataFixerEntry.currentVersion()
-			);
-		}
-
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = hasExistingDataVersions
-				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey()))
-				: getModDataVersion(current, entry.getKey());
-
-			// Check implemented by FrozenBlock for performance.
-			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			if (modDataVersion.isEmpty()) continue;
-
-			final DataFixerEntry dataFixerEntry = entry.getValue();
-			current = dataFixerEntry.dataFixer().update(
-				type,
-				current,
-				modDataVersion.get(),
-				dataFixerEntry.currentVersion()
-			);
+				current = entry.dataFixer().update(
+					type,
+					current,
+					modDataVersion.get(),
+					entry.currentVersion()
+				);
+			}
 		}
 
 		return current;
@@ -159,12 +129,11 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
     @Override
     public CompoundTag addModDataVersions(CompoundTag tag) {
         final CompoundTag dataVersions = tag.getCompoundOrEmpty(DATA_VERSIONS_KEY);
-        for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-            dataVersions.putInt(entry.getKey(), entry.getValue().currentVersion());
+        for (Map.Entry<String, List<DataFixerEntry>> modEntry : this.modDataFixers.entrySet()) {
+            for (DataFixerEntry entry : modEntry.getValue()) {
+                dataVersions.putInt(storageKey(modEntry.getKey(), entry.key()), entry.currentVersion());
+            }
         }
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			dataVersions.putInt(entry.getKey() + "_Minecraft", entry.getValue().currentVersion());
-		}
         tag.put(DATA_VERSIONS_KEY, dataVersions);
         return tag;
     }
@@ -172,11 +141,10 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 	@Override
 	public Dynamic<?> addModDataVersions(Dynamic<?> dynamic) {
 		Dynamic<?> dataVersions = dynamic.get(DATA_VERSIONS_KEY).orElseEmptyMap();
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			dataVersions = dataVersions.set(entry.getKey(), dataVersions.createInt(entry.getValue().currentVersion()));
-		}
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			dataVersions = dataVersions.set(entry.getKey() + "_Minecraft", dataVersions.createInt(entry.getValue().currentVersion()));
+		for (Map.Entry<String, List<DataFixerEntry>> modEntry : this.modDataFixers.entrySet()) {
+			for (DataFixerEntry entry : modEntry.getValue()) {
+				dataVersions = dataVersions.set(storageKey(modEntry.getKey(), entry.key()), dataVersions.createInt(entry.currentVersion()));
+			}
 		}
 		return dynamic.set(DATA_VERSIONS_KEY, dataVersions);
 	}
@@ -184,11 +152,10 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 	@Override
 	public void addModDataVersions(ValueOutput output) {
 		final ValueOutput dataVersions = output.child(DATA_VERSIONS_KEY);
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			dataVersions.putInt(entry.getKey(), entry.getValue().currentVersion());
-		}
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			dataVersions.putInt(entry.getKey() + "_Minecraft", entry.getValue().currentVersion());
+		for (Map.Entry<String, List<DataFixerEntry>> modEntry : this.modDataFixers.entrySet()) {
+			for (DataFixerEntry entry : modEntry.getValue()) {
+				dataVersions.putInt(storageKey(modEntry.getKey(), entry.key()), entry.currentVersion());
+			}
 		}
 	}
 
@@ -196,7 +163,6 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
     public void freeze() {
         if (!this.frozen) {
             this.modDataFixers = Collections.unmodifiableMap(this.modDataFixers);
-			this.modMinecraftDataFixers = Collections.unmodifiableMap(this.modMinecraftDataFixers);
         }
         this.frozen = true;
     }
