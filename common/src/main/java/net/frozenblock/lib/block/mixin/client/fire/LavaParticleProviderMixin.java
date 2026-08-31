@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.client.impl.fire.LavaParticleFireTypeInterface;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.LavaParticle;
 import net.minecraft.client.particle.Particle;

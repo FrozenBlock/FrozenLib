@@ -40,7 +40,7 @@ localPluginRepository(
 
 localPluginRepository(
     "candlelight",
-    enabled = false
+    enabled = true
 )
 
 plugins {

@@ -19,7 +19,7 @@ package net.frozenblock.lib.renderer.special;
 
 import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.resources.Identifier;

@@ -24,7 +24,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.modmenu.api.FrozenModMenuEntrypoint;
 import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

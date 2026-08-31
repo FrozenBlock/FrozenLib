@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.api;
 
 import java.util.List;
 import net.frozenblock.lib.platform.api.registry.DeferredBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;

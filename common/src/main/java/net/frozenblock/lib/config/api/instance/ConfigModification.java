@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
 /**

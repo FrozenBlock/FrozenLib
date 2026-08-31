@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.mixin.model;
 
 import net.fabricmc.fabric.impl.client.rendering.ModelExtensions;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.frozenblock.lib.renderer.model.ModelExtension;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;

@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.client.api.compass;
 
 import java.util.Optional;
 import java.util.UUID;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.GlobalPos;
 
 @ClientOnly

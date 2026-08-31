@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.mixin.builtinblockmodels;
 
 import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.block.BuiltInBlockModels;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

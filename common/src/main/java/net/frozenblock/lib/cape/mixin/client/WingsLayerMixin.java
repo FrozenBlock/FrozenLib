@@ -19,7 +19,7 @@ package net.frozenblock.lib.cape.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.ClientAsset;

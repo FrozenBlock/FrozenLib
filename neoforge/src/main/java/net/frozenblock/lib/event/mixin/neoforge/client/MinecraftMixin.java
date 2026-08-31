@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.mixin.neoforge.client;
 
 import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.jspecify.annotations.Nullable;

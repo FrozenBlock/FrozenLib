@@ -33,7 +33,7 @@ import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.platform.api.resource.FrozenLibResourceLoader;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;

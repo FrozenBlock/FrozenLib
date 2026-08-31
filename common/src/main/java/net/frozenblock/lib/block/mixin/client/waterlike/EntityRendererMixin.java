@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.mixin.client.waterlike;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;

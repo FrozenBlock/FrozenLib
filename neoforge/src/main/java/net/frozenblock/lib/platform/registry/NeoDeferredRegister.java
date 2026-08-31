@@ -120,8 +120,6 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 	private void runCallbacks(RegisterEvent event) {
 		if (!event.getRegistryKey().equals(this.inner.getRegistryKey())) return;
 		this.consumers.forEach((holder, also) -> also.accept(holder.get()));
-
-		for (var consumer : consumers.entrySet()) consumer.getValue().accept(consumer.getKey().get());
 	}
 
 	public static class Blocks extends NeoDeferredRegister<Block> implements DeferredRegister.Blocks {

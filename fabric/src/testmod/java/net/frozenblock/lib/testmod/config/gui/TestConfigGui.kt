@@ -27,7 +27,7 @@ import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper
 import net.frozenblock.lib.config.clothconfig.synced
 import net.frozenblock.lib.testmod.FrozenTestMain
 import net.frozenblock.lib.testmod.config.TestConfig
-import net.frozenblock.lib.platform.api.ClientOnly
+import net.mehvahdjukaar.candlelight.api.ClientOnly
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier

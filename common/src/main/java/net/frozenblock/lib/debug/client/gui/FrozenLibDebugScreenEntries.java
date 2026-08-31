@@ -18,7 +18,7 @@
 package net.frozenblock.lib.debug.client.gui;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.resources.Identifier;

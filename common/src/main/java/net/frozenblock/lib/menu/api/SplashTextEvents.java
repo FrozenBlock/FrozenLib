@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 
 @UtilityClass

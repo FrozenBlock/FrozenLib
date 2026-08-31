@@ -36,7 +36,7 @@ import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;

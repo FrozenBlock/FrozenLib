@@ -19,7 +19,7 @@ package net.frozenblock.lib.config.clothconfig.mixin.client;
 
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

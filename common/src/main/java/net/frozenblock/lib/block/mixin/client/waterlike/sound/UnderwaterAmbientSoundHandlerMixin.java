@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.mixin.client.waterlike.sound;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.UnderwaterAmbientSoundHandler;
 import org.spongepowered.asm.mixin.Final;

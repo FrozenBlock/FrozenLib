@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.particle.client.api;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.util.Mth;
 

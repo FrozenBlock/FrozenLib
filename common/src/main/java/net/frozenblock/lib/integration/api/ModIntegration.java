@@ -18,7 +18,7 @@
 package net.frozenblock.lib.integration.api;
 
 import net.frozenblock.lib.platform.ModLoader;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;

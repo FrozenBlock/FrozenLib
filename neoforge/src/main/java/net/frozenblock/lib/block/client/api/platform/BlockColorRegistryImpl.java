@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.client.api.platform;
 import java.util.Arrays;
 import java.util.List;
 import net.frozenblock.lib.platform.api.registry.DeferredBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.ModLoadingContext;

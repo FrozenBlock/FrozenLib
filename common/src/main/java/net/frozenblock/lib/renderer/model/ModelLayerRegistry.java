@@ -19,7 +19,7 @@ package net.frozenblock.lib.renderer.model;
 
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;

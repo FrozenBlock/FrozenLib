@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.frozenblock.lib.platform.api.registry.DeferredBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.world.level.block.Block;
 

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.renderer.model;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import org.jetbrains.annotations.Nullable;

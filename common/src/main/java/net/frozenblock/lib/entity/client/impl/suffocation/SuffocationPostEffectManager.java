@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState.Active;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.ScreenEffectSettings;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;

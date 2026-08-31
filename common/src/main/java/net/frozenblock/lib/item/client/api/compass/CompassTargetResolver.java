@@ -18,7 +18,7 @@
 package net.frozenblock.lib.item.client.api.compass;
 
 import java.util.Optional;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
 

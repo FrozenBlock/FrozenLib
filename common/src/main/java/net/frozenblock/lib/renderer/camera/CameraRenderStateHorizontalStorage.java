@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.renderer.camera;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.joml.Quaternionf;
 
 @ClientOnly

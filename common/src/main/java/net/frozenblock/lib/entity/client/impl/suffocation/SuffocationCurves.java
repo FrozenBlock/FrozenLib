@@ -21,7 +21,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.Keyframe;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.RelativeMode;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.util.Mth;
 
 @ClientOnly

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.mixin.camera;
 
 import net.frozenblock.lib.renderer.camera.CameraRenderStateHorizontalStorage;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;

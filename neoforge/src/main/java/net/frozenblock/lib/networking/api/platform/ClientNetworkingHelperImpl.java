@@ -18,7 +18,7 @@
 package net.frozenblock.lib.networking.api.platform;
 
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
