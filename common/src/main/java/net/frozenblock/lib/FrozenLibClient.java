@@ -39,7 +39,7 @@ import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
+import net.fabricmc.frozenblock.datafixer.impl.client.ClientFreezer;
 
 @ClientOnly
 public final class FrozenLibClient {

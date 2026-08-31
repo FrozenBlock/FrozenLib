@@ -16,14 +16,14 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.fabricmc.frozenblock.datafixer.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,16 +34,16 @@ public class NbtUtilsMixin {
 
 	@ModifyReturnValue(method = "addDataVersion(Lnet/minecraft/nbt/CompoundTag;I)Lnet/minecraft/nbt/CompoundTag;", at = @At("RETURN"))
 	private static CompoundTag addDataVersion(CompoundTag original) {
-		return QuiltDataFixesInternals.get().addModDataVersions(original);
+		return FabricDataFixesInternals.get().addModDataVersions(original);
 	}
 
 	@ModifyReturnValue(method = "addDataVersion(Lcom/mojang/serialization/Dynamic;I)Lcom/mojang/serialization/Dynamic;", at = @At("RETURN"))
 	private static Dynamic addDataVersion(Dynamic original) {
-		return QuiltDataFixesInternals.get().addModDataVersions(original);
+		return FabricDataFixesInternals.get().addModDataVersions(original);
 	}
 
 	@Inject(method = "addDataVersion(Lnet/minecraft/world/level/storage/ValueOutput;I)V", at = @At("TAIL"))
 	private static void addDataVersion(ValueOutput output, int version, CallbackInfo info) {
-		QuiltDataFixesInternals.get().addModDataVersions(output);
+		FabricDataFixesInternals.get().addModDataVersions(output);
 	}
 }

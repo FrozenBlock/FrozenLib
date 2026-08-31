@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
+package net.fabricmc.frozenblock.datafixer.impl;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
@@ -30,18 +30,18 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.EmptySchema;
+import net.fabricmc.frozenblock.datafixer.api.EmptySchema;
 
 /**
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
-public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
+public final class NoOpFabricDataFixesInternals extends FabricDataFixesInternals {
     private final Schema schema;
 
     private boolean frozen;
 
-    public NoOpQuiltDataFixesInternals() {
+    public NoOpFabricDataFixesInternals() {
         this.schema = new EmptySchema(0);
 
         this.frozen = false;

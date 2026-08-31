@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.fabricmc.frozenblock.datafixer.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -29,7 +29,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,7 +53,7 @@ public class SimpleRegionStorageMixin {
 		@Share("frozenLib$moddedDataVersions") LocalRef<Map<String, Integer>> moddedDataVersionsRef
 	) {
 		final Map<String, Integer> moddedDataVersions = new HashMap<>();
-		QuiltDataFixesInternals.get().forEachFixer(new Dynamic<>(NbtOps.INSTANCE, chunkTag), moddedDataVersions::put);
+		FabricDataFixesInternals.get().forEachFixer(new Dynamic<>(NbtOps.INSTANCE, chunkTag), moddedDataVersions::put);
 		moddedDataVersionsRef.set(moddedDataVersions);
 	}
 
@@ -65,7 +65,7 @@ public class SimpleRegionStorageMixin {
 		CompoundTag original,
 		@Share("frozenLib$moddedDataVersions") LocalRef<Map<String, Integer>> moddedDataVersionsRef
 	) {
-		final Dynamic<Tag> fixed = QuiltDataFixesInternals.get().updateWithAllFixers(
+		final Dynamic<Tag> fixed = FabricDataFixesInternals.get().updateWithAllFixers(
 			this.dataFixType.type,
 			new Dynamic<>(NbtOps.INSTANCE, original),
 			Optional.ofNullable(moddedDataVersionsRef.get())

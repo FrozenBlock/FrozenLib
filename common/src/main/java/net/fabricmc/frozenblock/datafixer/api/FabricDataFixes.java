@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -34,7 +34,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 
 /**
  * Provides methods to register custom {@link DataFixer}s.
@@ -42,7 +42,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesIntern
  * Modified to work on Fabric
  */
 @UtilityClass
-public class QuiltDataFixes {
+public class FabricDataFixes {
 
     /**
      * A "base" version {@code 0} schema, for use by all mods.
@@ -54,7 +54,7 @@ public class QuiltDataFixes {
     public static final BiFunction<Integer, Schema, Schema> BASE_SCHEMA = (version, parent) -> {
         checkArgument(version == 0, "version must be 0");
         checkArgument(parent == null, "parent must be null");
-        return QuiltDataFixesInternals.get().createBaseSchema();
+        return FabricDataFixesInternals.get().createBaseSchema();
     };
 
     /**
@@ -75,7 +75,7 @@ public class QuiltDataFixes {
         requireNonNull(dataFixer, "dataFixer cannot be null");
 
         if (isFrozen()) throw new IllegalStateException("Can't register data fixer after registry is frozen");
-        QuiltDataFixesInternals.get().registerFixer(modId, currentVersion, dataFixer);
+        FabricDataFixesInternals.get().registerFixer(modId, currentVersion, dataFixer);
     }
 
 	/**
@@ -96,7 +96,7 @@ public class QuiltDataFixes {
 		requireNonNull(dataFixer, "dataFixer cannot be null");
 
 		if (isFrozen()) throw new IllegalStateException("Can't register data fixer after registry is frozen");
-		QuiltDataFixesInternals.get().registerMinecraftFixer(modId, currentVersion, dataFixer);
+		FabricDataFixesInternals.get().registerMinecraftFixer(modId, currentVersion, dataFixer);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class QuiltDataFixes {
 	 */
 	public static void buildAndRegisterFixer(
 		String modId,
-		QuiltDataFixerBuilder builder
+		FabricDataFixerBuilder builder
 	) {
 		requireNonNull(modId, "modId cannot be null");
 		requireNonNull(builder, "data fixer builder cannot be null");
@@ -121,7 +121,7 @@ public class QuiltDataFixes {
 	 * @param modId The mod identifier
 	 * @param builder The data fixer builder
 	 */
-	public static void buildAndRegisterMinecraftFixer(String modId, QuiltDataFixerBuilder builder) {
+	public static void buildAndRegisterMinecraftFixer(String modId, FabricDataFixerBuilder builder) {
 		requireNonNull(modId, "modId cannot be null");
 		requireNonNull(builder, "data fixer builder cannot be null");
 
@@ -134,11 +134,11 @@ public class QuiltDataFixes {
 	 * @param builder The data fixer builder
 	 * @return The built data fixer.
 	 */
-	public static DataFixer buildFixer(QuiltDataFixerBuilder builder) {
+	public static DataFixer buildFixer(FabricDataFixerBuilder builder) {
 		requireNonNull(builder, "data fixer builder cannot be null");
 
 		Supplier<Executor> executor = () -> Executors.newSingleThreadExecutor(
-			new ThreadFactoryBuilder().setNameFormat("FrozenLib Quilt Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
+			new ThreadFactoryBuilder().setNameFormat("FrozenLib Fabric Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
 		);
 
 		return builder.build(DataFixTypes.TYPES_FOR_LEVEL_LIST, executor);
@@ -153,7 +153,7 @@ public class QuiltDataFixes {
     public static Optional<DataFixer> getFixer(String modId) {
         requireNonNull(modId, "modId cannot be null");
 
-		final  QuiltDataFixesInternals.DataFixerEntry entry = QuiltDataFixesInternals.get().getFixerEntry(modId);
+		final  FabricDataFixesInternals.DataFixerEntry entry = FabricDataFixesInternals.get().getFixerEntry(modId);
         if (entry == null) return Optional.empty();
         return Optional.of(entry.dataFixer());
     }
@@ -167,7 +167,7 @@ public class QuiltDataFixes {
 	public static Optional<DataFixer> getMinecraftFixer(String modId) {
 		requireNonNull(modId, "modId cannot be null");
 
-		final QuiltDataFixesInternals.DataFixerEntry entry = QuiltDataFixesInternals.get().getMinecraftFixerEntry(modId);
+		final FabricDataFixesInternals.DataFixerEntry entry = FabricDataFixesInternals.get().getMinecraftFixerEntry(modId);
 		if (entry == null) return Optional.empty();
 		return Optional.of(entry.dataFixer());
 	}
@@ -185,7 +185,7 @@ public class QuiltDataFixes {
 		requireNonNull(dynamic, "dynamic cannot be null");
 		requireNonNull(modId, "modId cannot be null");
 
-		return QuiltDataFixesInternals.getModDataVersion(dynamic, modId).orElse(0);
+		return FabricDataFixesInternals.getModDataVersion(dynamic, modId).orElse(0);
 	}
 
     /**
@@ -201,7 +201,7 @@ public class QuiltDataFixes {
         requireNonNull(dynamic, "tag cannot be null");
         requireNonNull(modId, "modId cannot be null");
 
-        return QuiltDataFixesInternals.getModMinecraftDataVersion(dynamic, modId).orElse(0);
+        return FabricDataFixesInternals.getModMinecraftDataVersion(dynamic, modId).orElse(0);
     }
 
     /**
@@ -211,6 +211,6 @@ public class QuiltDataFixes {
      */
     @Contract(pure = true)
     public static boolean isFrozen() {
-        return QuiltDataFixesInternals.get().isFrozen();
+        return FabricDataFixesInternals.get().isFrozen();
     }
 }

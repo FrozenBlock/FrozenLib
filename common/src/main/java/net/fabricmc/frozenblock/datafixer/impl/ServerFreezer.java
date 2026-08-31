@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
+package net.fabricmc.frozenblock.datafixer.impl;
 
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
@@ -27,9 +27,9 @@ public final class ServerFreezer {
 
     public static void onInitialize() {
         LifecycleEvents.SERVER_STARTING.register(server -> {
-            FrozenLibLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry is about to freeze", true);
-            QuiltDataFixesInternals.get().freeze();
-            FrozenLibLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry was frozen", true);
+            FrozenLibLogUtils.log("[Fabric DFU API] Serverside DataFixer Registry is about to freeze", true);
+            FabricDataFixesInternals.get().freeze();
+            FrozenLibLogUtils.log("[Fabric DFU API] Serverside DataFixer Registry was frozen", true);
         });
     }
 }

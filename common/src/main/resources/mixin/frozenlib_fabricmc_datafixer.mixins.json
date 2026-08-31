@@ -1,12 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8.5",
-  "package": "org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin",
+  "package": "net.fabricmc.frozenblock.datafixer.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
     "DataFixerUpperMixin",
     "DataFixTypesAccessor",
     "NbtUtilsMixin",
+    "SchemasMixin",
     "SimpleRegionStorageMixin"
   ],
   "client": [

@@ -76,7 +76,7 @@
     "mixin/frozenlib.levelgen.structure.mixins.json",
     "mixin/frozenlib.levelgen.surface.mixins.json",
 
-    "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
+    "mixin/frozenlib_fabricmc_datafixer.mixins.json",
     "mixin/frozenlib_quiltmc_registry.mixins.json",
     "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
   ],

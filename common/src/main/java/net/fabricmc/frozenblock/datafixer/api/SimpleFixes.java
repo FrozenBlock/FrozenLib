@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;

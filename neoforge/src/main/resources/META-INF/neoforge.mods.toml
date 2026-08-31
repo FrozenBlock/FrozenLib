@@ -77,7 +77,7 @@ config="mixin/frozenlib.networking.mixins.json"
 config="mixin/frozenlib.particle.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib_quiltmc_datafixerupper.mixins.json"
+config="mixin/frozenlib_fabricmc_datafixer.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib_quiltmc_registry.mixins.json"

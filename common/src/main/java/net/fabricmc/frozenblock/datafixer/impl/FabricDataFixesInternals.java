@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
+package net.fabricmc.frozenblock.datafixer.impl;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixUtils;
@@ -40,36 +40,58 @@ import net.minecraft.SharedConstants;
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
-public abstract class QuiltDataFixesInternals {
+public abstract class FabricDataFixesInternals {
     private static final Logger LOGGER = LogUtils.getLogger();
+
+	protected static final String DATA_VERSIONS_KEY = "_FabricDataVersions";
 
     public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
 
     @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
     public static Optional<Integer> getModDataVersion(Dynamic<?> dynamic, String modId) {
-		final int version = dynamic.get(modId + "_DataVersion").asInt(-1);
+		// LEGACY
+		final int legacyVersion = dynamic.get(modId + "_DataVersion").asInt(-1);
+		if (legacyVersion != -1) return Optional.of(legacyVersion);
+
+		// GROUPED
+		final int version = dynamic.get(DATA_VERSIONS_KEY).get(modId).asInt(-1);
 		return version != -1 ? Optional.of(version) : Optional.empty();
     }
 
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
 	public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId) {
-		return tag.getInt(modId + "_DataVersion");
+		// LEGACY
+		final String legacyKey = modId + "_DataVersion";
+		if (tag.contains(legacyKey)) return tag.getInt(legacyKey);
+
+		// GROUPED
+		return tag.getCompound(DATA_VERSIONS_KEY).flatMap(dataVersions -> dataVersions.getInt(modId));
 	}
 
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
 	public static Optional<Integer> getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
-		final int version = dynamic.get(modId + "_DataVersion_Minecraft").asInt(-1);
+		// LEGACY
+		final int legacyVersion = dynamic.get(modId + "_DataVersion_Minecraft").asInt(-1);
+		if (legacyVersion != -1) return Optional.of(legacyVersion);
+
+		// GROUPED
+		final int version = dynamic.get(DATA_VERSIONS_KEY).get(modId + "_Minecraft").asInt(-1);
 		return version != -1 ? Optional.of(version) : Optional.empty();
 	}
 
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
 	public static Optional<Integer> getModMinecraftDataVersion(CompoundTag tag, String modId) {
-		return tag.getInt(modId + "_DataVersion_Minecraft");
+		// LEGACY
+		final String legacyKey = modId + "_DataVersion_Minecraft";
+		if (tag.contains(legacyKey)) return tag.getInt(legacyKey);
+
+		// GROUPED
+		return tag.getCompound(DATA_VERSIONS_KEY).flatMap(dataVersions -> dataVersions.getInt(modId + "_Minecraft"));
 	}
 
-    private static QuiltDataFixesInternals instance;
+    private static volatile FabricDataFixesInternals instance;
 
-    public static QuiltDataFixesInternals get() {
+    public static synchronized FabricDataFixesInternals get() {
         if (instance != null) return  instance;
 
 		Schema latestVanillaSchema;
@@ -81,12 +103,12 @@ public abstract class QuiltDataFixesInternals {
 		}
 
 		if (latestVanillaSchema == null) {
-			LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
-			LOGGER.warn("[Quilt DFU API] or this Minecraft build is hosed.");
-			LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
-			instance = new NoOpQuiltDataFixesInternals();
+			LOGGER.warn("[Fabric DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
+			LOGGER.warn("[Fabric DFU API] or this Minecraft build is hosed.");
+			LOGGER.warn("[Fabric DFU API] Using no-op implementation.");
+			instance = new NoOpFabricDataFixesInternals();
 		} else {
-			instance = new QuiltDataFixesInternalsImpl(latestVanillaSchema);
+			instance = new FabricDataFixesInternalsImpl(latestVanillaSchema);
 		}
 
         return instance;

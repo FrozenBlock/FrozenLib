@@ -16,40 +16,40 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.types.templates.TypeTemplate;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
 import java.util.Map;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Range;
 
 /**
- * Represents a {@link Schema} that has no parent.
+ * Represents an empty {@link Schema}, having no parent and containing no type definitions.
  * <p>
  * Modified to work on Fabric
  */
-public class FirstSchema extends Schema {
+public final class EmptySchema extends FirstSchema {
     /**
-     * Creates a schema.
-     * @param versionKey Rhe data version key
+     * Constructs an empty schema.
+     *
+     * @param versionKey the data version key
      */
-    public FirstSchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
-        super(versionKey, null);
+    public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
+        super(versionKey);
     }
 
-    // all of these methods refer to this.parent without checking if its null
+    // Ensure the schema stays empty.
     @Override
-    public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes, Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
-	}
-
-    @Override
-    public Map<String, Supplier<TypeTemplate>> registerEntities(Schema schema) {
-        return Map.of();
+    public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public Map<String, Supplier<TypeTemplate>> registerBlockEntities(Schema schema) {
-        return Map.of();
+    protected Map<String, Type<?>> buildTypes() {
+        return Object2ObjectMaps.emptyMap();
     }
 }

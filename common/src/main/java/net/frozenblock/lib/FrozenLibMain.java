@@ -67,7 +67,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
+import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 
 public final class FrozenLibMain {
 

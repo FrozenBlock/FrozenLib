@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.fabricmc.frozenblock.datafixer.mixin;
 
 import com.mojang.datafixers.DSL;
 import net.minecraft.util.datafix.DataFixTypes;

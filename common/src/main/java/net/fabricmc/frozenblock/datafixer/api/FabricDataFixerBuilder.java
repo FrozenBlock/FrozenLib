@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
@@ -32,15 +32,15 @@ import org.jetbrains.annotations.Range;
  * <p>
  * Modified to work on Fabric
  */
-public class QuiltDataFixerBuilder extends DataFixerBuilder {
+public class FabricDataFixerBuilder extends DataFixerBuilder {
     protected final int dataVersion;
 
     /**
-     * Creates a new {@code QuiltDataFixerBuilder}.
+     * Creates a new {@code FabricDataFixerBuilder}.
      *
      * @param dataVersion The current data version
      */
-    public QuiltDataFixerBuilder(@Range(from = 0, to = Integer.MAX_VALUE) int dataVersion) {
+    public FabricDataFixerBuilder(@Range(from = 0, to = Integer.MAX_VALUE) int dataVersion) {
         super(dataVersion);
         this.dataVersion = dataVersion;
     }

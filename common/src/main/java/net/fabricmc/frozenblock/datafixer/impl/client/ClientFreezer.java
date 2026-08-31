@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client;
+package net.fabricmc.frozenblock.datafixer.impl.client;
 
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 
 @ClientOnly
 @ApiStatus.Internal
@@ -30,9 +30,9 @@ public final class ClientFreezer {
 
     public static void onSetupClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            FrozenLibLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
-            QuiltDataFixesInternals.get().freeze();
-            FrozenLibLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry was frozen", true);
+            FrozenLibLogUtils.log("[Fabric DFU API] Clientside DataFixer Registry is about to freeze", true);
+            FabricDataFixesInternals.get().freeze();
+            FrozenLibLogUtils.log("[Fabric DFU API] Clientside DataFixer Registry was frozen", true);
         });
     }
 }

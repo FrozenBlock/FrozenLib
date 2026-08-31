@@ -33,9 +33,9 @@
  *
  * public static void initialize(ModContainer mod) {
  *     // create a builder
- *     var builder = new QuiltDataFixerBuilder(CURRENT_DATA_VERSION);
+ *     var builder = new FabricDataFixerBuilder(CURRENT_DATA_VERSION);
  *     // add the "base" version 0 schema
- *     builder.addSchema(0, QuiltDataFixes.BASE_SCHEMA);
+ *     builder.addSchema(0, FabricDataFixes.BASE_SCHEMA);
  *     // add a schema for upgrading from version 0 to version 1
  *     Schema schemaV1 = builder.addSchema(1, IdentifierNormalizingSchema::new)
  *     // add fixes to the schema - for example, an item rename (identifier change)
@@ -47,13 +47,13 @@
  *     // register the fixer!
  *     // this will create either an unoptimized fixer or an optimized fixer,
  *     //  depending on the game configuration
- *     QuiltDataFixes.buildAndRegisterFixer(mod, builder);
+ *     FabricDataFixes.buildAndRegisterFixer(mod, builder);
  * }
  * </code></pre>
  *
- * @see org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes
- * @see org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes
- * @see org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder
+ * @see net.fabricmc.frozenblock.datafixer.api.FabricDataFixes
+ * @see net.fabricmc.frozenblock.datafixer.api.SimpleFixes
+ * @see net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;

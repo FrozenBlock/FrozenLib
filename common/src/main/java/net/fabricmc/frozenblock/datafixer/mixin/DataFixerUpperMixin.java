@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.fabricmc.frozenblock.datafixer.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DSL;
@@ -24,7 +24,7 @@ import com.mojang.datafixers.DataFixerUpper;
 import com.mojang.serialization.Dynamic;
 import java.util.Optional;
 import net.minecraft.util.datafix.DataFixers;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -37,6 +37,6 @@ public class DataFixerUpperMixin {
 	@ModifyReturnValue(method = "update", at = @At("RETURN"))
 	public <T> Dynamic<T> frozenLib$updateWithDataFixers(Dynamic<T> original, DSL.TypeReference type) {
 		if (DataFixerUpper.class.cast(this) != DataFixers.getDataFixer()) return original;
-		return QuiltDataFixesInternals.get().updateWithAllFixers(type, original, Optional.empty());
+		return FabricDataFixesInternals.get().updateWithAllFixers(type, original, Optional.empty());
 	}
 }
