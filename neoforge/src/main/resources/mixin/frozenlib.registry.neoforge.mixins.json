@@ -9,6 +9,8 @@
   "mixins": [
     "AxeItemAccessor",
     "AxeItemMixin",
-    "FireBlockAccessor"
+    "FireBlockAccessor",
+    "HoneycombItemMixin",
+    "WeatheringCopperMixin"
   ]
 }

@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
@@ -83,7 +83,7 @@ public class FrozenLibFeature {
 		return this;
 	}
 
-	public FrozenLibFeature makeAndSetHolder(FrozenHolder<Feature, Feature> feature) {
+	public FrozenLibFeature makeAndSetHolder(DeferredHolder<Feature, Feature> feature) {
 		return makeAndSetHolder(feature.get());
 	}
 }

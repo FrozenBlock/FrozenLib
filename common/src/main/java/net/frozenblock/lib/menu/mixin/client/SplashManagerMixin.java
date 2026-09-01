@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.menu.api.SplashTextEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;

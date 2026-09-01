@@ -19,7 +19,7 @@ package net.frozenblock.lib.music.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;

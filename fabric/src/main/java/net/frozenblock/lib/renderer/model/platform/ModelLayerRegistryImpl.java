@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.model.platform;
 
 import java.util.function.Supplier;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 

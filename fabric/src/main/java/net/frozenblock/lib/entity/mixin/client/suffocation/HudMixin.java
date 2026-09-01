@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.frozenblock.lib.entity.client.impl.suffocation.SuffocationBubbleRenderer;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;

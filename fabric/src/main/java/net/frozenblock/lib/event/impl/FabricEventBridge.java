@@ -34,6 +34,8 @@ public final class FabricEventBridge {
 		FabricEntityLifecycleEventsBridge.init();
 		FabricBlockEntityLifecycleEventsBridge.init();
 		FabricChunkLifecycleEventsBridge.init();
+		FabricCommonLifecycleEventsBridge.init();
+		FabricPlayerBlockBreakEventsBridge.init();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(instance -> {
 			LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.invoker().onServerAboutToStart(instance);

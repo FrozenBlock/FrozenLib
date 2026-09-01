@@ -59,7 +59,7 @@ import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;

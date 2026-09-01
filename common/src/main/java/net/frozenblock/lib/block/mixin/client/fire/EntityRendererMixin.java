@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.client.fire;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;

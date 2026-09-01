@@ -19,7 +19,7 @@ package net.frozenblock.lib.platform;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -29,27 +29,57 @@ import org.jetbrains.annotations.Nullable;
 public final class RegistryHelper {
 
 	@PlatformImpl
-	public static <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+	public static <T> DeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		throw new AssertionError();
 	}
 
 	@PlatformImpl
-	public static FrozenDeferredRegister.Items createDeferredItemsRegister(String namespace) {
+	public static DeferredRegister.Items createDeferredItemsRegister(String namespace) {
 		throw new AssertionError();
 	}
 
 	@PlatformImpl
-	public static FrozenDeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
+	public static DeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
 		throw new AssertionError();
 	}
 
 	@PlatformImpl
-	public static FrozenDeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
+	public static DeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
 		throw new AssertionError();
 	}
 
 	@PlatformImpl
-	public static FrozenDeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
+	public static DeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.ParticleTypes createDeferredParticleTypesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.MemoryModuleTypes createDeferredMemoryModuleTypesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.Activities createDeferredActivitiesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.SensorTypes createDeferredSensorTypesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static DeferredRegister.PoiTypes createDeferredPoiTypesRegister(String namespace) {
 		throw new AssertionError();
 	}
 

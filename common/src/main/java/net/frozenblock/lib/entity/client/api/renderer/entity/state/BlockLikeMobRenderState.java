@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.entity.client.api.renderer.entity.state;
 
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.level.block.Blocks;

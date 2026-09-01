@@ -19,7 +19,7 @@ package net.frozenblock.lib.music.mixin.client;
 
 import java.util.Map;
 import net.frozenblock.lib.music.impl.client.SoundEngineInterface;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.ChannelAccess;
 import net.minecraft.client.sounds.SoundEngine;

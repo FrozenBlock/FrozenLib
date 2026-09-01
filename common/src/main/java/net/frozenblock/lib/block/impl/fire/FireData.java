@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireEvents;
+import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
@@ -60,6 +61,19 @@ public record FireData(Holder<FireType> type) {
 
 	public static void trySet(Entity entity, Holder<FireType> type) {
 		if (entity == null || !canFireDataBeReplaced(entity, type) || entity.is(type.value().spreadSettings().cannotApplyToEntityTypes())) return;
+
+		ATTACHMENT.set(entity, new FireData(type));
+		FireEvents.AFTER_FIRE_TYPE_SET.invoker().onEntityFireTypeSet(entity, type);
+	}
+
+	public static void tryForceSetIfNotDefault(Entity entity, ResourceKey<FireType> type) {
+		entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+			.flatMap(registry -> registry.get(type))
+			.ifPresent(fireType -> tryForceSetIfNotDefault(entity, fireType));
+	}
+
+	public static void tryForceSetIfNotDefault(Entity entity, Holder<FireType> type) {
+		if (entity == null || type.is(FireTypes.DEFAULT)) return;
 
 		ATTACHMENT.set(entity, new FireData(type));
 		FireEvents.AFTER_FIRE_TYPE_SET.invoker().onEntityFireTypeSet(entity, type);

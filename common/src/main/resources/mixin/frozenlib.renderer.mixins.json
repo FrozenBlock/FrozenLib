@@ -7,13 +7,15 @@
     "defaultRequire": 1
   },
   "client": [
+    "BlockEntityRenderStateMixin",
     "FrozenLibRenderStateMixin",
     "RenderStateDataKeyMixin",
     "camera.CameraMixin",
     "camera.CameraRenderStateMixin",
-    "invert.ModelPartCubeMixin",
-    "invert.ModelPartMixin",
-    "invert.PartDefinitionMixin",
-    "invert.PolygonMixin"
+    "model.ModelMixin",
+    "model.invert.ModelPartCubeMixin",
+    "model.invert.ModelPartMixin",
+    "model.invert.PartDefinitionMixin",
+    "model.invert.PolygonMixin"
   ]
 }

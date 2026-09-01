@@ -43,7 +43,8 @@ public class BaseFireBlockMixin {
 			entity,
 			Optional.of(BaseFireBlock.class.cast(this)),
 			Optional.empty(),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(entity, fireType);
 	}

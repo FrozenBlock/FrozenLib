@@ -33,6 +33,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 
@@ -77,13 +78,17 @@ public record FireType(
 		float damage,
 		float vulnerableDamage,
 		HolderSet<EntityType<?>> vulnerableEntityTypes,
-		HolderSet<EntityType<?>> damageImmuneEntityTypes
+		HolderSet<EntityType<?>> damageImmuneEntityTypes,
+		HolderSet<MobEffect> vulnerableMobEffects,
+		HolderSet<MobEffect> damageImmuneMobEffects
 	) {
 		public static final Codec<DamageSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.FLOAT.optionalFieldOf("damage", 1F).forGetter(DamageSettings::damage),
 			Codec.FLOAT.optionalFieldOf("vulnerable_damage", 1F).forGetter(DamageSettings::vulnerableDamage),
 			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("vulnerable_entity_types", HolderSet.empty()).forGetter(DamageSettings::vulnerableEntityTypes),
-			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("damage_immune_entity_types", HolderSet.empty()).forGetter(DamageSettings::damageImmuneEntityTypes)
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("damage_immune_entity_types", HolderSet.empty()).forGetter(DamageSettings::damageImmuneEntityTypes),
+			RegistryCodecs.holderSet(Registries.MOB_EFFECT).optionalFieldOf("vulnerable_mob_effects", HolderSet.empty()).forGetter(DamageSettings::vulnerableMobEffects),
+			RegistryCodecs.holderSet(Registries.MOB_EFFECT).optionalFieldOf("damage_immune_mob_effects", HolderSet.empty()).forGetter(DamageSettings::damageImmuneMobEffects)
 		).apply(instance, DamageSettings::new));
 	}
 
@@ -92,14 +97,18 @@ public record FireType(
 		boolean spreadsFromIgniteEnchantments,
 		boolean replaceableByOtherFireTypes,
 		HolderSet<EntityType<?>> alwaysApplyToEntityTypes,
-		HolderSet<EntityType<?>> cannotApplyToEntityTypes
+		HolderSet<EntityType<?>> cannotApplyToEntityTypes,
+		HolderSet<MobEffect> alwaysApplyToMobEffects,
+		HolderSet<MobEffect> cannotApplyToMobEffects
 	) {
 		public static final Codec<SpreadSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.BOOL.optionalFieldOf("spreads_from_zombie_attack", true).forGetter(SpreadSettings::spreadsFromZombieAttack),
 			Codec.BOOL.optionalFieldOf("spreads_from_ignite_enchantments", true).forGetter(SpreadSettings::spreadsFromIgniteEnchantments),
 			Codec.BOOL.optionalFieldOf("replaceable_by_other_fire_types", true).forGetter(SpreadSettings::replaceableByOtherFireTypes),
 			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("always_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::alwaysApplyToEntityTypes),
-			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("cannot_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::cannotApplyToEntityTypes)
+			RegistryCodecs.holderSet(Registries.ENTITY_TYPE).optionalFieldOf("cannot_apply_to_entity_types", HolderSet.empty()).forGetter(SpreadSettings::cannotApplyToEntityTypes),
+			RegistryCodecs.holderSet(Registries.MOB_EFFECT).optionalFieldOf("always_apply_to_mob_effects", HolderSet.empty()).forGetter(SpreadSettings::alwaysApplyToMobEffects),
+			RegistryCodecs.holderSet(Registries.MOB_EFFECT).optionalFieldOf("cannot_apply_to_mob_effects", HolderSet.empty()).forGetter(SpreadSettings::cannotApplyToMobEffects)
 		).apply(instance, SpreadSettings::new));
 	}
 
@@ -120,6 +129,8 @@ public record FireType(
 		Optional<ParticleOptions> campfireCosySmokeParticle,
 		Optional<ParticleOptions> campfireSignalSmokeParticle,
 		Optional<ConfigPredicate> campfireSmokeEnabledWhen,
+		Optional<ParticleOptions> flameParticle,
+		Optional<ConfigPredicate> flameEnabledWhen,
 		Optional<ParticleOptions> lavaParticle,
 		Optional<ConfigPredicate> lavaEnabledWhen
 	) {
@@ -130,6 +141,8 @@ public record FireType(
 			ParticleTypes.CODEC.optionalFieldOf("campfire_cosy_smoke_particle").forGetter(ParticleSettings::campfireCosySmokeParticle),
 			ParticleTypes.CODEC.optionalFieldOf("campfire_signal_smoke_particle").forGetter(ParticleSettings::campfireSignalSmokeParticle),
 			ConfigPredicate.CODEC.optionalFieldOf("campfire_smoke_config_predicate").forGetter(ParticleSettings::campfireSmokeEnabledWhen),
+			ParticleTypes.CODEC.optionalFieldOf("flame_particle").forGetter(ParticleSettings::flameParticle),
+			ConfigPredicate.CODEC.optionalFieldOf("flame_config_predicate").forGetter(ParticleSettings::flameEnabledWhen),
 			ParticleTypes.CODEC.optionalFieldOf("lava_particle").forGetter(ParticleSettings::lavaParticle),
 			ConfigPredicate.CODEC.optionalFieldOf("lava_config_predicate").forGetter(ParticleSettings::lavaEnabledWhen)
 		).apply(instance, ParticleSettings::new));
@@ -162,6 +175,15 @@ public record FireType(
 			return this.campfireSmokeEnabled() ? this.campfireSignalSmokeParticle.get() : original;
 		}
 
+		public boolean flameEnabled() {
+			return this.flameEnabledWhen.map(ConfigPredicate::test).orElse(true);
+		}
+
+		public ParticleOptions getFlameParticle(ParticleOptions original) {
+			if (this.flameParticle.isEmpty()) return original;
+			return this.flameEnabled() ? this.flameParticle.get() : original;
+		}
+
 		public boolean lavaEnabled() {
 			return this.lavaEnabledWhen.map(ConfigPredicate::test).orElse(true);
 		}
@@ -181,12 +203,16 @@ public record FireType(
 		private float vulnerableDamage = 1F;
 		private HolderSet<EntityType<?>> vulnerableEntityTypes = HolderSet.empty();
 		private HolderSet<EntityType<?>> damageImmuneEntityTypes = HolderSet.empty();
+		private HolderSet<MobEffect> vulnerableMobEffects = HolderSet.empty();
+		private HolderSet<MobEffect> damageImmuneMobEffects = HolderSet.empty();
 		// SPREAD SETTINGS
 		private boolean spreadsFromZombieAttack = true;
 		private boolean spreadsFromIgniteEnchantments = true;
 		private boolean replaceableByOtherFireTypes = true;
 		private HolderSet<EntityType<?>> alwaysApplyToEntityTypes = HolderSet.empty();
 		private HolderSet<EntityType<?>> cannotApplyToEntityTypes = HolderSet.empty();
+		private HolderSet<MobEffect> alwaysApplyToMobEffects = HolderSet.empty();
+		private HolderSet<MobEffect> cannotApplyToMobEffects = HolderSet.empty();
 		// TEXTURES
 		private Identifier texture0 = null;
 		private Identifier texture1 = null;
@@ -197,6 +223,8 @@ public record FireType(
 		ParticleOptions campfireCosySmokeParticle = null;
 		ParticleOptions campfireSignalSmokeParticle = null;
 		ConfigPredicate campfireSmokeEnabledWhen = null;
+		ParticleOptions flameParticle = null;
+		ConfigPredicate flameEnabledWhen = null;
 		ParticleOptions lavaParticle = null;
 		ConfigPredicate lavaEnabledWhen = null;
 		// ENABLED
@@ -219,14 +247,16 @@ public record FireType(
 			return this;
 		}
 
-		public Builder vulnerableDamage(float vulnerableDamage, HolderSet<EntityType<?>> vulnerableEntityTypes) {
+		public Builder vulnerableDamage(float vulnerableDamage, HolderSet<EntityType<?>> vulnerableEntityTypes, HolderSet<MobEffect> vulnerableMobEffects) {
 			this.vulnerableDamage = vulnerableDamage;
 			this.vulnerableEntityTypes = vulnerableEntityTypes;
+			this.vulnerableMobEffects = vulnerableMobEffects;
 			return this;
 		}
 
-		public Builder damageImmuneEntityTypes(HolderSet<EntityType<?>> damageImmuneEntityTypes) {
+		public Builder damageImmune(HolderSet<EntityType<?>> damageImmuneEntityTypes, HolderSet<MobEffect> damageImmuneMobEffects) {
 			this.damageImmuneEntityTypes = damageImmuneEntityTypes;
+			this.damageImmuneMobEffects = damageImmuneMobEffects;
 			return this;
 		}
 
@@ -245,13 +275,15 @@ public record FireType(
 			return this;
 		}
 
-		public Builder alwaysApplyToEntityTypes(HolderSet<EntityType<?>> alwaysApplyToEntityTypes) {
+		public Builder alwaysApplyTo(HolderSet<EntityType<?>> alwaysApplyToEntityTypes, HolderSet<MobEffect> alwaysApplyToMobEffects) {
 			this.alwaysApplyToEntityTypes = alwaysApplyToEntityTypes;
+			this.alwaysApplyToMobEffects = alwaysApplyToMobEffects;
 			return this;
 		}
 
-		public Builder cannotApplyToEntityTypes(HolderSet<EntityType<?>> cannotApplyToEntityTypes) {
+		public Builder cannotApplyTo(HolderSet<EntityType<?>> cannotApplyToEntityTypes, HolderSet<MobEffect> cannotApplyToMobEffects) {
 			this.cannotApplyToEntityTypes = cannotApplyToEntityTypes;
+			this.cannotApplyToMobEffects = cannotApplyToMobEffects;
 			return this;
 		}
 
@@ -285,6 +317,17 @@ public record FireType(
 			return this;
 		}
 
+		public Builder flameParticle(ParticleOptions flameParticle) {
+			this.flameParticle = flameParticle;
+			return this;
+		}
+
+		public Builder flameParticle(ParticleOptions flameParticle, ConfigPredicate flameEnabledWhen) {
+			this.flameParticle(flameParticle);
+			this.flameEnabledWhen = flameEnabledWhen;
+			return this;
+		}
+
 		public Builder lavaParticle(ParticleOptions lavaParticle) {
 			this.lavaParticle = lavaParticle;
 			return this;
@@ -311,14 +354,18 @@ public record FireType(
 					this.damage,
 					this.vulnerableDamage,
 					this.vulnerableEntityTypes,
-					this.damageImmuneEntityTypes
+					this.damageImmuneEntityTypes,
+					this.vulnerableMobEffects,
+					this.damageImmuneMobEffects
 				),
 				new SpreadSettings(
 					this.spreadsFromZombieAttack,
 					this.spreadsFromIgniteEnchantments,
 					this.replaceableByOtherFireTypes,
 					this.alwaysApplyToEntityTypes,
-					this.cannotApplyToEntityTypes
+					this.cannotApplyToEntityTypes,
+					this.alwaysApplyToMobEffects,
+					this.cannotApplyToMobEffects
 				),
 				new TextureSettings(
 					Optional.ofNullable(this.texture0),
@@ -331,6 +378,8 @@ public record FireType(
 					Optional.ofNullable(this.campfireCosySmokeParticle),
 					Optional.ofNullable(this.campfireSignalSmokeParticle),
 					Optional.ofNullable(this.campfireSmokeEnabledWhen),
+					Optional.ofNullable(this.flameParticle),
+					Optional.ofNullable(this.flameEnabledWhen),
 					Optional.ofNullable(this.lavaParticle),
 					Optional.ofNullable(this.lavaEnabledWhen)
 				),

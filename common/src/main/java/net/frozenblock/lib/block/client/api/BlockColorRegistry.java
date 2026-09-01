@@ -18,8 +18,8 @@
 package net.frozenblock.lib.block.client.api;
 
 import java.util.List;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.platform.api.registry.DeferredBlock;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
@@ -29,35 +29,35 @@ import net.minecraft.world.level.FoliageColor;
 public final class BlockColorRegistry {
 
 	@PlatformImpl
-	public static void register(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
+	public static void register(List<BlockTintSource> tintSources, DeferredBlock<?>... blocks) {
 		throw new AssertionError();
 	}
 
-	public static void registerAverageFoliageTint(FrozenDeferredBlock<?>... blocks) {
+	public static void registerAverageFoliageTint(DeferredBlock<?>... blocks) {
 		register(List.of(BlockTintSources.foliage()), blocks);
 	}
 
-	public static void registerBirchFoliageTint(FrozenDeferredBlock<?>... blocks) {
+	public static void registerBirchFoliageTint(DeferredBlock<?>... blocks) {
 		register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_BIRCH)), blocks);
 	}
 
-	public static void registerEvergreenFoliageTint(FrozenDeferredBlock<?>... blocks) {
+	public static void registerEvergreenFoliageTint(DeferredBlock<?>... blocks) {
 		register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_EVERGREEN)), blocks);
 	}
 
-	public static void registerMangroveFoliageTint(FrozenDeferredBlock<?>... blocks) {
+	public static void registerMangroveFoliageTint(DeferredBlock<?>... blocks) {
 		register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_MANGROVE)), blocks);
 	}
 
-	public static void registerTints(int tint, FrozenDeferredBlock<?>... blocks) {
+	public static void registerTints(int tint, DeferredBlock<?>... blocks) {
 		register(List.of(BlockTintSources.constant(tint)), blocks);
 	}
 
-	public static void registerTints(BlockTintSource tintSource, FrozenDeferredBlock<?>... blocks) {
+	public static void registerTints(BlockTintSource tintSource, DeferredBlock<?>... blocks) {
 		register(List.of(tintSource), blocks);
 	}
 
-	public static void registerTints(List<BlockTintSource> tintSources, FrozenDeferredBlock<?>... blocks) {
+	public static void registerTints(List<BlockTintSource> tintSources, DeferredBlock<?>... blocks) {
 		register(tintSources, blocks);
 	}
 }

@@ -37,7 +37,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;

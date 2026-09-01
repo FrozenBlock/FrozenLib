@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.material.mixin;
 
 import java.util.List;
 import java.util.Set;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -36,7 +36,7 @@ public class MaterialRulePlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.contains("terrablender")) return FrozenBools.HAS_TERRABLENDER;
+		if (mixinClassName.contains("terrablender")) return FrozenLibConstants.HAS_TERRABLENDER;
 		return true;
 	}
 

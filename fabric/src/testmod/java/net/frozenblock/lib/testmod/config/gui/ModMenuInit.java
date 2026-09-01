@@ -19,16 +19,14 @@ package net.frozenblock.lib.testmod.config.gui;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.gui.screens.Screen;
 
 public class ModMenuInit implements ModMenuApi {
 
 	@Override
 	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		if (!FrozenBools.HAS_CLOTH_CONFIG) {
-			return screen -> screen;
-		}
+		if (!FrozenLibConstants.HAS_CLOTH_CONFIG) return screen -> screen;
 		return TestConfigGui::buildScreen;
 	}
 }

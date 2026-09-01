@@ -59,26 +59,24 @@ public final class SoundTypeCodecs {
 		SoundType::new
 	);
 
-	static <T> StreamCodec<RegistryFriendlyByteBuf, T> holderValue(
-		final ResourceKey<? extends Registry<T>> registryKey, final StreamCodec<? super RegistryFriendlyByteBuf, T> directCodec
-	) {
+	static <T> StreamCodec<RegistryFriendlyByteBuf, T> holderValue(ResourceKey<? extends Registry<T>> key, StreamCodec<? super RegistryFriendlyByteBuf, T> codec) {
 		return new StreamCodec<>() {
 			private static final int DIRECT_HOLDER_ID = 0;
 
 			private IdMap<Holder<T>> getRegistryOrThrow(final RegistryFriendlyByteBuf input) {
-				return input.registryAccess().lookupOrThrow(registryKey).asHolderIdMap();
+				return input.registryAccess().lookupOrThrow(key).asHolderIdMap();
 			}
 
 			@Override
 			public T decode(final RegistryFriendlyByteBuf input) {
-				int id = VarInt.read(input);
-				return id == DIRECT_HOLDER_ID ? directCodec.decode(input) : this.getRegistryOrThrow(input).byIdOrThrow(id - 1).value();
+				final int id = VarInt.read(input);
+				return id == DIRECT_HOLDER_ID ? codec.decode(input) : this.getRegistryOrThrow(input).byIdOrThrow(id - 1).value();
 			}
 
 			@Override
 			public void encode(final RegistryFriendlyByteBuf output, final T value) {
-				var lookup = output.registryAccess().lookupOrThrow(registryKey);
-				var holder = lookup.wrapAsHolder(value);
+				final var lookup = output.registryAccess().lookupOrThrow(key);
+				final var holder = lookup.wrapAsHolder(value);
 				switch (holder.kind()) {
 					case REFERENCE:
 						int id = this.getRegistryOrThrow(output).getIdOrThrow(holder);
@@ -86,7 +84,7 @@ public final class SoundTypeCodecs {
 						break;
 					case DIRECT:
 						VarInt.write(output, DIRECT_HOLDER_ID);
-						directCodec.encode(output, holder.value());
+						codec.encode(output, holder.value());
 				}
 			}
 		};

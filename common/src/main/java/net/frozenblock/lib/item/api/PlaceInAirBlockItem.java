@@ -35,6 +35,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * A {@link BlockItem} that can be placed midair.
+ */
 public class PlaceInAirBlockItem extends BlockItem {
 
 	public PlaceInAirBlockItem(Block block, Properties properties) {
@@ -57,7 +60,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 			playerPos,
 			placementPos,
 			entityPickBox,
-			entityx -> !entityx.isSpectator() && entityx.isPickable(),
+			entity -> !entity.isSpectator() && entity.isPickable(),
 			Mth.square(blockInteractionRange)
 		);
 

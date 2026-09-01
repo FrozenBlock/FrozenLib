@@ -21,7 +21,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.platform.api.ServerOnly;
+import net.mehvahdjukaar.candlelight.api.ServerOnly;
 
 @ServerOnly
 public final class FrozenLibServerFabric implements DedicatedServerModInitializer {

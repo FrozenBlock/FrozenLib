@@ -25,6 +25,7 @@ import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -37,68 +38,60 @@ public final class FireEvents {
 	/**
 	 * The event that is triggered when an {@link Entity} is catching on fire and the {@link FireType} is being selected.
 	 */
-	public static final Event<SelectFireType> SELECT_FIRE_TYPE = EventRegistry.createEnvironmentEvent(
-		SelectFireType.class,
-		(callbacks) -> (entity, sourceBlock, sourceEntity, sourceItem) -> {
-			ResourceKey<FireType> type = FireTypes.DEFAULT;
+	public static final Event<SelectFireType> SELECT_FIRE_TYPE = EventRegistry.createEnvironmentEvent(SelectFireType.class,
+		callbacks -> (entity, sourceBlock, sourceEntity, sourceItem, useMobEffects) -> {
+		ResourceKey<FireType> type = FireTypes.DEFAULT;
 
-			if (sourceBlock.isPresent()) {
-				final Optional<ResourceKey<FireType>> blockBasedType = FireTypes.getTypeKeyForBlock(entity.registryAccess(), sourceBlock.get(), false);
-				if (blockBasedType.isPresent()) type = blockBasedType.get();
-			}
-
-			if (sourceEntity.isPresent()) {
-				final Optional<ResourceKey<FireType>> sourceEntityBasedType = FireTypes.getTypeFromEntity(sourceEntity.get());
-				if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
-			}
-
-			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity);
-			if (entityBasedType.isPresent()) type = entityBasedType.get();
-
-			for (var callback : callbacks) {
-				final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem);
-				if (eventType != null) type = eventType;
-			}
-
-			return type;
+		if (sourceBlock.isPresent()) {
+			final Optional<ResourceKey<FireType>> blockBasedType = FireTypes.getTypeKeyForBlock(entity.registryAccess(), sourceBlock.get(), false);
+			if (blockBasedType.isPresent()) type = blockBasedType.get();
 		}
-	);
+
+		if (sourceEntity.isPresent()) {
+			final Optional<ResourceKey<FireType>> sourceEntityBasedType = FireTypes.getTypeFromEntity(sourceEntity.get());
+			if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
+		}
+
+		final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity, useMobEffects);
+		if (entityBasedType.isPresent()) type = entityBasedType.get();
+
+		for (var callback : callbacks) {
+			final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem, useMobEffects);
+			if (eventType != null) type = eventType;
+		}
+
+		return type;
+	});
 
 	/**
 	 * The event that is triggered after an {@link Entity} is caught on fire and the {@link FireType} is set.
 	 * <p>
 	 * Runs after {@link FireEvents#SELECT_FIRE_TYPE}.
 	 */
-	public static final Event<EntityFireTypeSet> AFTER_FIRE_TYPE_SET = EventRegistry.createEnvironmentEvent(
-		EntityFireTypeSet.class,
-		(callbacks) -> (entity, fireType) -> {
-			for (var callback : callbacks) callback.onEntityFireTypeSet(entity, fireType);
-		}
-	);
+	public static final Event<EntityFireTypeSet> AFTER_FIRE_TYPE_SET = EventRegistry.createEnvironmentEvent(EntityFireTypeSet.class,
+	callbacks -> (entity, fireType) -> {
+		for (var callback : callbacks) callback.onEntityFireTypeSet(entity, fireType);
+	});
 
 	/**
 	 * The event that is triggered when an {@link Entity} is burnt from fire lingering on them.
 	 */
-	public static final Event<EntityBurnTick> ON_ENTITY_BURN_TICK = EventRegistry.createEnvironmentEvent(
-		EntityBurnTick.class,
-		(callbacks) -> (entity, fireType) -> {
-			for (var callback : callbacks) callback.onEntityBurnTick(entity, fireType);
-		}
-	);
+	public static final Event<EntityBurnTick> ON_ENTITY_BURN_TICK = EventRegistry.createEnvironmentEvent(EntityBurnTick.class,
+		callbacks -> (entity, fireType) -> {
+		for (var callback : callbacks) callback.onEntityBurnTick(entity, fireType);
+	});
 
 	/**
 	 * The event that is triggered when {@link BaseFireBlock#getState(BlockGetter, BlockPos)} is called.
 	 * <p>
 	 * This event is used to alter the {@link BlockState} that gets placed (i.e., Soul and Copper Fire.)
 	 */
-	public static final Event<SelectFireBlockState> SELECT_FIRE_BLOCK_STATE = EventRegistry.createEnvironmentEvent(
-		SelectFireBlockState.class,
-		(callbacks) -> (level, belowPos, belowState) -> {
-			BlockState newState = null;
-			for (var callback : callbacks) newState = callback.selectFireBlockState(level, belowPos, belowState);
-			return newState;
-		}
-	);
+	public static final Event<SelectFireBlockState> SELECT_FIRE_BLOCK_STATE = EventRegistry.createEnvironmentEvent(SelectFireBlockState.class,
+		callbacks -> (level, belowPos, belowState) -> {
+		BlockState newState = null;
+		for (var callback : callbacks) newState = callback.selectFireBlockState(level, belowPos, belowState);
+		return newState;
+	});
 
 	/**
 	 * A functional interface representing a select fire type event.
@@ -111,9 +104,9 @@ public final class FireEvents {
 		 * @param sourceBlock the source {@link Block} of the fire, if available
 		 * @param sourceEntity the source {@link Entity} of the fire, if available
 		 * @param sourceItem the source {@link ItemStack} of the fire, if available
+		 * @param useMobEffects whether {@link MobEffect}s should be taken into account
 		 */
-		@Nullable
-		ResourceKey<FireType> selectFireType(Entity entity, Optional<Block> sourceBlock, Optional<Entity> sourceEntity, Optional<ItemStack> sourceItem);
+		ResourceKey<FireType> selectFireType(Entity entity, Optional<Block> sourceBlock, Optional<Entity> sourceEntity, Optional<ItemStack> sourceItem, boolean useMobEffects);
 	}
 
 	/**
@@ -156,4 +149,6 @@ public final class FireEvents {
 		@Nullable
 		BlockState selectFireBlockState(BlockGetter level, BlockPos belowPos, BlockState belowState);
 	}
+
+	private FireEvents() {}
 }

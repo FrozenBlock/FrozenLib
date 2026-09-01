@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:fireball",
+    "minecraft:small_fireball",
+    {
+      "id": "#frozenlib:blazes",
+      "required": false
+    }
+  ]
+}

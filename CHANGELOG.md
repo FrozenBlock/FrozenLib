@@ -73,6 +73,34 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `fallback`: The fallback value to use if the required Config Entry is not present.
 - Removed `BlockStateRenameFix` and `FrozenEntityRenameFix`, as Vanilla provides the same functionality.
 - Renamed `SplashTextAPI` to `SplashTextEvents` and migrated its functionality to events.
+- Added the following fields to Fire Types:
+  - Additions to `damage_settings`:
+    - `vulnerable_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity vulnerable to this Fire Type's damage.
+    - `damage_immune_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity immune to this Fire Type's damage.
+  - Additions to `spread_settings`:
+    - `always_apply_to_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make an Entity use this Fire Type if caught on fire.
+    - `cannot_apply_to_mob_effects`: A Mob Effect's id, a list of Mob Effect ids, or a Mob Effect Tag, defining which Mob Effects will make this Fire Type unable to be applied to an Entity.
+  - If conflicting Mob Effects are present, their total power will be summed by category (`always_apply` vs. `cannot_apply`) and the category with the highest power will be chosen.
+    - If their power is equal, the `cannot_apply` category will be chosen.
+- Fire Types now work as intended on Blazes, Fireballs, and Small Fireballs.
+- Added the `#frozenlib:on_fire` Entity Type Tag, defining which Entity Types are fire-like.
+  - Contains `#frozenlib:blazes`, `minecraft:fireball`, and `minecraft:small_fireball` by default.
+  - Entities in this Tag will:
+    - Set their Fire Type upon spawning, instead of waiting to be set on fire.
+    - Not remove their attached Fire Type if their `remainingFireTicks` field is zero or less, unlike other entities.
+- Added the `#frozenlib:spawner` Item Tag, used to define which Items should display the `Interact with Spawn Egg: Sets Mob Type` tooltip.
+- Added the `frozenlib:damage` Consume Effect Type, with the following format:
+  - `amount`: How much damage (must be above 0) to inflict upon the user.
+  - `sound` (Optional): The id of the Sound to play upon damaging the user.
+  - `type`: The id of the Damage Type to damage the user with.
+- Removed `DamageOnUseItem` and `DamageOnUseBlockItem`, as their functionality has been superseded by the `frozenlib:damage` Consume Effect Type.
+- Added Block Attachments, allowing data to be injected into Blocks for quick retrieval.
+  - Only the `REGISTER` event in `BlockAttachmentEvents` should be used to attach new data to Blocks.
+  - Are cleared each time Tags are loaded/reloaded.
+    - The `REGISTER` event is called whenever this occurs, as to keep attachments that may depend on Tags up-to-date.
+- Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` and `BlockTickRegistry` classes.
+  - `BlockTickEvents` provides events that trigger regardless of the Block.
+  - `BlockTickRegistry` uses the new Block Attachment system, and provides a simple way to add new Block-specific behavior.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+

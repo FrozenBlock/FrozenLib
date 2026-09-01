@@ -52,7 +52,8 @@ public class WitherSkeletonMixin {
 			arrow,
 			Optional.empty(),
 			Optional.of(WitherSkeleton.class.cast(this)),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(arrow, fireType);
 	}

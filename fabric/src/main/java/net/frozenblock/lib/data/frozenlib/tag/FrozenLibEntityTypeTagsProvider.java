@@ -44,5 +44,9 @@ public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.En
 
 		this.tag(FrozenLibEntityTypeTags.GHOST_LIKE)
 			.add(EntityTypeIds.VEX);
+
+		this.tag(FrozenLibEntityTypeTags.ON_FIRE)
+			.add(EntityTypeIds.FIREBALL, EntityTypeIds.SMALL_FIREBALL)
+			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
 	}
 }

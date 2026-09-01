@@ -44,7 +44,8 @@ public class AbstractArrowMixin {
 			hitResult.getEntity(),
 			Optional.empty(),
 			Optional.of(AbstractArrow.class.cast(this)),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(hitResult.getEntity(), fireType);
 	}

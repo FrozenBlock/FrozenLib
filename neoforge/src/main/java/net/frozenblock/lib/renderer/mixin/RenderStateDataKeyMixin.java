@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.util.context.ContextKey;
 import net.neoforged.neoforge.client.renderstate.BaseRenderState;
 import org.jspecify.annotations.Nullable;

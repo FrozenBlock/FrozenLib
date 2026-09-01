@@ -18,7 +18,7 @@
 package net.frozenblock.lib.entity.client.impl.suffocation;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -31,6 +31,8 @@ import net.minecraft.client.Minecraft;
 @ClientOnly
 @UtilityClass
 public final class SuffocationPostEffectManager {
+	// FIXME: implement on 26.3
+
 	public static void tick(Minecraft minecraft) {}
 
 	public static void reset() {}

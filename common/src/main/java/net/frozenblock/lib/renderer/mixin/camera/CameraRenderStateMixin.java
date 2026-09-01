@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.renderer.mixin.camera;
 
-import net.frozenblock.lib.renderer.impl.CameraRenderStateInterface;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.renderer.camera.CameraRenderStateHorizontalStorage;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
 @Mixin(CameraRenderState.class)
-public class CameraRenderStateMixin implements CameraRenderStateInterface {
+public class CameraRenderStateMixin implements CameraRenderStateHorizontalStorage {
 
 	@Unique
 	private Quaternionf frozenLib$horizontalOrientation = new Quaternionf();

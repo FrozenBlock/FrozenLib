@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -47,7 +47,7 @@ public class FrozenLibTreeFeature {
 	) {
 		this.feature = new FrozenLibFeature(key);
 		this.featureWithLitter = new FrozenLibFeature(key.withSuffix("_leaf_litter"));
-		this.litterDecorators = FrozenBools.IS_DATAGEN ? new ArrayList<>() : null;
+		this.litterDecorators = FrozenLibConstants.IS_DATAGEN ? new ArrayList<>() : null;
 		if (this.litterDecorators == null) return;
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesA, radiusA, heightA, 3));
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesB, radiusB, heightB, 4));

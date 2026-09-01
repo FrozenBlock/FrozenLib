@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.client.waterlike.sound;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.resources.sounds.BubbleColumnAmbientSoundHandler;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.state.BlockState;

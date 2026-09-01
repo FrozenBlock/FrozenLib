@@ -24,7 +24,7 @@ import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 

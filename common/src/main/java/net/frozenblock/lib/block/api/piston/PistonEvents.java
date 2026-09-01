@@ -38,58 +38,50 @@ public final class PistonEvents {
 	/**
 	 * The event that is triggered to determine whether a {@link Block} with a {@link BlockEntity} can be pushed by a Piston.
 	 */
-	public static final Event<DetermineBlockEntityPushResult> DETERMINE_BLOCK_ENTITY_PUSH_RESULT = EventRegistry.createEnvironmentEvent(
-		DetermineBlockEntityPushResult.class,
-		(callbacks) -> (state, direction) -> {
-			for (var callback : callbacks) {
-				final PushResult newResult = callback.determineBlockEntityPushResult(state, direction);
-				if (newResult != PushResult.PASS) return newResult;
-			}
-			return PushResult.PASS;
+	public static final Event<DetermineBlockEntityPushResult> DETERMINE_BLOCK_ENTITY_PUSH_RESULT = EventRegistry.createEnvironmentEvent(DetermineBlockEntityPushResult.class,
+		callbacks -> (state, direction) -> {
+		for (var callback : callbacks) {
+			final PushResult newResult = callback.determineBlockEntityPushResult(state, direction);
+			if (newResult != PushResult.PASS) return newResult;
 		}
-	);
+		return PushResult.PASS;
+	});
 
 	/**
 	 * The event that is triggered to determine whether a {@link Block} is considered sticky when pushed by a Piston.
 	 * <p>
 	 * Be sure to use {@link #TRY_STICK_BLOCKS_TOGETHER} to determine when {@link Block}s stick to each other, otherwise this event will not result in the intended behavior.
 	 */
-	public static final Event<DetermineBlockStickiness> DETERMINE_BLOCK_STICKINESS = EventRegistry.createEnvironmentEvent(
-		DetermineBlockStickiness.class,
-		(callbacks) -> (state, direction) -> {
-			for (var callback : callbacks) {
-				final StickyResult newResult = callback.determineBlockStickiness(state, direction);
-				if (newResult != StickyResult.PASS) return newResult;
-			}
-			return StickyResult.PASS;
+	public static final Event<DetermineBlockStickiness> DETERMINE_BLOCK_STICKINESS = EventRegistry.createEnvironmentEvent(DetermineBlockStickiness.class,
+		callbacks -> (state, direction) -> {
+		for (var callback : callbacks) {
+			final StickyResult newResult = callback.determineBlockStickiness(state, direction);
+			if (newResult != StickyResult.PASS) return newResult;
 		}
-	);
+		return StickyResult.PASS;
+	});
 
 	/**
 	 * The event that is triggered to determine whether a {@link Block} will stick to another {@link Block} when pushed by a Piston.
 	 * <p>
 	 * Be sure to use {@link #DETERMINE_BLOCK_STICKINESS} to enable stickiness first, otherwise this event will not result in the intended behavior.
 	 */
-	public static final Event<TryStickBlocksTogether> TRY_STICK_BLOCKS_TOGETHER = EventRegistry.createEnvironmentEvent(
-		TryStickBlocksTogether.class,
-		(callbacks) -> (previousState, nextState, direction) -> {
-			for (var callback : callbacks) {
-				final StickTogetherResult newResult = callback.tryStickBlocksTogether(previousState, nextState, direction);
-				if (newResult != StickTogetherResult.PASS) return newResult;
-			}
-			return StickTogetherResult.PASS;
+	public static final Event<TryStickBlocksTogether> TRY_STICK_BLOCKS_TOGETHER = EventRegistry.createEnvironmentEvent(TryStickBlocksTogether.class,
+		callbacks -> (previousState, nextState, direction) -> {
+		for (var callback : callbacks) {
+			final StickTogetherResult newResult = callback.tryStickBlocksTogether(previousState, nextState, direction);
+			if (newResult != StickTogetherResult.PASS) return newResult;
 		}
-	);
+		return StickTogetherResult.PASS;
+	});
 
 	/**
 	 * The event that is triggered when a {@link PistonMovingBlockEntity} sets its held block in the level.
 	 */
-	public static final Event<OnMovingBlockSet> ON_MOVING_BLOCK_SET = EventRegistry.createEnvironmentEvent(
-		OnMovingBlockSet.class,
-		(callbacks) -> (level, pos, state, pistonMovingBlockEntity) -> {
-			for (var callback : callbacks) callback.onMovingBlockSet(level, pos, state, pistonMovingBlockEntity);
-		}
-	);
+	public static final Event<OnMovingBlockSet> ON_MOVING_BLOCK_SET = EventRegistry.createEnvironmentEvent(OnMovingBlockSet.class,
+		callbacks -> (level, pos, state, pistonMovingBlockEntity) -> {
+		for (var callback : callbacks) callback.onMovingBlockSet(level, pos, state, pistonMovingBlockEntity);
+	});
 
 	/**
 	 * The event that is triggered when {@code addBlockLine} returns {@code false} from the {@link PistonStructureResolver#resolve()} method.
@@ -100,12 +92,10 @@ public final class PistonEvents {
 	 * <p>
 	 * I do know this sounds confusing. An example of this can be found in the {@code Drill} {@link Block} from {@code Netherier Nether}.
 	 */
-	public static final Event<OnPushFail> ON_PUSH_FAIL = EventRegistry.createEnvironmentEvent(
-		OnPushFail.class,
-		(callbacks) -> (level, pos, state, direction) -> {
-			for (var callback : callbacks) callback.onPushFail(level, pos, state, direction);
-		}
-	);
+	public static final Event<OnPushFail> ON_PUSH_FAIL = EventRegistry.createEnvironmentEvent(OnPushFail.class,
+		callbacks -> (level, pos, state, direction, extending) -> {
+		for (var callback : callbacks) callback.onPushFail(level, pos, state, direction, extending);
+	});
 
 	/**
 	 * A functional interface representing a determine Block Entity push result event.
@@ -198,8 +188,9 @@ public final class PistonEvents {
 		 * @param pos the {@link BlockPos} of the block that failed to push
 		 * @param state the {@link BlockState} of the block that failed to push
 		 * @param direction the {@link Direction} of the attempted push
+		 * @param extending whether the Piston was extending or retracting.
 		 */
-		void onPushFail(Level level, BlockPos pos, BlockState state, Direction direction);
+		void onPushFail(Level level, BlockPos pos, BlockState state, Direction direction, boolean extending);
 	}
 
 	public enum PushResult {

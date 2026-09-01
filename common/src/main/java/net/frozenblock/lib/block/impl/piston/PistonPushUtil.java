@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.impl.piston;
 
 import net.frozenblock.lib.block.api.piston.PistonEvents;
-import net.frozenblock.lib.tag.api.ConventionalTags;
+import net.frozenblock.lib.tag.api.ConventionalBlockTags;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -108,7 +108,7 @@ public class PistonPushUtil {
 	public static void init() {
 		// CHEST
 		PistonEvents.DETERMINE_BLOCK_STICKINESS.register((state, direction) -> {
-			if (!state.is(ConventionalTags.chestsBlockTag())) return PistonEvents.StickyResult.PASS;
+			if (!state.is(ConventionalBlockTags.CHESTS)) return PistonEvents.StickyResult.PASS;
 			return isBlockEntityPushableSuccess(state, direction) ? PistonEvents.StickyResult.SUCCESS : PistonEvents.StickyResult.PASS;
 		});
 		PistonEvents.TRY_STICK_BLOCKS_TOGETHER.register(((previousState, nextState, direction) -> {
@@ -127,7 +127,7 @@ public class PistonPushUtil {
 
 	@ApiStatus.Internal
 	public static boolean canChestsStick(BlockState state1, BlockState state2, Direction direction) {
-		if (!state1.is(ConventionalTags.chestsBlockTag()) || !state2.is(ConventionalTags.chestsBlockTag())) return false;
+		if (!state1.is(ConventionalBlockTags.CHESTS) || !state2.is(ConventionalBlockTags.CHESTS)) return false;
 		if (!isBlockEntityPushableSuccess(state1, direction) || !isBlockEntityPushableSuccess(state2, direction)) return false;
 
 		final ChestType chest1Type = state1.getValueOrElse(BlockStateProperties.CHEST_TYPE, ChestType.SINGLE);

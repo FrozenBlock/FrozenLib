@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.api;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;

@@ -33,7 +33,7 @@ import me.shedaniel.clothconfig2.impl.builders.SelectorBuilder;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
 @ClientOnly

@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.fabricmc.frozenblock.datafixer.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "DataFixerUpperMixin",
+    "DataFixTypesAccessor",
+    "NbtUtilsMixin",
+    "RegionStorageUpgraderMixin",
+    "SchemasMixin",
+    "SimpleRegionStorageMixin",
+    "fixes.LegacyAbstractBlockPropertyFixMixin",
+    "fixes.LegacyBlockRenameFixMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

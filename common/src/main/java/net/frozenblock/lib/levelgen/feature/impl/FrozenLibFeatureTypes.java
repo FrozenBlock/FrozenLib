@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.levelgen.feature.impl;
 
+import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchLessBordersFeature;
@@ -32,15 +33,16 @@ import net.frozenblock.lib.levelgen.feature.api.feature.UnderwaterVegetationPatc
 import net.frozenblock.lib.levelgen.feature.api.feature.VegetationPatchWithEdgeDecorationFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.NoisePathFeature;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class FrozenLibFeatureTypes {
 
 	public static void init() {
-		final var register = FrozenDeferredRegister.create(
+		final DeferredRegister<MapCodec<? extends Feature>> register = DeferredRegister.create(
 			Registries.FEATURE_TYPE,
 			FrozenLibConstants.MOD_ID
 		);

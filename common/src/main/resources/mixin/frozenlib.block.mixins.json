@@ -7,6 +7,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "attachment.BlockBehaviourMixin",
     "beacon.BeaconBlockEntityMixin",
     "blockentity.BlockEntityTypeMixin",
     "clipgroup.BlockGetterMixin",
@@ -14,12 +15,16 @@
     "dispenser.ShearsDispenseItemBehaviorMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
+    "fire.AbstractHurtingProjectileMixin",
     "fire.BaseFireBlockMixin",
+    "fire.BlazeAttackGoalMixin",
+    "fire.BlazeMixin",
     "fire.CampfireBlockMixin",
     "fire.ConversionTypeMixin",
     "fire.EntityMixin",
     "fire.IgniteMixin",
     "fire.LivingEntityMixin",
+    "fire.MobMixin",
     "fire.SmallFireballMixin",
     "fire.WitherSkeletonMixin",
     "fire.ZombieMixin",
@@ -27,10 +32,12 @@
     "modification.BlocksMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
+    "piston.PistonStructureResolverMixin",
     "piston.lectern.LecternBlockEntityMixin",
     "piston.shelf.ShelfBlockMixin",
     "piston.shelf.ShelfBlockUnpowerOnMoveMixin",
-    "piston.PistonStructureResolverMixin",
+    "registry.BlockBehaviourAccessor",
+    "registry.BlockStateBaseMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",
@@ -57,6 +64,7 @@
     "client.fire.TorchBlockMixin",
     "client.fire.WallTorchBlockMixin",
     "client.piston.PistonHeadRendererMixin",
+    "client.tick.ClientLevelMixin",
     "client.waterlike.ClientLevelMixin",
     "client.waterlike.EntityRendererMixin",
     "client.waterlike.MultiPlayerGameModeMixin",
@@ -65,7 +73,6 @@
     "client.waterlike.fog.WaterFogEnvironmentMixin",
     "client.waterlike.sound.BubbleColumnAmbientSoundHandlerMixin",
     "client.waterlike.sound.LocalPlayerMixin",
-    "client.waterlike.sound.UnderwaterAmbientSoundHandlerMixin",
-    "client.tick.ClientLevelMixin"
+    "client.waterlike.sound.UnderwaterAmbientSoundHandlerMixin"
   ]
 }

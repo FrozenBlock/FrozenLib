@@ -1,0 +1,159 @@
+/*
+ * Copyright (C) 2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.tag.api;
+
+import lombok.experimental.UtilityClass;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+
+@UtilityClass
+public final class ConventionalBlockTags {
+	public static final TagKey<Block> STONES = bind("stones");
+	public static final TagKey<Block> COBBLESTONES = bind("cobblestones");
+	public static final TagKey<Block> DEEPSLATE_COBBLESTONES = bind("cobblestones/deepslate");
+	public static final TagKey<Block> INFESTED_COBBLESTONES = bind("cobblestones/infested");
+	public static final TagKey<Block> MOSSY_COBBLESTONES = bind("cobblestones/mossy");
+	public static final TagKey<Block> NORMAL_COBBLESTONES = bind("cobblestones/normal");
+	public static final TagKey<Block> NETHERRACKS = bind("netherracks");
+	public static final TagKey<Block> END_STONES = bind("end_stones");
+	public static final TagKey<Block> GRAVELS = bind("gravels");
+	public static final TagKey<Block> OBSIDIANS = bind("obsidians");
+	public static final TagKey<Block> NORMAL_OBSIDIANS = bind("obsidians/normal");
+	public static final TagKey<Block> CRYING_OBSIDIANS = bind("obsidians/crying");
+	public static final TagKey<Block> FROGLIGHTS = bind("froglights");
+	public static final TagKey<Block> ORES = bind("ores");
+	public static final TagKey<Block> COAL_ORES = bind("ores/coal");
+	public static final TagKey<Block> COPPER_ORES = bind("ores/copper");
+	public static final TagKey<Block> DIAMOND_ORES = bind("ores/diamond");
+	public static final TagKey<Block> EMERALD_ORES = bind("ores/emerald");
+	public static final TagKey<Block> GOLD_ORES = bind("ores/gold");
+	public static final TagKey<Block> IRON_ORES = bind("ores/iron");
+	public static final TagKey<Block> LAPIS_ORES = bind("ores/lapis");
+	public static final TagKey<Block> NETHERITE_SCRAP_ORES = bind("ores/netherite_scrap");
+	public static final TagKey<Block> QUARTZ_ORES = bind("ores/quartz");
+	public static final TagKey<Block> REDSTONE_ORES = bind("ores/redstone");
+	public static final TagKey<Block> BARRELS = bind("barrels");
+	public static final TagKey<Block> WOODEN_BARRELS = bind("barrels/wooden");
+	public static final TagKey<Block> BOOKSHELVES = bind("bookshelves");
+	public static final TagKey<Block> CHESTS = bind("chests");
+	public static final TagKey<Block> WOODEN_CHESTS = bind("chests/wooden");
+	public static final TagKey<Block> TRAPPED_CHESTS = bind("chests/trapped");
+	public static final TagKey<Block> ENDER_CHESTS = bind("chests/ender");
+	public static final TagKey<Block> GLASS_BLOCKS = bind("glass_blocks");
+	public static final TagKey<Block> GLASS_BLOCKS_COLORLESS = bind("glass_blocks/colorless");
+	public static final TagKey<Block> GLASS_BLOCKS_CHEAP = bind("glass_blocks/cheap");
+	public static final TagKey<Block> GLASS_BLOCKS_TINTED = bind("glass_blocks/tinted");
+	public static final TagKey<Block> GLASS_PANES = bind("glass_panes");
+	public static final TagKey<Block> GLASS_PANES_COLORLESS = bind("glass_panes/colorless");
+	public static final TagKey<Block> GLAZED_TERRACOTTAS = bind("glazed_terracottas");
+	public static final TagKey<Block> CONCRETES = bind("concretes");
+	public static final TagKey<Block> BUDDING_BLOCKS = bind("budding_blocks");
+	public static final TagKey<Block> BUDS = bind("buds");
+	public static final TagKey<Block> CLUSTERS = bind("clusters");
+	public static final TagKey<Block> VILLAGER_JOB_SITES = bind("villager_job_sites");
+	public static final TagKey<Block> SANDS = bind("sands");
+	public static final TagKey<Block> RED_SANDS = bind("sands/red");
+	public static final TagKey<Block> COLORLESS_SANDS = bind("sands/colorless");
+	public static final TagKey<Block> SMALL_FLOWERS = bind("flowers/small");
+	public static final TagKey<Block> TALL_FLOWERS = bind("flowers/tall");
+	public static final TagKey<Block> FLOWERS = bind("flowers");
+	public static final TagKey<Block> SANDSTONE_BLOCKS = bind("sandstone/blocks");
+	public static final TagKey<Block> SANDSTONE_SLABS = bind("sandstone/slabs");
+	public static final TagKey<Block> SANDSTONE_STAIRS = bind("sandstone/stairs");
+	public static final TagKey<Block> RED_SANDSTONE_BLOCKS = bind("sandstone/red_blocks");
+	public static final TagKey<Block> RED_SANDSTONE_SLABS = bind("sandstone/red_slabs");
+	public static final TagKey<Block> RED_SANDSTONE_STAIRS = bind("sandstone/red_stairs");
+	public static final TagKey<Block> UNCOLORED_SANDSTONE_BLOCKS = bind("sandstone/uncolored_blocks");
+	public static final TagKey<Block> UNCOLORED_SANDSTONE_SLABS = bind("sandstone/uncolored_slabs");
+	public static final TagKey<Block> UNCOLORED_SANDSTONE_STAIRS = bind("sandstone/uncolored_stairs");
+	public static final TagKey<Block> FENCES = bind("fences");
+	public static final TagKey<Block> WOODEN_FENCES = bind("fences/wooden");
+	public static final TagKey<Block> NETHER_BRICK_FENCES = bind("fences/nether_brick");
+	public static final TagKey<Block> FENCE_GATES = bind("fence_gates");
+	public static final TagKey<Block> WOODEN_FENCE_GATES = bind("fence_gates/wooden");
+	public static final TagKey<Block> BARS = bind("bars");
+	public static final TagKey<Block> IRON_BARS = bind("bars/iron");
+	public static final TagKey<Block> COPPER_BARS = bind("bars/copper");
+	public static final TagKey<Block> PUMPKINS = bind("pumpkins");
+	public static final TagKey<Block> NORMAL_PUMPKINS = bind("pumpkins/normal");
+	public static final TagKey<Block> CARVED_PUMPKINS = bind("pumpkins/carved");
+	public static final TagKey<Block> JACK_O_LANTERNS_PUMPKINS = bind("pumpkins/jack_o_lanterns");
+	public static final TagKey<Block> DYED = bind("dyed");
+	public static final TagKey<Block> BLACK_DYED = bind("dyed/black");
+	public static final TagKey<Block> BLUE_DYED = bind("dyed/blue");
+	public static final TagKey<Block> BROWN_DYED = bind("dyed/brown");
+	public static final TagKey<Block> CYAN_DYED = bind("dyed/cyan");
+	public static final TagKey<Block> GRAY_DYED = bind("dyed/gray");
+	public static final TagKey<Block> GREEN_DYED = bind("dyed/green");
+	public static final TagKey<Block> LIGHT_BLUE_DYED = bind("dyed/light_blue");
+	public static final TagKey<Block> LIGHT_GRAY_DYED = bind("dyed/light_gray");
+	public static final TagKey<Block> LIME_DYED = bind("dyed/lime");
+	public static final TagKey<Block> MAGENTA_DYED = bind("dyed/magenta");
+	public static final TagKey<Block> ORANGE_DYED = bind("dyed/orange");
+	public static final TagKey<Block> PINK_DYED = bind("dyed/pink");
+	public static final TagKey<Block> PURPLE_DYED = bind("dyed/purple");
+	public static final TagKey<Block> RED_DYED = bind("dyed/red");
+	public static final TagKey<Block> WHITE_DYED = bind("dyed/white");
+	public static final TagKey<Block> YELLOW_DYED = bind("dyed/yellow");
+	public static final TagKey<Block> STORAGE_BLOCKS = bind("storage_blocks");
+	public static final TagKey<Block> STORAGE_BLOCKS_BONE_MEAL = bind("storage_blocks/bone_meal");
+	public static final TagKey<Block> STORAGE_BLOCKS_COAL = bind("storage_blocks/coal");
+	public static final TagKey<Block> STORAGE_BLOCKS_COPPER = bind("storage_blocks/copper");
+	public static final TagKey<Block> STORAGE_BLOCKS_DIAMOND = bind("storage_blocks/diamond");
+	public static final TagKey<Block> STORAGE_BLOCKS_DRIED_KELP = bind("storage_blocks/dried_kelp");
+	public static final TagKey<Block> STORAGE_BLOCKS_EMERALD = bind("storage_blocks/emerald");
+	public static final TagKey<Block> STORAGE_BLOCKS_GOLD = bind("storage_blocks/gold");
+	public static final TagKey<Block> STORAGE_BLOCKS_IRON = bind("storage_blocks/iron");
+	public static final TagKey<Block> STORAGE_BLOCKS_LAPIS = bind("storage_blocks/lapis");
+	public static final TagKey<Block> STORAGE_BLOCKS_NETHERITE = bind("storage_blocks/netherite");
+	public static final TagKey<Block> STORAGE_BLOCKS_RAW_COPPER = bind("storage_blocks/raw_copper");
+	public static final TagKey<Block> STORAGE_BLOCKS_RAW_GOLD = bind("storage_blocks/raw_gold");
+	public static final TagKey<Block> STORAGE_BLOCKS_RAW_IRON = bind("storage_blocks/raw_iron");
+	public static final TagKey<Block> STORAGE_BLOCKS_REDSTONE = bind("storage_blocks/redstone");
+	public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bind("storage_blocks/resin");
+	public static final TagKey<Block> STORAGE_BLOCKS_SLIME = bind("storage_blocks/slime");
+	public static final TagKey<Block> STORAGE_BLOCKS_WHEAT = bind("storage_blocks/wheat");
+	public static final TagKey<Block> OVERWORLD_NATURAL_LOGS = bind("natural_logs/overworld");
+	public static final TagKey<Block> NETHER_NATURAL_LOGS = bind("natural_logs/nether");
+	public static final TagKey<Block> NATURAL_LOGS = bind("natural_logs");
+	public static final TagKey<Block> NATURAL_WOODS = bind("natural_woods");
+	public static final TagKey<Block> STRIPPED_LOGS = bind("stripped_logs");
+	public static final TagKey<Block> STRIPPED_WOODS = bind("stripped_woods");
+	public static final TagKey<Block> PLAYER_WORKSTATIONS_CRAFTING_TABLES = bind("player_workstations/crafting_tables");
+	public static final TagKey<Block> PLAYER_WORKSTATIONS_FURNACES = bind("player_workstations/furnaces");
+	public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = bind("relocation_not_supported");
+	public static final TagKey<Block> SKULLS = bind("skulls");
+	public static final TagKey<Block> ROPES = bind("ropes");
+	public static final TagKey<Block> CHAINS = bind("chains");
+	public static final TagKey<Block> HIDDEN_FROM_RECIPE_VIEWERS = bind("hidden_from_recipe_viewers");
+	public static final TagKey<Block> ORE_BEARING_GROUND_DEEPSLATE = bind("ore_bearing_ground/deepslate");
+	public static final TagKey<Block> ORE_BEARING_GROUND_NETHERRACK = bind("ore_bearing_ground/netherrack");
+	public static final TagKey<Block> ORE_BEARING_GROUND_STONE = bind("ore_bearing_ground/stone");
+	public static final TagKey<Block> ORE_RATES_DENSE = bind("ore_rates/dense");
+	public static final TagKey<Block> ORE_RATES_SINGULAR = bind("ore_rates/singular");
+	public static final TagKey<Block> ORE_RATES_SPARSE = bind("ore_rates/sparse");
+	public static final TagKey<Block> ORES_IN_GROUND_DEEPSLATE = bind("ores_in_ground/deepslate");
+	public static final TagKey<Block> ORES_IN_GROUND_NETHERRACK = bind("ores_in_ground/netherrack");
+	public static final TagKey<Block> ORES_IN_GROUND_STONE = bind("ores_in_ground/stone");
+
+	private static TagKey<Block> bind(String path) {
+		return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("c", path));
+	}
+}

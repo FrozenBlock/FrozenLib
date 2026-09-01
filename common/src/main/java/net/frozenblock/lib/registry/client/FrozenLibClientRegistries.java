@@ -21,7 +21,7 @@ import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;

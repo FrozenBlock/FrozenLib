@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.mixin.camera;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.Mth;

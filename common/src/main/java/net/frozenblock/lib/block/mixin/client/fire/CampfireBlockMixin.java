@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;

@@ -49,6 +49,13 @@ public final class ModLoader {
 		throw new AssertionError();
 	}
 
+	public static boolean isModLoaded(String... possibleIds) {
+		for (String id : possibleIds) {
+			if (isModLoaded(id)) return true;
+		}
+		return false;
+	}
+
 	@PlatformImpl
 	public static boolean isFabric() {
 		throw new AssertionError();
@@ -110,6 +117,11 @@ public final class ModLoader {
 		String getId();
 
 		String getName();
+
+		/**
+		 * Returns this mod's version, as reported by the current loader.
+		 */
+		String getVersion();
 
 		/**
 		 * Returns the custom data value for the given top-level key, if present.

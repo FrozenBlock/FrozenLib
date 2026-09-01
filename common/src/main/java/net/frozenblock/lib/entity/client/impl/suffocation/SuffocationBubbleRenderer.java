@@ -26,7 +26,7 @@ import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
 import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState.Active;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.MeterSettings;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;

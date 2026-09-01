@@ -23,7 +23,7 @@ import net.frozenblock.lib.particle.client.ColoredSmokeParticle;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.api.ParticleProviderRegistry;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal

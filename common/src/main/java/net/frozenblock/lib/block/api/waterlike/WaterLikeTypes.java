@@ -37,38 +37,71 @@ import net.minecraft.world.level.block.Block;
 @UtilityClass
 public final class WaterLikeTypes {
 
+	/**
+	 * @return all currently-registered {@link WaterLikeType}s.
+	 */
 	public static List<WaterLikeType> getAll(RegistryAccess registryAccess) {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.WATER_LIKE_TYPE).stream().toList();
 	}
 
+	/**
+	 * @return all {@link WaterLikeType}s the {@link Entity}'s eye is inside.
+	 */
 	public static List<WaterLikeType> getAllInside(Entity entity) {
 		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasInWaterLike).toList();
 	}
 
+	/**
+	 * @return a random {@link WaterLikeType} the {@link Entity}'s eye is inside.
+	 */
 	public static Optional<WaterLikeType> getRandomInside(Entity entity) {
 		return Util.getRandomSafe(getAllInside(entity), entity.getRandom());
 	}
 
+	/**
+	 * @return all {@link WaterLikeType}s the {@link Player}'s eye is inside.
+	 * <p>
+	 * This is implemented separately as to fix client-sided issues with local {@link Player}s.
+	 */
 	public static List<WaterLikeType> getPlayerAllInside(Player player) {
 		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerInWaterLike).toList();
 	}
 
+	/**
+	 * @return a random {@link WaterLikeType} the {@link Player}'s eye is inside.
+	 * <p>
+	 * This is implemented separately as to fix client-sided issues with local {@link Player}s.
+	 */
 	public static Optional<WaterLikeType> getPlayerRandomInside(Player player) {
 		return Util.getRandomSafe(getPlayerAllInside(player), player.getRandom());
 	}
 
+	/**
+	 * @return all {@link WaterLikeType}s the {@link Entity} is touching.
+	 */
 	public static List<WaterLikeType> getAllTouching(Entity entity) {
 		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasTouchingWaterLike).toList();
 	}
 
+	/**
+	 * @return a random {@link WaterLikeType} the {@link Entity} is touching.
+	 */
 	public static Optional<WaterLikeType> getRandomTouching(Entity entity) {
 		return Util.getRandomSafe(getAllTouching(entity), entity.getRandom());
 	}
 
+	/**
+	 * @return all {@link WaterLikeType}s the {@link Entity}'s eye is inside if {@link Entity#isUnderWater() underwater},
+	 * or all {@link WaterLikeTypes} the {@link Entity} is touching if not {@link Entity#isUnderWater() underwater}.
+	 */
 	public static List<WaterLikeType> getAllTouchingOrUnderWaterAndWaterLike(Entity entity) {
 		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike).toList();
 	}
 
+	/**
+	 * @return a random {@link WaterLikeType} the {@link Entity}'s eye is inside if {@link Entity#isUnderWater() underwater},
+	 * or a random {@link WaterLikeTypes} the {@link Entity} is touching if not {@link Entity#isUnderWater() underwater}.
+	 */
 	public static Optional<WaterLikeType> getRandomTouchingOrUnderWaterAndWaterLike(Entity entity) {
 		return Util.getRandomSafe(getAllTouching(entity), entity.getRandom());
 	}

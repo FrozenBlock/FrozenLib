@@ -20,7 +20,7 @@ package net.frozenblock.lib.debug.client.renderer;
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.Gizmos;

@@ -7,10 +7,13 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "BlockBreakMixin",
     "BlockEntityLifecycleMixin",
-    "QuiltSyncTaskMixin"
+    "QuiltSyncTaskMixin",
+    "ReloadableServerResourcesMixin"
   ],
   "client": [
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.MultiPlayerGameModeMixin"
   ]
 }

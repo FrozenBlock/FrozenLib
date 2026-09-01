@@ -27,7 +27,7 @@ import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;

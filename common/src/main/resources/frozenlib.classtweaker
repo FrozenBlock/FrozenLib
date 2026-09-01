@@ -11,7 +11,7 @@ transitive-accessible method net/minecraft/client/gui/components/debug/DebugScre
 transitive-accessible method net/minecraft/data/registries/VanillaRegistries validateThatAllBiomeFeaturesHaveBiomeFilter (Lnet/minecraft/core/HolderLookup$Provider;)V
 transitive-accessible method net/minecraft/data/Main bindRegistries (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible method net/minecraft/core/MappedRegistry getOrCreateHolderOrThrow (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
-accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
+transitive-accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
 transitive-accessible method net/minecraft/core/registries/BuiltInRegistries freeze ()V
 transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljava/lang/Object;)V
 accessible method net/minecraft/core/registries/PatchedRegistry$LazyHolder bindValue (Ljava/lang/Object;)V
@@ -82,6 +82,7 @@ transitive-inject-interface net/minecraft/client/multiplayer/ServerData org/quil
 # State & Properties
 transitive-accessible method net/minecraft/world/level/block/Block registerDefaultState (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/state/StateHolder propertyKeys [Lnet/minecraft/world/level/block/state/properties/Property;
+transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties destroyTime F
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties instrument Lnet/minecraft/world/level/block/state/properties/NoteBlockInstrument;
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
 transitive-accessible class net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase$Cache
@@ -89,6 +90,10 @@ transitive-accessible method net/minecraft/world/level/block/Blocks logPropertie
 transitive-accessible method net/minecraft/world/level/block/Blocks leavesProperties (Lnet/minecraft/world/level/block/SoundType;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks flowerPotProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks netherStemProperties (Lnet/minecraft/world/level/material/MapColor;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks litBlockEmission (I)Ljava/util/function/ToIntFunction;
+
+transitive-inject-interface net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase net/frozenblock/lib/block/impl/registry/BlockStateBaseExtension
 
 # Block Updates & Property Predicates
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
@@ -119,8 +124,15 @@ transitive-accessible method net/minecraft/world/level/block/PressurePlateBlock 
 transitive-accessible method net/minecraft/world/level/block/SaplingBlock <init> (Lnet/minecraft/world/level/block/grower/TreeGrower;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible method net/minecraft/world/level/block/TrapDoorBlock <init> (Lnet/minecraft/world/level/block/state/properties/BlockSetType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/IronBarsBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/WeightedPressurePlateBlock <init> (ILnet/minecraft/world/level/block/state/properties/BlockSetType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/CarvedPumpkinBlock <init> (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/NetherRootsBlock <init> (Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible method net/minecraft/world/level/block/NetherFungusBlock <init> (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible class net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
+
+transitive-inject-interface net/minecraft/world/level/block/state/BlockBehaviour net/frozenblock/lib/block/impl/attachment/BlockAttachmentHolder
 
 # Loot
 transitive-accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_STICK_CHANCES [F
@@ -187,6 +199,8 @@ transitive-accessible class net/minecraft/world/level/block/entity/BlockEntityTy
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;[Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/block/entity/BlockEntityType;
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/List;)Lnet/minecraft/world/level/block/entity/BlockEntityType;
 
+transitive-inject-interface net/minecraft/world/level/block/entity/BlockEntityType net/frozenblock/lib/block/api/blockentity/BlockEntityTypeExtension
+
 # Beacon
 transitive-accessible field net/minecraft/world/level/block/entity/BrushableBlockEntity lootTable Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity VALID_EFFECTS Ljava/util/Set;
@@ -235,6 +249,7 @@ transitive-accessible field net/minecraft/world/entity/Mob goalSelector Lnet/min
 transitive-accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible field net/minecraft/world/entity/ai/navigation/WallClimberNavigation pathToPosition Lnet/minecraft/core/BlockPos;
 transitive-accessible class net/minecraft/world/entity/monster/warden/Warden$VibrationUser
+transitive-accessible class net/minecraft/world/entity/monster/Blaze$BlazeAttackGoal
 
 # Registry
 transitive-accessible method net/minecraft/world/entity/EntityTypes register (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/EntityType$Builder;)Lnet/minecraft/world/entity/EntityType;
@@ -296,6 +311,7 @@ transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY
 
 transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface net/minecraft/client/renderer/state/level/LevelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 
 # Mob Effect
@@ -360,6 +376,8 @@ transitive-accessible field net/minecraft/world/item/CreativeModeTabs INGREDIENT
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs FOOD_AND_DRINKS Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs COMBAT Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/item/CreativeModeTabs SPAWN_EGGS Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/item/CreativeModeTabs COLORED_BLOCKS Lnet/minecraft/resources/ResourceKey;
+transitive-accessible field net/minecraft/world/item/CreativeModeTabs OP_BLOCKS Lnet/minecraft/resources/ResourceKey;
 
 # Cooldown
 transitive-accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
@@ -582,18 +600,23 @@ transitive-accessible method net/minecraft/client/data/models/BlockModelGenerato
 
 # Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
+transitive-accessible method net/minecraft/client/model/geom/ModelPart addAllChildren (Ljava/util/function/BiConsumer;)V
 
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
-transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Polygon net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+transitive-inject-interface net/minecraft/client/model/Model net/frozenblock/lib/renderer/model/ModelExtension
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/model/InvertibleModelPart
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Polygon net/frozenblock/lib/renderer/model/InvertibleModelPart
 
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V
 transitive-accessible field net/minecraft/client/Camera xRot F
 transitive-accessible field net/minecraft/client/Camera yRot F
 
-transitive-inject-interface net/minecraft/client/renderer/state/level/CameraRenderState net/frozenblock/lib/renderer/impl/CameraRenderStateInterface
+transitive-inject-interface net/minecraft/client/renderer/state/level/CameraRenderState net/frozenblock/lib/renderer/camera/CameraRenderStateHorizontalStorage
+
+# Lightmap
+transitive-accessible field net/minecraft/util/LightCoordsUtil MAX_SMOOTH_LIGHT_LEVEL I
 
 # Render Types & Shaders
 transitive-accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;

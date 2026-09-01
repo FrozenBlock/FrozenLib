@@ -20,7 +20,7 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.menu.api.SplashTextEvents;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

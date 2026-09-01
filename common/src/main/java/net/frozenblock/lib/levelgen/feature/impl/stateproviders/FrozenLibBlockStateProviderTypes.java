@@ -22,7 +22,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.FlowerBedStateProvider;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.StrictRuleBasedStateProvider;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jetbrains.annotations.ApiStatus;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.ApiStatus;
 public final class FrozenLibBlockStateProviderTypes {
 
 	public static void init() {
-		final FrozenDeferredRegister<MapCodec<? extends BlockStateProvider>> register = FrozenDeferredRegister.create(
+		final DeferredRegister<MapCodec<? extends BlockStateProvider>> register = DeferredRegister.create(
 			Registries.BLOCK_STATE_PROVIDER_TYPE,
 			FrozenLibConstants.MOD_ID
 		);

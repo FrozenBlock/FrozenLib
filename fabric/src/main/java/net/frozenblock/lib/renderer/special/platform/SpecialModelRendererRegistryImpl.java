@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.special.platform;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.resources.Identifier;

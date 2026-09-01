@@ -21,14 +21,14 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.api.variant.CompoundCheck;
 import net.frozenblock.lib.entity.api.variant.ConfigCheck;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class FrozenLibSpawnConditions {
-	private static final FrozenDeferredRegister<MapCodec<? extends SpawnCondition>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<MapCodec<? extends SpawnCondition>> REGISTER = DeferredRegister.create(
 		Registries.SPAWN_CONDITION_TYPE,
 		FrozenLibConstants.MOD_ID
 	);

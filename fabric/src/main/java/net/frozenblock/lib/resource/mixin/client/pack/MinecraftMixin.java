@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.resource.client.api.pack.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.resource.client.impl.pack.PackRepositoryInterface;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.world.level.validation.DirectoryValidator;

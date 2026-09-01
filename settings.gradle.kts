@@ -16,10 +16,7 @@ pluginManagement {
         maven("https://jitpack.io") {
             name = "Jitpack"
         }
-        maven("https://registry.somethingcatchy.net/repository/maven-releases/") { // Candlelight & Triangle
-            name = "SomethingCatchy (MehVahdJukaar)"
-        }
-        maven("https://maven.frozenblock.net/snapshot") {
+        maven("https://maven.frozenblock.net/snapshot") { // Candlelight & Triangle
             name = "FrozenBlock Snapshot"
         }
         mavenCentral()
@@ -35,6 +32,16 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
         }
     }
 }
+
+localPluginRepository(
+    "GradleHelper",
+    enabled = true
+)
+
+localPluginRepository(
+    "candlelight",
+    enabled = true
+)
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version("+")
@@ -69,11 +76,6 @@ if (Constants.NEOFORGE) {
 }
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", enabled = false)
-
-localPluginRepository(
-    "GradleHelper",
-    enabled = true
-)
 
 fun localPluginRepository(repo: String, enabled: Boolean = true) {
     if (!enabled) return

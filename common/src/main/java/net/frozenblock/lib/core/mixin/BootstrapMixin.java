@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.core.mixin;
 
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.server.Bootstrap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +35,7 @@ public class BootstrapMixin {
 		)
 	)
 	private static void frozenLib$finishBootStrap(CallbackInfo info) {
-		FrozenBools.isInitialized = true;
+		FrozenLibConstants.isInitialized = true;
 	}
 
 }

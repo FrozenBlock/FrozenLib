@@ -17,11 +17,24 @@
 
 package net.frozenblock.lib.block.api.blockentity;
 
+import java.util.function.Supplier;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.NonExtendable
-public interface BlockEntityTypeExtension {
+public interface BlockEntityTypeExtension<T extends BlockEntity> {
 
-	void frozenLib$addValidBlock(Block block);
+	default void frozenLib$addValidBlock(Block block) {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$addValidBlock(Supplier<Block> block) {
+		this.frozenLib$addValidBlock(block.get());
+	}
+
+	default BlockEntityType<T> frozenLib$setOpOnlyCustomData() {
+		throw new AssertionError();
+	}
 }

@@ -23,7 +23,7 @@ import java.util.List;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;

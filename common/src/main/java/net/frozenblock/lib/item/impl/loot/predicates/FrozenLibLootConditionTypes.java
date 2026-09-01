@@ -21,12 +21,12 @@ import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public class FrozenLibLootConditionTypes {
-	private static final FrozenDeferredRegister<MapCodec<? extends LootItemCondition>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<MapCodec<? extends LootItemCondition>> REGISTER = DeferredRegister.create(
 		Registries.LOOT_CONDITION_TYPE,
 		FrozenLibConstants.MOD_ID
 	);

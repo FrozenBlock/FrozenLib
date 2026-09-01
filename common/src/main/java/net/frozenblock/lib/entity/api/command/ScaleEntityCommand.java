@@ -22,6 +22,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -33,7 +34,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class ScaleEntityCommand {
+@UtilityClass
+public final class ScaleEntityCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		return Commands.literal("scale")

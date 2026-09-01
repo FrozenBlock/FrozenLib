@@ -18,7 +18,7 @@
 package net.frozenblock.lib.resource.client.api.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TickableTexture;
 

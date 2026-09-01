@@ -19,7 +19,7 @@ package net.frozenblock.lib.particle.client;
 
 import net.frozenblock.lib.particle.client.api.ColoredLerpedParticleHelper;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;

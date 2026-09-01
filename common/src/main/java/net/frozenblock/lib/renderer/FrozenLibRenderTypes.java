@@ -20,7 +20,7 @@ package net.frozenblock.lib.renderer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;

@@ -21,8 +21,8 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ConfigPredicateDecorator;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ProbabilityDecorator;
-import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.registry.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
@@ -30,16 +30,16 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class FrozenLibTreeDecoratorTypes {
-	private static final FrozenDeferredRegister<TreeDecoratorType<?>> REGISTER = FrozenDeferredRegister.create(
+	private static final DeferredRegister<TreeDecoratorType<?>> REGISTER = DeferredRegister.create(
 		Registries.TREE_DECORATOR_TYPE,
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final FrozenHolder<TreeDecoratorType<?>, TreeDecoratorType<ConfigPredicateDecorator>> CONFIG_PREDICATE = register(
+	public static final DeferredHolder<TreeDecoratorType<?>, TreeDecoratorType<ConfigPredicateDecorator>> CONFIG_PREDICATE = register(
 		"config_predicate",
 		() -> new TreeDecoratorType<>(ConfigPredicateDecorator.CODEC)
 	);
-	public static final FrozenHolder<TreeDecoratorType<?>, TreeDecoratorType<ProbabilityDecorator>> PROBABILITY = register(
+	public static final DeferredHolder<TreeDecoratorType<?>, TreeDecoratorType<ProbabilityDecorator>> PROBABILITY = register(
 		"probability",
 		() -> new TreeDecoratorType<>(ProbabilityDecorator.CODEC)
 	);
@@ -50,7 +50,7 @@ public final class FrozenLibTreeDecoratorTypes {
 
 	public static void init() {}
 
-	private static <T extends TreeDecorator> FrozenHolder<TreeDecoratorType<?>, TreeDecoratorType<T>> register(String name, Supplier<TreeDecoratorType<T>> supplier) {
+	private static <T extends TreeDecorator> DeferredHolder<TreeDecoratorType<?>, TreeDecoratorType<T>> register(String name, Supplier<TreeDecoratorType<T>> supplier) {
 		return REGISTER.register(name, supplier);
 	}
 }

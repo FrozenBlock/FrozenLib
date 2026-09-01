@@ -26,9 +26,10 @@ import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.networking.api.platform.NetworkingHelperImpl;
 import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
 import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
-import net.frozenblock.lib.platform.registry.NeoFrozenDeferredRegister;
+import net.frozenblock.lib.platform.registry.NeoDeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
+import net.frozenblock.lib.transfer.api.platform.TransferApiImpl;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
@@ -42,6 +43,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
@@ -76,11 +78,12 @@ public final class FrozenLibNeoForge {
 		});
 		modBus.addListener(AddPackFindersEvent.class, ResourceLoaderHelperImpl::flushPackFinders);
 		modBus.addListener(EntityAttributeCreationEvent.class, DefaultAttributeRegistryImpl::flush);
+		modBus.addListener(RegisterCapabilitiesEvent.class, TransferApiImpl::flush);
 
-		NeoFrozenDeferredRegister.tryRegisterFailedRegisters();
-		FrozenLibMain.preQuiltSetup();
-		FrozenLibMain.quiltSetup();
-		FrozenLibMain.setup();
+		NeoDeferredRegister.tryRegisterFailedRegisters();
+		FrozenLibMain.preQuiltInit();
+		FrozenLibMain.quiltInit();
+		FrozenLibMain.init();
 
 		DataAttachmentHelperImpl.register(modBus);
 		NeoEventBridge.initModStage(modBus);

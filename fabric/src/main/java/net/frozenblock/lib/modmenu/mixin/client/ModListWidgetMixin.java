@@ -22,10 +22,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import java.util.Set;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -49,7 +48,7 @@ public class ModListWidgetMixin {
 		Set instance, Object object, Operation<Boolean> original,
 		@Local(name = "modId") String modId
 	) {
-		if (FrozenBools.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
+		if (FrozenLibConstants.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
 		return original.call(instance, object);
 	}
 }

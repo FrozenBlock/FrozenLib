@@ -26,7 +26,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import net.frozenblock.lib.block.client.impl.waterlike.UnderWaterAmbientSoundInstanceHandler;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SoundInstance;

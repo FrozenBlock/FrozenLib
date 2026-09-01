@@ -48,7 +48,8 @@ public class ZombieMixin {
 			target,
 			Optional.empty(),
 			Optional.of(Zombie.class.cast(this)),
-			Optional.empty()
+			Optional.empty(),
+			true
 		);
 		FireData.trySet(target, fireType);
 	}

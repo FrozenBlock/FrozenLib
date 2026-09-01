@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -41,13 +42,20 @@ public final class CreativeModeTabSorterImpl {
 		});
 	}
 
+	public static void removeIf(ResourceKey<CreativeModeTab> tab, Predicate<? super ItemStack> predicate, CreativeModeTab.TabVisibility tabVisibility) {
+		listen(tab, event -> event.removeIf(predicate, tabVisibility));
+	}
+
 	public static void insert(ResourceKey<CreativeModeTab> tab, ItemLike item) {
 		listen(tab, event -> event.accept(new ItemStack(item)));
 	}
 
 	public static void insertBefore(
 		ResourceKey<CreativeModeTab> tab,
-		ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility) {
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility
+	) {
 		listen(tab, event -> event.insertBefore(comparedItem.asItem().getDefaultInstance(), new ItemStack(item), tabVisibility));
 	}
 

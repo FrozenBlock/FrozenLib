@@ -21,8 +21,9 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.color.item.GrassColorSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Unmodifiable;
 
 @ClientOnly
+@UtilityClass
 public final class FrozenLibModelHelper {
 	public static final Map<Direction, VariantMutator> MULTIFACE_GENERATOR_NO_UV_LOCK = ImmutableMap.of(
 		Direction.NORTH, BlockModelGenerators.NOP,

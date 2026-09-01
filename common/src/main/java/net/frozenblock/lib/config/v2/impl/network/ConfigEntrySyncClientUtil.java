@@ -23,7 +23,7 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
-import net.frozenblock.lib.platform.api.ClientOnly;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 
