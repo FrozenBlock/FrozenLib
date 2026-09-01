@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,33 +15,49 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.command.client;
+package net.frozenblock.lib.config.v2.impl.client;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import net.frozenblock.lib.config.v2.impl.client.ClientConfigCommand;
+import net.frozenblock.lib.config.v2.impl.ConfigCommand;
+import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
 @ClientOnly
-public final class FrozenLibClientCommand {
+public final class ClientConfigCommand {
 
-	public static void register(
-		CommandDispatcher<SharedSuggestionProvider> dispatcher,
+	public static LiteralArgumentBuilder<SharedSuggestionProvider> buildSubCommand(
 		Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal,
 		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SharedSuggestionProvider, ?>> argument,
 		Consumer<Component> feedbackCallback
 	) {
-		dispatcher.register(
-			literal.apply("frozenlib_client")
-				.then(ClientConfigCommand.buildSubCommand(literal, argument, feedbackCallback))
-				.then(PanoramaCommand.buildSubCommand(literal))
+		return literal.apply("config").then(
+			literal.apply("reload").then(
+				argument.apply("modId", StringArgumentType.string()).suggests((context, builder) ->
+						SharedSuggestionProvider.suggest(
+							ConfigV2Registry.allConfigData().stream()
+								.map(configData -> configData.id().namespace())
+								.toList(),
+							builder
+						)
+				).executes(context -> reloadConfigs(StringArgumentType.getString(context, "modId"), feedbackCallback))
+			)
 		);
+	}
+
+	private static int reloadConfigs(String modId, Consumer<Component> feedbackCallback) {
+		final int configCount = ConfigCommand.reloadConfigsAndCount(modId);
+		if (configCount == 1) {
+			feedbackCallback.accept(Component.translatable("commands.frozenlib_config.reload.single", modId));
+		} else {
+			feedbackCallback.accept(Component.translatable("commands.frozenlib_config.reload.multiple", configCount, modId));
+		}
+		return configCount;
 	}
 }

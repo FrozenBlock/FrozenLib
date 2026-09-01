@@ -15,19 +15,35 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.clothconfig.impl;
+package net.frozenblock.lib.config.v1.entry;
 
-import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.frozenblock.lib.config.v1.entry.TypedEntry;
+import net.frozenblock.lib.config.v1.entry.TypedEntryType;
 
 /**
- * Used to integrate config syncing with Cloth Config.
+ * @since 1.7
  */
-@ClientOnly
-public interface DisableableWidgetInterface {
-	void frozenLib$addSyncData(ConfigEntry<?> configInstance);
-	boolean frozenLib$isSyncable();
-	boolean frozenLib$hasValidData();
-	ConfigEntrySyncUtil.EntryPermissionType frozenLib$getEntryPermissionType();
+public class TypedEntryImpl<T> implements TypedEntry<T> {
+    private final TypedEntryType<T> type;
+    private T value;
+
+    public TypedEntryImpl(TypedEntryType<T> type, T value) {
+        this.type = type;
+        this.value = value;
+    }
+
+    @Override
+    public TypedEntryType<T> type() {
+        return this.type;
+    }
+
+    @Override
+    public T value() {
+        return this.value;
+    }
+
+    @Override
+    public void setValue(T value) {
+        this.value = value;
+    }
 }

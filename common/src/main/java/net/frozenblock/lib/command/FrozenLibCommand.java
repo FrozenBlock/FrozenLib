@@ -18,7 +18,7 @@
 package net.frozenblock.lib.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.frozenblock.lib.config.impl.ConfigCommand;
+import net.frozenblock.lib.config.v2.impl.ConfigCommand;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entity.client.api.spottingicon.command.SpottingIconCommand;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;

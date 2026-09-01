@@ -19,22 +19,21 @@
 
 package net.frozenblock.lib.config.api.instance.json
 
-import net.frozenblock.lib.config.api.instance.Config
+import net.frozenblock.lib.config.v1.instance.BasicConfig
+import net.frozenblock.lib.config.v1.instance.json.JsonType
 import java.nio.file.Path
-import net.frozenblock.lib.config.api.instance.json.JsonConfig as RealJsonConfig
+import net.frozenblock.lib.config.v1.instance.json.JsonBasicConfig as RealJsonConfig
 
 fun <T> JsonConfig(
     modId: String,
     config: Class<T>,
     type: JsonType = JsonType.JSON,
-    path: Path = Config.makePath(modId, type.serializedName),
-    supportsModification: Boolean = true,
+    path: Path = BasicConfig.makePath(modId, type.serializedName)
 ): RealJsonConfig<T> {
     return RealJsonConfig(
         modId,
         config,
         path,
         type,
-        supportsModification
     )
 }

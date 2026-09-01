@@ -65,7 +65,6 @@ public final class FrozenLibEntrypoints {
 		}
 	}
 
-	@ApiStatus.Internal
 	public static synchronized void collectFromStream(String modId, @Nullable InputStream stream) {
 		if (stream == null) return;
 		try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
@@ -75,7 +74,6 @@ public final class FrozenLibEntrypoints {
 		}
 	}
 
-	@ApiStatus.Internal
 	public static synchronized void markCollected() {
 		collected = true;
 	}
@@ -122,12 +120,10 @@ public final class FrozenLibEntrypoints {
 		}
 	}
 
-	@ApiStatus.Internal
 	public static void markInjectedIntoNativeLoader() {
 		injectedIntoNativeLoader = true;
 	}
 
-	@ApiStatus.Internal
 	public static boolean isInjectedIntoNativeLoader() {
 		return injectedIntoNativeLoader;
 	}

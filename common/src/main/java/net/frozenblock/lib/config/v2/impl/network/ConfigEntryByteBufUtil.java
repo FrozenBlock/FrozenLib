@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.config.v2.impl.network;
 
-import net.frozenblock.lib.config.api.instance.xjs.NonSerializableObjectException;
-import net.frozenblock.lib.config.api.instance.xjs.XjsObjectMapper;
+import net.frozenblock.lib.config.v1.instance.xjs.NonSerializableObjectException;
+import net.frozenblock.lib.config.v1.instance.xjs.XjsObjectMapper;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.network.FriendlyByteBuf;
 import xjs.data.JsonObject;
