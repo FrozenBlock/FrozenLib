@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibLogUtils {
 	public static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib");
 	/**

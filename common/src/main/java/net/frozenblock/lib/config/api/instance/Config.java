@@ -18,7 +18,7 @@
 package net.frozenblock.lib.config.api.instance;
 
 import java.nio.file.Path;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
@@ -106,7 +106,7 @@ public abstract class Config<T> {
 		try {
 			this.onSave();
 
-			if (FrozenLibConstants.isInitialized) invokeSaveEvents();
+			if (FrozenLibEarlyConstants.isInitialized) invokeSaveEvents();
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error while saving " + formatted, e);
 		}
@@ -117,7 +117,7 @@ public abstract class Config<T> {
 		FrozenLibLogUtils.LOGGER.info("Loading {}", formatted);
 		try {
 			final boolean loadVal = this.onLoad();
-			if (FrozenLibConstants.isInitialized) invokeLoadEvents();
+			if (FrozenLibEarlyConstants.isInitialized) invokeLoadEvents();
 			return loadVal;
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error while loading " + formatted, e);
