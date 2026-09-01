@@ -34,12 +34,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import net.frozenblock.lib.FrozenLibConstants;
+import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibEntrypoints {
 	public static final String METADATA_FILE = "frozenlib.json";
 	private static final Map<String, List<DeclaredEntrypoint>> DECLARED = new HashMap<>();
@@ -59,7 +61,7 @@ public final class FrozenLibEntrypoints {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			mergeFrom(modId, reader);
 		} catch (IOException | RuntimeException e) {
-			FrozenLibConstants.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
+			FrozenLibLogUtils.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
 		}
 	}
 
@@ -69,7 +71,7 @@ public final class FrozenLibEntrypoints {
 		try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
 			mergeFrom(modId, reader);
 		} catch (IOException | RuntimeException e) {
-			FrozenLibConstants.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
+			FrozenLibLogUtils.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
 		}
 	}
 
@@ -79,13 +81,13 @@ public final class FrozenLibEntrypoints {
 	}
 
 	private static void mergeFrom(String modId, Reader reader) {
-		JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
-		JsonElement entrypoints = root.get("entrypoints");
+		final JsonObject root = JsonParser.parseReader(reader).getAsJsonObject();
+		final JsonElement entrypoints = root.get("entrypoints");
 		if (entrypoints == null || !entrypoints.isJsonObject()) return;
 
 		for (Map.Entry<String, JsonElement> entry : entrypoints.getAsJsonObject().entrySet()) {
-			List<DeclaredEntrypoint> declared = DECLARED.computeIfAbsent(entry.getKey(), key -> new ArrayList<>());
-			JsonElement value = entry.getValue();
+			final List<DeclaredEntrypoint> declared = DECLARED.computeIfAbsent(entry.getKey(), key -> new ArrayList<>());
+			final JsonElement value = entry.getValue();
 			if (value.isJsonArray()) {
 				for (JsonElement element : value.getAsJsonArray()) declared.add(new DeclaredEntrypoint(modId, element.getAsString()));
 			} else {
@@ -106,16 +108,16 @@ public final class FrozenLibEntrypoints {
 
 	public static <T> void forEachDeclaredEntrypoint(String key, Class<T> type, Consumer<T> consumer) {
 		for (DeclaredEntrypoint declared : getDeclared(key)) {
-			String className = declared.className();
+			final String className = declared.className();
 			try {
-				Class<?> clazz = Class.forName(className, true, FrozenLibEntrypoints.class.getClassLoader());
+				final Class<?> clazz = Class.forName(className, true, FrozenLibEntrypoints.class.getClassLoader());
 				if (!type.isAssignableFrom(clazz)) {
-					FrozenLibConstants.LOGGER.error("Entrypoint '{}' declared for key '{}' does not implement {}", className, key, type.getName());
+					FrozenLibLogUtils.LOGGER.error("Entrypoint '{}' declared for key '{}' does not implement {}", className, key, type.getName());
 					continue;
 				}
 				consumer.accept(type.cast(clazz.getDeclaredConstructor().newInstance()));
 			} catch (ReflectiveOperationException e) {
-				FrozenLibConstants.LOGGER.error("Failed to load entrypoint '{}' declared for key '{}'", className, key, e);
+				FrozenLibLogUtils.LOGGER.error("Failed to load entrypoint '{}' declared for key '{}'", className, key, e);
 			}
 		}
 	}
@@ -131,6 +133,4 @@ public final class FrozenLibEntrypoints {
 	}
 
 	public record DeclaredEntrypoint(String modId, String className) {}
-
-	private FrozenLibEntrypoints() {}
 }

@@ -27,7 +27,7 @@ import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.ModContainerImpl;
 import net.fabricmc.loader.impl.entrypoint.EntrypointStorage;
 import net.fabricmc.loader.impl.metadata.EntrypointMetadata;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 
 public final class FrozenLibEntrypointInjectorImpl {
@@ -36,28 +36,29 @@ public final class FrozenLibEntrypointInjectorImpl {
 		EntrypointStorage storage;
 		Map<String, LanguageAdapter> adapterMap;
 		try {
-			FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
+			final FabricLoaderImpl loader = FabricLoaderImpl.INSTANCE;
 
-			Field storageField = FabricLoaderImpl.class.getDeclaredField("entrypointStorage");
+			final Field storageField = FabricLoaderImpl.class.getDeclaredField("entrypointStorage");
 			storageField.setAccessible(true);
 			storage = (EntrypointStorage) storageField.get(loader);
 
-			Field adapterField = FabricLoaderImpl.class.getDeclaredField("adapterMap");
+			final Field adapterField = FabricLoaderImpl.class.getDeclaredField("adapterMap");
 			adapterField.setAccessible(true);
 			@SuppressWarnings("unchecked")
-			Map<String, LanguageAdapter> castAdapterMap = (Map<String, LanguageAdapter>) adapterField.get(loader);
+			final Map<String, LanguageAdapter> castAdapterMap = (Map<String, LanguageAdapter>) adapterField.get(loader);
 			adapterMap = castAdapterMap;
 		} catch (ReflectiveOperationException | ClassCastException e) {
-			FrozenLibConstants.LOGGER.error(
+			FrozenLibLogUtils.LOGGER.error(
 				"Failed to hook into Fabric Loader's entrypoint storage - frozenlib.json entrypoints will "
-					+ "only be visible through EntrypointHelper, not FabricLoader#getEntrypoints", e
+					+ "only be visible through EntrypointHelper, not FabricLoader#getEntrypoints",
+				e
 			);
 			return;
 		}
 
 		for (String key : FrozenLibEntrypoints.getKeys()) {
 			for (FrozenLibEntrypoints.DeclaredEntrypoint declared : FrozenLibEntrypoints.getDeclared(key)) {
-				Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(declared.modId());
+				final Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(declared.modId());
 				if (container.isEmpty() || !(container.get() instanceof ModContainerImpl modContainer)) continue;
 
 				try {
@@ -73,7 +74,7 @@ public final class FrozenLibEntrypointInjectorImpl {
 						}
 					}, adapterMap);
 				} catch (Exception e) {
-					FrozenLibConstants.LOGGER.error(
+					FrozenLibLogUtils.LOGGER.error(
 						"Failed to inject frozenlib.json entrypoint '{}' (key '{}') into Fabric Loader", declared.className(), key, e
 					);
 				}
