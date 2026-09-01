@@ -28,9 +28,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
-	public void onLoad(String mixinPackage) {
-
-	}
+	public void onLoad(String mixinPackage) {}
 
 	@Override
 	@Nullable
@@ -40,16 +38,11 @@ public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (ModLoader.isFabric()) {
-			return ModLoader.isModLoaded("cloth-config");
-		}
-		return true;
+		return ModLoader.isModLoaded("cloth-config") || ModLoader.isModLoaded("cloth_config");
 	}
 
 	@Override
-	public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-
-	}
+	public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {}
 
 	@Override
 	@Nullable
@@ -58,12 +51,8 @@ public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 	}
 
 	@Override
-	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
-	}
+	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 
 	@Override
-	public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
-	}
+	public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {}
 }
