@@ -26,7 +26,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
@@ -80,7 +80,7 @@ public final class FrozenLibClientNetworking {
 			ConfigEntrySyncPacket.receive(packet, null, null)
 		);
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> {
-			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);
+			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigEntrySyncUtil.clearSyncData(config);
 		});
 
 		receiveLocalPlayerSoundPacket();

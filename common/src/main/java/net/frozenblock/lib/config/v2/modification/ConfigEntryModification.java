@@ -18,7 +18,7 @@
 package net.frozenblock.lib.config.v2.modification;
 
 import java.util.function.Consumer;
-import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
+import net.frozenblock.lib.config.v1.instance.util.DeepCopyUtils;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 
 public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier) {
@@ -34,10 +34,7 @@ public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier)
 
         copyInto(original, copy);
         final EntryValueHolder<T> holder = new EntryValueHolder<>(original);
-
-        for (ConfigEntryModification<T> modifications : entry.modifications()) {
-            modifications.modifier().accept(holder);
-        }
+        for (ConfigEntryModification<T> modifications : entry.modifications()) modifications.modifier().accept(holder);
         return holder.value;
     }
 

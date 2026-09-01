@@ -21,8 +21,8 @@ import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.v1.instance.BasicConfig;
+import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
@@ -139,7 +139,7 @@ public final class FrozenLibMain {
 
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
-			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
+			for (BasicConfig<?> basicConfig : BasicConfigRegistry.getAllConfigs()) basicConfig.save();
 		});
 
 		FrozenLibConfig.CONFIG.load(true);

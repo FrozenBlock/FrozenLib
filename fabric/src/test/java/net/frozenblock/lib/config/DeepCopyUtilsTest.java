@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
+import net.frozenblock.lib.config.v1.instance.util.DeepCopyUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 

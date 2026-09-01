@@ -15,19 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.clothconfig.impl;
+package net.frozenblock.lib.config.v1.entry;
 
-import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import com.mojang.serialization.Codec;
+import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
+import org.jetbrains.annotations.Contract;
 
-/**
- * Used to integrate config syncing with Cloth Config.
- */
-@ClientOnly
-public interface DisableableWidgetInterface {
-	void frozenLib$addSyncData(ConfigEntry<?> configInstance);
-	boolean frozenLib$isSyncable();
-	boolean frozenLib$hasValidData();
-	ConfigEntrySyncUtil.EntryPermissionType frozenLib$getEntryPermissionType();
+public record TypedEntryType<T>(String modId, Codec<T> codec) {
+
+	public TypedEntryType<T> register() {
+		return register(this);
+	}
+
+	@Contract("_ -> param1")
+	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
+		return BasicConfigRegistry.register(type);
+	}
 }

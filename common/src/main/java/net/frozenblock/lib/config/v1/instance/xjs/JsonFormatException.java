@@ -15,19 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.clothconfig.impl;
+package net.frozenblock.lib.config.v1.instance.xjs;
 
-import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
-
-/**
- * Used to integrate config syncing with Cloth Config.
+/*
+ Source: https://github.com/PersonTheCat/CatLib
+ License: GNU GPL-3.0
  */
-@ClientOnly
-public interface DisableableWidgetInterface {
-	void frozenLib$addSyncData(ConfigEntry<?> configInstance);
-	boolean frozenLib$isSyncable();
-	boolean frozenLib$hasValidData();
-	ConfigEntrySyncUtil.EntryPermissionType frozenLib$getEntryPermissionType();
+public class JsonFormatException extends RuntimeException{
+	public JsonFormatException(final String msg) {
+		super(msg);
+	}
 }

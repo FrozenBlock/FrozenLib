@@ -22,9 +22,9 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
-import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
@@ -48,7 +48,7 @@ public class TooltipListEntryMixin {
 
 			return optionalComponent.isPresent()
 				? Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
-				: Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
+				: Optional.of(ConfigEntrySyncUtil.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
 		} else if (
 			disableableWidgetInterface.frozenLib$hasValidData()
 			&& disableableWidgetInterface.frozenLib$isSyncable()

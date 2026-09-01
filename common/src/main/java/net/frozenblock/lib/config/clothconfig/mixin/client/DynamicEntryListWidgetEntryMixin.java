@@ -20,10 +20,9 @@ package net.frozenblock.lib.config.clothconfig.mixin.client;
 import me.shedaniel.clothconfig2.api.DisableableWidget;
 import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
-import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
-import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,7 +32,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWidget, DisableableWidgetInterface {
 
 	@Unique
-	private ConfigModification.EntryPermissionType frozenLib$entryPermissionType = ConfigModification.EntryPermissionType.CAN_MODIFY;
+	private ConfigEntrySyncUtil.EntryPermissionType frozenLib$entryPermissionType = ConfigEntrySyncUtil.EntryPermissionType.CAN_MODIFY;
 
 	@Unique
 	private boolean frozenLib$isSyncable = true;
@@ -45,7 +44,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 	@Override
     public void frozenLib$addSyncData(ConfigEntry<?> configInstance) {
 		final Requirement nonSyncRequirement = () -> {
-			this.frozenLib$entryPermissionType = ConfigSyncModification.canModify(configInstance);
+			this.frozenLib$entryPermissionType = ConfigEntrySyncUtil.canModify(configInstance);
 			this.frozenLib$isSyncable = configInstance.isSyncable();
 			return this.frozenLib$entryPermissionType.canModify;
 		};
@@ -72,7 +71,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 
 	@Unique
 	@Override
-    public ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType() {
+    public ConfigEntrySyncUtil.EntryPermissionType frozenLib$getEntryPermissionType() {
 		return this.frozenLib$entryPermissionType;
 	}
 }
