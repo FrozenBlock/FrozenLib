@@ -21,6 +21,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -54,6 +55,7 @@ public final class FrozenLibRenderTypes {
 
 	public static final Function<Identifier, RenderType> ENTITY_TRANSLUCENT_NO_SHADING_CULL = Util.memoize(identifier -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_NO_SHADING_CULL)
+			.setOitPipelines(RenderPipelines.OIT_ENTITY)
 			.withTexture("Sampler0", identifier)
 			.useLightmap()
 			.useOverlay()
@@ -66,6 +68,7 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize((identifier, affectsOutline) -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED)
+			.setOitPipelines(RenderPipelines.OIT_ENTITY_EMISSIVE)
 			.withTexture("Sampler0", identifier)
 			.useOverlay()
 			.affectsCrumbling()
@@ -77,6 +80,7 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize((identifier, affectsOutline) -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL)
+			.setOitPipelines(RenderPipelines.OIT_ENTITY_EMISSIVE)
 			.withTexture("Sampler0", identifier)
 			.useOverlay()
 			.affectsCrumbling()
@@ -88,6 +92,7 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize((identifier, affectsOutline) -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL)
+			.setOitPipelines(RenderPipelines.OIT_ENTITY_EMISSIVE)
 			.withTexture("Sampler0", identifier)
 			.useOverlay()
 			.affectsCrumbling()
@@ -97,30 +102,9 @@ public final class FrozenLibRenderTypes {
 		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_fixed_cull"), renderSetup);
 	});
 
-	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize((identifier, affectsOutline) -> {
-		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER)
-			.withTexture("Sampler0", identifier)
-			.useOverlay()
-			.affectsCrumbling()
-			.sortOnUpload()
-			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
-			.createRenderSetup();
-		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_always_render"), renderSetup);
-	});
-
-	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize((identifier, affectsOutline) -> {
-		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL)
-			.withTexture("Sampler0", identifier)
-			.useOverlay()
-			.affectsCrumbling()
-			.sortOnUpload()
-			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
-			.createRenderSetup();
-		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_always_render_cull"), renderSetup);
-	});
-
 	public static final BiFunction<Identifier, Boolean, RenderType> APPARITION_OUTER = Util.memoize((identifier, affectsOutline) -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.APPARITION_OUTER)
+			.setOitPipelines(RenderPipelines.OIT_ENTITY)
 			.withTexture("Sampler0", identifier)
 			.useOverlay()
 			.sortOnUpload()
@@ -154,14 +138,6 @@ public final class FrozenLibRenderTypes {
 
 	public static RenderType entityTranslucentEmissiveFixedNoOutline(Identifier identifier) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(identifier, false);
-	}
-
-	public static RenderType entityTranslucentEmissiveAlwaysRender(Identifier identifier) {
-		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER.apply(identifier, false);
-	}
-
-	public static RenderType entityTranslucentEmissiveAlwaysRenderCull(Identifier identifier) {
-		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL.apply(identifier, false);
 	}
 
 	public static RenderType apparitionOuter(Identifier identifier) {

@@ -98,34 +98,6 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = RenderPipelines.register(
-		RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render"))
-			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
-			.withShaderDefine("EMISSIVE")
-			.withShaderDefine("PER_FACE_LIGHTING")
-			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-			// TODO: test
-			.withDepthStencilState(Optional.empty())
-			.withCull(false)
-			.build()
-	);
-
-	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = RenderPipelines.register(
-		RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
-			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render_cull"))
-			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
-			.withShaderDefine("EMISSIVE")
-			.withShaderDefine("PER_FACE_LIGHTING")
-			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
-			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-			// TODO: test
-			.withDepthStencilState(Optional.empty())
-			.withCull(true)
-			.build()
-	);
-
 	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
