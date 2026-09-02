@@ -50,8 +50,11 @@ import net.minecraft.world.entity.ai.sensing.Sensor;
 import net.minecraft.world.entity.ai.sensing.SensorType;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
@@ -186,7 +189,7 @@ public interface DeferredRegister<T> {
 		FeatureFlag[] requiredFeatures();
 
 		default <T> T applyFeaturesIfNotDefault(T value, BiConsumer<FeatureFlag[], T> consumer) {
-			if (this.requiredFeatures() ==  null) return value;
+			if (this.requiredFeatures() == null || Arrays.stream(this.requiredFeatures()).allMatch(flag -> flag == FeatureFlags.VANILLA)) return value;
 			consumer.accept(this.requiredFeatures(), value);
 			return value;
 		}
@@ -807,13 +810,21 @@ public interface DeferredRegister<T> {
 		}
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
-		default DeferredItem<BlockItem> registerWoodBlockItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldWoodItem(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
-		default DeferredItem<BlockItem> registerWoodSlabItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldWoodSlabItem(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_SLABS));
+		}
+
+		default DeferredItem<BlockItem> registerOverworldSaplingItem(BlockItemId key, Supplier<? extends Block> block) {
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW).cookingFuel(NumberProviders.COOKING_TIME_DRY_PLANTS));
+		}
+
+		default DeferredItem<BlockItem> registerOverworldLeavesItem(BlockItemId key, Supplier<? extends Block> block) {
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW));
 		}
 
 		default DeferredItem<BlockItem> registerCookableButtonItem(BlockItemId key, Supplier<? extends Block> block) {
@@ -942,6 +953,14 @@ public interface DeferredRegister<T> {
 
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type) {
 			return this.registerSpawnEgg(key, type::get);
+		}
+
+		default DeferredItem<BoatItem> registerBoatItem(ResourceKey<Item> id, Supplier<EntityType<? extends AbstractBoat>> boat) {
+			return this.registerItem(
+				id,
+				properties -> new BoatItem(boat.get(), properties),
+				() -> new Item.Properties().cookingFuel(NumberProviders.COOKING_TIME_BOATS).stacksTo(1)
+			);
 		}
 
 		// COPPER
