@@ -32,15 +32,16 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProvider;
 
 @UnstableApi
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
 	public ArrayList<Holder<LootItemCondition>> conditions = new ArrayList<>();
 	public ArrayList<Holder<LootItemFunction>> functions = new ArrayList<>();
-	public Holder<NumberProvider> rolls;
-	public Holder<NumberProvider> bonusRolls;
+	public Holder<ContextIntProvider> rolls;
+	public Holder<ContextFloatProvider> bonusRolls;
 
 	public MutableLootPool(LootPool lootPool) {
 		final LootPoolAccessor accessor = (LootPoolAccessor) lootPool;

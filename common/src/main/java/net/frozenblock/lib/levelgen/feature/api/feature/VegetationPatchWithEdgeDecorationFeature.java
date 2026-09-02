@@ -42,7 +42,7 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 
 	public VegetationPatchWithEdgeDecorationFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,

@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.levelgen.material.api;
 
-import java.util.List;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -25,58 +24,56 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.MaterialRules;
+import net.minecraft.world.level.levelgen.material.condition.BiomeCondition;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 public final class FrozenLibMaterialRules {
-	public static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
-	public static final SurfaceRules.RuleSource BEDROCK = makeStateRule(Blocks.BEDROCK);
-	public static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.white());
-	public static final SurfaceRules.RuleSource ORANGE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.orange());
-	public static final SurfaceRules.RuleSource TERRACOTTA = makeStateRule(Blocks.TERRACOTTA);
-	public static final SurfaceRules.RuleSource RED_SAND = makeStateRule(Blocks.RED_SAND);
-	public static final SurfaceRules.RuleSource RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE);
-	public static final SurfaceRules.RuleSource STONE = makeStateRule(Blocks.STONE);
-	public static final SurfaceRules.RuleSource DEEPSLATE = makeStateRule(Blocks.DEEPSLATE);
-	public static final SurfaceRules.RuleSource DIRT = makeStateRule(Blocks.DIRT);
-	public static final SurfaceRules.RuleSource PODZOL = makeStateRule(Blocks.PODZOL);
-	public static final SurfaceRules.RuleSource COARSE_DIRT = makeStateRule(Blocks.COARSE_DIRT);
-	public static final SurfaceRules.RuleSource MYCELIUM = makeStateRule(Blocks.MYCELIUM);
-	public static final SurfaceRules.RuleSource GRASS_BLOCK = makeStateRule(Blocks.GRASS_BLOCK);
-	public static final SurfaceRules.RuleSource CALCITE = makeStateRule(Blocks.CALCITE);
-	public static final SurfaceRules.RuleSource GRAVEL = makeStateRule(Blocks.GRAVEL);
-	public static final SurfaceRules.RuleSource SAND = makeStateRule(Blocks.SAND);
-	public static final SurfaceRules.RuleSource SANDSTONE = makeStateRule(Blocks.SANDSTONE);
-	public static final SurfaceRules.RuleSource PACKED_ICE = makeStateRule(Blocks.PACKED_ICE);
-	public static final SurfaceRules.RuleSource SNOW_BLOCK = makeStateRule(Blocks.SNOW_BLOCK);
-	public static final SurfaceRules.RuleSource MUD = makeStateRule(Blocks.MUD);
-	public static final SurfaceRules.RuleSource POWDER_SNOW = makeStateRule(Blocks.POWDER_SNOW);
-	public static final SurfaceRules.RuleSource ICE = makeStateRule(Blocks.ICE);
-	public static final SurfaceRules.RuleSource WATER = makeStateRule(Blocks.WATER);
-	public static final SurfaceRules.RuleSource LAVA = makeStateRule(Blocks.LAVA);
-	public static final SurfaceRules.RuleSource NETHERRACK = makeStateRule(Blocks.NETHERRACK);
-	public static final SurfaceRules.RuleSource SOUL_SAND = makeStateRule(Blocks.SOUL_SAND);
-	public static final SurfaceRules.RuleSource SOUL_SOIL = makeStateRule(Blocks.SOUL_SOIL);
-	public static final SurfaceRules.RuleSource BASALT = makeStateRule(Blocks.BASALT);
-	public static final SurfaceRules.RuleSource BLACKSTONE = makeStateRule(Blocks.BLACKSTONE);
-	public static final SurfaceRules.RuleSource WARPED_WART_BLOCK = makeStateRule(Blocks.WARPED_WART_BLOCK);
-	public static final SurfaceRules.RuleSource WARPED_NYLIUM = makeStateRule(Blocks.WARPED_NYLIUM);
-	public static final SurfaceRules.RuleSource NETHER_WART_BLOCK = makeStateRule(Blocks.NETHER_WART_BLOCK);
-	public static final SurfaceRules.RuleSource CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM);
-	public static final SurfaceRules.RuleSource ENDSTONE = makeStateRule(Blocks.END_STONE);
+	public static final MaterialRule AIR = makeStateRule(Blocks.AIR);
+	public static final MaterialRule BEDROCK = makeStateRule(Blocks.BEDROCK);
+	public static final MaterialRule WHITE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.white());
+	public static final MaterialRule ORANGE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.orange());
+	public static final MaterialRule TERRACOTTA = makeStateRule(Blocks.TERRACOTTA);
+	public static final MaterialRule RED_SAND = makeStateRule(Blocks.RED_SAND);
+	public static final MaterialRule RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE);
+	public static final MaterialRule STONE = makeStateRule(Blocks.STONE);
+	public static final MaterialRule DEEPSLATE = makeStateRule(Blocks.DEEPSLATE);
+	public static final MaterialRule DIRT = makeStateRule(Blocks.DIRT);
+	public static final MaterialRule PODZOL = makeStateRule(Blocks.PODZOL);
+	public static final MaterialRule COARSE_DIRT = makeStateRule(Blocks.COARSE_DIRT);
+	public static final MaterialRule MYCELIUM = makeStateRule(Blocks.MYCELIUM);
+	public static final MaterialRule GRASS_BLOCK = makeStateRule(Blocks.GRASS_BLOCK);
+	public static final MaterialRule CALCITE = makeStateRule(Blocks.CALCITE);
+	public static final MaterialRule GRAVEL = makeStateRule(Blocks.GRAVEL);
+	public static final MaterialRule SAND = makeStateRule(Blocks.SAND);
+	public static final MaterialRule SANDSTONE = makeStateRule(Blocks.SANDSTONE);
+	public static final MaterialRule PACKED_ICE = makeStateRule(Blocks.PACKED_ICE);
+	public static final MaterialRule SNOW_BLOCK = makeStateRule(Blocks.SNOW_BLOCK);
+	public static final MaterialRule MUD = makeStateRule(Blocks.MUD);
+	public static final MaterialRule POWDER_SNOW = makeStateRule(Blocks.POWDER_SNOW);
+	public static final MaterialRule ICE = makeStateRule(Blocks.ICE);
+	public static final MaterialRule WATER = makeStateRule(Blocks.WATER);
+	public static final MaterialRule LAVA = makeStateRule(Blocks.LAVA);
+	public static final MaterialRule NETHERRACK = makeStateRule(Blocks.NETHERRACK);
+	public static final MaterialRule SOUL_SAND = makeStateRule(Blocks.SOUL_SAND);
+	public static final MaterialRule SOUL_SOIL = makeStateRule(Blocks.SOUL_SOIL);
+	public static final MaterialRule BASALT = makeStateRule(Blocks.BASALT);
+	public static final MaterialRule BLACKSTONE = makeStateRule(Blocks.BLACKSTONE);
+	public static final MaterialRule WARPED_WART_BLOCK = makeStateRule(Blocks.WARPED_WART_BLOCK);
+	public static final MaterialRule WARPED_NYLIUM = makeStateRule(Blocks.WARPED_NYLIUM);
+	public static final MaterialRule NETHER_WART_BLOCK = makeStateRule(Blocks.NETHER_WART_BLOCK);
+	public static final MaterialRule CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM);
+	public static final MaterialRule ENDSTONE = makeStateRule(Blocks.END_STONE);
 
-	public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
-		return new SurfaceRules.SequenceRuleSource(list);
+	public static MaterialRule makeStateRule(Block block) {
+		return MaterialRules.state(block.defaultBlockState());
 	}
 
-	public static SurfaceRules.RuleSource makeStateRule(Block block) {
-		return SurfaceRules.state(block.defaultBlockState());
+	public static BiomeCondition isBiomeTag(HolderGetter<Biome> biomes, TagKey<Biome> tagKey) {
+		return new BiomeCondition(biomes.getOrThrow(tagKey));
 	}
 
-	public static SurfaceRules.ConditionSource isBiomeTag(HolderGetter<Biome> biomes, TagKey<Biome> tagKey) {
-		return new SurfaceRules.BiomeConditionSource(biomes.getOrThrow(tagKey));
-	}
-
-	public static SurfaceRules.ConditionSource isBiomeTag(RegistryAccess registryAccess, TagKey<Biome> tagKey) {
+	public static BiomeCondition isBiomeTag(RegistryAccess registryAccess, TagKey<Biome> tagKey) {
 		return isBiomeTag(registryAccess.lookupOrThrow(Registries.BIOME), tagKey);
 	}
 }

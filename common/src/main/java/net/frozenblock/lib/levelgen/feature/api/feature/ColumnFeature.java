@@ -22,6 +22,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
@@ -33,7 +34,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 public record ColumnFeature(
-	BlockStateProvider state,
+	Holder<BlockStateProvider> state,
 	BlockPredicate replaceable,
 	IntProvider length,
 	Direction direction,
@@ -60,7 +61,7 @@ public record ColumnFeature(
 		for (int step = 0; step < length; step++) {
 			if (this.replaceable.test(level, mutable)) {
 				generated = true;
-				level.setBlock(mutable, this.state.getState(level, random, mutable), Block.UPDATE_ALL);
+				level.setBlock(mutable, this.state.value().getState(level, random, mutable), Block.UPDATE_ALL);
 			} else if (this.stopAtUnreplaceableBlock) {
 				return generated;
 			}

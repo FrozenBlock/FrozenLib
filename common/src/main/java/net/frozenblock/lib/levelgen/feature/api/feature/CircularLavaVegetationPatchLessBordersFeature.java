@@ -44,7 +44,7 @@ public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPat
 
 	public CircularLavaVegetationPatchLessBordersFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,

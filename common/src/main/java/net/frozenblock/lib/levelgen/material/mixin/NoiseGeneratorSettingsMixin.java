@@ -21,7 +21,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.levelgen.material.impl.NoiseGeneratorSettingsInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.MaterialRules;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,18 +34,18 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorSettingsInterf
 	 * Surface rules added by FrozenLib
 	 */
 	@Unique
-	private SurfaceRules.RuleSource frozenLib$ruleSourceAddition;
+	private MaterialRule frozenLib$materialRuleAddition;
 
 	@ModifyReturnValue(method = "materialRule", at = @At("RETURN"))
-	private Holder<SurfaceRules.RuleSource> frozenLib$modifyRules(Holder<SurfaceRules.RuleSource> original) {
-		if (this.frozenLib$ruleSourceAddition == null) return original;
-		return Holder.direct(SurfaceRules.sequence(this.frozenLib$ruleSourceAddition, original.value()));
+	private Holder<MaterialRule> frozenLib$modifyRules(Holder<MaterialRule> original) {
+		if (this.frozenLib$materialRuleAddition == null) return original;
+		return Holder.direct(MaterialRules.sequence(this.frozenLib$materialRuleAddition, original.value()));
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$setRuleSourceAddition(SurfaceRules.RuleSource ruleSource) {
-		if (ruleSource == null || ruleSource == this.frozenLib$ruleSourceAddition) return;
-		this.frozenLib$ruleSourceAddition = ruleSource;
+	public void frozenLib$setMaterialRuleAddition(MaterialRule materialRule) {
+		if (materialRule == null || materialRule == this.frozenLib$materialRuleAddition) return;
+		this.frozenLib$materialRuleAddition = materialRule;
 	}
 }

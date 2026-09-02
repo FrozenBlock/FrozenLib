@@ -8,8 +8,9 @@
   },
   "mixins": [
     "bonemeal.BoneMealItemMixin",
-    "component.BlockTransformerMappingsMixin",
+    "component.BlockTransformerMixin",
     "component.BundleContentsMixin",
+    "component.ResourceManagerRegistryLoadTaskMixin",
     "component.removable.AbstractContainerMenuMixin",
     "component.removable.ItemStackMixin",
     "cooldown.EntityMixin",

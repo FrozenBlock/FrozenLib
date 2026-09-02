@@ -101,8 +101,8 @@ public class ClientScreenShaker {
 	}
 
 	public static void apply(PoseStack poseStack, float partialTicks) {
-		poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, prevYRot, yRot)));
-		poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, prevXRot, xRot)));
-		poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, prevZRot, zRot)));
+		poseStack.rotate(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, prevYRot, yRot)));
+		poseStack.rotate(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, prevXRot, xRot)));
+		poseStack.rotate(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, prevZRot, zRot)));
 	}
 }

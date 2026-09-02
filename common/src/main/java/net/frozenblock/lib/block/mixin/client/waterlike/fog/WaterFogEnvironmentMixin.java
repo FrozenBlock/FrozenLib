@@ -30,6 +30,7 @@ import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.material.FogType;
+import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -71,8 +72,8 @@ public class WaterFogEnvironmentMixin {
 	}
 
 	@ModifyReturnValue(method = "getBaseColor", at = @At("RETURN"))
-	public int frozenLib$modifyFogColor(
-		int original,
+	public Vector3fc frozenLib$modifyFogColor(
+		Vector3fc original,
 		@Local(argsOnly = true) float partialTicks
 	) {
 		return WaterLikeFogUtil.getModifiedFogColor(partialTicks, original);

@@ -25,8 +25,8 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @UtilityClass
 @ClientOnly
@@ -53,15 +53,12 @@ public final class WaterLikeFogUtil {
 		return original * Mth.lerp(Mth.lerp(partialTicks, prevFogStrength, fogStrength), 1F, Mth.lerp(partialTicks, prevFogDistance, fogDistance));
 	}
 
-	public static int getModifiedFogColor(float partialTicks, int original) {
+	public static Vector3fc getModifiedFogColor(float partialTicks, Vector3fc original) {
 		if (prevFogStrength == 0F && fogStrength == 0F) return original;
-		return ARGB.color(
-			new Vec3(
-				ARGB.vector3fFromRGB24(original).lerp(
-					prevFogColor.lerp(fogColor, partialTicks, new Vector3f(0F, 0F, 0F)),
-					Mth.lerp(partialTicks, prevFogStrength, fogStrength)
-				)
-			)
+		return ARGB.srgbLerp(
+			Mth.lerp(partialTicks, prevFogStrength, fogStrength),
+			original,
+			ARGB.srgbLerp(partialTicks, prevFogColor, fogColor)
 		);
 	}
 

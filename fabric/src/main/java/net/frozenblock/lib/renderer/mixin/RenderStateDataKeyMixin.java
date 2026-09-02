@@ -67,7 +67,7 @@ public interface RenderStateDataKeyMixin extends FrozenLibRenderState { // in co
 	}
 
 	@Unique
-	private static <T>net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T> getOrCreateFabricKey(RenderStateDataKey<T> key) {
+	private static <T> net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T> getOrCreateFabricKey(RenderStateDataKey<T> key) {
 		final net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T> fabricKey = (net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T>) key.getFabricKey();
 		if (fabricKey != null) return fabricKey;
 

@@ -22,9 +22,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
@@ -38,12 +39,12 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 public record ColumnWithDiskFeature(
-	BlockStateProvider state,
+	Holder<BlockStateProvider> state,
 	IntProvider radius,
 	IntProvider height,
 	float surroundingPillarChance,
 	HolderSet<Block> replaceableBlocks,
-	BlockStateProvider diskState
+	Holder<BlockStateProvider> diskState
 ) implements Feature {
 	public static final MapCodec<ColumnWithDiskFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(ColumnWithDiskFeature::state),
@@ -68,7 +69,7 @@ public record ColumnWithDiskFeature(
 
 		// DISK
 		placeDisk: {
-			final BlockState diskState = this.diskState.getOptionalState(level, random, origin);
+			final BlockState diskState = this.diskState.value().getOptionalState(level, random, origin);
 			if (diskState == null) break placeDisk;
 
 			final BlockPos.MutableBlockPos mutable = surfacePos.mutable();
@@ -95,7 +96,7 @@ public record ColumnWithDiskFeature(
 
 		// COLUMN
 		placeColumn: {
-			final BlockState columnState = this.state.getState(level, random, origin);
+			final BlockState columnState = this.state.value().getState(level, random, origin);
 			final BlockPos.MutableBlockPos mutable = origin.mutable();
 			final int columnHeight = this.height.sample(random);
 

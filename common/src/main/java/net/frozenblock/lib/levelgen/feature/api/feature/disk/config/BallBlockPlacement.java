@@ -22,6 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
@@ -34,22 +35,20 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 public class BallBlockPlacement {
-	public static final Codec<BallBlockPlacement> CODEC = RecordCodecBuilder.create(
-		instance -> instance.group(
-			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.stateProvider),
-			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
-			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_inner_block_in_outer_ring", 0F).forGetter(config -> config.chanceToChooseInnerBlockInOuterRing),
-			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("fade_start_percentage", 1F).forGetter(config -> config.fadeStartPercentage),
-			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
-			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
-			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset),
-			RegistryCodecs.holderSet(Registries.BIOME).lenientOptionalFieldOf("excluded_biomes").forGetter(config -> config.excludedBiomes),
-			BallOuterRingBlockPlacement.CODEC.lenientOptionalFieldOf("outer_placement").forGetter(config -> config.outerRingBlockPlacement)
-		).apply(instance, BallBlockPlacement::new)
-	);
+	public static final Codec<BallBlockPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.stateProvider),
+		Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
+		Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_inner_block_in_outer_ring", 0F).forGetter(config -> config.chanceToChooseInnerBlockInOuterRing),
+		Codec.floatRange(0F, 1F).lenientOptionalFieldOf("fade_start_percentage", 1F).forGetter(config -> config.fadeStartPercentage),
+		BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
+		BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+		Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
+		Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset),
+		RegistryCodecs.holderSet(Registries.BIOME).lenientOptionalFieldOf("excluded_biomes").forGetter(config -> config.excludedBiomes),
+		BallOuterRingBlockPlacement.CODEC.lenientOptionalFieldOf("outer_placement").forGetter(config -> config.outerRingBlockPlacement)
+	).apply(instance, BallBlockPlacement::new));
 
-	private final BlockStateProvider stateProvider;
+	private final Holder<BlockStateProvider> stateProvider;
 	private final float placementChance;
 	private final float chanceToChooseInnerBlockInOuterRing;
 	private final float fadeStartPercentage;
@@ -61,7 +60,7 @@ public class BallBlockPlacement {
 	private final Optional<BallOuterRingBlockPlacement> outerRingBlockPlacement;
 
 	public BallBlockPlacement(
-		BlockStateProvider stateProvider,
+		Holder<BlockStateProvider> stateProvider,
 		float placementChance,
 		float chanceToChooseInnerBlockInOuterRing,
 		float fadeStartPercentage,
@@ -121,14 +120,14 @@ public class BallBlockPlacement {
 		if (!this.replacementBlockPredicate.test(level, pos)) return false;
 		if (!this.searchingBlockPredicate.test(level, pos)) return false;
 
-		final BlockState state = this.stateProvider.getState(level, random, pos);
+		final BlockState state = this.stateProvider.value().getState(level, random, pos);
 		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
 		return true;
 	}
 
 	public static class Builder {
-		private final BlockStateProvider stateProvider;
+		private final Holder<BlockStateProvider> stateProvider;
 		private float placementChance = 1F;
 		private float chanceToChooseInnerBlockInOuterRing = 0F;
 		private float fadeStartPercentage = 1F;
@@ -139,8 +138,12 @@ public class BallBlockPlacement {
 		private Optional<HolderSet<Biome>> excludedBiomes = Optional.empty();
 		private Optional<BallOuterRingBlockPlacement> outerRingBlockPlacement = Optional.empty();
 
-		public Builder(BlockStateProvider stateProvider) {
+		public Builder(Holder<BlockStateProvider> stateProvider) {
 			this.stateProvider = stateProvider;
+		}
+
+		public Builder(BlockStateProvider stateProvider) {
+			this(Holder.direct(stateProvider));
 		}
 
 		public Builder placementChance(float chance) {

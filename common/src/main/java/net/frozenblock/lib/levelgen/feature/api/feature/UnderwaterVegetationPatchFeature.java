@@ -41,7 +41,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 
 	public UnderwaterVegetationPatchFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,

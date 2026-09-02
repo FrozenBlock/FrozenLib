@@ -17,9 +17,6 @@
 
 package net.frozenblock.lib.config.v1.entry;
 
-import net.frozenblock.lib.config.v1.entry.TypedEntry;
-import net.frozenblock.lib.config.v1.entry.TypedEntryType;
-
 /**
  * @since 1.7
  */

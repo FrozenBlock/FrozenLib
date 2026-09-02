@@ -24,7 +24,7 @@ import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 @UtilityClass
 public final class FTLootTables {
@@ -36,7 +36,7 @@ public final class FTLootTables {
 			BuiltInLootTables.SPAWN_BONUS_CHEST, false,
 			(id, mutableLootTable, registries) -> mutableLootTable.modifyPools(
 				MutableLootTable.has(Items.ACACIA_LOG),
-				(lootPool) -> lootPool.add(Items.DIAMOND_BLOCK, 3, SetItemCountFunction.setCount(UniformGenerator.between(1F, 3F)))
+				(lootPool) -> lootPool.add(Items.DIAMOND_BLOCK, 3, SetItemCountFunction.setCount(ContextIntProviders.between(1, 3)))
 			)
 		);
 

@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api.feature;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.util.valueproviders.FloatProviders;
@@ -34,7 +35,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.phys.Vec3;
 
 public record CurvingSpikeFeature(
-	BlockStateProvider stateProvider,
+	Holder<BlockStateProvider> stateProvider,
 	IntProvider xWidth,
 	IntProvider zWidth,
 	IntProvider height,
@@ -71,7 +72,7 @@ public record CurvingSpikeFeature(
 			placeInSquare(
 				level,
 				mutable,
-				this.stateProvider,
+				this.stateProvider.value(),
 				this.replaceable,
 				(double) i / height,
 				curveDistance,
@@ -88,7 +89,7 @@ public record CurvingSpikeFeature(
 			placeInSquare(
 				level,
 				mutable,
-				this.stateProvider,
+				this.stateProvider.value(),
 				this.replaceable,
 				(double) i / BELOW_HEIGHT,
 				curveDistance,

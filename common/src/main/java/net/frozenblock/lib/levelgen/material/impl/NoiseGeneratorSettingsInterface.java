@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.levelgen.material.impl;
 
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 public interface NoiseGeneratorSettingsInterface {
-	default void frozenLib$setRuleSourceAddition(SurfaceRules.RuleSource ruleSource) {
+	default void frozenLib$setMaterialRuleAddition(MaterialRule materialRule) {
 		throw new AssertionError();
 	}
 }

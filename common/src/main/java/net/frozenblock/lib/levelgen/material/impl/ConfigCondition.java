@@ -20,30 +20,27 @@ package net.frozenblock.lib.levelgen.material.impl;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.MaterialRuleContext;
+import net.minecraft.world.level.levelgen.material.condition.ConditionEvaluator;
+import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 
-public record ConfigConditionSource(ConfigPredicate configPredicate) implements SurfaceRules.ConditionSource {
-	public static final MapCodec<ConfigConditionSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigConditionSource::configPredicate)
-	).apply(instance, ConfigConditionSource::new));
+public record ConfigCondition(ConfigPredicate configPredicate) implements MaterialCondition {
+	public static final MapCodec<ConfigCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigCondition::configPredicate)
+	).apply(instance, ConfigCondition::new));
 
 	@Override
-	public MapCodec<? extends SurfaceRules.ConditionSource> codec() {
-		return CODEC;
+	public ConditionEvaluator compile(MaterialRuleContext context) {
+		return new MaterialRuleContext.LazyYCondition(context) {
+			@Override
+			protected boolean compute() {
+				return ConfigCondition.this.configPredicate.test();
+			}
+		};
 	}
 
 	@Override
-	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
-		class ConfigPredicateCondition extends SurfaceRules.LazyYCondition {
-			ConfigPredicateCondition(SurfaceRules.Context context) {
-				super(context);
-			}
-
-			protected boolean compute() {
-				return ConfigConditionSource.this.configPredicate().test();
-			}
-		}
-
-		return new ConfigPredicateCondition(context);
+	public MapCodec<? extends MaterialCondition> codec() {
+		return CODEC;
 	}
 }

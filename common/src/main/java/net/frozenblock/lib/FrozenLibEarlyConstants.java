@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;

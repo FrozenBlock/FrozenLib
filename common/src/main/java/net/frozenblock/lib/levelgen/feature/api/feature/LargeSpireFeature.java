@@ -23,6 +23,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
@@ -50,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 public record LargeSpireFeature(
 	int floorToCeilingSearchRange,
 	IntProvider columnRadius,
-	BlockStateProvider pathBlock,
+	Holder<BlockStateProvider> pathBlock,
 	FloatProvider heightScale,
 	float maxColumnRadiusToCaveHeightRatio,
 	FloatProvider stalactiteBluntness,
@@ -224,7 +225,7 @@ public record LargeSpireFeature(
 						final BlockPos pos = windOffsetter.offset(mutable);
 						if (isEmptyOrWaterOrLava(level, pos)) {
 							bl = true;
-							level.setBlock(pos, feature.pathBlock().getState(level, random, mutable), Block.UPDATE_ALL);
+							level.setBlock(pos, feature.pathBlock().value().getState(level, random, mutable), Block.UPDATE_ALL);
 						} else if (bl && level.getBlockState(pos).is(BlockTags.BASE_STONE_NETHER)) {
 							break;
 						}

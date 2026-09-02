@@ -20,27 +20,23 @@ package net.frozenblock.lib.block.mixin.client.fire;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.Optional;
-import net.frozenblock.lib.block.impl.fire.FireData;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ScreenEffectRenderer;
 import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.state.level.PlayerRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @ClientOnly
 @Mixin(ScreenEffectRenderer.class)
 public class ScreenEffectRendererMixin {
-
-	@Shadow
-	@Final
-	private Minecraft minecraft;
 
 	@WrapOperation(
 		method = "submit",
@@ -50,12 +46,13 @@ public class ScreenEffectRendererMixin {
 		)
 	)
 	public TextureAtlasSprite frozenLib$submitFireType(
-		SpriteGetter instance, SpriteId spriteId, Operation<TextureAtlasSprite> original
+		SpriteGetter instance, SpriteId spriteId, Operation<TextureAtlasSprite> original,
+		@Local(argsOnly = true) PlayerRenderState playerRenderState
 	) {
-		final FireData fireData = FireData.ATTACHMENT.get(this.minecraft.player);
-		if (fireData == null) return original.call(instance, spriteId);
+		final FireType fireType = playerRenderState.frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
+		if (fireType == null) return original.call(instance, spriteId);
 
-		final Optional<Identifier> optionalTexture = fireData.type().value().textures().texture1();
+		final Optional<Identifier> optionalTexture = fireType.textures().texture1();
 		if (optionalTexture.isPresent()) spriteId = Sheets.BLOCKS_MAPPER.apply(optionalTexture.get());
 
 		return original.call(instance, spriteId);

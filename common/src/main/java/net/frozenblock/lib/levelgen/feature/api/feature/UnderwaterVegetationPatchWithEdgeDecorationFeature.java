@@ -42,7 +42,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 
 	public UnderwaterVegetationPatchWithEdgeDecorationFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,

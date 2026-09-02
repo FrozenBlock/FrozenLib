@@ -38,7 +38,6 @@ public final class FrozenLibPlacementModifierTypes {
 		register.register("config_predicate", () -> ConfigPlacementFilter.CODEC);
 		register.register("noise_filter", () -> NoisePlacementFilter.CODEC);
 
-
 		register.register();
 	}
 }

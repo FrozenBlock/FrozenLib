@@ -28,13 +28,13 @@ import net.frozenblock.lib.entity.api.variant.ConfigCheck;
 import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ConfigPredicateDecorator;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
-import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
+import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
 import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.world.entity.variant.SpawnCondition;
-import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
+import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
@@ -191,8 +191,8 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return new ConfigLootCondition(this);
 	}
 
-	default SurfaceRules.ConditionSource asConditionSource() {
-		return new ConfigConditionSource(this);
+	default MaterialCondition asMaterialCondition() {
+		return new ConfigCondition(this);
 	}
 
 	default SpawnCondition asSpawnCondition() {

@@ -71,7 +71,7 @@ public class StructureUpgradeCommand {
 
 		if (log) foundPieces.forEach(identifier -> System.out.println("Found piece: " + identifier.toString()));
 
-		final StructureTemplateManager structureTemplateManager = source.getLevel().getStructureManager();
+		final StructureTemplateManager structureTemplateManager = source.getLevel().getStructureTemplateManager();
 		final Map<Identifier, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
 
 		foundPieces.forEach((identifier) -> {

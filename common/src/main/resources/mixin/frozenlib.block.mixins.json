@@ -60,6 +60,7 @@
     "client.fire.FlameFeatureRendererMixin",
     "client.fire.LavaParticleMixin",
     "client.fire.LavaParticleProviderMixin",
+    "client.fire.LevelExtractorMixin",
     "client.fire.ScreenEffectRendererMixin",
     "client.fire.TorchBlockMixin",
     "client.fire.WallTorchBlockMixin",

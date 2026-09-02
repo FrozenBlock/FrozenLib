@@ -83,7 +83,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -811,52 +811,52 @@ public interface DeferredRegister<T> {
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
 		default DeferredItem<BlockItem> registerOverworldWoodItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
 		default DeferredItem<BlockItem> registerOverworldWoodSlabItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_SLABS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS));
 		}
 
 		default DeferredItem<BlockItem> registerOverworldSaplingItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW).cookingFuel(NumberProviders.COOKING_TIME_DRY_PLANTS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS));
 		}
 
 		default DeferredItem<BlockItem> registerOverworldLeavesItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW));
 		}
 
 		default DeferredItem<BlockItem> registerCookableButtonItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
 		}
 
 		default DeferredItem<BlockItem> registerCookablePressurePlateItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		default DeferredItem<BlockItem> registerCookableTrapdoorItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		default DeferredItem<BlockItem> registerCookableFenceItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		default DeferredItem<BlockItem> registerCookableFenceGateItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		default DeferredItem<BlockItem> registerFlowerItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_MEDIUM));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM));
 		}
 
 		default DeferredItem<BlockItem> registerFlowerBedItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW));
 		}
 
 		default DeferredItem<BlockItem> registerLeafLitterItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_LOW).cookingFuel(NumberProviders.COOKING_TIME_DRY_PLANTS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS));
 		}
 
 		default DeferredItem<PlaceOnWaterBlockItem> registerPlaceOnWaterBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
@@ -876,11 +876,11 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredItem<DoubleHighBlockItem> registerCookableDoorItem(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerDoubleHighBlockItem(key, base, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
+			return this.registerDoubleHighBlockItem(key, base, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
 		}
 
 		default DeferredItem<DoubleHighBlockItem> registerDoubleTallFlowerItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerDoubleHighBlockItem(key, block, properties -> properties.compostable(NumberProviders.COMPOSTABLE_MEDIUM));
+			return this.registerDoubleHighBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM));
 		}
 
 		default DeferredItem<StandingAndWallBlockItem> registerSignItem(
@@ -902,7 +902,7 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredItem<StandingAndWallBlockItem> registerCookableSignItem(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
-			return this.registerSignItem(key, sign, wallSign, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
+			return this.registerSignItem(key, sign, wallSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
 		}
 
 		default DeferredItem<HangingSignItem> registerHangingSignItem(
@@ -924,7 +924,7 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredItem<HangingSignItem> registerCookableHangingSignItem(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
-			return this.registerHangingSignItem(key, hangingSign, wallHangingSign, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_HANGING_SIGNS));
+			return this.registerHangingSignItem(key, hangingSign, wallHangingSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_HANGING_SIGNS));
 		}
 
 		default DeferredItem<BlockItem> registerShelfItem(BlockItemId key, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
@@ -940,7 +940,7 @@ public interface DeferredRegister<T> {
 		}
 
 		default DeferredItem<BlockItem> registerCookableShelfItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(NumberProviders.COOKING_TIME_WOOD_BLOCKS));
+			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		default DeferredItem<Item> registerMusicDisc(ResourceKey<Item> key, ResourceKey<JukeboxSong> song) {
@@ -959,7 +959,7 @@ public interface DeferredRegister<T> {
 			return this.registerItem(
 				id,
 				properties -> new BoatItem(boat.get(), properties),
-				() -> new Item.Properties().cookingFuel(NumberProviders.COOKING_TIME_BOATS).stacksTo(1)
+				() -> new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_BOATS).stacksTo(1)
 			);
 		}
 

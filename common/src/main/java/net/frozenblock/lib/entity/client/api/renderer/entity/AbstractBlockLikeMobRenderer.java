@@ -84,7 +84,7 @@ public abstract class AbstractBlockLikeMobRenderer<T extends AbstractBlockLikeMo
 	}
 
 	public static void applyRotation(PoseStack poseStack, Vec3 rotationPivot, Quaternionf rotation) {
-		poseStack.mulPose(rotation);
+		poseStack.rotate(rotation);
 		poseStack.translate(rotationPivot);
 	}
 

@@ -37,6 +37,8 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -100,13 +102,13 @@ public final class PlayerBlockBreakEvents {
 		level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(loggedState));
 		level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, loggedState));
 
-		if (level.isClientSide()) return;
+		if (level.isClientSide() || !(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) return;
 
 		if (!player.preventsBlockDrops() && player.hasCorrectToolForDrops(loggedState)) {
 			final ItemStack itemStack = player.getMainHandItem();
 			final ItemStack destroyedWith = itemStack.copy();
 			itemStack.mineBlock(level, loggedState, pos, player);
-			Blocks.SNOW.playerDestroy(level, player, pos, loggedState, blockEntity, destroyedWith);
+			Blocks.SNOW.playerDestroy(serverLevel, serverPlayer, pos, loggedState, blockEntity, destroyedWith);
 		}
 	}
 

@@ -31,6 +31,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
@@ -58,12 +59,13 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 		final List<Entity> entities = new ArrayList<>();
 		minecraft.level.entitiesForRendering().forEach(entities::add);
 		entities.sort(Comparator.comparingDouble(e -> -e.position().distanceTo(cameraPos)));
+		final long chunkFadeDuration = Util.toMillis(minecraft.options.chunkSectionFadeInTime().get());
 		for (Entity entity : entities) {
 			final SpottingIcons icons = SpottingIcons.ATTACHMENT_TYPE.getAttachedOrElseGet(entity, () -> SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
 			final BlockPos blockPos = entity.blockPosition();
-			if (!(minecraft.level.isOutsideBuildHeight(blockPos.getY()) || minecraft.levelRenderer.isSectionCompiledAndVisible(blockPos))) continue;
+			if (!(minecraft.level.isOutsideBuildHeight(blockPos.getY()) || minecraft.levelRenderer.isSectionCompiledAndVisible(blockPos, chunkFadeDuration))) continue;
 
 			final Vec3 entityTopPosition = entity.getPosition(partialTicks).add(0D, entity.getBbHeight(), 0D);
 			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityTopPosition));

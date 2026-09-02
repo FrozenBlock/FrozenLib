@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
+import com.mojang.serialization.MapCodec;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +45,7 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 
 	public CircularWaterloggedVegetationPatchFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,

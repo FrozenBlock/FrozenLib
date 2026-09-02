@@ -19,7 +19,6 @@ package net.frozenblock.lib.config.v1.entry;
 
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
-import org.jetbrains.annotations.Contract;
 
 public record TypedEntryType<T>(String modId, Codec<T> codec) {
 
@@ -27,7 +26,6 @@ public record TypedEntryType<T>(String modId, Codec<T> codec) {
 		return register(this);
 	}
 
-	@Contract("_ -> param1")
 	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
 		return BasicConfigRegistry.register(type);
 	}

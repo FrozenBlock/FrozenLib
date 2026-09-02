@@ -35,36 +35,30 @@ public final class FrozenLibConstants {
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibEarlyConstants.UNSTABLE_LOGGING;
 	public static final Path FROZENLIB_GAME_DIRECTORY = FrozenLibEarlyConstants.FROZENLIB_GAME_DIRECTORY;
-	/**
-	 * Whether the current instance is running in datagen mode.
-	 * <p>
-	 * This is set up to specifically support FrozenBlock's environment, it may not work outside our projects!
-	 */
-	public static final boolean IS_DATAGEN = FrozenLibEarlyConstants.IS_DATAGEN;
 
 	// FROZENBLOCK MODS
 	public static final String WILDER_WILD_MOD_ID = FrozenLibEarlyConstants.WILDER_WILD_MOD_ID;
 	public static final boolean HAS_WILDER_WILD = FrozenLibEarlyConstants.HAS_WILDER_WILD;
 
-	public static final String TRAILIER_TALES_MOD_ID = "trailertales";
+	public static final String TRAILIER_TALES_MOD_ID = FrozenLibEarlyConstants.TRAILIER_TALES_MOD_ID;
 	public static final boolean HAS_TRAILIER_TALES = FrozenLibEarlyConstants.HAS_TRAILIER_TALES;
 
-	public static final String THE_COPPERIER_AGE_MOD_ID = "thecopperierage";
+	public static final String THE_COPPERIER_AGE_MOD_ID = FrozenLibEarlyConstants.THE_COPPERIER_AGE_MOD_ID;
 	public static final boolean HAS_THE_COPPERIER_AGE = FrozenLibEarlyConstants.HAS_THE_COPPERIER_AGE;
 
-	public static final String CHAOS_HYPERCUBED_MOD_ID = "chaoshypercubed";
+	public static final String CHAOS_HYPERCUBED_MOD_ID = FrozenLibEarlyConstants.CHAOS_HYPERCUBED_MOD_ID;
 	public static final boolean HAS_CHAOS_HYPERCUBED = FrozenLibEarlyConstants.HAS_CHAOS_HYPERCUBED;
 
-	public static final String NETHERIER_NETHER_MOD_ID = "netheriernether";
+	public static final String NETHERIER_NETHER_MOD_ID = FrozenLibEarlyConstants.NETHERIER_NETHER_MOD_ID;
 	public static final boolean HAS_NETHERIER_NETHER = FrozenLibEarlyConstants.HAS_NETHERIER_NETHER;
 
-	public static final String GLOWTONE_MOD_ID = "glowtone";
+	public static final String GLOWTONE_MOD_ID = FrozenLibEarlyConstants.GLOWTONE_MOD_ID;
 	public static final boolean HAS_GLOWTONE = FrozenLibEarlyConstants.HAS_GLOWTONE;
 
-	public static final String SPRINGIER_LIFE_MOD_ID = "springierlife";
+	public static final String SPRINGIER_LIFE_MOD_ID = FrozenLibEarlyConstants.SPRINGIER_LIFE_MOD_ID;
 	public static final boolean HAS_SPRINGIER_LIFE = FrozenLibEarlyConstants.HAS_SPRINGIER_LIFE;
 
-	public static final String SIMPLE_COPPER_PIPES_MOD_ID = "simple_copper_pipes";
+	public static final String SIMPLE_COPPER_PIPES_MOD_ID = FrozenLibEarlyConstants.SIMPLE_COPPER_PIPES_MOD_ID;
 	public static final boolean HAS_SIMPLE_COPPER_PIPES = FrozenLibEarlyConstants.HAS_SIMPLE_COPPER_PIPES;
 
 	// EXTERNAL MODS

@@ -44,7 +44,7 @@ import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicate
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
-import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
+import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
@@ -68,7 +68,7 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 
@@ -128,8 +128,8 @@ public final class FrozenLibMain {
 		StructureSetApi.init();
 		TemplatePoolApi.init();
 
-		final DeferredRegister<MapCodec<? extends SurfaceRules.ConditionSource>> materialConditionTypes = DeferredRegister.create(Registries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.MOD_ID);
-		materialConditionTypes.register("config_predicate", () -> ConfigConditionSource.CODEC);
+		final DeferredRegister<MapCodec<? extends MaterialCondition>> materialConditionTypes = DeferredRegister.create(Registries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.MOD_ID);
+		materialConditionTypes.register("config_predicate", () -> ConfigCondition.CODEC);
 		materialConditionTypes.register();
 
 		ScreenShakes.init();

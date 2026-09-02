@@ -24,20 +24,20 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 /**
- * Appends a {@link SurfaceRules.RuleSource} to a set of {@link DimensionType}s.
+ * Appends a {@link MaterialRule} to a set of {@link DimensionType}s.
  */
-public record RuleSourceAddition(HolderSet<DimensionType> dimensions, boolean hasPreliminarySurface, SurfaceRules.RuleSource ruleSource) {
-	public static final Codec<RuleSourceAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.holderSet(Registries.DIMENSION_TYPE).fieldOf("dimensions").forGetter(RuleSourceAddition::dimensions),
-		Codec.BOOL.optionalFieldOf("has_preliminary_surface", false).forGetter(RuleSourceAddition::hasPreliminarySurface),
-		SurfaceRules.RuleSource.CODEC.fieldOf("rule_source").forGetter(RuleSourceAddition::ruleSource)
-	).apply(instance, RuleSourceAddition::new));
+public record MaterialRuleAddition(HolderSet<DimensionType> dimensions, boolean hasPreliminarySurface, MaterialRule materialRule) {
+	public static final Codec<MaterialRuleAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		RegistryCodecs.holderSet(Registries.DIMENSION_TYPE).fieldOf("dimensions").forGetter(MaterialRuleAddition::dimensions),
+		Codec.BOOL.optionalFieldOf("has_preliminary_surface", false).forGetter(MaterialRuleAddition::hasPreliminarySurface),
+		MaterialRule.CODEC.fieldOf("rule").forGetter(MaterialRuleAddition::materialRule)
+	).apply(instance, MaterialRuleAddition::new));
 
-	public RuleSourceAddition(HolderSet<DimensionType> dimensions, SurfaceRules.RuleSource ruleSource) {
-		this(dimensions, false, ruleSource);
+	public MaterialRuleAddition(HolderSet<DimensionType> dimensions, MaterialRule materialRule) {
+		this(dimensions, false, materialRule);
 	}
 
 	public boolean matches(Holder<DimensionType> dimension) {

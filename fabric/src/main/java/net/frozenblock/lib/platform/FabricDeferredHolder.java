@@ -23,7 +23,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
 public class FabricDeferredHolder<R, T extends R> implements DeferredHolder<R, T> {
-
 	private Holder.Reference<T> reference;
 
 	void bind(Holder.Reference<T> reference) {

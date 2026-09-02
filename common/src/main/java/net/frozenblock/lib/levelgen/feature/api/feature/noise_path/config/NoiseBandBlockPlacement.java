@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
@@ -28,20 +29,18 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 public class NoiseBandBlockPlacement {
-	public static final Codec<NoiseBandBlockPlacement> CODEC = RecordCodecBuilder.create(
-		instance -> instance.group(
-			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
-			Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("minimum_noise_threshold", 1D).forGetter(config -> config.minNoiseThreshold),
-			Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("maximum_noise_threshold", 1D).forGetter(config -> config.maxNoiseThreshold),
-			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
-			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
-			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementPredicate),
-			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingPredicate),
-			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
-		).apply(instance, NoiseBandBlockPlacement::new)
-	);
+	public static final Codec<NoiseBandBlockPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+		Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("minimum_noise_threshold", 1D).forGetter(config -> config.minNoiseThreshold),
+		Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("maximum_noise_threshold", 1D).forGetter(config -> config.maxNoiseThreshold),
+		Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
+		Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
+		BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementPredicate),
+		BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingPredicate),
+		Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
+	).apply(instance, NoiseBandBlockPlacement::new));
 
-	private final BlockStateProvider blockStateProvider;
+	private final Holder<BlockStateProvider> blockStateProvider;
 	private final double minNoiseThreshold;
 	private final double maxNoiseThreshold;
 	private final float placementChance;
@@ -51,7 +50,7 @@ public class NoiseBandBlockPlacement {
 	private final int verticalPlacementOffset;
 
 	public NoiseBandBlockPlacement(
-		BlockStateProvider stateProvider,
+		Holder<BlockStateProvider> stateProvider,
 		double minNoiseThreshold,
 		double maxNoiseThreshold,
 		float placementChance,
@@ -83,14 +82,14 @@ public class NoiseBandBlockPlacement {
 		if (!this.replacementPredicate.test(level, pos)) return false;
 		if (!this.searchingPredicate.test(level, pos)) return false;
 
-		final BlockState state = this.blockStateProvider.getState(level, random, pos);
+		final BlockState state = this.blockStateProvider.value().getState(level, random, pos);
 		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
 		return true;
 	}
 
 	public static class Builder {
-		private final BlockStateProvider stateProvider;
+		private final Holder<BlockStateProvider> stateProvider;
 		private double minNoiseThreshold = -1D;
 		private double maxNoiseThreshold = 1D;
 		private float placementChance = 1F;
@@ -99,8 +98,12 @@ public class NoiseBandBlockPlacement {
 		private BlockPredicate searchingPredicate;
 		private int verticalPlacementOffset = 0;
 
-		public Builder(BlockStateProvider stateProvider) {
+		public Builder(Holder<BlockStateProvider> stateProvider) {
 			this.stateProvider = stateProvider;
+		}
+
+		public Builder(BlockStateProvider stateProvider) {
+			this(Holder.direct(stateProvider));
 		}
 
 		public Builder minNoiseThreshold(double minNoiseThreshold) {

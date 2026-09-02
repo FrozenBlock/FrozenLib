@@ -9,6 +9,7 @@
   "client": [
     "BlockEntityRenderStateMixin",
     "FrozenLibRenderStateMixin",
+    "PlayerRenderStateDataKeyMixin",
     "RenderStateDataKeyMixin",
     "camera.CameraMixin",
     "camera.CameraRenderStateMixin",

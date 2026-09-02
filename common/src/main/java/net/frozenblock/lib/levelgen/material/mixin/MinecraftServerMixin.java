@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.levelgen.material.mixin;
 
-import net.frozenblock.lib.levelgen.material.api.RuleSourceAdditions;
+import net.frozenblock.lib.levelgen.material.api.MaterialRuleAdditions;
 import net.minecraft.core.Holder;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
@@ -59,7 +59,7 @@ public abstract class MinecraftServerMixin {
 			final NoiseGeneratorSettings noiseGeneratorSettings = noiseBasedChunkGenerator.generatorSettings().value();
 			final Holder<DimensionType> dimension = levelStem.type();
 
-			RuleSourceAdditions.compileAndGet(registries, dimension).ifPresent(noiseGeneratorSettings::frozenLib$setRuleSourceAddition);
+			MaterialRuleAdditions.compileAndGet(registries, dimension).ifPresent(noiseGeneratorSettings::frozenLib$setMaterialRuleAddition);
 		}
 	}
 }

@@ -7,11 +7,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - `DataMarkerProcessableSinglePoolElement` and `DataMarkerProcessableLegacySinglePoolElement` are now both abstract classes.
   - This change allows for easy handling of Data Markers without the need for mixins.
 - Added the `StructureSetApi` class, allowing modders to easily add or remove `Structure`s to/from `StructureSet`s.
-- Added `RuleSourceAddition`s, replacing the previous API used to add new `RuleSource`s to Levels.
-  - Added the `frozenlib:rule_source_addition` Dynamic Registry, with the following format:
-    - `dimensions`: A Dimension Type's ID, a list of Dimension Type IDs, or a Dimenion Type Tag that `rule_sources` will be added to.
+- Added `RuleSourceAddition`s (or `MaterialRuleAddition`s on 26.3+,) replacing the previous API used to add new `RuleSource`s to Levels.
+  - Added the `frozenlib:rule_source_addition` (`frozenlib:material_rule_addition` on 26.3+) Dynamic Registry, with the following format:
+    - `dimensions`: A Dimension Type's ID, a list of Dimension Type IDs, or a Dimension Type Tag that `rule_sources` will be added to.
     - `has_preliminary_surface`: Whether `rule_sources` can only generate on the world's surface. (i.e., the surface of the Overworld.)
-    - `rule_source`: The `RuleSource` to add to `dimensions`.
+    - `rule_source` (or `rule` on 26.3+): The `RuleSource` (or `MaterialRule` on 26.3+) to add to `dimensions`.
   - Removed `SurfaceRuleEvents`, `DimensionBoundRuleSource`, and `SurfaceRuleUtil` as they are no longer needed.
 - Added the `#frozenlib:overworld`, `#frozenlib:nether`, and `#frozenlib:end` Dimension Type Tags.
 - Added `PlayerDamageTypeSound`s, used to play a custom sound when a Player is damaged by a specific `DamageType`.
@@ -28,7 +28,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `structures`: A Structure's ID, a list of Structure IDs, or a Structure Tag that `processors` will be added to.
     - `processors`: A list of `StructureProcessor`s to add to `structures`.
     - `config_predicate`: An optional field, determining whether this can be used.
-- Added `BlockTransformerMappingsApi`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
+- Added `BlockTransformerEvents`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
   - This replaces the previous `ShovelApi` and `AxeApi` classes.
 - Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
   - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
@@ -112,7 +112,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `max_segment`: The maximum amount of segments to provide, in a range of 1-4.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
-- Added `NumberProviderProvider` (pardon the odd name,) allowing the creation of Number Providers via datagen without encountering issues.
 - Added the `frozenlib:config_predicate` Tree Decorator, with the following format:
   - `decorator`: The Tree Decorator to generate.
   - `predicate`: The Config Predicate to test, determining whether `decorator` can generate.

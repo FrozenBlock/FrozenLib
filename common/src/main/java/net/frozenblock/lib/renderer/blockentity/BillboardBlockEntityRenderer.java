@@ -70,7 +70,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		CameraRenderState camera
 	) {
 		poseStack.translate(0.5F, 0F, 0.5F);
-		poseStack.mulPose(camera.frozenLib$horizontalOrientation());
+		poseStack.rotate(camera.frozenLib$horizontalOrientation());
 		final TextureAtlasSprite sprite = this.getSprite(state);
 		collector.submitModelPart(
 			this.base,

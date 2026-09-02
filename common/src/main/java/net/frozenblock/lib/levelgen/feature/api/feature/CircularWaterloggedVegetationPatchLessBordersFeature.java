@@ -45,7 +45,7 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 
 	public CircularWaterloggedVegetationPatchLessBordersFeature(
 		HolderSet<Block> replaceable,
-		BlockStateProvider groundState,
+		Holder<BlockStateProvider> groundState,
 		Holder<PlacedFeature> vegetationFeature,
 		CaveSurface surface,
 		IntProvider depth,
