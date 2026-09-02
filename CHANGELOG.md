@@ -104,7 +104,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+
-- Added the `frozenlib:strict_rule_based_state_provider` Block State Provider, an alternate implementation of `minecraft:rule_based_state_provider` that properly accounts for failed nested Rule-Based State Providers.
 - Added the `frozenlib:leaf_litter_provider` and `frozenlib:flower_bed_provider` Block State Providers, with the following format:
   - `block`: The id of the Block to generate.
   - `min_segment` (Optional): The minimum amount of segments to provide, in a range of 1-4.
