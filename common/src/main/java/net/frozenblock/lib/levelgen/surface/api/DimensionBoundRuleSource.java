@@ -19,6 +19,9 @@ package net.frozenblock.lib.levelgen.surface.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
@@ -31,4 +34,13 @@ public record DimensionBoundRuleSource(Identifier dimension, SurfaceRules.RuleSo
 		Identifier.CODEC.fieldOf("dimension").forGetter(DimensionBoundRuleSource::dimension),
 		SurfaceRules.RuleSource.CODEC.fieldOf("rule_source").forGetter(DimensionBoundRuleSource::ruleSource)
 	).apply(instance, DimensionBoundRuleSource::new));
+
+	// todo more compact stream codec
+	public static final StreamCodec<ByteBuf, DimensionBoundRuleSource> STREAM_CODEC = StreamCodec.composite(
+		Identifier.STREAM_CODEC,
+		DimensionBoundRuleSource::dimension,
+		ByteBufCodecs.fromCodec(SurfaceRules.RuleSource.CODEC),
+		DimensionBoundRuleSource::ruleSource,
+		DimensionBoundRuleSource::new
+	);
 }
