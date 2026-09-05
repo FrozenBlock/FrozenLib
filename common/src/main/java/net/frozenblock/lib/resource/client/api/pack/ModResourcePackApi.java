@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
@@ -58,6 +57,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -230,7 +230,7 @@ public final class ModResourcePackApi {
 					return failToast;
 				}
 			},
-			Executors.newCachedThreadPool()
+			Util.nonCriticalIoPool().forName("downloadModResourcePack")
 		).whenComplete((value, throwable) -> {
 			value.ifPresent(failToast -> ((ToastInfo)failToast).addToast());
 		});
