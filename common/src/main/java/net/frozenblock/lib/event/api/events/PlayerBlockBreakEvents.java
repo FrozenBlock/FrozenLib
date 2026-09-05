@@ -41,7 +41,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -106,7 +105,7 @@ public final class PlayerBlockBreakEvents {
 			final ItemStack itemStack = player.getMainHandItem();
 			final ItemStack destroyedWith = itemStack.copy();
 			itemStack.mineBlock(level, loggedState, pos, player);
-			Blocks.SNOW.playerDestroy(level, player, pos, loggedState, blockEntity, destroyedWith);
+			loggedState.getBlock().playerDestroy(level, player, pos, loggedState, blockEntity, destroyedWith);
 		}
 	}
 
