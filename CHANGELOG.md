@@ -69,6 +69,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` and `BlockTickRegistry` classes.
   - `BlockTickEvents` provides events that trigger regardless of the Block.
   - `BlockTickRegistry` uses the new Block Attachment system, and provides a simple way to add new Block-specific behavior.
+- Fixed an issue that required Minecraft to run for an entire minute before finally shutting down. ([#81](https://github.com/FrozenBlock/FrozenLib/issues/81) - Fixed in pull request [#82](https://github.com/FrozenBlock/FrozenLib/pull/82))
 - Fixed a major issue that caused certain DataFixers to not work as intended.
 
 ### 26.3+
