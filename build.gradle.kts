@@ -31,8 +31,10 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
+val min_fabric_loader_version: String by project
+
 mod {
-    additional.add("fabric_loader_version")
+    additional.add("min_fabric_loader_version", ">=$min_fabric_loader_version")
     additional.add("fabric_kotlin_version")
     additional.add("mod_description")
     additional.add("mod_credits")

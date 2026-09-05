@@ -36,7 +36,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
@@ -46,6 +45,7 @@ import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -125,7 +125,7 @@ public class CapeUtil {
 				} catch (IOException ignored) {}
 				return Optional.empty();
 			},
-			Executors.newCachedThreadPool()
+			Util.nonCriticalIoPool().forName("registerCapesFromURL")
 		).whenComplete((value, throwable) -> {
 			value.ifPresent(string -> CAPE_REPOS.add((String) string));
 		});
