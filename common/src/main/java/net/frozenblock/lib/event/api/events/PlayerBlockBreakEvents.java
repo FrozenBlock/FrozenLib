@@ -43,7 +43,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -99,7 +98,7 @@ public final class PlayerBlockBreakEvents {
 	 */
 	// New method added by FrozenBlock (AViewFromTheTop)
 	public static void onDestroyLoggedBlock(Level level, Player player, BlockPos pos, BlockState loggedState, @Nullable BlockEntity blockEntity) {
-		level.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(loggedState));
+		level.levelEvent(player, LevelEvent.PARTICLES_AND_SOUND_DESTROY_BLOCK, pos, Block.getId(loggedState));
 		level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, loggedState));
 
 		if (level.isClientSide() || !(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) return;
@@ -108,7 +107,7 @@ public final class PlayerBlockBreakEvents {
 			final ItemStack itemStack = player.getMainHandItem();
 			final ItemStack destroyedWith = itemStack.copy();
 			itemStack.mineBlock(level, loggedState, pos, player);
-			Blocks.SNOW.playerDestroy(serverLevel, serverPlayer, pos, loggedState, blockEntity, destroyedWith);
+			loggedState.getBlock().playerDestroy(serverLevel, serverPlayer, pos, loggedState, blockEntity, destroyedWith);
 		}
 	}
 
