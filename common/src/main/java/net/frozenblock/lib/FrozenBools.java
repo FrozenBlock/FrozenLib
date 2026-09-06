@@ -48,7 +48,8 @@ public final class FrozenBools {
     public static final boolean HAS_CLOTH_CONFIG = hasMod("cloth-config") || hasMod("cloth_config");
     public static final boolean HAS_SIMPLE_COPPER_PIPES = hasMod("simple_copper_pipes");
     public static final boolean HAS_SODIUM = hasMod("sodium");
-    public static final boolean HAS_TERRABLENDER = hasMod("terrablender");
+	public static final boolean HAS_IRIS = hasMod("iris");
+	public static final boolean HAS_TERRABLENDER = hasMod("terrablender");
 
 	public static boolean hasMod(String mod) {
 		return ModLoader.isModLoaded(mod);
