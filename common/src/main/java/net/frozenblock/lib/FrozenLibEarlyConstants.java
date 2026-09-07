@@ -19,7 +19,6 @@ package net.frozenblock.lib;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
@@ -88,5 +87,6 @@ public final class FrozenLibEarlyConstants {
 	// Cloth has a separate id on Fabric vs. Neo
 	public static final boolean HAS_CLOTH_CONFIG = ModLoader.isModLoaded("cloth-config", "cloth_config");
 	public static final boolean HAS_SODIUM = ModLoader.isModLoaded("sodium");
+	public static final boolean HAS_IRIS = ModLoader.isModLoaded("iris");
 	public static final boolean HAS_TERRABLENDER = ModLoader.isModLoaded("terrablender");
 }

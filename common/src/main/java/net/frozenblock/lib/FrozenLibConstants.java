@@ -65,6 +65,7 @@ public final class FrozenLibConstants {
 	public static final boolean HAS_MODMENU = FrozenLibEarlyConstants.HAS_MODMENU;
 	public static final boolean HAS_CLOTH_CONFIG = FrozenLibEarlyConstants.HAS_CLOTH_CONFIG;
 	public static final boolean HAS_SODIUM = FrozenLibEarlyConstants.HAS_SODIUM;
+	public static final boolean HAS_IRIS = FrozenLibEarlyConstants.HAS_IRIS;
 	public static final boolean HAS_TERRABLENDER = FrozenLibEarlyConstants.HAS_TERRABLENDER;
 
 	// DEBUG
