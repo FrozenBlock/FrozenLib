@@ -87,20 +87,27 @@ public final class BiomeModifications {
 	 * @see BiomeSelectors
 	 * @see net.minecraft.world.level.biome.MobSpawnSettings.Builder#addSpawn(EntityType, MobCategory, int, IntProvider)
 	 */
-	public static void addSpawn(Predicate<BiomeSelectionContext> biomeSelector,
-	                            MobCategory category, EntityType<?> entityType,
-	                            int weight, int minGroupSize, int maxGroupSize) {
+	public static void addSpawn(
+		Predicate<BiomeSelectionContext> biomeSelector,
+		MobCategory category,
+		EntityType<?> type,
+		int weight,
+		int minGroupSize,
+		int maxGroupSize
+	) {
 		// See constructor of SpawnSettings.SpawnEntry for context
-		Preconditions.checkArgument(entityType.getCategory() != MobCategory.MISC,
-			"Cannot add spawns for entities with category=MISC since they'd be replaced by pigs.");
+		Preconditions.checkArgument(
+			type.getCategory() != MobCategory.MISC,
+			"Cannot add spawns for entities with category=MISC since they'd be replaced by pigs."
+		);
 
 		// We need the entity type to be registered, or we cannot deduce an ID otherwise
-		Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
-		Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.getResourceKey(entityType).isPresent(), "Unregistered entity type: %s", entityType);
+		final Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+		Preconditions.checkState(BuiltInRegistries.ENTITY_TYPE.getResourceKey(type).isPresent(), "Unregistered entity type: %s", type);
 
 		create(id).add(ModificationPhase.ADDITIONS, biomeSelector, context -> {
-			IntProvider count = minGroupSize == maxGroupSize ? ConstantInt.of(minGroupSize) : UniformInt.of(minGroupSize, maxGroupSize);
-			context.getMobSpawnSettings().addSpawn(category, new MobSpawnSettings.SpawnerData(entityType, count), weight);
+			final IntProvider count = minGroupSize == maxGroupSize ? ConstantInt.of(minGroupSize) : UniformInt.of(minGroupSize, maxGroupSize);
+			context.getMobSpawnSettings().addSpawn(category, new MobSpawnSettings.SpawnerData(type, count), weight);
 		});
 	}
 
