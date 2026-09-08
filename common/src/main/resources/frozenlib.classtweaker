@@ -95,6 +95,7 @@ transitive-accessible method net/minecraft/world/level/block/Blocks flowerPotPro
 transitive-accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks netherStemProperties (Lnet/minecraft/world/level/material/MapColor;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks litBlockEmission (I)Ljava/util/function/ToIntFunction;
+transitive-accessible field net/minecraft/world/level/block/Blocks NEAR_PLANE_INTERSECTS_OUTLINE Lnet/minecraft/world/level/block/state/BlockBehaviour$StateArgumentPredicate;
 
 transitive-inject-interface net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase net/frozenblock/lib/block/impl/registry/BlockStateBaseExtension
 
