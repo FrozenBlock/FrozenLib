@@ -30,8 +30,10 @@ import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.resources.RegistryFileCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -235,5 +237,14 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 
 	default SpawnCondition asSpawnCondition() {
 		return spawnCondition(this.asHolder());
+	}
+
+	static boolean lookupAndTest(RegistryAccess registries, ResourceKey<ConfigPredicate> key) {
+		return registries.lookup(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER)
+			.map(registry -> registry.get(key)
+				.map(Holder.Reference::value)
+				.map(ConfigPredicate::test)
+				.orElse(false)
+			).orElse(false);
 	}
 }
