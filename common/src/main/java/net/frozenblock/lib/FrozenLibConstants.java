@@ -43,6 +43,8 @@ public final class FrozenLibConstants {
 	public static final String NETHERIER_NETHER_MOD_ID = "netheriernether";
 	public static final String SPRINGIER_LIFE_MOD_ID = "springierlife";
 	public static final String SIMPLE_COPPER_PIPES_MOD_ID = "simple_copper_pipes";
+	public static final String FREEZE_FRAME_MOD_ID = "freezeframe";
+	public static final String GLOWTONE_MOD_ID = "glowtone";
 
 	// DEBUG
 	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");

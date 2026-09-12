@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:not",
+  "predicate": {
+    "type": "minecraft:true"
+  }
+}
