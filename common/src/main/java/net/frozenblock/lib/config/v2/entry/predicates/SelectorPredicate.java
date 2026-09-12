@@ -19,18 +19,19 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 
 public class SelectorPredicate implements ConfigPredicate {
 	public static final MapCodec<SelectorPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("selector").forGetter(predicate -> predicate.selector),
-		ConfigPredicate.CODEC.fieldOf("when_true").forGetter(predicate -> predicate.whenTrue),
-		ConfigPredicate.CODEC.fieldOf("when_false").forGetter(predicate -> predicate.whenFalse)
+		HOLDER_CODEC.fieldOf("selector").forGetter(predicate -> predicate.selector),
+		HOLDER_CODEC.fieldOf("when_true").forGetter(predicate -> predicate.whenTrue),
+		HOLDER_CODEC.fieldOf("when_false").forGetter(predicate -> predicate.whenFalse)
 	).apply(instance, SelectorPredicate::new));
-	private final ConfigPredicate selector;
-	private final ConfigPredicate whenTrue;
-	private final ConfigPredicate whenFalse;
+	private final Holder<ConfigPredicate> selector;
+	private final Holder<ConfigPredicate> whenTrue;
+	private final Holder<ConfigPredicate> whenFalse;
 
-	public SelectorPredicate(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
+	public SelectorPredicate(Holder<ConfigPredicate> selector, Holder<ConfigPredicate> whenTrue, Holder<ConfigPredicate> whenFalse) {
 		this.selector = selector;
 		this.whenTrue = whenTrue;
 		this.whenFalse = whenFalse;
@@ -38,9 +39,9 @@ public class SelectorPredicate implements ConfigPredicate {
 
 	@Override
 	public Boolean get() {
-		return this.selector.get()
-			? this.whenTrue.get()
-			: this.whenFalse.get();
+		return this.selector.value().get()
+			? this.whenTrue.value().get()
+			: this.whenFalse.value().get();
 	}
 
 	@Override

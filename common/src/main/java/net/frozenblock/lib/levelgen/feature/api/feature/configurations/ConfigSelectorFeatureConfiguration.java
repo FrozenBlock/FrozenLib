@@ -25,12 +25,12 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public record ConfigSelectorFeatureConfiguration(
-	ConfigPredicate configPredicate,
+	Holder<ConfigPredicate> configPredicate,
 	Holder<PlacedFeature> featureIfTrue,
 	Holder<PlacedFeature> featureIfFalse
 ) implements FeatureConfiguration {
 	public static final Codec<ConfigSelectorFeatureConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate),
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate),
 		PlacedFeature.CODEC.fieldOf("feature_if_true").forGetter(config -> config.featureIfTrue),
 		PlacedFeature.CODEC.fieldOf("feature_if_false").forGetter(config -> config.featureIfFalse)
 	).apply(instance, ConfigSelectorFeatureConfiguration::new));

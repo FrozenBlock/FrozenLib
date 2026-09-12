@@ -20,11 +20,12 @@ package net.frozenblock.lib.levelgen.surface.impl;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-public record ConfigConditionSource(ConfigPredicate configPredicate) implements SurfaceRules.ConditionSource {
+public record ConfigConditionSource(Holder<ConfigPredicate> configPredicate) implements SurfaceRules.ConditionSource {
 	public static final MapCodec<ConfigConditionSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigConditionSource::configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(ConfigConditionSource::configPredicate)
 	).apply(instance, ConfigConditionSource::new));
 
 	@Override
@@ -40,7 +41,7 @@ public record ConfigConditionSource(ConfigPredicate configPredicate) implements 
 			}
 
 			protected boolean compute() {
-				return ConfigConditionSource.this.configPredicate().test();
+				return ConfigConditionSource.this.configPredicate().value().test();
 			}
 		}
 

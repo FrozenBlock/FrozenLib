@@ -22,6 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
@@ -29,17 +30,17 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class ConfigPlacementFilter<T> extends PlacementFilter {
 	public static final MapCodec<ConfigPlacementFilter<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
 	).apply(instance, ConfigPlacementFilter::new));
-	private final ConfigPredicate configPredicate;
+	private final Holder<ConfigPredicate> configPredicate;
 
-	public ConfigPlacementFilter(ConfigPredicate configPredicate) {
+	public ConfigPlacementFilter(Holder<ConfigPredicate> configPredicate) {
 		this.configPredicate = configPredicate;
 	}
 
 	@Override
 	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
-		return this.configPredicate.test();
+		return this.configPredicate.value().test();
 	}
 
 	@Override

@@ -20,12 +20,13 @@ package net.frozenblock.lib.entity.api.variant;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.entity.variant.SpawnContext;
 
-public record ConfigCheck(ConfigPredicate configPredicate) implements SpawnCondition {
+public record ConfigCheck(Holder<ConfigPredicate> configPredicate) implements SpawnCondition {
 	public static final MapCodec<ConfigCheck> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("predicate").forGetter(ConfigCheck::configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("predicate").forGetter(ConfigCheck::configPredicate)
 	).apply(instance, ConfigCheck::new));
 
 	@Override
@@ -35,6 +36,6 @@ public record ConfigCheck(ConfigPredicate configPredicate) implements SpawnCondi
 
 	@Override
 	public boolean test(SpawnContext spawnContext) {
-		return this.configPredicate.test();
+		return this.configPredicate.value().test();
 	}
 }

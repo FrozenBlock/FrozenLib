@@ -22,6 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
@@ -29,12 +30,12 @@ import org.jetbrains.annotations.ApiStatus;
 
 public class ConfigBlockPredicate implements BlockPredicate {
 	public static final MapCodec<ConfigBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
 	).apply(instance, ConfigBlockPredicate::new));
-	private final ConfigPredicate configPredicate;
+	private final Holder<ConfigPredicate> configPredicate;
 
 	@ApiStatus.Internal
-	public ConfigBlockPredicate(ConfigPredicate configPredicate) {
+	public ConfigBlockPredicate(Holder<ConfigPredicate> configPredicate) {
 		this.configPredicate = configPredicate;
 	}
 
@@ -45,7 +46,7 @@ public class ConfigBlockPredicate implements BlockPredicate {
 
 	@Override
 	public boolean test(WorldGenLevel level, BlockPos pos) {
-		return this.configPredicate.test();
+		return this.configPredicate.value().test();
 	}
 
 }

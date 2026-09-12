@@ -28,6 +28,10 @@ import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredi
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -35,7 +39,9 @@ import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public interface ConfigPredicate extends Supplier<Boolean> {
-	Codec<ConfigPredicate> CODEC = FrozenLibRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::type, ConfigPredicateType::codec);
+	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::type, ConfigPredicateType::codec);
+	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryFileCodec.create(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
+	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.homogeneousList(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
 
 	ConfigPredicateType<?> type();
 
@@ -43,40 +49,40 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return this.get();
 	}
 
-	static ConfigPredicate allOf(List<ConfigPredicate> predicates) {
+	static ConfigPredicate allOf(HolderSet<ConfigPredicate> predicates) {
 		return new AllOfPredicate(predicates);
+	}
+
+	static ConfigPredicate allOf(List<ConfigPredicate> predicates) {
+		return allOf(HolderSet.direct(predicates.stream().map(Holder::direct).toList()));
 	}
 
 	static ConfigPredicate allOf(ConfigPredicate... predicates) {
 		return allOf(List.of(predicates));
 	}
 
-	static ConfigPredicate allOf(ConfigPredicate a, ConfigPredicate b) {
-		return allOf(List.of(a, b));
+	static ConfigPredicate anyOf(HolderSet<ConfigPredicate> predicates) {
+		return new AnyOfPredicate(predicates);
 	}
 
 	static ConfigPredicate anyOf(List<ConfigPredicate> predicates) {
-		return new AnyOfPredicate(predicates);
+		return anyOf(HolderSet.direct(predicates.stream().map(Holder::direct).toList()));
 	}
 
 	static ConfigPredicate anyOf(ConfigPredicate... predicates) {
 		return anyOf(List.of(predicates));
 	}
 
-	static ConfigPredicate anyOf(ConfigPredicate a, ConfigPredicate b) {
-		return anyOf(List.of(a, b));
+	static ConfigPredicate allMatch(HolderSet<ConfigPredicate> predicates) {
+		return new AllMatchPredicate(predicates);
 	}
 
 	static ConfigPredicate allMatch(List<ConfigPredicate> predicates) {
-		return new AllMatchPredicate(predicates);
+		return allMatch(HolderSet.direct(predicates.stream().map(Holder::direct).toList()));
 	}
 
 	static ConfigPredicate allMatch(ConfigPredicate... predicates) {
 		return allMatch(List.of(predicates));
-	}
-
-	static ConfigPredicate allMatch(ConfigPredicate a, ConfigPredicate b) {
-		return allMatch(List.of(a, b));
 	}
 
 	static <T> ConfigPredicate equalTo(ID entryId, T value) {
@@ -135,20 +141,36 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return exists(entry.id());
 	}
 
-	static ConfigPredicate selector(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
+	static ConfigPredicate selector(Holder<ConfigPredicate> selector, Holder<ConfigPredicate> whenTrue, Holder<ConfigPredicate> whenFalse) {
 		return new SelectorPredicate(selector, whenTrue, whenFalse);
 	}
 
-	static ConfigPredicate withFallback(ID id, ConfigPredicate predicate, ConfigPredicate fallback) {
+	static ConfigPredicate selector(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
+		return selector(selector.asHolder(), whenTrue.asHolder(), whenFalse.asHolder());
+	}
+
+	static ConfigPredicate withFallback(ID id, Holder<ConfigPredicate> predicate, Holder<ConfigPredicate> fallback) {
 		return WithFallbackPredicate.of(id, predicate, fallback);
+	}
+
+	static ConfigPredicate withFallback(ID id, ConfigPredicate predicate, ConfigPredicate fallback) {
+		return withFallback(id, predicate.asHolder(), fallback.asHolder());
+	}
+
+	static ConfigPredicate withFallback(ConfigEntry<?> entry, Holder<ConfigPredicate> predicate, Holder<ConfigPredicate> fallback) {
+		return withFallback(entry.id(), predicate, fallback);
 	}
 
 	static ConfigPredicate withFallback(ConfigEntry<?> entry, ConfigPredicate predicate, ConfigPredicate fallback) {
 		return withFallback(entry.id(), predicate, fallback);
 	}
 
-	static ConfigPredicate not(ConfigPredicate predicate) {
+	static ConfigPredicate not(Holder<ConfigPredicate> predicate) {
 		return new NotPredicate(predicate);
+	}
+
+	static ConfigPredicate not(ConfigPredicate predicate) {
+		return not(predicate.asHolder());
 	}
 
 	static ConfigPredicate alwaysTrue() {
@@ -171,23 +193,47 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return not(new ModPredicate(modId));
 	}
 
+	default Holder<ConfigPredicate> asHolder() {
+		return Holder.direct(this);
+	}
+
+	static BlockPredicate blockPredicate(Holder<ConfigPredicate> predicate) {
+		return new ConfigBlockPredicate(predicate);
+	}
+
 	default BlockPredicate asBlockPredicate() {
-		return new ConfigBlockPredicate(this);
+		return blockPredicate(this.asHolder());
+	}
+
+	static PlacementFilter placementFilter(Holder<ConfigPredicate> predicate) {
+		return new ConfigPlacementFilter<>(predicate);
 	}
 
 	default PlacementFilter asPlacementFilter() {
-		return new ConfigPlacementFilter<>(this);
+		return placementFilter(this.asHolder());
+	}
+
+	static LootItemCondition lootCondition(Holder<ConfigPredicate> predicate) {
+		return new ConfigLootCondition(predicate);
 	}
 
 	default LootItemCondition asLootCondition() {
-		return new ConfigLootCondition(this);
+		return lootCondition(this.asHolder());
+	}
+
+	static SurfaceRules.ConditionSource conditionSource(Holder<ConfigPredicate> predicate) {
+		return new ConfigConditionSource(predicate);
 	}
 
 	default SurfaceRules.ConditionSource asConditionSource() {
-		return new ConfigConditionSource(this);
+		return conditionSource(this.asHolder());
+	}
+
+	static SpawnCondition spawnCondition(Holder<ConfigPredicate> predicate) {
+		return new ConfigCheck(predicate);
 	}
 
 	default SpawnCondition asSpawnCondition() {
-		return new ConfigCheck(this);
+		return spawnCondition(this.asHolder());
 	}
 }

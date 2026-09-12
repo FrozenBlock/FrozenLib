@@ -23,6 +23,7 @@ import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
+import net.minecraft.core.Holder;
 
 public class WithFallbackPredicate implements ConfigPredicate {
 	public static final MapCodec<WithFallbackPredicate> CODEC = ID.CODEC.fieldOf("entry").dispatchMap(
@@ -32,38 +33,38 @@ public class WithFallbackPredicate implements ConfigPredicate {
 			if (entry == null) {
 				return instance.group(
 					instance.point(id),
-					ConfigPredicate.CODEC.fieldOf("fallback").forGetter(predicate -> predicate.fallback)
+					HOLDER_CODEC.fieldOf("fallback").forGetter(predicate -> predicate.fallback)
 				).apply(instance, WithFallbackPredicate::whenNotPresent);
 			}
 
 			return instance.group(
 				instance.point(id),
-				ConfigPredicate.CODEC.fieldOf("predicate").forGetter(predicate -> predicate.whenPresent.orElseThrow()),
-				ConfigPredicate.CODEC.fieldOf("fallback").forGetter(predicate -> predicate.fallback)
+				HOLDER_CODEC.fieldOf("predicate").forGetter(predicate -> predicate.whenPresent.orElseThrow()),
+				HOLDER_CODEC.fieldOf("fallback").forGetter(predicate -> predicate.fallback)
 			).apply(instance, WithFallbackPredicate::of);
 		})
 	);
 	private final ID id;
-	private final Optional<ConfigPredicate> whenPresent;
-	private final ConfigPredicate fallback;
+	private final Optional<Holder<ConfigPredicate>> whenPresent;
+	private final Holder<ConfigPredicate> fallback;
 
-	private WithFallbackPredicate(ID id, Optional<ConfigPredicate> whenPresent, ConfigPredicate fallback) {
+	private WithFallbackPredicate(ID id, Optional<Holder<ConfigPredicate>> whenPresent, Holder<ConfigPredicate> fallback) {
 		this.id = id;
 		this.whenPresent = whenPresent;
 		this.fallback = fallback;
 	}
 
-	protected static WithFallbackPredicate whenNotPresent(ID id, ConfigPredicate fallback) {
+	protected static WithFallbackPredicate whenNotPresent(ID id, Holder<ConfigPredicate> fallback) {
 		return new WithFallbackPredicate(id, Optional.empty(), fallback);
 	}
 
-	public static WithFallbackPredicate of(ID id, ConfigPredicate predicate, ConfigPredicate fallback) {
+	public static WithFallbackPredicate of(ID id, Holder<ConfigPredicate> predicate, Holder<ConfigPredicate> fallback) {
 		return new WithFallbackPredicate(id, Optional.of(predicate), fallback);
 	}
 
 	@Override
 	public Boolean get() {
-		return this.whenPresent.map(ConfigPredicate::get).orElseGet(this.fallback);
+		return this.whenPresent.map(Holder::value).map(ConfigPredicate::get).orElseGet(this.fallback.value());
 	}
 
 	@Override

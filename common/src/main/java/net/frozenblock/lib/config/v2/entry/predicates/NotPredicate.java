@@ -18,18 +18,19 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
 
 public class NotPredicate implements ConfigPredicate {
-	public static final MapCodec<NotPredicate> CODEC = ConfigPredicate.CODEC.fieldOf("predicate").xmap(NotPredicate::new, predicate -> predicate.predicate);
-	private final ConfigPredicate predicate;
+	public static final MapCodec<NotPredicate> CODEC = HOLDER_CODEC.fieldOf("predicate").xmap(NotPredicate::new, predicate -> predicate.predicate);
+	private final Holder<ConfigPredicate> predicate;
 
-	public NotPredicate(ConfigPredicate predicate) {
+	public NotPredicate(Holder<ConfigPredicate> predicate) {
 		this.predicate = predicate;
 	}
 
 	@Override
 	public Boolean get() {
-		return !this.predicate.get();
+		return !this.predicate.value().get();
 	}
 
 	@Override

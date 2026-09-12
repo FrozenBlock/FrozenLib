@@ -42,7 +42,7 @@ public record FireType(
 	SpreadSettings spreadSettings,
 	TextureSettings textures,
 	ParticleSettings particleSettings,
-	Optional<ConfigPredicate> enabledWhen
+	Optional<Holder<ConfigPredicate>> enabledWhen
 ) {
 	public static final Codec<FireType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		SourceSettings.CODEC.fieldOf("source_settings").forGetter(FireType::sourceSettings),
@@ -50,7 +50,7 @@ public record FireType(
 		SpreadSettings.CODEC.fieldOf("spread_settings").forGetter(FireType::spreadSettings),
 		TextureSettings.CODEC.fieldOf("textures").forGetter(FireType::textures),
 		ParticleSettings.CODEC.fieldOf("particle_settings").forGetter(FireType::particleSettings),
-		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabledWhen)
+		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabledWhen)
 	).apply(instance, FireType::new));
 	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
 	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.FIRE_TYPE);
@@ -60,7 +60,7 @@ public record FireType(
 	}
 
 	public boolean isEnabled() {
-		return this.enabledWhen.map(ConfigPredicate::test).orElse(true);
+		return this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 	}
 
 	public record SourceSettings(
@@ -124,30 +124,30 @@ public record FireType(
 	public record ParticleSettings(
 		Optional<ParticleOptions> smokeParticle,
 		Optional<ParticleOptions> largeSmokeParticle,
-		Optional<ConfigPredicate> smokeEnabledWhen,
+		Optional<Holder<ConfigPredicate>> smokeEnabledWhen,
 		Optional<ParticleOptions> campfireCosySmokeParticle,
 		Optional<ParticleOptions> campfireSignalSmokeParticle,
-		Optional<ConfigPredicate> campfireSmokeEnabledWhen,
+		Optional<Holder<ConfigPredicate>> campfireSmokeEnabledWhen,
 		Optional<ParticleOptions> flameParticle,
-		Optional<ConfigPredicate> flameEnabledWhen,
+		Optional<Holder<ConfigPredicate>> flameEnabledWhen,
 		Optional<ParticleOptions> lavaParticle,
-		Optional<ConfigPredicate> lavaEnabledWhen
+		Optional<Holder<ConfigPredicate>> lavaEnabledWhen
 	) {
 		public static final Codec<ParticleSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ParticleTypes.CODEC.optionalFieldOf("smoke_particle").forGetter(ParticleSettings::smokeParticle),
 			ParticleTypes.CODEC.optionalFieldOf("large_smoke_particle").forGetter(ParticleSettings::largeSmokeParticle),
-			ConfigPredicate.CODEC.optionalFieldOf("smoke_config_predicate").forGetter(ParticleSettings::smokeEnabledWhen),
+			ConfigPredicate.HOLDER_CODEC.optionalFieldOf("smoke_config_predicate").forGetter(ParticleSettings::smokeEnabledWhen),
 			ParticleTypes.CODEC.optionalFieldOf("campfire_cosy_smoke_particle").forGetter(ParticleSettings::campfireCosySmokeParticle),
 			ParticleTypes.CODEC.optionalFieldOf("campfire_signal_smoke_particle").forGetter(ParticleSettings::campfireSignalSmokeParticle),
-			ConfigPredicate.CODEC.optionalFieldOf("campfire_smoke_config_predicate").forGetter(ParticleSettings::campfireSmokeEnabledWhen),
+			ConfigPredicate.HOLDER_CODEC.optionalFieldOf("campfire_smoke_config_predicate").forGetter(ParticleSettings::campfireSmokeEnabledWhen),
 			ParticleTypes.CODEC.optionalFieldOf("flame_particle").forGetter(ParticleSettings::flameParticle),
-			ConfigPredicate.CODEC.optionalFieldOf("flame_config_predicate").forGetter(ParticleSettings::flameEnabledWhen),
+			ConfigPredicate.HOLDER_CODEC.optionalFieldOf("flame_config_predicate").forGetter(ParticleSettings::flameEnabledWhen),
 			ParticleTypes.CODEC.optionalFieldOf("lava_particle").forGetter(ParticleSettings::lavaParticle),
-			ConfigPredicate.CODEC.optionalFieldOf("lava_config_predicate").forGetter(ParticleSettings::lavaEnabledWhen)
+			ConfigPredicate.HOLDER_CODEC.optionalFieldOf("lava_config_predicate").forGetter(ParticleSettings::lavaEnabledWhen)
 		).apply(instance, ParticleSettings::new));
 
 		public boolean smokeEnabled() {
-			return this.smokeEnabledWhen.map(ConfigPredicate::test).orElse(true);
+			return this.smokeEnabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 		}
 
 		public ParticleOptions getSmokeParticle(ParticleOptions original) {
@@ -161,7 +161,7 @@ public record FireType(
 		}
 
 		public boolean campfireSmokeEnabled() {
-			return this.campfireSmokeEnabledWhen.map(ConfigPredicate::test).orElse(true);
+			return this.campfireSmokeEnabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 		}
 
 		public ParticleOptions getCampfireCosySmokeParticle(ParticleOptions original) {
@@ -175,7 +175,7 @@ public record FireType(
 		}
 
 		public boolean flameEnabled() {
-			return this.flameEnabledWhen.map(ConfigPredicate::test).orElse(true);
+			return this.flameEnabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 		}
 
 		public ParticleOptions getFlameParticle(ParticleOptions original) {
@@ -184,7 +184,7 @@ public record FireType(
 		}
 
 		public boolean lavaEnabled() {
-			return this.lavaEnabledWhen.map(ConfigPredicate::test).orElse(true);
+			return this.lavaEnabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 		}
 
 		public ParticleOptions getLavaParticle(ParticleOptions original) {
@@ -218,16 +218,16 @@ public record FireType(
 		// PARTICLE SETTINGS
 		ParticleOptions smokeParticle = null;
 		ParticleOptions largeSmokeParticle = null;
-		ConfigPredicate smokeEnabledWhen = null;
+		Holder<ConfigPredicate> smokeEnabledWhen = null;
 		ParticleOptions campfireCosySmokeParticle = null;
 		ParticleOptions campfireSignalSmokeParticle = null;
-		ConfigPredicate campfireSmokeEnabledWhen = null;
+		Holder<ConfigPredicate> campfireSmokeEnabledWhen = null;
 		ParticleOptions flameParticle = null;
-		ConfigPredicate flameEnabledWhen = null;
+		Holder<ConfigPredicate> flameEnabledWhen = null;
 		ParticleOptions lavaParticle = null;
-		ConfigPredicate lavaEnabledWhen = null;
+		Holder<ConfigPredicate> lavaEnabledWhen = null;
 		// ENABLED
-		private ConfigPredicate enabledWhen = null;
+		private Holder<ConfigPredicate> enabledWhen = null;
 
 		private Builder() {}
 
@@ -298,7 +298,7 @@ public record FireType(
 			return this;
 		}
 
-		public Builder smokeParticles(ParticleOptions smokeParticle, ParticleOptions largeSmokeParticle, ConfigPredicate smokeEnabledWhen) {
+		public Builder smokeParticles(ParticleOptions smokeParticle, ParticleOptions largeSmokeParticle, Holder<ConfigPredicate> smokeEnabledWhen) {
 			this.smokeParticles(smokeParticle, largeSmokeParticle);
 			this.smokeEnabledWhen = smokeEnabledWhen;
 			return this;
@@ -310,7 +310,7 @@ public record FireType(
 			return this;
 		}
 
-		public Builder campfireSmokeParticles(ParticleOptions campfireCosySmokeParticle, ParticleOptions campfireSignalSmokeParticle, ConfigPredicate campfireSmokeEnabledWhen) {
+		public Builder campfireSmokeParticles(ParticleOptions campfireCosySmokeParticle, ParticleOptions campfireSignalSmokeParticle, Holder<ConfigPredicate> campfireSmokeEnabledWhen) {
 			this.campfireSmokeParticles(campfireCosySmokeParticle, campfireSignalSmokeParticle);
 			this.campfireSmokeEnabledWhen = campfireSmokeEnabledWhen;
 			return this;
@@ -321,7 +321,7 @@ public record FireType(
 			return this;
 		}
 
-		public Builder flameParticle(ParticleOptions flameParticle, ConfigPredicate flameEnabledWhen) {
+		public Builder flameParticle(ParticleOptions flameParticle, Holder<ConfigPredicate> flameEnabledWhen) {
 			this.flameParticle(flameParticle);
 			this.flameEnabledWhen = flameEnabledWhen;
 			return this;
@@ -332,13 +332,13 @@ public record FireType(
 			return this;
 		}
 
-		public Builder lavaParticle(ParticleOptions lavaParticle, ConfigPredicate lavaEnabledWhen) {
+		public Builder lavaParticle(ParticleOptions lavaParticle, Holder<ConfigPredicate> lavaEnabledWhen) {
 			this.lavaParticle(lavaParticle);
 			this.lavaEnabledWhen = lavaEnabledWhen;
 			return this;
 		}
 
-		public Builder enabledWhen(ConfigPredicate enabledWhen) {
+		public Builder enabledWhen(Holder<ConfigPredicate> enabledWhen) {
 			this.enabledWhen = enabledWhen;
 			return this;
 		}

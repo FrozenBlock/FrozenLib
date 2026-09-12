@@ -20,18 +20,19 @@ package net.frozenblock.lib.item.api.loot.predicates;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.ApiStatus;
 
 public class ConfigLootCondition implements LootItemCondition {
 	public static final MapCodec<ConfigLootCondition> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
 	).apply(instance, ConfigLootCondition::new));
-	private final ConfigPredicate configPredicate;
+	private final Holder<ConfigPredicate> configPredicate;
 
 	@ApiStatus.Internal
-	public ConfigLootCondition(ConfigPredicate configPredicate) {
+	public ConfigLootCondition(Holder<ConfigPredicate> configPredicate) {
 		this.configPredicate = configPredicate;
 	}
 
@@ -42,6 +43,6 @@ public class ConfigLootCondition implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext lootContext) {
-		return this.configPredicate.test();
+		return this.configPredicate.value().test();
 	}
 }

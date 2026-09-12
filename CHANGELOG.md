@@ -1,7 +1,9 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-[- Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+- Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
+- Added the `frozenlib:config_predicate_provider` Dynamic Registry, used to register `ConfigPredicate`s.
+  - All implementation of `ConfigPredicate`s have been updated to now use `Holder`s and `HolderSet`s, allowing modders to refer to `ConfigPredicate`s via their registered id or tags.
 - Added the `frozenlib:fabric` Config Predicate, returning whether the current mod loader is Fabric.
 - Added the `frozenlib:neoforge` Config Predicate, returning whether the current mod loader is NeoForge.
 - Added the `frozenlib:mod` Config Predicate, returning whether a mod with the given id (defined via the `id` field) is loaded.
