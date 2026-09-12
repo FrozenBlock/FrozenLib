@@ -20,13 +20,14 @@ package net.frozenblock.lib.levelgen.material.impl;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.material.MaterialRuleContext;
 import net.minecraft.world.level.levelgen.material.condition.ConditionEvaluator;
 import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 
-public record ConfigCondition(ConfigPredicate configPredicate) implements MaterialCondition {
+public record ConfigCondition(Holder<ConfigPredicate> configPredicate) implements MaterialCondition {
 	public static final MapCodec<ConfigCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigCondition::configPredicate)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(ConfigCondition::configPredicate)
 	).apply(instance, ConfigCondition::new));
 
 	@Override
@@ -34,7 +35,7 @@ public record ConfigCondition(ConfigPredicate configPredicate) implements Materi
 		return new MaterialRuleContext.LazyYCondition(context) {
 			@Override
 			protected boolean compute() {
-				return ConfigCondition.this.configPredicate.test();
+				return ConfigCondition.this.configPredicate.value().test();
 			}
 		};
 	}

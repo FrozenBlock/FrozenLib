@@ -18,20 +18,21 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
-import java.util.List;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 
 public class AllMatchPredicate extends CombiningPredicate {
 	public static final MapCodec<AllMatchPredicate> CODEC = codec(AllMatchPredicate::new);
 
-	public AllMatchPredicate(List<ConfigPredicate> predicates) {
+	public AllMatchPredicate(HolderSet<ConfigPredicate> predicates) {
 		super(predicates);
 	}
 
 	@Override
 	public Boolean get() {
 		Boolean last = null;
-		for (ConfigPredicate predicate : this.predicates) {
-			final boolean predicateValue = predicate.get();
+		for (Holder<ConfigPredicate> predicate : this.predicates) {
+			final boolean predicateValue = predicate.value().get();
 			last = last != null ? last : predicateValue;
 			if (predicateValue != last) return false;
 		}

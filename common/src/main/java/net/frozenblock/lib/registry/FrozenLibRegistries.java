@@ -86,6 +86,7 @@ public class FrozenLibRegistries {
 	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = createSimple(MOVING_SOUND_TYPE_REGISTRY, Lifecycle.stable());
 
 	// DYNAMIC REGISTRIES
+	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE_PROVIDER = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_provider"));
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = ResourceKey.createRegistryKey(FrozenLibConstants.id("biome_environment_attribute_modification"));
@@ -99,6 +100,7 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<VariantSpawnInjection>> VARIANT_SPAWN_INJECTION = ResourceKey.createRegistryKey(FrozenLibConstants.id("variant_spawn_injection"));
 
 	public static void setup() {
+		RegistryHelper.registerSyncedDynamicRegistry(CONFIG_PREDICATE_PROVIDER, ConfigPredicate.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);

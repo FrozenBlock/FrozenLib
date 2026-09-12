@@ -29,12 +29,12 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public record ConfigSelectorFeature(
-	ConfigPredicate configPredicate,
+	Holder<ConfigPredicate> configPredicate,
 	Holder<PlacedFeature> featureIfTrue,
 	Holder<PlacedFeature> featureIfFalse
 ) implements Feature {
 	public static final MapCodec<ConfigSelectorFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigSelectorFeature::configPredicate),
+		ConfigPredicate.HOLDER_CODEC.fieldOf("config_predicate").forGetter(ConfigSelectorFeature::configPredicate),
 		PlacedFeature.CODEC.fieldOf("feature_if_true").forGetter(ConfigSelectorFeature::featureIfTrue),
 		PlacedFeature.CODEC.fieldOf("feature_if_false").forGetter(ConfigSelectorFeature::featureIfFalse)
 	).apply(instance, ConfigSelectorFeature::new));
@@ -46,7 +46,7 @@ public record ConfigSelectorFeature(
 
 	@Override
 	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
-		return (this.configPredicate.test() ? this.featureIfTrue : this.featureIfFalse)
+		return (this.configPredicate.value().test() ? this.featureIfTrue : this.featureIfFalse)
 			.value()
 			.place(level, chunkGenerator, random, origin);
 	}

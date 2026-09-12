@@ -25,6 +25,7 @@ import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModifications;
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.core.registries.codec.RegistryCodecs;
@@ -42,11 +43,11 @@ import org.jetbrains.annotations.ApiStatus;
  * @param attributes The {@link EnvironmentAttributeMap} to merge with the {@link Biome}'s {@link EnvironmentAttributeMap}.
  * @param enabledWhen The {@link ConfigPredicate} to test. This instance will be ignored if it returns false.
  */
-public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, EnvironmentAttributeMap attributes, ConfigPredicate enabledWhen) {
+public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, EnvironmentAttributeMap attributes, Holder<ConfigPredicate> enabledWhen) {
 	public static final Codec<BiomeEnvironmentAttributeModification> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.holderSet(Registries.BIOME).fieldOf("biomes").forGetter(BiomeEnvironmentAttributeModification::biomes),
 		EnvironmentAttributeMap.CODEC_ONLY_POSITIONAL.fieldOf("attributes").forGetter(BiomeEnvironmentAttributeModification::attributes),
-		ConfigPredicate.CODEC.fieldOf("enabled_when").forGetter(BiomeEnvironmentAttributeModification::enabledWhen)
+		ConfigPredicate.HOLDER_CODEC.fieldOf("enabled_when").forGetter(BiomeEnvironmentAttributeModification::enabledWhen)
 	).apply(instance, BiomeEnvironmentAttributeModification::new));
 
 	@ApiStatus.Internal
@@ -56,7 +57,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 			BiomeSelectors.all(),
 			(registryAccess, selectionContext, modificationContext) -> {
 				registryAccess.lookupOrThrow(FrozenLibRegistries.BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION).forEach(modification -> {
-					if (!modification.enabledWhen.test()) return;
+					if (!modification.enabledWhen.value().test()) return;
 					if (!modification.biomes.contains(selectionContext.getBiomeHolder())) return;
 					if (modification.attributes.equals(EnvironmentAttributeMap.EMPTY)) return;
 
@@ -75,7 +76,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 		ResourceKey<BiomeEnvironmentAttributeModification> name,
 		HolderSet<Biome> biomes,
 		EnvironmentAttributeMap attributes,
-		ConfigPredicate replaceWhen
+		Holder<ConfigPredicate> replaceWhen
 	) {
 		context.register(name, new BiomeEnvironmentAttributeModification(biomes, attributes, replaceWhen));
 	}
@@ -85,7 +86,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 		ResourceKey<BiomeEnvironmentAttributeModification> name,
 		TagKey<Biome> biomes,
 		EnvironmentAttributeMap attributes,
-		ConfigPredicate replaceWhen
+		Holder<ConfigPredicate> replaceWhen
 	) {
 		register(context, name, context.lookup(Registries.BIOME).getOrThrow(biomes), attributes, replaceWhen);
 	}
@@ -95,7 +96,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 		Identifier id,
 		TagKey<Biome> biomes,
 		EnvironmentAttributeMap attributes,
-		ConfigPredicate replaceWhen
+		Holder<ConfigPredicate> replaceWhen
 	) {
 		register(context, createKey(id), biomes, attributes, replaceWhen);
 	}
@@ -105,7 +106,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 		ResourceKey<BiomeEnvironmentAttributeModification> name,
 		ResourceKey<Biome> biome,
 		EnvironmentAttributeMap attributes,
-		ConfigPredicate replaceWhen
+		Holder<ConfigPredicate> replaceWhen
 	) {
 		register(context, name, HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(biome)), attributes, replaceWhen);
 	}
@@ -115,7 +116,7 @@ public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, Env
 		Identifier id,
 		ResourceKey<Biome> biome,
 		EnvironmentAttributeMap attributes,
-		ConfigPredicate replaceWhen
+		Holder<ConfigPredicate> replaceWhen
 	) {
 		register(context, createKey(id), biome, attributes, replaceWhen);
 	}

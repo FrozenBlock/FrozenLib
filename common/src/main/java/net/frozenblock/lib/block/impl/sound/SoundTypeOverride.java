@@ -22,6 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.sound.SoundTypeCodecs;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
@@ -33,13 +34,13 @@ public class SoundTypeOverride {
 	public static final Codec<SoundTypeOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
 		SoundTypeCodecs.SOUND_TYPE.fieldOf("sound_type").forGetter(override -> override.soundType),
-		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(override -> override.configPredicate)
+		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(override -> override.configPredicate)
 	).apply(instance, SoundTypeOverride::new));
 	private final HolderSet<Block> blocks;
 	private final SoundType soundType;
-	private final Optional<ConfigPredicate> configPredicate;
+	private final Optional<Holder<ConfigPredicate>> configPredicate;
 
-	public SoundTypeOverride(HolderSet<Block> blocks, SoundType soundType, Optional<ConfigPredicate> configPredicate) {
+	public SoundTypeOverride(HolderSet<Block> blocks, SoundType soundType, Optional<Holder<ConfigPredicate>> configPredicate) {
 		this.blocks = blocks;
 		this.soundType = soundType;
 		this.configPredicate = configPredicate;
@@ -58,6 +59,6 @@ public class SoundTypeOverride {
 	}
 
 	public boolean matches(BlockState state) {
-		return this.configPredicate.map(ConfigPredicate::test).orElse(true) && state.is(this.blocks);
+		return this.configPredicate.map(Holder::value).map(ConfigPredicate::test).orElse(true) && state.is(this.blocks);
 	}
 }

@@ -20,23 +20,24 @@ package net.frozenblock.lib.levelgen.placement.api;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 
 public class ConfigPlacementFilter implements PlacementFilter {
-	public static final MapCodec<ConfigPlacementFilter> CODEC = ConfigPredicate.CODEC
+	public static final MapCodec<ConfigPlacementFilter> CODEC = ConfigPredicate.HOLDER_CODEC
 		.fieldOf("config_predicate")
 		.xmap(ConfigPlacementFilter::new, config -> config.configPredicate);
-	private final ConfigPredicate configPredicate;
+	private final Holder<ConfigPredicate> configPredicate;
 
-	public ConfigPlacementFilter(ConfigPredicate configPredicate) {
+	public ConfigPlacementFilter(Holder<ConfigPredicate> configPredicate) {
 		this.configPredicate = configPredicate;
 	}
 
 	@Override
 	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
-		return this.configPredicate.test();
+		return this.configPredicate.value().test();
 	}
 
 	@Override

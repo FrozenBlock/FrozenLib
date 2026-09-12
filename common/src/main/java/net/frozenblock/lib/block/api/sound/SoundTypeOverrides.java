@@ -26,6 +26,7 @@ import net.frozenblock.lib.block.api.attachment.BlockAttachmentKey;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
@@ -64,7 +65,7 @@ public final class SoundTypeOverrides {
 		ResourceKey<SoundTypeOverride> name,
 		HolderSet<Block> blocks,
 		SoundType soundType,
-		ConfigPredicate configPredicate
+		Holder<ConfigPredicate> configPredicate
 	) {
 		register(context, name, blocks, soundType, Optional.of(configPredicate));
 	}
@@ -74,7 +75,7 @@ public final class SoundTypeOverrides {
 		ResourceKey<SoundTypeOverride> name,
 		HolderSet<Block> blocks,
 		SoundType soundType,
-		Optional<ConfigPredicate> configPredicate
+		Optional<Holder<ConfigPredicate>> configPredicate
 	) {
 		context.register(name, new SoundTypeOverride(blocks, soundType, configPredicate));
 	}
