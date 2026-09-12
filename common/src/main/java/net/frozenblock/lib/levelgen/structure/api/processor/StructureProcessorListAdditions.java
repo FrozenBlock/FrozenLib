@@ -77,21 +77,31 @@ public final class StructureProcessorListAdditions {
 
 	public static void register(
 		BootstrapContext<StructureProcessorListAddition> context,
-		ResourceKey<StructureProcessorListAddition> key,
-		HolderSet<Structure> structures,
-		List<StructureProcessor> processors,
-		ConfigPredicate enabledWhen
-	) {
-		context.register(key, new StructureProcessorListAddition(structures, processors, Optional.of(enabledWhen)));
-	}
-
-	public static void register(
-		BootstrapContext<StructureProcessorListAddition> context,
 		Identifier id,
 		HolderSet<Structure> structures,
 		List<StructureProcessor> processors,
 		ConfigPredicate enabledWhen
 	) {
 		register(context, createKey(id), structures, processors, enabledWhen);
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		ResourceKey<StructureProcessorListAddition> key,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		ConfigPredicate enabledWhen
+	) {
+		register(context, key, structures, processors, enabledWhen.asHolder());
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		ResourceKey<StructureProcessorListAddition> key,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Holder<ConfigPredicate> enabledWhen
+	) {
+		context.register(key, new StructureProcessorListAddition(structures, processors, Optional.of(enabledWhen)));
 	}
 }

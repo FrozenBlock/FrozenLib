@@ -76,21 +76,31 @@ public final class PlayerDamageTypeSounds {
 
 	public static void register(
 		BootstrapContext<PlayerDamageTypeSound> context,
-		ResourceKey<PlayerDamageTypeSound> key,
-		HolderSet<DamageType> damageTypes,
-		Holder<SoundEvent> soundEvent,
-		ConfigPredicate enabledWhen
-	) {
-		context.register(key, new PlayerDamageTypeSound(damageTypes, soundEvent, Optional.of(enabledWhen)));
-	}
-
-	public static void register(
-		BootstrapContext<PlayerDamageTypeSound> context,
 		Identifier id,
 		HolderSet<DamageType> damageTypes,
 		Holder<SoundEvent> soundEvent,
 		ConfigPredicate enabledWhen
 	) {
 		register(context, createKey(id), damageTypes, soundEvent, enabledWhen);
+	}
+
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		ResourceKey<PlayerDamageTypeSound> key,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent,
+		ConfigPredicate enabledWhen
+	) {
+		register(context, key, damageTypes, soundEvent, enabledWhen.asHolder());
+	}
+
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		ResourceKey<PlayerDamageTypeSound> key,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent,
+		Holder<ConfigPredicate> enabledWhen
+	) {
+		context.register(key, new PlayerDamageTypeSound(damageTypes, soundEvent, Optional.of(enabledWhen)));
 	}
 }

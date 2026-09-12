@@ -31,18 +31,18 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
-public record StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors, Optional<ConfigPredicate> enabledWhen) {
+public record StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors, Optional<Holder<ConfigPredicate>> enabledWhen) {
 	public static final Codec<StructureProcessorListAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.holderSet(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureProcessorListAddition::structures),
 		StructureProcessorType.LIST_CODEC.fieldOf("processors").forGetter(StructureProcessorListAddition::processors),
-		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(StructureProcessorListAddition::enabledWhen)
+		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(StructureProcessorListAddition::enabledWhen)
 	).apply(instance, StructureProcessorListAddition::new));
 
 	public StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors) {
 		this(structures, processors, Optional.empty());
 	}
 
-	public StructureProcessorListAddition(HolderSet<Structure> structures, List<StructureProcessor> processors, Optional<ConfigPredicate> enabledWhen) {
+	public StructureProcessorListAddition(HolderSet<Structure> structures, List<StructureProcessor> processors, Optional<Holder<ConfigPredicate>> enabledWhen) {
 		this(structures, Holder.direct(new StructureProcessorList(processors)), enabledWhen);
 	}
 
@@ -59,6 +59,6 @@ public record StructureProcessorListAddition(HolderSet<Structure> structures, Ho
 	}
 
 	public boolean isEnabled() {
-		return this.enabledWhen.map(ConfigPredicate::test).orElse(true);
+		return this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 	}
 }
