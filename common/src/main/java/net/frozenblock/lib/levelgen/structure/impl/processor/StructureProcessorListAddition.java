@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.levelgen.structure.impl.processor;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Optional;
@@ -31,23 +31,67 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
-public record StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors, Optional<Holder<ConfigPredicate>> enabledWhen) {
-	public static final Codec<StructureProcessorListAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.holderSet(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureProcessorListAddition::structures),
-		StructureProcessorType.LIST_CODEC.fieldOf("processors").forGetter(StructureProcessorListAddition::processors),
-		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(StructureProcessorListAddition::enabledWhen)
-	).apply(instance, StructureProcessorListAddition::new));
+public record StructureProcessorListAddition(
+	HolderSet<Structure> structures,
+	Holder<StructureProcessorList> processors,
+	Optional<Holder<ConfigPredicate>> enabledWhen,
+	Optional<Holder<ConfigPredicate>> serializationRequirement
+) {
+	private static final StructureProcessorListAddition EMPTY = new StructureProcessorListAddition(
+		HolderSet.empty(),
+		Holder.direct(new StructureProcessorList(List.of())),
+		Optional.empty(),
+		Optional.empty()
+	);
+	public static final MapCodec<StructureProcessorListAddition> DIRECT_CODEC = ConfigPredicate.HOLDER_CODEC.optionalFieldOf("serialization_requirement").dispatchMap(
+		materialRuleAddition -> materialRuleAddition.serializationRequirement,
+		requirement -> RecordCodecBuilder.mapCodec(instance -> {
 
-	public StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors) {
-		this(structures, processors, Optional.empty());
-	}
+			if (requirement.isPresent() && !requirement.get().value().test()) {
+				return instance.point(EMPTY);
+			}
 
-	public StructureProcessorListAddition(HolderSet<Structure> structures, List<StructureProcessor> processors, Optional<Holder<ConfigPredicate>> enabledWhen) {
-		this(structures, Holder.direct(new StructureProcessorList(processors)), enabledWhen);
-	}
+			return instance.group(
+				RegistryCodecs.holderSet(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureProcessorListAddition::structures),
+				StructureProcessorType.LIST_CODEC.fieldOf("processors").forGetter(StructureProcessorListAddition::processors),
+				ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(StructureProcessorListAddition::enabledWhen),
+				instance.point(requirement)
+			).apply(instance, StructureProcessorListAddition::new);
+		})
+	);
 
 	public StructureProcessorListAddition(HolderSet<Structure> structures, List<StructureProcessor> processors) {
-		this(structures, processors, Optional.empty());
+		this(structures, Holder.direct(new StructureProcessorList(processors)), Optional.empty(), Optional.empty());
+	}
+
+	public StructureProcessorListAddition(HolderSet<Structure> structures, List<StructureProcessor> processors, Holder<ConfigPredicate> enabledWhen) {
+		this(structures, Holder.direct(new StructureProcessorList(processors)), Optional.of(enabledWhen), Optional.empty());
+	}
+
+	public StructureProcessorListAddition(
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Holder<ConfigPredicate> enabledWhen,
+		Holder<ConfigPredicate> serializationRequirement
+	) {
+		this(structures, processors, Optional.of(enabledWhen), Optional.of(serializationRequirement));
+	}
+
+	public StructureProcessorListAddition(
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Optional<Holder<ConfigPredicate>> enabledWhen,
+		Optional<Holder<ConfigPredicate>> serializationRequirement
+	) {
+		this(structures, Holder.direct(new StructureProcessorList(processors)), enabledWhen, serializationRequirement);
+	}
+
+	public StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors) {
+		this(structures, processors, Optional.empty(), Optional.empty());
+	}
+
+	public StructureProcessorListAddition(HolderSet<Structure> structures, Holder<StructureProcessorList> processors, Holder<ConfigPredicate> enabledWhen) {
+		this(structures, processors, Optional.of(enabledWhen), Optional.empty());
 	}
 
 	public boolean enabledAndMatches(Holder<Structure> structure) {
@@ -55,10 +99,14 @@ public record StructureProcessorListAddition(HolderSet<Structure> structures, Ho
 	}
 
 	public boolean matches(Holder<Structure> structureHolder) {
-		return this.structures.contains(structureHolder);
+		return !this.isEmpty() && this.structures.contains(structureHolder);
 	}
 
 	public boolean isEnabled() {
-		return this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
+		return !this.isEmpty() && this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
+	}
+
+	public boolean isEmpty() {
+		return this == EMPTY;
 	}
 }

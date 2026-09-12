@@ -59,20 +59,20 @@ public final class StructureProcessorListAdditions {
 
 	public static void register(
 		BootstrapContext<StructureProcessorListAddition> context,
-		ResourceKey<StructureProcessorListAddition> key,
-		HolderSet<Structure> structures,
-		List<StructureProcessor> processors
-	) {
-		context.register(key, new StructureProcessorListAddition(structures, processors, Optional.empty()));
-	}
-
-	public static void register(
-		BootstrapContext<StructureProcessorListAddition> context,
 		Identifier id,
 		HolderSet<Structure> structures,
 		List<StructureProcessor> processors
 	) {
 		register(context, createKey(id), structures, processors);
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		ResourceKey<StructureProcessorListAddition> key,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors
+	) {
+		context.register(key, new StructureProcessorListAddition(structures, processors));
 	}
 
 	public static void register(
@@ -97,11 +97,65 @@ public final class StructureProcessorListAdditions {
 
 	public static void register(
 		BootstrapContext<StructureProcessorListAddition> context,
+		Identifier id,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Holder<ConfigPredicate> enabledWhen
+	) {
+		register(context, createKey(id), structures, processors, enabledWhen);
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
 		ResourceKey<StructureProcessorListAddition> key,
 		HolderSet<Structure> structures,
 		List<StructureProcessor> processors,
 		Holder<ConfigPredicate> enabledWhen
 	) {
-		context.register(key, new StructureProcessorListAddition(structures, processors, Optional.of(enabledWhen)));
+		context.register(key, new StructureProcessorListAddition(structures, processors, enabledWhen));
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		Identifier id,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Holder<ConfigPredicate> enabledWhen,
+		Holder<ConfigPredicate> serializationRequirement
+	) {
+		register(context, createKey(id), structures, processors, enabledWhen, serializationRequirement);
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		ResourceKey<StructureProcessorListAddition> key,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Holder<ConfigPredicate> enabledWhen,
+		Holder<ConfigPredicate> serializationRequirement
+	) {
+		context.register(key, new StructureProcessorListAddition(structures, processors, enabledWhen, serializationRequirement));
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		Identifier id,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Optional<Holder<ConfigPredicate>> enabledWhen,
+		Holder<ConfigPredicate> serializationRequirement
+	) {
+		register(context, createKey(id), structures, processors, enabledWhen, serializationRequirement);
+	}
+
+	public static void register(
+		BootstrapContext<StructureProcessorListAddition> context,
+		ResourceKey<StructureProcessorListAddition> key,
+		HolderSet<Structure> structures,
+		List<StructureProcessor> processors,
+		Optional<Holder<ConfigPredicate>> enabledWhen,
+		Holder<ConfigPredicate> serializationRequirement
+	) {
+		context.register(key, new StructureProcessorListAddition(structures, processors, enabledWhen, Optional.of(serializationRequirement)));
 	}
 }

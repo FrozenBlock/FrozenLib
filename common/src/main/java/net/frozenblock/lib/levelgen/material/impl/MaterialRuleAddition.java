@@ -18,33 +18,72 @@
 package net.frozenblock.lib.levelgen.material.impl;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.levelgen.material.MaterialRules;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 /**
  * Appends a {@link MaterialRule} to a set of {@link DimensionType}s.
  */
-public record MaterialRuleAddition(HolderSet<DimensionType> dimensions, boolean hasPreliminarySurface, MaterialRule materialRule) {
-	public static final Codec<MaterialRuleAddition> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.holderSet(Registries.DIMENSION_TYPE).fieldOf("dimensions").forGetter(MaterialRuleAddition::dimensions),
-		Codec.BOOL.optionalFieldOf("has_preliminary_surface", false).forGetter(MaterialRuleAddition::hasPreliminarySurface),
-		MaterialRule.CODEC.fieldOf("rule").forGetter(MaterialRuleAddition::materialRule)
-	).apply(instance, MaterialRuleAddition::new));
+public record MaterialRuleAddition(
+	HolderSet<DimensionType> dimensions,
+	boolean hasPreliminarySurface,
+	MaterialRule materialRule,
+	Optional<Holder<ConfigPredicate>> serializationRequirement
+) {
+	private static final MaterialRuleAddition EMPTY = new MaterialRuleAddition(
+		HolderSet.empty(),
+		false,
+		MaterialRules.state(Blocks.AIR.defaultBlockState()),
+		Optional.empty()
+	);
+	public static final MapCodec<MaterialRuleAddition> DIRECT_CODEC = ConfigPredicate.HOLDER_CODEC.optionalFieldOf("serialization_requirement").dispatchMap(
+		materialRuleAddition -> materialRuleAddition.serializationRequirement,
+		requirement -> RecordCodecBuilder.mapCodec(instance -> {
+
+			if (requirement.isPresent() && !requirement.get().value().test()) {
+				return instance.point(EMPTY);
+			}
+
+			return instance.group(
+				RegistryCodecs.holderSet(Registries.DIMENSION_TYPE).fieldOf("dimensions").forGetter(MaterialRuleAddition::dimensions),
+				Codec.BOOL.optionalFieldOf("has_preliminary_surface", false).forGetter(MaterialRuleAddition::hasPreliminarySurface),
+				MaterialRule.CODEC.fieldOf("rule").forGetter(MaterialRuleAddition::materialRule),
+				instance.point(requirement)
+			).apply(instance, MaterialRuleAddition::new);
+		})
+	);
 
 	public MaterialRuleAddition(HolderSet<DimensionType> dimensions, MaterialRule materialRule) {
-		this(dimensions, false, materialRule);
+		this(dimensions, false, materialRule, Optional.empty());
+	}
+
+	public MaterialRuleAddition(HolderSet<DimensionType> dimensions, boolean hasPreliminarySurface, MaterialRule materialRule) {
+		this(dimensions, hasPreliminarySurface, materialRule, Optional.empty());
+	}
+
+	public MaterialRuleAddition(HolderSet<DimensionType> dimensions, MaterialRule materialRule, Holder<ConfigPredicate> serializationRequirement) {
+		this(dimensions, false, materialRule, Optional.of(serializationRequirement));
 	}
 
 	public boolean matches(Holder<DimensionType> dimension) {
-		return this.dimensions.contains(dimension);
+		return !this.isEmpty() && this.dimensions.contains(dimension);
 	}
 
 	public boolean noPreliminarySurface() {
 		return !this.hasPreliminarySurface;
+	}
+
+	public boolean isEmpty() {
+		return this == EMPTY;
 	}
 }

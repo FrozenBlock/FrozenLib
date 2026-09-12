@@ -108,9 +108,9 @@ public class FrozenLibRegistries {
 		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(SUFFOCATION_TYPE, SuffocationType.DIRECT_CODEC);
-		RegistryHelper.registerDynamicRegistry(MATERIAL_RULE_ADDITION, MaterialRuleAddition.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(MATERIAL_RULE_ADDITION, MaterialRuleAddition.DIRECT_CODEC.codec());
 		RegistryHelper.registerSyncedDynamicRegistry(PLAYER_DAMAGE_TYPE_SOUND, PlayerDamageTypeSound.DIRECT_CODEC);
-		RegistryHelper.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC);
+		RegistryHelper.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC.codec());
 		RegistryHelper.registerDynamicRegistry(VARIANT_SPAWN_INJECTION, VariantSpawnInjection.CODEC);
 	}
 

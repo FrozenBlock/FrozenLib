@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.material.api;
 import java.util.List;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.material.impl.MaterialRuleAddition;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
@@ -68,6 +69,16 @@ public final class MaterialRuleAdditions {
 
 	public static void register(
 		BootstrapContext<MaterialRuleAddition> context,
+		Identifier id,
+		HolderSet<DimensionType> dimensions,
+		boolean hasPreliminarySurface,
+		MaterialRule materialRule
+	) {
+		register(context, createKey(id), dimensions, hasPreliminarySurface, materialRule);
+	}
+
+	public static void register(
+		BootstrapContext<MaterialRuleAddition> context,
 		ResourceKey<MaterialRuleAddition> key,
 		HolderSet<DimensionType> dimensions,
 		boolean hasPreliminarySurface,
@@ -78,12 +89,44 @@ public final class MaterialRuleAdditions {
 
 	public static void register(
 		BootstrapContext<MaterialRuleAddition> context,
+		ResourceKey<MaterialRuleAddition> key,
+		HolderSet<DimensionType> dimensions,
+		MaterialRule materialRule,
+		Holder<ConfigPredicate> predicate
+	) {
+		register(context, key, dimensions, false, materialRule, predicate);
+	}
+
+	public static void register(
+		BootstrapContext<MaterialRuleAddition> context,
+		Identifier id,
+		HolderSet<DimensionType> dimensions,
+		MaterialRule materialRule,
+		Holder<ConfigPredicate> predicate
+	) {
+		register(context, createKey(id), dimensions, materialRule, predicate);
+	}
+
+	public static void register(
+		BootstrapContext<MaterialRuleAddition> context,
 		Identifier id,
 		HolderSet<DimensionType> dimensions,
 		boolean hasPreliminarySurface,
-		MaterialRule materialRule
+		MaterialRule materialRule,
+		Holder<ConfigPredicate> predicate
 	) {
-		register(context, createKey(id), dimensions, hasPreliminarySurface, materialRule);
+		register(context, createKey(id), dimensions, hasPreliminarySurface, materialRule, predicate);
+	}
+
+	public static void register(
+		BootstrapContext<MaterialRuleAddition> context,
+		ResourceKey<MaterialRuleAddition> key,
+		HolderSet<DimensionType> dimensions,
+		boolean hasPreliminarySurface,
+		MaterialRule materialRule,
+		Holder<ConfigPredicate> predicate
+	) {
+		context.register(key, new MaterialRuleAddition(dimensions, hasPreliminarySurface, materialRule, Optional.of(predicate)));
 	}
 
 	@ApiStatus.Internal
