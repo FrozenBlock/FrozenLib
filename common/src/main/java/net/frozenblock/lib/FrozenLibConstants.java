@@ -27,7 +27,7 @@ import net.minecraft.SharedConstants;
 @ApiStatus.Internal
 public final class FrozenLibConstants {
 	public static final String MOD_ID = FrozenLibEarlyConstants.MOD_ID;
-	public static final Logger LOGGER = FrozenLibEarlyConstants.LOGGER;
+	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>
@@ -52,14 +52,18 @@ public final class FrozenLibConstants {
 	public static final String NETHERIER_NETHER_MOD_ID = FrozenLibEarlyConstants.NETHERIER_NETHER_MOD_ID;
 	public static final boolean HAS_NETHERIER_NETHER = FrozenLibEarlyConstants.HAS_NETHERIER_NETHER;
 
-	public static final String GLOWTONE_MOD_ID = FrozenLibEarlyConstants.GLOWTONE_MOD_ID;
-	public static final boolean HAS_GLOWTONE = FrozenLibEarlyConstants.HAS_GLOWTONE;
-
 	public static final String SPRINGIER_LIFE_MOD_ID = FrozenLibEarlyConstants.SPRINGIER_LIFE_MOD_ID;
 	public static final boolean HAS_SPRINGIER_LIFE = FrozenLibEarlyConstants.HAS_SPRINGIER_LIFE;
 
 	public static final String SIMPLE_COPPER_PIPES_MOD_ID = FrozenLibEarlyConstants.SIMPLE_COPPER_PIPES_MOD_ID;
 	public static final boolean HAS_SIMPLE_COPPER_PIPES = FrozenLibEarlyConstants.HAS_SIMPLE_COPPER_PIPES;
+
+	public static final String FREEZE_FRAME_MOD_ID = FrozenLibEarlyConstants.FREEZE_FRAME_MOD_ID;
+	public static final boolean HAS_FREEZE_FRAME = FrozenLibEarlyConstants.HAS_FREEZE_FRAME;
+
+	public static final String GLOWTONE_MOD_ID = FrozenLibEarlyConstants.GLOWTONE_MOD_ID;
+	public static final boolean HAS_GLOWTONE = FrozenLibEarlyConstants.HAS_GLOWTONE;
+
 
 	// EXTERNAL MODS
 	public static final boolean HAS_MODMENU = FrozenLibEarlyConstants.HAS_MODMENU;

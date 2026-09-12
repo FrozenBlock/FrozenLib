@@ -73,14 +73,17 @@ public final class FrozenLibEarlyConstants {
 	public static final String NETHERIER_NETHER_MOD_ID = "netheriernether";
 	public static final boolean HAS_NETHERIER_NETHER = ModLoader.isModLoaded(NETHERIER_NETHER_MOD_ID);
 
-	public static final String GLOWTONE_MOD_ID = "glowtone";
-	public static final boolean HAS_GLOWTONE = ModLoader.isModLoaded(GLOWTONE_MOD_ID);
-
 	public static final String SPRINGIER_LIFE_MOD_ID = "springierlife";
 	public static final boolean HAS_SPRINGIER_LIFE = ModLoader.isModLoaded(SPRINGIER_LIFE_MOD_ID);
 
 	public static final String SIMPLE_COPPER_PIPES_MOD_ID = "simple_copper_pipes";
 	public static final boolean HAS_SIMPLE_COPPER_PIPES = ModLoader.isModLoaded(SIMPLE_COPPER_PIPES_MOD_ID);
+
+	public static final String FREEZE_FRAME_MOD_ID = "freezeframe";
+	public static final boolean HAS_FREEZE_FRAME = ModLoader.isModLoaded(FREEZE_FRAME_MOD_ID);
+
+	public static final String GLOWTONE_MOD_ID = "glowtone";
+	public static final boolean HAS_GLOWTONE = ModLoader.isModLoaded(GLOWTONE_MOD_ID);
 
 	// EXTERNAL MODS
 	public static final boolean HAS_MODMENU = ModLoader.isModLoaded("modmenu");
