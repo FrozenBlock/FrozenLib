@@ -40,18 +40,12 @@ public record MaterialRuleAddition(
 	MaterialRule materialRule,
 	Optional<Holder<ConfigPredicate>> serializationRequirement
 ) {
-	private static final MaterialRuleAddition EMPTY = new MaterialRuleAddition(
-		HolderSet.empty(),
-		false,
-		MaterialRules.state(Blocks.AIR.defaultBlockState()),
-		Optional.empty()
-	);
 	public static final MapCodec<MaterialRuleAddition> DIRECT_CODEC = ConfigPredicate.HOLDER_CODEC.optionalFieldOf("serialization_requirement").dispatchMap(
 		materialRuleAddition -> materialRuleAddition.serializationRequirement,
 		requirement -> RecordCodecBuilder.mapCodec(instance -> {
 
 			if (requirement.isPresent() && !requirement.get().value().test()) {
-				return instance.point(EMPTY);
+				return instance.point(createEmpty());
 			}
 
 			return instance.group(
@@ -75,15 +69,20 @@ public record MaterialRuleAddition(
 		this(dimensions, false, materialRule, Optional.of(serializationRequirement));
 	}
 
+	private static MaterialRuleAddition createEmpty() {
+		return new MaterialRuleAddition(
+			HolderSet.empty(),
+			false,
+			MaterialRules.state(Blocks.AIR.defaultBlockState()),
+			Optional.empty()
+		);
+	}
+
 	public boolean matches(Holder<DimensionType> dimension) {
-		return !this.isEmpty() && this.dimensions.contains(dimension);
+		return this.dimensions.contains(dimension);
 	}
 
 	public boolean noPreliminarySurface() {
 		return !this.hasPreliminarySurface;
-	}
-
-	public boolean isEmpty() {
-		return this == EMPTY;
 	}
 }

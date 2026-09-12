@@ -37,18 +37,12 @@ public record StructureProcessorListAddition(
 	Optional<Holder<ConfigPredicate>> enabledWhen,
 	Optional<Holder<ConfigPredicate>> serializationRequirement
 ) {
-	private static final StructureProcessorListAddition EMPTY = new StructureProcessorListAddition(
-		HolderSet.empty(),
-		Holder.direct(new StructureProcessorList(List.of())),
-		Optional.empty(),
-		Optional.empty()
-	);
 	public static final MapCodec<StructureProcessorListAddition> DIRECT_CODEC = ConfigPredicate.HOLDER_CODEC.optionalFieldOf("serialization_requirement").dispatchMap(
 		materialRuleAddition -> materialRuleAddition.serializationRequirement,
 		requirement -> RecordCodecBuilder.mapCodec(instance -> {
 
 			if (requirement.isPresent() && !requirement.get().value().test()) {
-				return instance.point(EMPTY);
+				return instance.point(createEmpty());
 			}
 
 			return instance.group(
@@ -94,19 +88,24 @@ public record StructureProcessorListAddition(
 		this(structures, processors, Optional.of(enabledWhen), Optional.empty());
 	}
 
+	private static StructureProcessorListAddition createEmpty() {
+		return new StructureProcessorListAddition(
+			HolderSet.empty(),
+			Holder.direct(new StructureProcessorList(List.of())),
+			Optional.empty(),
+			Optional.empty()
+		);
+	}
+
 	public boolean enabledAndMatches(Holder<Structure> structure) {
 		return this.isEnabled() && this.matches(structure);
 	}
 
 	public boolean matches(Holder<Structure> structureHolder) {
-		return !this.isEmpty() && this.structures.contains(structureHolder);
+		return this.structures.contains(structureHolder);
 	}
 
 	public boolean isEnabled() {
-		return !this.isEmpty() && this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
-	}
-
-	public boolean isEmpty() {
-		return this == EMPTY;
+		return this.enabledWhen.map(Holder::value).map(ConfigPredicate::test).orElse(true);
 	}
 }
