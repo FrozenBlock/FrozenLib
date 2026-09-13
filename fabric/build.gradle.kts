@@ -30,7 +30,6 @@ val fresult_version: String by project
 
 val modmenu_version: String by project
 val cloth_config_version: String by project
-val terrablender_version: String by project
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
