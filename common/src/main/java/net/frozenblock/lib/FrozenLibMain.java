@@ -17,9 +17,11 @@
 
 package net.frozenblock.lib;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
@@ -65,10 +67,13 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
@@ -123,6 +128,7 @@ public final class FrozenLibMain {
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
+		PistonPushUtil.init();
 
 		final var matCon = DeferredRegister.create(Registries.MATERIAL_CONDITION, FrozenLibConstants.MOD_ID);
 		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);

@@ -20,7 +20,6 @@ package net.fabricmc.frozenblock.datafixer.mixin;
 
 import com.mojang.datafixers.DataFixerBuilder;
 import net.fabricmc.frozenblock.datafixer.impl.FabricSubSchema;
-import net.minecraft.SharedConstants;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.AddNewChoices;
 import net.minecraft.util.datafix.fixes.References;
@@ -33,6 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DataFixers.class)
 public class SchemasMixin {
+
 	@Inject(
 		method = "addFixers",
 		at = @At(
@@ -48,7 +48,7 @@ public class SchemasMixin {
 		)
 	)
 	private static void frozenLib$addEntrypointSchema(DataFixerBuilder fixerUpper, FileFixerUpper.Builder fileFixerUpper, CallbackInfo ci) {
-		final int version = 1903; // below the vanilla schema 1904, which added Cats
+		final int version = 1903; // Below the vanilla schema 1904, which added Cats
 		final FabricSubSchema schema = (FabricSubSchema) fixerUpper.addSchema(version, FabricSubSchema::new);
 
 		if (!schema.registeredBlockEntities.getKeys().isEmpty()) {

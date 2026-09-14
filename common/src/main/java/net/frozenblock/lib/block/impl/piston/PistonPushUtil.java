@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.impl.piston;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.piston.PistonEvents;
 import net.frozenblock.lib.tag.api.ConventionalBlockTags;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
@@ -36,7 +37,8 @@ import net.minecraft.world.level.block.state.properties.SideChainPart;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-public class PistonPushUtil {
+@UtilityClass
+public final class PistonPushUtil {
 
 	public static boolean cannotPushBlockEntity(boolean hasBlockEntity, BlockState state, Direction direction) {
 		if (!hasBlockEntity) return hasBlockEntity;
