@@ -20,11 +20,9 @@ package net.frozenblock.lib;
 import java.nio.file.Path;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 import net.minecraft.SharedConstants;
 
-@ApiStatus.Internal
 public final class FrozenLibConstants {
 	public static final String MOD_ID = FrozenLibEarlyConstants.MOD_ID;
 	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;

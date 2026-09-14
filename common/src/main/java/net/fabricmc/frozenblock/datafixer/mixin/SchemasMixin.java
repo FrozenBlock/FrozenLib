@@ -27,17 +27,29 @@ import net.minecraft.util.filefix.FileFixerUpper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.SharedConstants;
 
 @Mixin(DataFixers.class)
 public class SchemasMixin {
 
-	// TODO: rework this so it can actually apply to Vanilla schemas. This implementation effectively accomplishes absolutely nothing.
-	// TODO: but embarrass us.
-	@Inject(method = "addFixers", at = @At("TAIL"))
+	@Inject(
+		method = "addFixers",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/datafixers/DataFixerBuilder;addSchema(ILjava/util/function/BiFunction;)Lcom/mojang/datafixers/schemas/Schema;",
+			ordinal = 0
+		),
+		slice = @Slice(
+			from = @At(
+				value = "CONSTANT",
+				args = "intValue=1803"
+			)
+		)
+	)
 	private static void frozenLib$addEntrypointSchema(DataFixerBuilder fixerUpper, FileFixerUpper.Builder fileFixerUpper, CallbackInfo info) {
-		final int version = SharedConstants.getCurrentVersion().dataVersion().version() - 1;
+		final int version = 1903; // below the vanilla schema 1904, which added Cats
 		final FabricSubSchema schema = (FabricSubSchema) fixerUpper.addSchema(version, FabricSubSchema::new);
 
 		if (!schema.registeredBlockEntities.getKeys().isEmpty()) {

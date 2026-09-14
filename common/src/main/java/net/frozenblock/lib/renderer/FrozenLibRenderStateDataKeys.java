@@ -17,12 +17,14 @@
 
 package net.frozenblock.lib.renderer;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
 @ClientOnly
+@UtilityClass
 public final class FrozenLibRenderStateDataKeys {
 	public static final RenderStateDataKey<FireType> FIRE_TYPE = RenderStateDataKey.create(FrozenLibConstants.id("fire_type"));
 	public static final RenderStateDataKey<String> ENTITY_NAME = RenderStateDataKey.create(FrozenLibConstants.id("entity_name"));

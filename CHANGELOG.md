@@ -4,8 +4,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Fixed a crash that could occur on clients when trying to sync Wind Manager Extensions with the server.
 - Wind Manager Extensions now support modification as a method of syncing, instead of replacement.
 - Fixed an issue that could cause the number of Wind Manager Extensions on the client to increase dramatically over time.
-- `DataMarkerProcessableSinglePoolElement` and `DataMarkerProcessableLegacySinglePoolElement` are now both abstract classes.
-  - This change allows for easy handling of Data Markers without the need for mixins.
 - Added the `StructureSetApi` class, allowing modders to easily add or remove `Structure`s to/from `StructureSet`s.
 - Added `RuleSourceAddition`s (or `MaterialRuleAddition`s on 26.3+,) replacing the previous API used to add new `RuleSource`s to Levels.
   - Added the `frozenlib:rule_source_addition` (`frozenlib:material_rule_addition` on 26.3+) Dynamic Registry, with the following format:
@@ -30,10 +28,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `processors`: A list of `StructureProcessor`s to add to `structures`.
     - `config_predicate`: An optional field, determining whether this can be used.
     - `serialization_requirement` (26.3+ only): A `ConfigPredicate`, determining whether this can be serialized (useful for mod compat.)
-- Added `BlockTransformerEvents`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
-  - This replaces the previous `ShovelApi` and `AxeApi` classes.
-- Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
-  - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
 - Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
 - Added the `frozenlib:config_predicate_provider` Dynamic Registry, used to register `ConfigPredicate`s.
@@ -50,7 +44,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `registry`: The id of the variant registry.
   - `variant`: The id of the variant to inject custom spawn conditions into.
   - `spawn_conditions`: The spawn conditions to inject into the variant, using the same format as the `spawn_conditions` field in other mob variants.
-- Removed the `WolfVariantBiomeRegistry` class, as Variant Spawn Injections supercede its functionality.
+- Removed the `WolfVariantBiomeRegistry` class, as Variant Spawn Injections supersede its functionality.
 - Added the following new Spawn Conditions (used for selecting mob variants within the `spawn_conditions` field,) with the following formats:
   - `frozenlib:config`Predicate to check.
   - `frozenlib:compound`
@@ -114,6 +108,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `min_segment` (Optional): The minimum amount of segments to provide, in a range of 1-4.
     - Provides 1 if empty.
   - `max_segment`: The maximum amount of segments to provide, in a range of 1-4.
+- Added `BlockTransformerEvents`, enabling the modification of `BlockTransformers` for Shovel, Axe, and Hoe items.
+  - This replaces the previous `ShovelApi` and `AxeApi` classes.
+- Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
+  - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
 - Added the `frozenlib:config_predicate` Tree Decorator, with the following format:
@@ -122,5 +120,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:probability` Tree Decorator, with the following format:
   - `decorator`: The Tree Decorator to generate.
   - `probability`: The probability for `decorator` to generate.
+- `DataMarkerProcessableSinglePoolElement` and `DataMarkerProcessableLegacySinglePoolElement` are now both abstract classes.
+  - This change allows for easy handling of Data Markers without the need for mixins.
 - Added the `ParticleSpawner` class, assisting in setting up client-sided particle spawners, e.g., Pollen particles spawning from Pollen blocks.
 - Added new implementations of `BlockRenameFix` and `BlockPropertyRenameAndFix` that work on 26.3-snapshot-7+.

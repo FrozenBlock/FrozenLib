@@ -42,6 +42,8 @@ import org.jspecify.annotations.Nullable;
 public final class ModLoaderImpl {
 	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();
 
+	public static volatile List<String> EARLY_MOD_IDS = null;
+
 	private static FileSystem openOrGetFileSystem(Path jarPath) {
 		return MOD_JAR_FILESYSTEMS.computeIfAbsent(jarPath, p -> {
 			try {
@@ -65,8 +67,17 @@ public final class ModLoaderImpl {
 	}
 
 	public static boolean isModLoaded(String modId) {
-		final var modList = ModList.get();
-		return modList != null && modList.isLoaded(modId);
+		try {
+			final ModList modList = ModList.get();
+			if (modList != null) {
+				final boolean loaded = modList.isLoaded(modId);
+				EARLY_MOD_IDS = null;
+				return loaded;
+			}
+		} catch (RuntimeException _) {}
+
+		final var earlyModIds = EARLY_MOD_IDS;
+		return earlyModIds != null && earlyModIds.contains(modId);
 	}
 
 	public static boolean isFabric() {

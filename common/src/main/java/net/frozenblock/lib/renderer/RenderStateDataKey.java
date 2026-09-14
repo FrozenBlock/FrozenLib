@@ -33,6 +33,7 @@ package net.frozenblock.lib.renderer;
  * limitations under the License.
  */
 
+import net.frozenblock.lib.FrozenLibConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKey;
@@ -57,7 +58,7 @@ public final class RenderStateDataKey<T> {
 	 * @return The newly created data key.
 	 */
 	public static <T> RenderStateDataKey<T> create(Identifier id) {
-		return new RenderStateDataKey<>(new ContextKey<>(id));
+		return new RenderStateDataKey<>(new ContextKey<>(FrozenLibConstants.id(id.getNamespace() + "/" + id.getPath())));
 	}
 
 	/**

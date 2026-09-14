@@ -25,7 +25,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
+public final class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public void onLoad(String mixinPackage) {}
@@ -38,7 +38,7 @@ public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		return ModLoader.isModLoaded("cloth-config") || ModLoader.isModLoaded("cloth_config");
+		return ModLoader.isNeoForge() || ModLoader.isModLoaded("cloth-config") || ModLoader.isModLoaded("cloth_config");
 	}
 
 	@Override
