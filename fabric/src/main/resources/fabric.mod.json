@@ -70,6 +70,7 @@
     "mixin/frozenlib.sound.mixins.json",
     "mixin/frozenlib.storage.mixins.json",
     "mixin/frozenlib.tag.mixins.json",
+    "mixin/frozenlib.wind.mixins.json",
     "mixin/frozenlib.wind.fabric.mixins.json",
     "mixin/frozenlib.levelgen.attribute.mixins.json",
     "mixin/frozenlib.levelgen.biome.mixins.json",

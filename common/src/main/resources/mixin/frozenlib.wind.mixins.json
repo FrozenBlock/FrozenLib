@@ -7,8 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AttachmentChangeMixin"
-  ],
-  "client": [
+    "geyser.PotentSulfurBlockEntityMixin"
   ]
 }
