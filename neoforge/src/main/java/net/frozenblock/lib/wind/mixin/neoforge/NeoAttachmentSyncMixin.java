@@ -24,9 +24,11 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.neoforged.neoforge.attachment.AttachmentHolder;
 import net.neoforged.neoforge.attachment.AttachmentSync;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,15 +39,28 @@ public class NeoAttachmentSyncMixin {
 
 	@Inject(method = "receiveSyncedDataAttachments", at = @At("TAIL"))
 	private static void frozenLib$onReceiveSyncedDataAttachments(
-		AttachmentHolder holder,
+		AttachmentHolder originalHolder,
 		RegistryAccess registryAccess,
 		List<AttachmentType<?>> types,
 		byte[] bytes,
 		CallbackInfo info
 	) {
+		IAttachmentHolder holder = originalHolder;
+		if (holder instanceof AttachmentHolder.AsField asField) {
+			holder = ((AttachmentHolderAsFieldAccessor)asField).frozenLib$getExposedHolder();
+		}
+
+
 		final Level level;
 		final DataAttachmentTarget target;
-		if (holder instanceof Entity entity) {
+
+		if (holder instanceof Level targetLevel) {
+			level = targetLevel;
+			target = targetLevel;
+		} else if (holder instanceof ChunkAccess chunkAccess) {
+			level = chunkAccess.getLevel();
+			target = chunkAccess;
+		} else if (holder instanceof Entity entity) {
 			level = entity.level();
 			target = entity;
 		} else if (holder instanceof BlockEntity blockEntity) {
