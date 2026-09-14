@@ -25,6 +25,8 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
 import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.state.MapRenderState;
 import net.minecraft.util.context.ContextKey;
 import net.neoforged.neoforge.client.renderstate.BaseRenderState;
 import org.jspecify.annotations.Nullable;
@@ -54,12 +56,16 @@ public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 		)
 	)
 	private void frozenLib$keepFrozenLibData(Map<ContextKey<?>, Object> extensions, Operation<Void> original) {
-		final var frozenlibData = extensions.entrySet()
+		final BaseRenderState state = BaseRenderState.class.cast(this);
+		// These three RenderStates are manually reset by NeoForge at a strange time.
+		if (!(state instanceof EntityRenderState || state instanceof MapRenderState || state instanceof MapRenderState.MapDecorationRenderState)) return;
+
+		final var frozenLibData = extensions.entrySet()
 			.stream().filter(key -> key.getKey().name().getNamespace().equals(FrozenLibConstants.MOD_ID))
 			.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 		original.call(extensions);
-		extensions.putAll(frozenlibData);
+		extensions.putAll(frozenLibData);
 	}
 
 	@Unique

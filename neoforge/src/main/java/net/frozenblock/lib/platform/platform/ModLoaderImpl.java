@@ -68,14 +68,14 @@ public final class ModLoaderImpl {
 
 	public static boolean isModLoaded(String modId) {
 		try {
-			final var modList = ModList.get();
+			final ModList modList = ModList.get();
 			if (modList != null) {
 				final boolean loaded = modList.isLoaded(modId);
 				EARLY_MOD_IDS = null;
 				return loaded;
 			}
-		} catch (RuntimeException _) {
-		}
+		} catch (RuntimeException _) {}
+
 		final var earlyModIds = EARLY_MOD_IDS;
 		return earlyModIds != null && earlyModIds.contains(modId);
 	}
