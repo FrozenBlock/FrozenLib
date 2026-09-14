@@ -62,7 +62,7 @@ public class ConfigSettings<T> {
 		janksonSave(false, JsonType.JSON),
 		JANKSON_LOAD
 	);
-	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<JsonElement>(
+	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<>(
 		"json5",
 		JanksonOps.INSTANCE,
 		janksonSave(true, JsonType.JSON5),
