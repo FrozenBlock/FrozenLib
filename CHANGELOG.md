@@ -4,31 +4,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Fixed a crash that could occur on clients when trying to sync Wind Manager Extensions with the server.
 - Wind Manager Extensions now support modification as a method of syncing, instead of replacement.
 - Fixed an issue that could cause the number of Wind Manager Extensions on the client to increase dramatically over time.
-- Added the `StructureSetApi` class, allowing modders to easily add or remove `Structure`s to/from `StructureSet`s.
-- Added `RuleSourceAddition`s (or `MaterialRuleAddition`s on 26.3+,) replacing the previous API used to add new `RuleSource`s to Levels.
-  - Added the `frozenlib:rule_source_addition` (`frozenlib:material_rule_addition` on 26.3+) Dynamic Registry, with the following format:
-    - `dimensions`: A Dimension Type's ID, a list of Dimension Type IDs, or a Dimension Type Tag that `rule_sources` will be added to.
-    - `has_preliminary_surface`: Whether `rule_sources` can only generate on the world's surface. (i.e., the surface of the Overworld.)
-    - `rule_source` (or `rule` on 26.3+): The `RuleSource` (or `MaterialRule` on 26.3+) to add to `dimensions`.
-    - `serialization_requirement` (26.3+ only): A `ConfigPredicate`, determining whether this can be serialized (useful for mod compat.)
-  - Removed `SurfaceRuleEvents`, `DimensionBoundRuleSource`, and `SurfaceRuleUtil` as they are no longer needed.
-- Added the `#frozenlib:overworld`, `#frozenlib:nether`, and `#frozenlib:end` Dimension Type Tags.
-- Added `PlayerDamageTypeSound`s, used to play a custom sound when a Player is damaged by a specific `DamageType`.
-  - Added the `frozenlib:player_damage_type_sound` Dynamic Registry with the following format:
-    - `damage_types`: A Damage Type's ID, a list of Damage Type IDs, or a Damage Type Tag that `sound_event` will be used for.
-    - `sound_event`: The Sound Event to play when a Player is damaged by `damage_types`.
-    - `config_predicate`: An optional field, determining whether this can be used.
-  - Removed the initial implementation, as this new data-driven implementation is far more stable.
-- Added `ShearsDispenseItemBehaviorApi`, used to register custom behaviors for Shears being used by a Dispenser.
-- Added the experimental `BlockRegistryModificationEvents` class, used to modify the Properties and Factory used to create Blocks.
-- Moved Wilder Wild's Potent Sulfur Geyser Wind Disturbance into FrozenLib.
-- Added `StructureProcessorListAddition`s, replacing `StructureProcessorApi` in a more stable and data-driven manner.
-  - Added the `frozenlib:structure_processor_list_addition` Dynamic Registry with the following format:
-    - `structures`: A Structure's ID, a list of Structure IDs, or a Structure Tag that `processors` will be added to.
-    - `processors`: A list of `StructureProcessor`s to add to `structures`.
-    - `config_predicate`: An optional field, determining whether this can be used.
-    - `serialization_requirement` (26.3+ only): A `ConfigPredicate`, determining whether this can be serialized (useful for mod compat.)
-- Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
 - Added the `frozenlib:config_predicate_provider` Dynamic Registry, used to register `ConfigPredicate`s.
   - All implementation of `ConfigPredicate`s have been updated to now use `Holder`s and `HolderSet`s, allowing modders to refer to `ConfigPredicate`s via their registered id or tags.
@@ -112,8 +87,33 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - This replaces the previous `ShovelApi` and `AxeApi` classes.
 - Added `PropertyTestingPredicate`, a new abstract `BlockPredicate` used to compare Property values.
   - Added `HasMatchingAxisPredicate`, used to compare the `AXIS` Property of a Block.
+- Added `ShearsDispenseItemBehaviorApi`, used to register custom behaviors for Shears being used by a Dispenser.
+- Added the experimental `BlockRegistryModificationEvents` class, used to modify the Properties and Factory used to create Blocks.
+- Moved Wilder Wild's Potent Sulfur Geyser Wind Disturbance into FrozenLib.
+- Added `StructureProcessorListAddition`s, replacing `StructureProcessorApi` in a more stable and data-driven manner.
+  - Added the `frozenlib:structure_processor_list_addition` Dynamic Registry with the following format:
+    - `structures`: A Structure's ID, a list of Structure IDs, or a Structure Tag that `processors` will be added to.
+    - `processors`: A list of `StructureProcessor`s to add to `structures`.
+    - `config_predicate`: An optional field, determining whether this can be used.
+    - `serialization_requirement`: A `ConfigPredicate`, determining whether this can be serialized (useful for mod compat.)
+- Added the `frozenlib:pathfinding_damaging_blocks` Block Tag, denoting extra Blocks to be considered as damaging while pathfinding.
 - Migrated `StructureGenerationConditionApi` to an event.
 - Migrated `StructurePlacementExclusionApi` to an event.
+- Added the `StructureSetApi` class, allowing modders to easily add or remove `Structure`s to/from `StructureSet`s.
+- Added `MaterialRuleAddition`s, replacing the previous API used to add new `MaterialRules`s to Levels.
+  - Added the `frozenlib:material_rule_addition` Dynamic Registry, with the following format:
+    - `dimensions`: A Dimension Type's ID, a list of Dimension Type IDs, or a Dimension Type Tag that `rule` will be added to.
+    - `has_preliminary_surface`: Whether `rule` can only generate on the world's surface. (i.e., the surface of the Overworld.)
+    - `rule`: The `MaterialRules` to add to `dimensions`.
+    - `serialization_requirement`: A `ConfigPredicate`, determining whether this can be serialized (useful for mod compat.)
+  - Removed `SurfaceRuleEvents`, `DimensionBoundRuleSource`, and `SurfaceRuleUtil` as they are no longer needed.
+- Added the `#frozenlib:overworld`, `#frozenlib:nether`, and `#frozenlib:end` Dimension Type Tags.
+- Added `PlayerDamageTypeSound`s, used to play a custom sound when a Player is damaged by a specific `DamageType`.
+  - Added the `frozenlib:player_damage_type_sound` Dynamic Registry with the following format:
+    - `damage_types`: A Damage Type's ID, a list of Damage Type IDs, or a Damage Type Tag that `sound_event` will be used for.
+    - `sound_event`: The Sound Event to play when a Player is damaged by `damage_types`.
+    - `config_predicate`: An optional field, determining whether this can be used.
+  - Removed the initial implementation, as this new data-driven implementation is far more stable.
 - Added the `frozenlib:config_predicate` Tree Decorator, with the following format:
   - `decorator`: The Tree Decorator to generate.
   - `predicate`: The Config Predicate to test, determining whether `decorator` can generate.
