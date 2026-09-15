@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
+import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.platform.api.Env;
 import net.neoforged.fml.ModList;
@@ -41,8 +42,6 @@ import org.jspecify.annotations.Nullable;
 
 public final class ModLoaderImpl {
 	private static final Map<Path, FileSystem> MOD_JAR_FILESYSTEMS = new ConcurrentHashMap<>();
-
-	public static volatile List<String> EARLY_MOD_IDS = null;
 
 	private static FileSystem openOrGetFileSystem(Path jarPath) {
 		return MOD_JAR_FILESYSTEMS.computeIfAbsent(jarPath, p -> {
@@ -70,14 +69,11 @@ public final class ModLoaderImpl {
 		try {
 			final ModList modList = ModList.get();
 			if (modList != null && !modList.getMods().isEmpty()) {
-				final boolean loaded = modList.isLoaded(modId);
-				EARLY_MOD_IDS = null;
-				return loaded;
+				return modList.isLoaded(modId);
 			}
 		} catch (RuntimeException _) {}
 
-		final var earlyModIds = EARLY_MOD_IDS;
-		return earlyModIds != null && earlyModIds.contains(modId);
+		return FrozenLibEntrypoints.getModIds().contains(modId);
 	}
 
 	public static boolean isFabric() {
