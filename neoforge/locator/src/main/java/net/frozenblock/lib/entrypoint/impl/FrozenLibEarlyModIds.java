@@ -23,7 +23,7 @@ public final class FrozenLibEarlyModIds implements IDependencyLocator {
 
 	@Override
 	public int getPriority() {
-		return HIGHEST_SYSTEM_PRIORITY;
+		return LOWEST_SYSTEM_PRIORITY;
 	}
 
 	private static void setEarlyModIds(List<String> modIds) {
