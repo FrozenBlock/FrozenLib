@@ -69,7 +69,7 @@ public final class ModLoaderImpl {
 	public static boolean isModLoaded(String modId) {
 		try {
 			final ModList modList = ModList.get();
-			if (modList != null) {
+			if (modList != null && !modList.getMods().isEmpty()) {
 				final boolean loaded = modList.isLoaded(modId);
 				EARLY_MOD_IDS = null;
 				return loaded;
