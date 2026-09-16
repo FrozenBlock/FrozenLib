@@ -1,7 +1,7 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-
+- Ported to multiloader and added plenty of new Events & Helpers for multiloader development.
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
 - Added the `frozenlib:config_predicate_provider` Dynamic Registry, used to register `ConfigPredicate`s.
   - All implementation of `ConfigPredicate`s have been updated to now use `Holder`s and `HolderSet`s, allowing modders to refer to `ConfigPredicate`s via their registered id or tags.
