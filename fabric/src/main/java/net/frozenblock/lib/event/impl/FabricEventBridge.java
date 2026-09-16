@@ -35,6 +35,7 @@ public final class FabricEventBridge {
 		FabricBlockEntityLifecycleEventsBridge.init();
 		FabricChunkLifecycleEventsBridge.init();
 		FabricCommonLifecycleEventsBridge.init();
+		FabricDefaultItemComponentEventsBridge.init();
 		FabricPotionBrewingEventBridge.init();
 		FabricPlayerBlockBreakEventsBridge.init();
 
@@ -61,5 +62,6 @@ public final class FabricEventBridge {
 		FabricClientEntityLifecycleEventsBridge.init();
 		FabricClientBlockEntityLifecycleEventsBridge.init();
 		FabricClientChunkLifecycleEventsBridge.init();
+		FabricClientTooltipComponentCallbackBridge.init();
 	}
 }

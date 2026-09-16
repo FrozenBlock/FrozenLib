@@ -13,6 +13,7 @@
     "ReloadableServerResourcesMixin"
   ],
   "client": [
+    "client.ClientTooltipComponentMixin",
     "client.MinecraftMixin",
     "client.MultiPlayerGameModeMixin"
   ]

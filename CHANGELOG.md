@@ -1,9 +1,7 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Fixed a crash that could occur on clients when trying to sync Wind Manager Extensions with the server.
-- Wind Manager Extensions now support modification as a method of syncing, instead of replacement.
-- Fixed an issue that could cause the number of Wind Manager Extensions on the client to increase dramatically over time.
+
 - Added `ConfigEntryGetter`, a serializable way to access values from `ConfigEntry`s.
 - Added the `frozenlib:config_predicate_provider` Dynamic Registry, used to register `ConfigPredicate`s.
   - All implementation of `ConfigPredicate`s have been updated to now use `Holder`s and `HolderSet`s, allowing modders to refer to `ConfigPredicate`s via their registered id or tags.
@@ -74,8 +72,14 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Condensed `BlockScheduledTicks`, `BlockRandomTicks`, and `BlockAnimateTicks` into the new `BlockTickEvents` and `BlockTickRegistry` classes.
   - `BlockTickEvents` provides events that trigger regardless of the Block.
   - `BlockTickRegistry` uses the new Block Attachment system, and provides a simple way to add new Block-specific behavior.
+- Reworked the implementation of modded DataFixers, now allowing modders to register any amount of DataFixers per-mod as they'd like.
+- Added `DataFixerEntrypoint` (using the identifier `frozenlib:data_fixer`,) allowing modders to register custom Entities and Block Entities to Vanilla's DataFixers.
+  - This resolves a long-standing issue that caused many modded Entities and Block Entities to lose data across versions, without the need to use mixins.
 - Fixed an issue that required Minecraft to run for an entire minute before finally shutting down. ([#81](https://github.com/FrozenBlock/FrozenLib/issues/81) - Fixed in pull request [#82](https://github.com/FrozenBlock/FrozenLib/pull/82))
 - Fixed a major issue that caused certain DataFixers to not work as intended.
+- Fixed a crash that could occur on clients when trying to sync Wind Manager Extensions with the server.
+- Wind Manager Extensions now support modification as a method of syncing, instead of replacement.
+- Fixed an issue that could cause the number of Wind Manager Extensions on the client to increase dramatically over time.
 
 ### 26.3+
 - Added the `frozenlib:leaf_litter_provider` and `frozenlib:flower_bed_provider` Block State Providers, with the following format:
