@@ -30,6 +30,9 @@ public final class FabricEventBridge {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();
 		FabricServerLevelEventsBridge.init();
+		FabricServerEntityLevelChangeEventsBridge.init();
+		FabricServerLivingEntityEventsBridge.init();
+		FabricServerPlayerEventsBridge.init();
 		FabricEntityTrackingEventsBridge.init();
 		FabricEntityLifecycleEventsBridge.init();
 		FabricBlockEntityLifecycleEventsBridge.init();

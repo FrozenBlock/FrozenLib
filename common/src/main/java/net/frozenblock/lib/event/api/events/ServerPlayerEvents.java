@@ -26,45 +26,65 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 @UtilityClass
-public final class PlayerJoinEvents {
+public final class ServerPlayerEvents {
 	/**
 	 * The event that is triggered when a {@link ServerPlayer} joins the {@link MinecraftServer}.
 	 */
-	public static final Event<PlayerJoin> ON_JOIN_SERVER = EventRegistry.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
-		for (var callback : callbacks) callback.onPlayerJoin(server, player);
+	public static final Event<Join> JOIN = EventRegistry.createEnvironmentEvent(Join.class, (callbacks) -> (server, player) -> {
+		for (var callback : callbacks) callback.onJoin(server, player);
+	});
+
+	/**
+	 * The event that is triggered when a {@link ServerPlayer} leaves the {@link MinecraftServer}.
+	 */
+	public static final Event<Leave> LEAVE = EventRegistry.createEnvironmentEvent(Leave.class, (callbacks) -> (server, player) -> {
+		for (var callback : callbacks) callback.onLeave(server, player);
 	});
 
 	/**
 	 * The event that is triggered when a {@link ServerPlayer} is added to a {@link ServerLevel}.
 	 */
-	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = EventRegistry.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, level, player) -> {
-		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, level, player);
+	public static final Event<AddedToLevel> ADDED_TO_LEVEL = EventRegistry.createEnvironmentEvent(AddedToLevel.class, (callbacks) -> (server, level, player) -> {
+		for (var callback : callbacks) callback.onAddedToLevel(server, level, player);
 	});
 
 	/**
 	 * A functional interface representing a player join event.
 	 */
 	@FunctionalInterface
-	public interface PlayerJoin extends CommonEventEntrypoint {
+	public interface Join extends CommonEventEntrypoint {
 		/**
 		 * Triggers the event when a {@link ServerPlayer} joins the {@link MinecraftServer}.
 		 * @param server the Minecraft server instance
 		 * @param player the player joining the server
 		 */
-		void onPlayerJoin(MinecraftServer server, ServerPlayer player);
+		void onJoin(MinecraftServer server, ServerPlayer player);
+	}
+
+	/**
+	 * A functional interface representing a player leave event.
+	 */
+	@FunctionalInterface
+	public interface Leave extends CommonEventEntrypoint {
+		/**
+		 * Triggers the event when a {@link ServerPlayer} leaves the {@link MinecraftServer}.
+		 * @param server the Minecraft server instance
+		 * @param player the player leaving the server
+		 */
+		void onLeave(MinecraftServer server, ServerPlayer player);
 	}
 
 	/**
 	 * A functional interface representing a player added to level event.
 	 */
 	@FunctionalInterface
-	public interface PlayerAddedToLevel extends CommonEventEntrypoint {
+	public interface AddedToLevel extends CommonEventEntrypoint {
 		/**
 		 * Triggers the event when a {@link ServerPlayer} is added to a {@link ServerLevel}.
 		 * @param server the Minecraft server instance
 		 * @param level the server level the player has been added to
 		 * @param player the player added to the level
 		 */
-		void onPlayerAddedToLevel(MinecraftServer server, ServerLevel level, ServerPlayer player);
+		void onAddedToLevel(MinecraftServer server, ServerLevel level, ServerPlayer player);
 	}
 }

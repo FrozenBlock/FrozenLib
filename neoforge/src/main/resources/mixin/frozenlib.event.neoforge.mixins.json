@@ -9,8 +9,13 @@
   "mixins": [
     "BlockBreakMixin",
     "BlockEntityLifecycleMixin",
+    "EntityMixin",
+    "LivingEntityMixin",
+    "MobMixin",
+    "PlayerListMixin",
     "QuiltSyncTaskMixin",
-    "ReloadableServerResourcesMixin"
+    "ReloadableServerResourcesMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
     "client.ClientTooltipComponentMixin",

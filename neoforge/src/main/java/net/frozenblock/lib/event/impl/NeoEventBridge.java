@@ -35,6 +35,8 @@ public final class NeoEventBridge {
 		NeoLootTableEventBridge.init();
 		NeoServerTickEventBridge.init();
 		NeoServerLevelEventBridge.init();
+		NeoServerLivingEntityEventsBridge.init();
+		NeoServerPlayerEventsBridge.init();
 		NeoEntityTrackingEventBridge.init();
 		NeoDefaultItemComponentEventsBridge.init();
 		NeoEntityLifecycleEventBridge.init();
