@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.api.component.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -33,7 +34,8 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.ApiStatus;
 
-public class RemovableDataComponents {
+@UtilityClass
+public final class RemovableDataComponents {
 	private static final LinkedHashMap<Holder<DataComponentType<?>>, RemovableDataComponent> REMOVABLE_DATA_COMPONENTS = new LinkedHashMap<>();
 
 	public static void register(DataComponentType<?> component, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {

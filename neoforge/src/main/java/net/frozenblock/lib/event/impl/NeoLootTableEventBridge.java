@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.event.impl;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.frozenblock.lib.item.api.loot.LootTableSource;
 import net.frozenblock.lib.loot.impl.NeoLootUtil;
@@ -32,6 +33,7 @@ import net.neoforged.neoforge.event.LootTableLoadEvent;
  * Drives {@link LootTableEvents#REPLACE} and {@link LootTableEvents#MODIFY} from NeoForge's
  * {@link LootTableLoadEvent}, the only native loot table event NeoForge provides.
  */
+@UtilityClass
 public class NeoLootTableEventBridge {
 
 	public static void init() {

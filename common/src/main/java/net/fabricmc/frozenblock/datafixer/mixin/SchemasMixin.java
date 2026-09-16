@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.SharedConstants;
 
 @Mixin(DataFixers.class)
 public class SchemasMixin {
@@ -49,7 +48,7 @@ public class SchemasMixin {
 		)
 	)
 	private static void frozenLib$addEntrypointSchema(DataFixerBuilder fixerUpper, FileFixerUpper.Builder fileFixerUpper, CallbackInfo info) {
-		final int version = 1903; // below the vanilla schema 1904, which added Cats
+		final int version = 1903; // Below the vanilla schema 1904, which added Cats
 		final FabricSubSchema schema = (FabricSubSchema) fixerUpper.addSchema(version, FabricSubSchema::new);
 
 		if (!schema.registeredBlockEntities.getKeys().isEmpty()) {

@@ -17,12 +17,14 @@
 
 package net.frozenblock.lib.event.impl;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.TickEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
+@UtilityClass
 public class NeoServerTickEventBridge {
 
 	public static void init() {

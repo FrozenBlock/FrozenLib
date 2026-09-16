@@ -18,6 +18,7 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -41,39 +42,39 @@ public final class FrozenLibConfigPredicates {
 		);
 		context.register(
 			HAS_WILDER_WILD,
-			ConfigPredicate.modLoaded(FrozenLibConstants.WILDER_WILD_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.WILDER_WILD_MOD_ID)
 		);
 		context.register(
 			HAS_TRAILIER_TALES,
-			ConfigPredicate.modLoaded(FrozenLibConstants.TRAILIER_TALES_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.TRAILIER_TALES_MOD_ID)
 		);
 		context.register(
 			HAS_THE_COPPERIER_AGE,
-			ConfigPredicate.modLoaded(FrozenLibConstants.THE_COPPERIER_AGE_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.THE_COPPERIER_AGE_MOD_ID)
 		);
 		context.register(
 			HAS_CHAOS_HYPERCUBED,
-			ConfigPredicate.modLoaded(FrozenLibConstants.CHAOS_HYPERCUBED_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.CHAOS_HYPERCUBED_MOD_ID)
 		);
 		context.register(
 			HAS_NETHERIER_NETHER,
-			ConfigPredicate.modLoaded(FrozenLibConstants.NETHERIER_NETHER_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.NETHERIER_NETHER_MOD_ID)
 		);
 		context.register(
 			HAS_SPRINGIER_LIFE,
-			ConfigPredicate.modLoaded(FrozenLibConstants.SPRINGIER_LIFE_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.SPRINGIER_LIFE_MOD_ID)
 		);
 		context.register(
 			HAS_SIMPLE_COPPER_PIPES,
-			ConfigPredicate.modLoaded(FrozenLibConstants.SIMPLE_COPPER_PIPES_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.SIMPLE_COPPER_PIPES_MOD_ID)
 		);
 		context.register(
 			HAS_FREEZE_FRAME,
-			ConfigPredicate.modLoaded(FrozenLibConstants.FREEZE_FRAME_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.FREEZE_FRAME_MOD_ID)
 		);
 		context.register(
 			HAS_GLOWTONE,
-			ConfigPredicate.modLoaded(FrozenLibConstants.GLOWTONE_MOD_ID)
+			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.GLOWTONE_MOD_ID)
 		);
 	}
 

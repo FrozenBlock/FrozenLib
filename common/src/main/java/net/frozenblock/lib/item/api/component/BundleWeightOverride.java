@@ -24,7 +24,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import org.apache.commons.lang3.math.Fraction;
 
-public final class BundleWeightOverride {
+public record BundleWeightOverride(int numerator, int denominator, Fraction fraction) {
 	public static final Codec<BundleWeightOverride> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Codec.INT.fieldOf("numerator").forGetter(component -> component.numerator),
 		Codec.INT.fieldOf("denominator").forGetter(BundleWeightOverride::denominator)
@@ -34,25 +34,8 @@ public final class BundleWeightOverride {
 		ByteBufCodecs.VAR_INT, BundleWeightOverride::denominator,
 		BundleWeightOverride::new
 	);
-	private final int numerator;
-	private final int denominator;
-	private final Fraction fraction;
 
 	public BundleWeightOverride(int numerator, int denominator) {
-		this.numerator = numerator;
-		this.denominator = denominator;
-		this.fraction = Fraction.getFraction(numerator, denominator);
-	}
-
-	public Fraction fraction() {
-		return this.fraction;
-	}
-
-	private int numerator() {
-		return this.numerator;
-	}
-
-	private int denominator() {
-		return this.denominator;
+		this(numerator, denominator, Fraction.getFraction(numerator, denominator));
 	}
 }

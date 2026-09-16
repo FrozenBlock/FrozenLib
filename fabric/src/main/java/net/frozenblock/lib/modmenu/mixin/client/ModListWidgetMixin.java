@@ -23,6 +23,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
 import java.util.Set;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +49,7 @@ public class ModListWidgetMixin {
 		Set instance, Object object, Operation<Boolean> original,
 		@Local(name = "modId") String modId
 	) {
-		if (FrozenLibConstants.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
+		if (FrozenLibEarlyConstants.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
 		return original.call(instance, object);
 	}
 }

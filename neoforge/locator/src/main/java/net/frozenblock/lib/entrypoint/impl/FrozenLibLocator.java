@@ -13,6 +13,7 @@ public final class FrozenLibLocator implements IDependencyLocator {
 	@Override
 	public void scanMods(List<IModFile> loadedMods, IDiscoveryPipeline pipeline) {
 		for (IModFile modFile : loadedMods) {
+			FrozenLibEntrypoints.addModId(modFile.getId());
 			try {
 				final InputStream stream = modFile.getContents().openFile(FrozenLibEntrypoints.METADATA_FILE);
 				if (stream != null) FrozenLibEntrypoints.collectFromStream(modFile.getId(), stream);
@@ -21,5 +22,10 @@ public final class FrozenLibLocator implements IDependencyLocator {
 			}
 		}
 		FrozenLibEntrypoints.markCollected();
+	}
+
+	@Override
+	public int getPriority() {
+		return LOWEST_SYSTEM_PRIORITY;
 	}
 }

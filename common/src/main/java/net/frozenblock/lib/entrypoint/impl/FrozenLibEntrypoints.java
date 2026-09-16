@@ -42,9 +42,11 @@ import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
 @UtilityClass
+// Please keep in mind, this class should NEVER reference any Minecraft/Mojang classes.
 public final class FrozenLibEntrypoints {
 	public static final String METADATA_FILE = "frozenlib.json";
 	private static final Map<String, List<DeclaredEntrypoint>> DECLARED = new HashMap<>();
+	private static final List<String> MOD_IDS = new ArrayList<>();
 	private static boolean collected = false;
 	private static boolean injectedIntoNativeLoader = false;
 
@@ -53,6 +55,7 @@ public final class FrozenLibEntrypoints {
 		collected = true;
 
 		for (ModLoader.ModEntry mod : ModLoader.getAllMods()) {
+			addModId(mod.getId());
 			mod.findPath(METADATA_FILE).ifPresent(path -> readInto(mod.getId(), path));
 		}
 	}
@@ -67,11 +70,16 @@ public final class FrozenLibEntrypoints {
 
 	public static synchronized void collectFromStream(String modId, @Nullable InputStream stream) {
 		if (stream == null) return;
+
 		try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
 			mergeFrom(modId, reader);
 		} catch (IOException | RuntimeException e) {
 			FrozenLibLogUtils.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
 		}
+	}
+
+	public static synchronized void addModId(String modId) {
+		if (!MOD_IDS.contains(modId)) MOD_IDS.add(modId);
 	}
 
 	public static synchronized void markCollected() {
@@ -102,6 +110,11 @@ public final class FrozenLibEntrypoints {
 	public static List<DeclaredEntrypoint> getDeclared(String key) {
 		collect();
 		return DECLARED.getOrDefault(key, List.of());
+	}
+
+	public static List<String> getModIds() {
+		collect();
+		return List.copyOf(MOD_IDS);
 	}
 
 	public static <T> void forEachDeclaredEntrypoint(String key, Class<T> type, Consumer<T> consumer) {

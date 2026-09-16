@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,28 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.mixin;
+package net.frozenblock.lib.event.mixin.neoforge;
 
-import net.frozenblock.lib.event.api.events.ServerPlayerEvents;
-import net.minecraft.server.MinecraftServer;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.frozenblock.lib.event.api.events.ServerLivingEntityEvents;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ServerLevel.class)
-public class ServerLevelMixin {
+@Mixin(LivingEntity.class)
+public class LivingEntityMixin {
 
-	@Shadow
-	@Final
-	private MinecraftServer server;
-
-	@Inject(method = "addPlayer", at = @At("TAIL"))
-	private void frozenLib$addPlayer(ServerPlayer player, CallbackInfo info) {
-		ServerPlayerEvents.ADDED_TO_LEVEL.invoker().onAddedToLevel(this.server, ServerLevel.class.cast(this), player);
+	@ModifyExpressionValue(
+		method = "hurtServer",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;isDeadOrDying()Z",
+			ordinal = 1
+		)
+	)
+	boolean frozenLib$allowDeath(boolean original, ServerLevel level, DamageSource source, float damage) {
+		return original && ServerLivingEntityEvents.ALLOW_DEATH.invoker().allowDeath(LivingEntity.class.cast(this), source, damage);
 	}
 }

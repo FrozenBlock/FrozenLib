@@ -24,12 +24,13 @@ import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.networking.impl.FrozenLibClientNetworking;
+import net.frozenblock.lib.particle.client.api.platform.ParticleProviderRegistryImpl;
+import net.frozenblock.lib.platform.client.platform.KeyMappingRegistryImpl;
+import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
 import net.frozenblock.lib.renderer.blockentity.platform.BlockEntityRendererRegistryImpl;
 import net.frozenblock.lib.renderer.entity.platform.EntityRendererRegistryImpl;
 import net.frozenblock.lib.renderer.hud.platform.HudElementRegistryImpl;
 import net.frozenblock.lib.renderer.model.platform.ModelLayerRegistryImpl;
-import net.frozenblock.lib.particle.client.api.platform.ParticleProviderRegistryImpl;
-import net.frozenblock.lib.renderer.block.BuiltInBlockModelRegistry;
 import net.frozenblock.lib.renderer.special.platform.SpecialModelRendererRegistryImpl;
 import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
 import net.frozenblock.lib.resource.client.api.pack.FrozenLibFolderRepositorySource;
@@ -45,6 +46,7 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterClientCommandsEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -69,6 +71,7 @@ public final class FrozenLibClientNeoForge {
 		modBus.addListener(EntityRenderersEvent.RegisterRenderers.class, EntityRendererRegistryImpl::flush);
 		modBus.addListener(RegisterSpecialModelRendererEvent.class, SpecialModelRendererRegistryImpl::flush);
 		modBus.addListener(RegisterParticleProvidersEvent.class, ParticleProviderRegistryImpl::flush);
+		modBus.addListener(RegisterKeyMappingsEvent.class, KeyMappingRegistryImpl::flushKeyMappings);
 
 		NeoForge.EVENT_BUS.addListener(ClientPlayerNetworkEvent.LoggingOut.class, event ->
 			ClientScreenShaker.reset()

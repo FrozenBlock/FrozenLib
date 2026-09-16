@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config.gui;
+package net.frozenblock.lib.platform.client.platform;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.frozenblock.lib.FrozenLibEarlyConstants;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.KeyMapping;
 
 @ClientOnly
-public final class ModMenuIntegration implements ModMenuApi {
+public final class KeyMappingRegistryImpl {
 
-    @Override
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenLibEarlyConstants.HAS_CLOTH_CONFIG) return FrozenLibConfigGui::buildScreen;
-        return screen -> null;
-    }
+	public static KeyMapping register(KeyMapping keyMapping) {
+		return KeyMappingHelper.registerKeyMapping(keyMapping);
+	}
 }
-

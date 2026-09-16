@@ -21,10 +21,8 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
-import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
-@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibEarlyConstants {
 	public static final String MOD_ID = "frozenlib";
@@ -61,7 +59,7 @@ public final class FrozenLibEarlyConstants {
 	public static final String WILDER_WILD_MOD_ID = "wilderwild";
 	public static final boolean HAS_WILDER_WILD = ModLoader.isModLoaded(WILDER_WILD_MOD_ID);
 
-	public static final String TRAILIER_TALES_MOD_ID = "trailertales";
+	public static final String TRAILIER_TALES_MOD_ID = "trailiertales";
 	public static final boolean HAS_TRAILIER_TALES = ModLoader.isModLoaded(TRAILIER_TALES_MOD_ID);
 
 	public static final String THE_COPPERIER_AGE_MOD_ID = "thecopperierage";

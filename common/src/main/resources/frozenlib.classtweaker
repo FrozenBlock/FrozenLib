@@ -17,8 +17,6 @@ transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljav
 accessible method net/minecraft/core/registries/PatchedRegistry$LazyHolder bindValue (Ljava/lang/Object;)V
 transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
 transitive-accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
-transitive-accessible class net/minecraft/core/RegistrySetBuilder$BootstrappedRegistryState
-transitive-accessible method net/minecraft/core/RegistrySetBuilder$BootstrappedRegistryState <init> (Lnet/minecraft/core/registries/BootstrapRegistry;Ljava/util/Map;)V
 transitive-accessible class net/minecraft/core/RegistrySetBuilder$BuildState
 transitive-accessible method net/minecraft/core/RegistrySetBuilder$BuildState <init> (Lnet/minecraft/core/HolderLookup$Provider;Lnet/minecraft/core/HolderLookup$Provider;Ljava/util/Map;Ljava/util/List;)V
 transitive-accessible class net/minecraft/resources/RegistryLoadTask$PendingRegistration

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.event.impl;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,6 +25,7 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 
+@UtilityClass
 public class NeoClientTickEventBridge {
 
 	public static void init() {

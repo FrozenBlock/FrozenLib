@@ -23,12 +23,11 @@ import com.llamalad7.mixinextras.sugar.Local;
 import java.util.List;
 import net.frozenblock.lib.levelgen.biome.api.FrozenLibBiome;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(RegistrySetBuilder.BootstrappedRegistryState.class)
+@Mixin(targets = "net/minecraft/core/RegistrySetBuilder$BootstrappedRegistryState")
 public class BootstrappedRegistryStateMixin {
 
 	/**

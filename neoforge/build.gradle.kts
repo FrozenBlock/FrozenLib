@@ -98,6 +98,7 @@ dependencies {
         exclude(group = "net.neoforged")
     }
 
+    implementation(project(":neoforge-locator"))
     "jarJar"(project(":neoforge-locator"))
 }
 

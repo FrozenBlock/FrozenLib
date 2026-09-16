@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AttachmentChangeMixin {
 
 	/**
-	 * @reason Is called to set the attachment on the client when it is synced. We are using this to add {@link WindDisturbances} to the client's {@link WindManager}.
+	 * Is called to set the attachment on the client when it is synced. We are using this to add {@link WindDisturbances} to the client's {@link WindManager}.
 	 */
 	@Inject(method = "tryApply", at = @At("TAIL"))
 	private void frozenLib$onAttachmentApplied(Level level, CallbackInfo info) {

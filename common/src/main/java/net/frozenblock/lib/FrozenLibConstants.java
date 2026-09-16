@@ -18,11 +18,13 @@
 package net.frozenblock.lib;
 
 import java.nio.file.Path;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import net.minecraft.SharedConstants;
 
+@UtilityClass
 public final class FrozenLibConstants {
 	public static final String MOD_ID = FrozenLibEarlyConstants.MOD_ID;
 	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;
@@ -33,42 +35,6 @@ public final class FrozenLibConstants {
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibEarlyConstants.UNSTABLE_LOGGING;
 	public static final Path FROZENLIB_GAME_DIRECTORY = FrozenLibEarlyConstants.FROZENLIB_GAME_DIRECTORY;
-
-	// FROZENBLOCK MODS
-	public static final String WILDER_WILD_MOD_ID = FrozenLibEarlyConstants.WILDER_WILD_MOD_ID;
-	public static final boolean HAS_WILDER_WILD = FrozenLibEarlyConstants.HAS_WILDER_WILD;
-
-	public static final String TRAILIER_TALES_MOD_ID = FrozenLibEarlyConstants.TRAILIER_TALES_MOD_ID;
-	public static final boolean HAS_TRAILIER_TALES = FrozenLibEarlyConstants.HAS_TRAILIER_TALES;
-
-	public static final String THE_COPPERIER_AGE_MOD_ID = FrozenLibEarlyConstants.THE_COPPERIER_AGE_MOD_ID;
-	public static final boolean HAS_THE_COPPERIER_AGE = FrozenLibEarlyConstants.HAS_THE_COPPERIER_AGE;
-
-	public static final String CHAOS_HYPERCUBED_MOD_ID = FrozenLibEarlyConstants.CHAOS_HYPERCUBED_MOD_ID;
-	public static final boolean HAS_CHAOS_HYPERCUBED = FrozenLibEarlyConstants.HAS_CHAOS_HYPERCUBED;
-
-	public static final String NETHERIER_NETHER_MOD_ID = FrozenLibEarlyConstants.NETHERIER_NETHER_MOD_ID;
-	public static final boolean HAS_NETHERIER_NETHER = FrozenLibEarlyConstants.HAS_NETHERIER_NETHER;
-
-	public static final String SPRINGIER_LIFE_MOD_ID = FrozenLibEarlyConstants.SPRINGIER_LIFE_MOD_ID;
-	public static final boolean HAS_SPRINGIER_LIFE = FrozenLibEarlyConstants.HAS_SPRINGIER_LIFE;
-
-	public static final String SIMPLE_COPPER_PIPES_MOD_ID = FrozenLibEarlyConstants.SIMPLE_COPPER_PIPES_MOD_ID;
-	public static final boolean HAS_SIMPLE_COPPER_PIPES = FrozenLibEarlyConstants.HAS_SIMPLE_COPPER_PIPES;
-
-	public static final String FREEZE_FRAME_MOD_ID = FrozenLibEarlyConstants.FREEZE_FRAME_MOD_ID;
-	public static final boolean HAS_FREEZE_FRAME = FrozenLibEarlyConstants.HAS_FREEZE_FRAME;
-
-	public static final String GLOWTONE_MOD_ID = FrozenLibEarlyConstants.GLOWTONE_MOD_ID;
-	public static final boolean HAS_GLOWTONE = FrozenLibEarlyConstants.HAS_GLOWTONE;
-
-
-	// EXTERNAL MODS
-	public static final boolean HAS_MODMENU = FrozenLibEarlyConstants.HAS_MODMENU;
-	public static final boolean HAS_CLOTH_CONFIG = FrozenLibEarlyConstants.HAS_CLOTH_CONFIG;
-	public static final boolean HAS_SODIUM = FrozenLibEarlyConstants.HAS_SODIUM;
-	public static final boolean HAS_IRIS = FrozenLibEarlyConstants.HAS_IRIS;
-	public static final boolean HAS_TERRABLENDER = FrozenLibEarlyConstants.HAS_TERRABLENDER;
 
 	// DEBUG
 	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");
@@ -89,6 +55,4 @@ public final class FrozenLibConstants {
 	public static String safeString(String path) {
 		return id(path).toString().replace(":", "_");
 	}
-
-	private FrozenLibConstants() {}
 }

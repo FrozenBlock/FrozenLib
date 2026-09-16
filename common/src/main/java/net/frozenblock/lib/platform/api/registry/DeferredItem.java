@@ -58,7 +58,7 @@ public class DeferredItem<T extends Item> implements DeferredHolder<Item, T>, It
 
 	@Override
 	public Item asItem() {
-		return get();
+		return this.get();
 	}
 
 	public ItemStack toStack() {

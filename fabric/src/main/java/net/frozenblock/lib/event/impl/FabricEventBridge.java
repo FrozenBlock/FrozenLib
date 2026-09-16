@@ -30,11 +30,15 @@ public final class FabricEventBridge {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();
 		FabricServerLevelEventsBridge.init();
+		FabricServerEntityLevelChangeEventsBridge.init();
+		FabricServerLivingEntityEventsBridge.init();
+		FabricServerPlayerEventsBridge.init();
 		FabricEntityTrackingEventsBridge.init();
 		FabricEntityLifecycleEventsBridge.init();
 		FabricBlockEntityLifecycleEventsBridge.init();
 		FabricChunkLifecycleEventsBridge.init();
 		FabricCommonLifecycleEventsBridge.init();
+		FabricDefaultItemComponentEventsBridge.init();
 		FabricPlayerBlockBreakEventsBridge.init();
 
 		ServerLifecycleEvents.SERVER_STARTING.register(instance -> {
@@ -60,5 +64,6 @@ public final class FabricEventBridge {
 		FabricClientEntityLifecycleEventsBridge.init();
 		FabricClientBlockEntityLifecycleEventsBridge.init();
 		FabricClientChunkLifecycleEventsBridge.init();
+		FabricClientTooltipComponentCallbackBridge.init();
 	}
 }

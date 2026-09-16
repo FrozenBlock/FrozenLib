@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib;
 
+import lombok.experimental.UtilityClass;
+import net.fabricmc.frozenblock.datafixer.impl.client.ClientFreezer;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
@@ -40,10 +42,12 @@ import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
-import net.fabricmc.frozenblock.datafixer.impl.client.ClientFreezer;
 
 @ClientOnly
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {

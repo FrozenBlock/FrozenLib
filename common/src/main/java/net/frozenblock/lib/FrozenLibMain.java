@@ -19,9 +19,11 @@ package net.frozenblock.lib;
 
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
@@ -69,9 +71,12 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
@@ -127,6 +132,7 @@ public final class FrozenLibMain {
 		StructurePlacementExclusionApi.init();
 		StructureSetApi.init();
 		TemplatePoolApi.init();
+		PistonPushUtil.init();
 
 		final DeferredRegister<MapCodec<? extends MaterialCondition>> materialConditionTypes = DeferredRegister.create(Registries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.MOD_ID);
 		materialConditionTypes.register("config_predicate", () -> ConfigCondition.CODEC);

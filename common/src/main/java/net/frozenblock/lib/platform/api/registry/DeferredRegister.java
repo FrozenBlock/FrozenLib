@@ -151,7 +151,7 @@ public interface DeferredRegister<T> {
 	<I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier, @Nullable Consumer<I> also);
 
 	default <I extends T> DeferredHolder<T, I> register(String name, Supplier<? extends I> supplier) {
-		return  register(name, supplier, null);
+		return this.register(name, supplier, null);
 	}
 
 	<I extends T> DeferredHolder<T, I> register(String name, Function<Identifier, ? extends I> func, @Nullable Consumer<I> also);
