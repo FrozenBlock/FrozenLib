@@ -21,14 +21,14 @@ import java.util.function.Predicate;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.DefaultItemComponentEvents;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.event.ModifyDefaultComponentsEvent;
 
 @UtilityClass
 public class NeoDefaultItemComponentEventsBridge {
 
-	public static void init() {
-		NeoForge.EVENT_BUS.addListener(ModifyDefaultComponentsEvent.class, NeoDefaultItemComponentEventsBridge::modify);
+	public static void init(IEventBus modBus) {
+		modBus.addListener(ModifyDefaultComponentsEvent.class, NeoDefaultItemComponentEventsBridge::modify);
 	}
 
 	private static void modify(ModifyDefaultComponentsEvent event) {
