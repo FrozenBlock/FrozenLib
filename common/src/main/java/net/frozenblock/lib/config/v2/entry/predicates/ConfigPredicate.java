@@ -218,7 +218,7 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return placementFilter(this.asHolder());
 	}
 
-	default TreeDecorator treeDecorator(TreeDecorator decorator, Holder<ConfigPredicate> predicate) {
+	static TreeDecorator treeDecorator(TreeDecorator decorator, Holder<ConfigPredicate> predicate) {
 		return new ConfigPredicateDecorator(decorator, predicate);
 	}
 
