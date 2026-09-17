@@ -114,7 +114,7 @@ config="mixin/frozenlib.wind.neoforge.mixins.json"
     version="${mod_version}"
     displayName="FrozenLib"
     displayURL="https://www.modrinth.com/mod/FrozenLib"
-    logoFile="assets/frozenlib/icon.png"
+    iconFile="assets/frozenlib/icon.png"
     authors="AViewFromTheTop/Lunade, Ethan Stokes"
     description='''
 A library that contains many tools for modders.
