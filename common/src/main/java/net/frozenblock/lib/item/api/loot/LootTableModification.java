@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.api.loot;
 
 import io.netty.util.internal.UnstableApi;
 import net.frozenblock.lib.item.impl.loot.MutableLootTable;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
 
@@ -44,8 +44,8 @@ public class LootTableModification {
 		 *
 		 * @param id The loot table key.
 		 * @param mutableLootTable The mutable copy of the loot table.
-		 * @param registries The available holder lookup.
+		 * @param registries The available holder getter.
 		 */
-		void editLootTable(ResourceKey<LootTable> id, MutableLootTable mutableLootTable, HolderLookup.Provider registries);
+		void editLootTable(ResourceKey<LootTable> id, MutableLootTable mutableLootTable, HolderGetter.Provider registries);
 	}
 }

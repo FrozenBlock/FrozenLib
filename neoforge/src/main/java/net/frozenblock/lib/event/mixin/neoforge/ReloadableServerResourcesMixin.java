@@ -33,12 +33,11 @@ package net.frozenblock.lib.event.mixin.neoforge;
  * limitations under the License.
  */
 
+import java.util.List;
 import net.frozenblock.lib.event.api.events.CommonLifecycleEvents;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.server.RegistryLayer;
+import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.flag.FeatureFlagSet;
@@ -47,7 +46,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.List;
 
 @Mixin(ReloadableServerResources.class)
 public class ReloadableServerResourcesMixin {
@@ -56,8 +54,7 @@ public class ReloadableServerResourcesMixin {
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void frozenLib$fabric$init(
-		LayeredRegistryAccess<RegistryLayer> fullLayers,
-		HolderLookup.Provider loadingContext,
+		ReloadableServerRegistries.LoadResult loadingContext,
 		FeatureFlagSet enabledFeatures,
 		Commands.CommandSelection commandSelection,
 		List postponedTags,
@@ -65,7 +62,7 @@ public class ReloadableServerResourcesMixin {
 		List newComponents,
 		CallbackInfo info
 	) {
-		this.frozenLib$fabric$layeredRegistries = fullLayers.compositeAccess();
+		this.frozenLib$fabric$layeredRegistries = loadingContext.layers().compositeAccess();
 	}
 
 	/**

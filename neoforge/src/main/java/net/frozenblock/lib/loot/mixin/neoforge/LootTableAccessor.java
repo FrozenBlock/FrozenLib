@@ -19,6 +19,7 @@ package net.frozenblock.lib.loot.mixin.neoforge;
 
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -35,8 +36,8 @@ public interface LootTableAccessor {
 	@Accessor("pools")
 	List<LootPool> frozenLib$getPools();
 
-	@Accessor("functions")
-	List<LootItemFunction> frozenLib$getFunctions();
+	@Accessor("modifier")
+	Optional<Holder<LootItemFunction>> frozenLib$getModifier();
 
 	@Accessor("randomSequence")
 	Optional<Identifier> frozenLib$getRandomSequence();

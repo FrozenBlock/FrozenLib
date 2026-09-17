@@ -21,17 +21,21 @@ import com.google.gson.JsonElement;
 import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import net.frozenblock.lib.loot.impl.NeoLootUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -44,16 +48,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class ReloadableServerRegistriesMixin {
 
 	@SuppressWarnings("unchecked")
-	@Inject(method = "lambda$scheduleRegistryLoad$0", at = @At("RETURN"))
+	@Inject(
+		method = "reload",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/resources/RegistryDataLoader;load(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/List;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;"
+		)
+	)
 	private static <T extends Validatable> void frozenLib$onLootTablesLoaded(
-		LootDataType<T> type,
-		RegistryOps<JsonElement> ops,
-		ResourceManager manager,
-		CallbackInfoReturnable<WritableRegistry<?>> info
+		ValidationContextSource contextSource, HolderLookup.Provider fullContextWithNewTags, LootDataType<T> lootDataType, CallbackInfo info
 	) {
-		if (type != LootDataType.TABLE) return;
+		if (lootDataType != LootDataType.TABLE) return;
 
-		final Registry<LootTable> lootTables = (Registry<LootTable>) info.getReturnValue();
+		final HolderLookup.RegistryLookup<LootTable> lootTables = fullContextWithNewTags.lookupOrThrow(Registries.LOOT_TABLE);
 		lootTables.listElements().forEach(reference ->
 			((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
 

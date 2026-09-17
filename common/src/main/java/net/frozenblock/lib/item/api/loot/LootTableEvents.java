@@ -22,7 +22,7 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -121,7 +121,7 @@ public class LootTableEvents {
 		 * @return the new loot table, or null if it wasn't replaced
 		 */
 		@Nullable
-		LootTable replaceLootTable(ResourceKey<LootTable> key, LootTable original, LootTableSource source, HolderLookup.Provider registries);
+		LootTable replaceLootTable(ResourceKey<LootTable> key, LootTable original, LootTableSource source, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface
@@ -132,9 +132,9 @@ public class LootTableEvents {
 		 * @param key the loot table key
 		 * @param builder a builder of the loot table being loaded
 		 * @param source the source of the loot table
-		 * @param registries the holder lookup
+		 * @param registries the holder getter
 		 */
-		void modifyLootTable(ResourceKey<LootTable> key, LootTable.Builder builder, LootTableSource source, HolderLookup.Provider registries);
+		void modifyLootTable(ResourceKey<LootTable> key, LootTable.Builder builder, LootTableSource source, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface

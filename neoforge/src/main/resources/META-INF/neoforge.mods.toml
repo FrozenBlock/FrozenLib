@@ -59,7 +59,7 @@ config="mixin/frozenlib.levelgen.biome.mixins.json"
 config="mixin/frozenlib.levelgen.structure.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.levelgen.surface.mixins.json"
+config="mixin/frozenlib.levelgen.material.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.loot.neoforge.mixins.json"

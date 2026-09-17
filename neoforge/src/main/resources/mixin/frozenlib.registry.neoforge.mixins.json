@@ -7,8 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AxeItemAccessor",
-    "AxeItemMixin",
     "FireBlockAccessor",
     "HoneycombItemMixin",
     "WeatheringCopperMixin"

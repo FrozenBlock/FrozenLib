@@ -22,15 +22,14 @@ import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.entity.api.attribute.platform.DefaultAttributeRegistryImpl;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
-import net.frozenblock.lib.item.impl.NeoFuelRegistry;
 import net.frozenblock.lib.networking.api.platform.NetworkingHelperImpl;
 import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
 import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
 import net.frozenblock.lib.platform.registry.NeoDeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.resource.api.platform.ResourceLoaderHelperImpl;
-import net.frozenblock.lib.transfer.api.platform.TransferApiImpl;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
+import net.frozenblock.lib.transfer.api.platform.TransferApiImpl;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
@@ -118,7 +117,6 @@ public final class FrozenLibNeoForge {
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
 		WindDisturbanceType.init();
-		NeoFuelRegistry.init();
 
 		// some events need to use the NeoForge event bus
 		NeoForge.EVENT_BUS.addListener(RegisterCommandsEvent.class, event ->

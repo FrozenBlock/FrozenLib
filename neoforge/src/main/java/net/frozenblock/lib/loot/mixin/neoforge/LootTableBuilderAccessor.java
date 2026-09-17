@@ -18,6 +18,7 @@
 package net.frozenblock.lib.loot.mixin.neoforge;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.core.Holder;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -34,5 +35,5 @@ public interface LootTableBuilderAccessor {
 	ImmutableList.Builder<LootPool> frozenLib$getPools();
 
 	@Accessor("functions")
-	ImmutableList.Builder<LootItemFunction> frozenLib$getFunctions();
+	ImmutableList.Builder<Holder<LootItemFunction>> frozenLib$getFunctions();
 }

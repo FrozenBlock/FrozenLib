@@ -24,6 +24,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import java.util.function.Predicate;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -37,15 +38,14 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.function.Predicate;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityFluidInteraction.class)
 public class EntityFluidInteractionMixin {
 
-	@Inject(method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V", at = @At("HEAD"))
+	@Inject(method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)Z", at = @At("HEAD"))
 	public void frozenLib$setupMesogleaFluidDetection(
-		Entity entity, Predicate<FluidType> typePushPredicate, CallbackInfo info,
+		Entity entity, Predicate<FluidType> typePushPredicate, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$closestPosDistance") LocalDoubleRef closestPosDistanceRef
 	) {
 		closestPosDistanceRef.set(Double.MAX_VALUE);
@@ -55,7 +55,7 @@ public class EntityFluidInteractionMixin {
 	}
 
 	@WrapOperation(
-		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V",
+		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)Z",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/BlockGetter;getFluidState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/FluidState;"
@@ -71,7 +71,7 @@ public class EntityFluidInteractionMixin {
 	}
 
 	@ModifyExpressionValue(
-		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V",
+		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)Z",
 		at = @At(
 			value = "INVOKE",
 			target = "Ljava/lang/Math;max(DD)D"
@@ -97,7 +97,7 @@ public class EntityFluidInteractionMixin {
 	}
 
 	@Inject(
-		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)V",
+		method = "update(Lnet/minecraft/world/entity/Entity;Ljava/util/function/Predicate;)Z",
 		at = @At(
 			value = "FIELD",
 			target = "Lnet/minecraft/world/entity/EntityFluidInteraction$Tracker;eyesInside:Z",
@@ -105,7 +105,7 @@ public class EntityFluidInteractionMixin {
 		)
 	)
 	public void frozenLib$updateEyeInWaterLike(
-		Entity entity, Predicate<FluidType> typePushPredicate, CallbackInfo info,
+		Entity entity, Predicate<FluidType> typePushPredicate, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$blockState") LocalRef<BlockState> blockStateRef
 	) {
 		if (blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock) {

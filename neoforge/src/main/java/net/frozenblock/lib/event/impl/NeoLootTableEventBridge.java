@@ -23,7 +23,7 @@ import net.frozenblock.lib.item.api.loot.LootTableSource;
 import net.frozenblock.lib.loot.impl.NeoLootUtil;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableAccessor;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableBuilderAccessor;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.common.NeoForge;
@@ -43,7 +43,7 @@ public class NeoLootTableEventBridge {
 	private static void onLootTableLoad(LootTableLoadEvent event) {
 		final ResourceKey<LootTable> key = event.getKey();
 		final LootTable original = event.getTable();
-		final HolderLookup.Provider registries = event.getRegistries();
+		final HolderGetter.Provider registries = event.getRegistries();
 
 		LootTableSource source = NeoLootUtil.SOURCES.get().getOrDefault(key.identifier(), LootTableSource.DATA_PACK);
 
@@ -70,7 +70,7 @@ public class NeoLootTableEventBridge {
 		builder.setParamSet(original.getParamSet());
 		accessor.frozenLib$getRandomSequence().ifPresent(builder::setRandomSequence);
 		((LootTableBuilderAccessor) builder).frozenLib$getPools().addAll(accessor.frozenLib$getPools());
-		((LootTableBuilderAccessor) builder).frozenLib$getFunctions().addAll(accessor.frozenLib$getFunctions());
+		accessor.frozenLib$getModifier().ifPresent(modifier -> ((LootTableBuilderAccessor) builder).frozenLib$getFunctions().add(modifier));
 		return builder;
 	}
 }
