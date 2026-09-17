@@ -22,6 +22,7 @@ import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.entity.api.attribute.platform.DefaultAttributeRegistryImpl;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.item.api.component.platform.TooltipAdditionRegistryImpl;
 import net.frozenblock.lib.networking.api.platform.NetworkingHelperImpl;
 import net.frozenblock.lib.platform.api.attachment.platform.DataAttachmentHelperImpl;
 import net.frozenblock.lib.platform.platform.RegistryHelperImpl;
@@ -47,6 +48,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.RegisterTooltipAppendersEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
@@ -124,6 +126,8 @@ public final class FrozenLibNeoForge {
 		);
 
 		NeoForge.EVENT_BUS.addListener(AddServerReloadListenersEvent.class, ResourceLoaderHelperImpl::flushServerListeners);
+
+		modBus.addListener(RegisterTooltipAppendersEvent.class, TooltipAdditionRegistryImpl::flushComponentTooltipAdditions);
 
 		NeoForge.EVENT_BUS.addListener(LevelTickEvent.Post.class, event -> {
 			final Level level = event.getLevel();

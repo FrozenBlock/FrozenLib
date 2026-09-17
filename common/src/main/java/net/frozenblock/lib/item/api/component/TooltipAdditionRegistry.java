@@ -22,20 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TooltipProvider;
 
 @UtilityClass
-public class ItemTooltipAdditionAPI {
-	private static final Map<TooltipCondition, List<Component>> ADDITIONAL_TOOLTIPS = new Object2ObjectLinkedOpenHashMap<>();
+public final class TooltipAdditionRegistry {
+	private static final Map<Predicate<ItemStack>, List<Component>> ADDITIONAL_TOOLTIPS = new Object2ObjectLinkedOpenHashMap<>();
 
 	/**
 	 * Registers text to render as a tooltip for an item when certain conditions are met.
 	 * @param tooltip The text, in {@link Component} form, to render.
 	 * @param condition The conditions under which the tooltip will render.
 	 */
-	public static void addTooltip(Component tooltip, TooltipCondition condition) {
+	public static void addTooltip(Component tooltip, Predicate<ItemStack> condition) {
 		final List<Component> tooltips = List.of(tooltip);
 		addTooltips(tooltips, condition);
 	}
@@ -45,10 +50,64 @@ public class ItemTooltipAdditionAPI {
 	 * @param tooltips A list of text, in {@link Component} form, to render.
 	 * @param condition The conditions under which the tooltips will render.
 	 */
-	public static void addTooltips(List<Component> tooltips, TooltipCondition condition) {
+	public static void addTooltips(List<Component> tooltips, Predicate<ItemStack> condition) {
 		final List<Component> tooltipList = ADDITIONAL_TOOLTIPS.getOrDefault(condition, new ArrayList<>());
 		tooltipList.addAll(tooltips);
 		ADDITIONAL_TOOLTIPS.put(condition, tooltipList);
+	}
+
+	@PlatformImpl
+	public static void addComponentTooltipAtHead(Supplier<DataComponentType<? extends TooltipProvider>> type) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static <T> void addComponentTooltipAtHead(Supplier<DataComponentType<T>> type, TooltipProvider.Getter<T> tooltip) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addComponentTooltipAtTail(Supplier<DataComponentType<? extends TooltipProvider>> type) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static <T> void addComponentTooltipAtTail(Supplier<DataComponentType<T>> type, TooltipProvider.Getter<T> tooltip) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addComponentTooltipBefore(
+		Supplier<DataComponentType<?>> comparedType,
+		Supplier<DataComponentType<? extends TooltipProvider>> type
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static <T> void addComponentTooltipBefore(
+		Supplier<DataComponentType<T>> comparedType,
+		Supplier<DataComponentType<T>> type,
+		TooltipProvider.Getter<T> tooltip
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static void addComponentTooltipAfter(
+		Supplier<DataComponentType<?>> comparedType,
+		Supplier<DataComponentType<? extends TooltipProvider>> type
+	) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
+	public static <T> void addComponentTooltipAfter(
+		Supplier<DataComponentType<T>> comparedType,
+		Supplier<DataComponentType<T>> type,
+		TooltipProvider.Getter<T> tooltip
+	) {
+		throw new AssertionError();
 	}
 
 	public static Optional<List<Component>> getTooltipsForItemStack(ItemStack stack) {
@@ -58,10 +117,5 @@ public class ItemTooltipAdditionAPI {
 		});
 		if (tooltips.isEmpty()) return Optional.empty();
 		return Optional.of(tooltips);
-	}
-
-	@FunctionalInterface
-	public interface TooltipCondition {
-		boolean test(ItemStack stack);
 	}
 }

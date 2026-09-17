@@ -10,6 +10,7 @@
     "bonemeal.BoneMealItemMixin",
     "component.BlockTransformerMixin",
     "component.BundleContentsMixin",
+    "component.ItemStackMixin",
     "component.ResourceManagerRegistryLoadTaskMixin",
     "component.removable.AbstractContainerMenuMixin",
     "component.removable.ItemStackMixin",

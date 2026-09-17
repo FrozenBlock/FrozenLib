@@ -25,7 +25,6 @@ import net.minecraft.world.item.Item;
 
 @UtilityClass
 public class FrozenLibItemTags {
-	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
 	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
 	public static final TagKey<Item> SPAWNER = bind("spawner");
 

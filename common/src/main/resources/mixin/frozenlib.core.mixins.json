@@ -8,6 +8,7 @@
   },
   "mixins": [
     "BootstrapMixin",
-    "BootstrappedRegistryStateMixin"
+    "BootstrappedRegistryStateMixin",
+    "VanillaRegistriesMixin"
   ]
 }

@@ -17,38 +17,34 @@
 
 package net.frozenblock.lib.core.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import java.util.List;
 import net.frozenblock.lib.levelgen.biome.api.FrozenLibBiome;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "net/minecraft/core/RegistrySetBuilder$BootstrappedRegistryState")
-public class BootstrappedRegistryStateMixin {
+@Mixin(VanillaRegistries.class)
+public class VanillaRegistriesMixin {
 
 	/**
 	 * This is meant to fix {@code VanillaRegistries} lookup crashes we have.
 	 */
-	@WrapOperation(
-		method = "lambda$errorOnMissingHolders$0",
-		at = @At(
-			value = "INVOKE",
-			target = "Ljava/util/List;add(Ljava/lang/Object;)Z"
-		)
+	@Inject(
+		method = "lambda$validateThatAllBiomeFeaturesHaveBiomeFilter$0",
+		at = @At("HEAD"),
+		cancellable = true
 	)
-	private static boolean frozenLib$ignoreMissingBiomes(
-		List<RuntimeException> instance, Object object, Operation<Boolean> original,
-		@Local(argsOnly = true) Holder.Reference<?> element
-	) {
-		if (element.key().registryKey().equals(Registries.BIOME)
-			&& FrozenLibBiome.allFrozenLibBiomes().stream().anyMatch(frozenLibBiome -> frozenLibBiome.getKey().equals(element.key()))
+	private static void frozenLib$ignoreMissingBiomes(HolderLookup.RegistryLookup placedFeatures, Holder.Reference<Biome> biome, CallbackInfo info) {
+		if (!biome.isBound()
+			&& biome.key().registryKey().equals(Registries.BIOME)
+			&& FrozenLibBiome.allFrozenLibBiomes().stream().anyMatch(frozenLibBiome -> frozenLibBiome.getKey().equals(biome.key()))
 		) {
-			return false;
+			info.cancel();
 		}
-		return original.call(instance, object);
 	}
 }
