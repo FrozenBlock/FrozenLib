@@ -17,26 +17,24 @@
 
 package net.frozenblock.lib.loot.mixin.neoforge;
 
-import com.google.gson.JsonElement;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import net.frozenblock.lib.item.api.loot.LootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import net.frozenblock.lib.loot.impl.NeoLootUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.server.ReloadableServerRegistries;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.Validatable;
-import net.minecraft.world.level.storage.loot.ValidationContextSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Drives {@link LootTableEvents#ALL_LOADED}, which has no NeoForge equivalent.
@@ -48,23 +46,27 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 abstract class ReloadableServerRegistriesMixin {
 
 	@SuppressWarnings("unchecked")
-	@Inject(
+	@WrapOperation(
 		method = "reload",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/resources/RegistryDataLoader;load(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/List;Ljava/util/List;Ljava/util/concurrent/Executor;Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;"
 		)
 	)
-	private static <T extends Validatable> void frozenLib$onLootTablesLoaded(
-		ValidationContextSource contextSource, HolderLookup.Provider fullContextWithNewTags, LootDataType<T> lootDataType, CallbackInfo info
+	private static CompletableFuture<RegistryAccess.Frozen> frozenLib$onLootTablesLoaded(
+		ResourceManager manager,
+		List<HolderLookup.RegistryLookup<?>> contextRegistries,
+		List<RegistryDataLoader.RegistryData<?>> registriesToLoad,
+		Executor executor,
+		List<Registry.PendingTags<?>> updatedContextTags,
+		Operation<CompletableFuture<RegistryAccess.Frozen>> original
 	) {
-		if (lootDataType != LootDataType.TABLE) return;
-
-		final HolderLookup.RegistryLookup<LootTable> lootTables = fullContextWithNewTags.lookupOrThrow(Registries.LOOT_TABLE);
-		lootTables.listElements().forEach(reference ->
-			((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
-
-		LootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(manager, lootTables);
-		NeoLootUtil.SOURCES.remove();
+		return original.call(manager, contextRegistries, registriesToLoad, executor, updatedContextTags)
+			.thenApply(registries -> {
+				Registry<LootTable> lootTableRegistry = registries.lookupOrThrow(Registries.LOOT_TABLE);
+				LootTableEvents.ALL_LOADED.invoker().onLootTablesLoaded(manager, lootTableRegistry);
+				lootTableRegistry.listElements().forEach(reference -> ((FrozenNeoLootTable) reference.value()).frozenLib$setHolder(reference));
+				return registries;
+			}).whenComplete((registries, throwable) -> NeoLootUtil.SOURCES.remove());
 	}
 }
