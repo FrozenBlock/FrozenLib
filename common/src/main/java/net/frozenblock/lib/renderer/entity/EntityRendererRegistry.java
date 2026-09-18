@@ -17,17 +17,20 @@
 
 package net.frozenblock.lib.renderer.entity;
 
+import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import java.util.function.Supplier;
 
+@UtilityClass
 @ClientOnly
 public final class EntityRendererRegistry {
 
 	@PlatformImpl
-	public static <T extends Entity> void register(EntityType<? extends T> entityType, EntityRendererProvider<T> provider) {
+	public static <T extends Entity> void register(Supplier<EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
 		throw new AssertionError();
 	}
 }

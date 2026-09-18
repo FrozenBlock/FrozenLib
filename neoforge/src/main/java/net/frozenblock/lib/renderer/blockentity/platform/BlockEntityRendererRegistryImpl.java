@@ -19,20 +19,25 @@ package net.frozenblock.lib.renderer.blockentity.platform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
+@UtilityClass
+@ClientOnly
 public final class BlockEntityRendererRegistryImpl {
 	private static final List<Entry<?, ?>> ENTRIES = new ArrayList<>();
 
 	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
-		BlockEntityType<? extends T> blockEntityType,
+		Supplier<BlockEntityType<? extends T>> type,
 		BlockEntityRendererProvider<T, S> provider
 	) {
-		ENTRIES.add(new Entry<>(blockEntityType, provider));
+		ENTRIES.add(new Entry<>(type, provider));
 	}
 
 	public static void flush(EntityRenderersEvent.RegisterRenderers event) {
@@ -43,11 +48,11 @@ public final class BlockEntityRendererRegistryImpl {
 		EntityRenderersEvent.RegisterRenderers event,
 		Entry<T, S> entry
 	) {
-		event.registerBlockEntityRenderer(entry.blockEntityType(), entry.provider());
+		event.registerBlockEntityRenderer(entry.type().get(), entry.provider());
 	}
 
 	private record Entry<T extends BlockEntity, S extends BlockEntityRenderState>(
-		BlockEntityType<? extends T> blockEntityType,
+		Supplier<BlockEntityType<? extends T>> type,
 		BlockEntityRendererProvider<T, S> provider
 	) {}
 }

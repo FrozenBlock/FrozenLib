@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.renderer.blockentity;
 
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
@@ -25,13 +26,13 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-@ClientOnly
 @UtilityClass
+@ClientOnly
 public final class BlockEntityRendererRegistry {
 
 	@PlatformImpl
 	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
-		BlockEntityType<? extends T> blockEntityType,
+		Supplier<BlockEntityType<? extends T>> type,
 		BlockEntityRendererProvider<T, S> provider
 	) {
 		throw new AssertionError();
