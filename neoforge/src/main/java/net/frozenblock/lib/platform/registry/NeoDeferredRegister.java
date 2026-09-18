@@ -45,6 +45,7 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -222,6 +223,12 @@ public class NeoDeferredRegister<T> implements DeferredRegister<T> {
 		@Override
 		public FeatureFlag[] requiredFeatures() {
 			return this.requiredFeatures;
+		}
+	}
+
+	public static class BlockEntities extends NeoDeferredRegister<BlockEntityType<?>> implements DeferredRegister.BlockEntities {
+		public BlockEntities(String namespace) {
+			super(Registries.BLOCK_ENTITY_TYPE, namespace);
 		}
 	}
 

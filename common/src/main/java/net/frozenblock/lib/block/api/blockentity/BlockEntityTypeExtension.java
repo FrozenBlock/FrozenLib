@@ -34,6 +34,14 @@ public interface BlockEntityTypeExtension<T extends BlockEntity> {
 		this.frozenLib$addValidBlock(block.get());
 	}
 
+	default void frozenLib$addValidBlock(Block... blocks) {
+		for (Block block : blocks) this.frozenLib$addValidBlock(block);
+	}
+
+	default void frozenLib$addValidBlock(Supplier<Block>... blocks) {
+		for (Supplier<Block> block : blocks) this.frozenLib$addValidBlock(block);
+	}
+
 	default BlockEntityType<T> frozenLib$setOpOnlyCustomData() {
 		throw new AssertionError();
 	}

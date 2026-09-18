@@ -57,6 +57,10 @@ public final class RegistryHelperImpl {
 		return new NeoDeferredRegister.Entities(namespace);
 	}
 
+	public static DeferredRegister.BlockEntities createDeferredBlockEntitiesRegister(String namespace) {
+		return new NeoDeferredRegister.BlockEntities(namespace);
+	}
+
 	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
 		return new NeoDeferredRegister.SoundEvents(namespace);
 	}

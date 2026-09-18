@@ -54,6 +54,11 @@ public final class RegistryHelper {
 	}
 
 	@PlatformImpl
+	public static DeferredRegister.BlockEntities createDeferredBlockEntitiesRegister(String namespace) {
+		throw new AssertionError();
+	}
+
+	@PlatformImpl
 	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
 		throw new AssertionError();
 	}

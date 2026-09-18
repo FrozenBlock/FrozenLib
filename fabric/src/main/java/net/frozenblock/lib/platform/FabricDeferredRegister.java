@@ -41,6 +41,7 @@ import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public class FabricDeferredRegister<T> implements DeferredRegister<T> {
@@ -198,6 +199,12 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 		@Override
 		public FeatureFlag[] requiredFeatures() {
 			return this.requiredFeatures;
+		}
+	}
+
+	public static class BlockEntities extends FabricDeferredRegister<BlockEntityType<?>> implements DeferredRegister.BlockEntities {
+		public BlockEntities(String namespace) {
+			super(Registries.BLOCK_ENTITY_TYPE, namespace);
 		}
 	}
 

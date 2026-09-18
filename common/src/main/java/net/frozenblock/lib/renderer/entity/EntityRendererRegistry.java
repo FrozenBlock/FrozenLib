@@ -18,6 +18,7 @@
 package net.frozenblock.lib.renderer.entity;
 
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.platform.api.registry.DeferredEntityType;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -32,5 +33,9 @@ public final class EntityRendererRegistry {
 	@PlatformImpl
 	public static <T extends Entity> void register(Supplier<EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
 		throw new AssertionError();
+	}
+
+	public static <T extends Entity> void register(DeferredEntityType<? extends T> type, EntityRendererProvider<T> provider) {
+		register(type::get, provider);
 	}
 }

@@ -20,24 +20,23 @@ package net.frozenblock.lib.platform.api.registry;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class DeferredItem<T extends Item> implements DeferredHolder<Item, T>, ItemLike {
-	private final DeferredHolder<Item, T> holder;
+public class DeferredBlockEntityType<T extends BlockEntity> implements DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> {
+	private final DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder;
 
-	public DeferredItem(DeferredHolder<Item, T> holder) {
+	public DeferredBlockEntityType(DeferredHolder<BlockEntityType<?>, BlockEntityType<T>> holder) {
 		this.holder = holder;
 	}
 
 	@Override
-	public T get() {
+	public BlockEntityType<T> get() {
 		return this.holder.get();
 	}
 
 	@Override
-	public ResourceKey<Item> getKey() {
+	public ResourceKey<BlockEntityType<?>> getKey() {
 		return this.holder.getKey();
 	}
 
@@ -52,24 +51,7 @@ public class DeferredItem<T extends Item> implements DeferredHolder<Item, T>, It
 	}
 
 	@Override
-	public Holder<Item> asHolder() {
+	public Holder<BlockEntityType<?>> asHolder() {
 		return this.holder.asHolder();
-	}
-
-	@Override
-	public Item asItem() {
-		return this.get();
-	}
-
-	public ItemStack toStack() {
-		return toStack(1);
-	}
-
-	public ItemStack toStack(int count) {
-		final ItemStack stack = asItem().getDefaultInstance();
-		if (stack.isEmpty()) throw new IllegalStateException("Obtained empty item stack; incorrect getDefaultInstance() call?");
-
-		stack.setCount(count);
-		return stack;
 	}
 }

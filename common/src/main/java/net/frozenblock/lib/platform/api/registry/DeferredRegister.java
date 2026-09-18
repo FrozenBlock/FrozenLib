@@ -21,7 +21,10 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -74,6 +77,8 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.WeatheringCopperCollection;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -117,6 +122,10 @@ public interface DeferredRegister<T> {
 
 	static Entities createEntities(String namespace) {
 		return RegistryHelper.createDeferredEntitiesRegister(namespace);
+	}
+
+	static BlockEntities createBlockEntities(String namespace) {
+		return RegistryHelper.createDeferredBlockEntitiesRegister(namespace);
 	}
 
 	static SoundEvents createSoundEvents(String namespace) {
@@ -920,6 +929,54 @@ public interface DeferredRegister<T> {
 			UnaryOperator<EntityType.Builder<E>> builder
 		) {
 			return this.register(key, factory, category, builder, null);
+		}
+	}
+
+	interface BlockEntities extends DeferredRegister<BlockEntityType<?>> {
+
+		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
+			ResourceKey<BlockEntityType<?>> key,
+			BlockEntityType.BlockEntitySupplier<B> supplier,
+			Supplier<Collection<Block>> blocks,
+			@Nullable Consumer<BlockEntityType<B>> also
+		) {
+			return new DeferredBlockEntityType<>(
+				this.register(
+					key,
+					() -> new BlockEntityType<>(supplier, Set.copyOf(blocks.get())),
+					also
+				)
+			);
+		}
+
+		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
+			ResourceKey<BlockEntityType<?>> key,
+			BlockEntityType.BlockEntitySupplier<B> supplier,
+			Collection<Supplier<? extends Block>> blocks,
+			@Nullable Consumer<BlockEntityType<B>> also
+		) {
+			return this.register(
+				key,
+				supplier,
+				() -> (List<Block>) blocks.stream().map(Supplier::get).toList(),
+				also
+			);
+		}
+
+		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
+			ResourceKey<BlockEntityType<?>> key,
+			BlockEntityType.BlockEntitySupplier<B> supplier,
+			Supplier<Collection<Block>> blocks
+		) {
+			return this.register(key, supplier, blocks, null);
+		}
+
+		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
+			ResourceKey<BlockEntityType<?>> key,
+			BlockEntityType.BlockEntitySupplier<B> supplier,
+			Collection<Supplier<? extends Block>> blocks
+		) {
+			return this.register(key, supplier, blocks, null);
 		}
 	}
 
