@@ -30,7 +30,7 @@ public interface BlockEntityTypeExtension<T extends BlockEntity> {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$addValidBlock(Supplier<Block> block) {
+	default void frozenLib$addValidBlock(Supplier<? extends Block> block) {
 		this.frozenLib$addValidBlock(block.get());
 	}
 
@@ -38,8 +38,8 @@ public interface BlockEntityTypeExtension<T extends BlockEntity> {
 		for (Block block : blocks) this.frozenLib$addValidBlock(block);
 	}
 
-	default void frozenLib$addValidBlock(Supplier<Block>... blocks) {
-		for (Supplier<Block> block : blocks) this.frozenLib$addValidBlock(block);
+	default void frozenLib$addValidBlock(Supplier<? extends Block>... blocks) {
+		for (Supplier<? extends Block> block : blocks) this.frozenLib$addValidBlock(block);
 	}
 
 	default BlockEntityType<T> frozenLib$setOpOnlyCustomData() {
