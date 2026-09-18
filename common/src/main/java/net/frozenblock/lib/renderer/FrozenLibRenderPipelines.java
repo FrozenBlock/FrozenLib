@@ -36,6 +36,7 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+			.withColorTargetState(ColorTargetState.DEFAULT)
 			.withCull(false)
 			.build()
 	);
@@ -46,6 +47,7 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+			.withColorTargetState(ColorTargetState.DEFAULT)
 			.withCull(false)
 			.build()
 	);
