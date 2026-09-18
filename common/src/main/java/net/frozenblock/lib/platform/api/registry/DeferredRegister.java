@@ -22,7 +22,6 @@ import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.Codec;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -937,7 +936,7 @@ public interface DeferredRegister<T> {
 		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
 			ResourceKey<BlockEntityType<?>> key,
 			BlockEntityType.BlockEntitySupplier<B> supplier,
-			Supplier<Collection<Block>> blocks,
+			Supplier<Collection<? extends Block>> blocks,
 			@Nullable Consumer<BlockEntityType<B>> also
 		) {
 			return new DeferredBlockEntityType<>(
@@ -958,7 +957,7 @@ public interface DeferredRegister<T> {
 			return this.register(
 				key,
 				supplier,
-				() -> (List<Block>) blocks.stream().map(Supplier::get).toList(),
+				() -> blocks.stream().map(Supplier::get).toList(),
 				also
 			);
 		}
@@ -966,7 +965,7 @@ public interface DeferredRegister<T> {
 		default <B extends BlockEntity> DeferredBlockEntityType<B> register(
 			ResourceKey<BlockEntityType<?>> key,
 			BlockEntityType.BlockEntitySupplier<B> supplier,
-			Supplier<Collection<Block>> blocks
+			Supplier<Collection<? extends Block>> blocks
 		) {
 			return this.register(key, supplier, blocks, null);
 		}
