@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "frozenlib",
+  "id": "${mod_id}",
   "provides": [
     "frozenblocklib"
   ],
   "version": "${version}",
-  "name": "FrozenLib",
-  "description": "A library that contains many tools for modders.\nIncludes advanced math operations, noise sampling, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!\nProvides a Fabric implementation of QuiltMC's DataFixerUpper API.",
+  "name": "${mod_name}",
+  "description": "FrozenBlock's library mod, providing countless useful APIs and features for mod development.",
   "authors": [
     "AViewFromTheTop/Lunade",
     "Ethan Stokes"
@@ -17,11 +17,11 @@
     "Xfrtrex"
   ],
   "contact": {
-    "homepage": "https://www.modrinth.com/mod/FrozenLib",
-    "sources": "https://github.com/FrozenBlock/FrozenLib",
-    "issues": "https://github.com/FrozenBlock/FrozenLib/issues"
+    "homepage": "${mod_url}",
+    "sources": "${source_url}",
+    "issues": "${issues_url}"
   },
-  "license": "GPL-3.0",
+  "license": "${mod_license}",
   "icon": "assets/frozenlib/icon.png",
   "environment": "*",
   "entrypoints": {
@@ -82,14 +82,15 @@
   ],
   "accessWidener": "frozenlib.classtweaker",
   "depends": {
-    "fabricloader": "${min_fabric_loader_version}",
+    "fabricloader": "${fabric_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
     "java": ">=25"
   },
   "suggests": {
     "fabric-language-kotlin": ">=${fabric_kotlin_version}",
-    "cloth-config": "*"
+    "cloth-config": "*",
+    "modmenu": "*"
   },
   "breaks": {
     "fabric-language-kotlin": "<${fabric_kotlin_version}"

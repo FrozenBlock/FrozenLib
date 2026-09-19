@@ -15,6 +15,7 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
+val subproject_prefix: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
@@ -46,8 +47,8 @@ repositories {
 }
 
 neoforge {
-    dependOn(project(":flib-common"))
-    accessWidener(project(":flib-common"))
+    dependOn(project(":{$subproject_prefix}-common"))
+    accessWidener(project(":{$subproject_prefix}-common"))
 }
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
@@ -76,8 +77,6 @@ val relocApi: Configuration by configurations.creating {
 }
 
 dependencies {
-    //"neoForge"("net.neoforged:neoforge:$neoforge_version")
-
     // Toml
     api("com.moandjiezana.toml:toml4j:$toml4j_version")
 
@@ -87,13 +86,17 @@ dependencies {
     // ExJson
     relocApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
     relocApi("org.exjson:xjs-compat:$xjs_compat_version")
+
+    // Fresult
     relocApi("com.personthecat:fresult:$fresult_version")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     // Kotlin for NeoForge
     //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 
-    // Cloth Config (NeoForge edition)
+    // Cloth Config
     implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
         exclude(group = "net.neoforged")
     }
@@ -103,13 +106,13 @@ dependencies {
 }
 
 tasks {
-    processResources {
-        val properties = HashMap<String, Any>()
+    license {
+        if (licenseChecks) {
+            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(rootProject.file("codeformat/HEADER"))
 
-        properties.forEach { (a, b) -> inputs.property(a, b) }
-
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(properties)
+            include("**//*.java")
+            include("**//*.kt")
         }
     }
 
@@ -176,7 +179,7 @@ val changelogText = run {
 
 upload {
     maven {
-        name.set("frozenlib-neoforge")
+        name.set("{$mod_id}-neoforge")
     }
 
     forEach {

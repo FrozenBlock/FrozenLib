@@ -14,16 +14,15 @@ checkstyle {
 
 withKotlin()
 
-val fabric_loader_version: String by project
-val min_fabric_loader_version: String by project
-
+val mod_id: String by project
+val subproject_prefix: String by project
 val maven_group: String by project
 val archives_base_name: String by project
+val fabric_loader_version: String by project
 
 val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
 val toml4j_version: String by project
-val jankson_version: String by project
 val xjs_data_version: String by project
 val xjs_compat_version: String by project
 val fresult_version: String by project
@@ -46,10 +45,10 @@ val testmod by sourceSets.registering {
 }
 
 fabric {
-    dependOn(project(":flib-common"))
-    accessWidener(project(":flib-common"))
+    dependOn(project(":{$subproject_prefix}-common"))
+    accessWidener(project(":{$subproject_prefix}-common"))
     dataGen {
-        owner = project(":flib-common")
+        owner = project(":{$subproject_prefix}-common")
         splitSourceSet("datagen")
     }
 }
@@ -149,34 +148,11 @@ repositories {
     mavenCentral()
 }
 
-val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
-val loaderVariants = setOf("apiElements", "runtimeElements", "sourcesElements", "javadocElements", "includeInternal", "modCompileClasspath")
-configurations.all {
-    if (name in loaderVariants) {
-        attributes {
-            attribute(loaderAttribute, "fabric")
-        }
-    }
-}
-sourceSets.configureEach {
-    listOf(compileClasspathConfigurationName, runtimeClasspathConfigurationName).forEach { variant ->
-        configurations.named(variant) {
-            attributes {
-                attribute(loaderAttribute, "fabric")
-            }
-        }
-    }
-}
-
 dependencies {
-    // To change the versions see the gradle.properties file
-    implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
-    testImplementation("net.fabricmc:fabric-loader-junit:$fabric_loader_version")
-
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
-
-    // Fabric Language Kotlin. Required to use the Kotlin language.
+    // Fabric
+    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
     implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
@@ -197,7 +173,11 @@ dependencies {
     // ExJson
     relocApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
     relocApi("org.exjson:xjs-compat:$xjs_compat_version")
+
+    // Fresult
     relocApi("com.personthecat:fresult:$fresult_version")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
@@ -205,22 +185,6 @@ dependencies {
 }
 
 tasks {
-    processResources {
-        val properties = HashMap<String, Any>()
-        properties["version"] = project.version
-        properties["minecraft_version"] = "~26.2-"//minecraft_version
-
-        properties["fabric_loader_version"] = ">=$min_fabric_loader_version"
-        properties["fabric_api_version"] = ">=$fabric_api_version"
-        properties["fabric_kotlin_version"] = fabric_kotlin_version
-
-        properties.forEach { (a, b) -> inputs.property(a, b) }
-
-        filesMatching("fabric.mod.json") {
-            expand(properties)
-        }
-    }
-
     license {
         if (licenseChecks) {
             rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
@@ -326,7 +290,7 @@ val changelogText = run {
 
 upload {
     maven {
-        name.set("frozenlib-fabric")
+        name.set("{$mod_id}-fabric")
     }
 
     forEach {

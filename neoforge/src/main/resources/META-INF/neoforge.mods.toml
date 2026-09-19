@@ -1,7 +1,18 @@
 modLoader="javafml"
 loaderVersion="[4,)"
-license="GPL-3.0"
-issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
+license="${mod_license}"
+issueTrackerURL="${issues_url}"
+
+[[mods]]
+    modId="${mod_id}"
+    version="${mod_version}"
+    displayName="${mod_name}"
+    displayURL="${mod_url}"
+    iconFile="assets/frozenlib/icon.png"
+    authors="AViewFromTheTop/Lunade, Ethan Stokes"
+    description='''
+FrozenBlock's library mod, providing countless useful APIs and features for mod development.
+    '''
 
 [[mixins]]
 config="mixin/frozenlib.advancement.mixins.json"
@@ -109,30 +120,19 @@ config="mixin/frozenlib.tag.mixins.json"
 [[mixins]]
 config="mixin/frozenlib.wind.neoforge.mixins.json"
 
-[[mods]]
-    modId="frozenlib"
-    version="${mod_version}"
-    displayName="FrozenLib"
-    displayURL="https://www.modrinth.com/mod/FrozenLib"
-    iconFile="assets/frozenlib/icon.png"
-    authors="AViewFromTheTop/Lunade, Ethan Stokes"
-    description='''
-A library that contains many tools for modders.
-Includes advanced math operations, noise sampling, advanced sounds, entity texture overrides,
-structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!
-Provides a NeoForge implementation of QuiltMC's DataFixerUpper API.
-    '''
-
 [[ dependencies.frozenlib ]]
     modId="neoforge"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[${minecraft_version},)"
     ordering="NONE"
     side="BOTH"
 
 [[ dependencies.frozenlib ]]
     modId="minecraft"
     type="required"
-    versionRange="[~26.2-,)"
+    versionRange="[${minecraft_version},)"
     ordering="NONE"
     side="BOTH"
+
+["lithium:options"]
+"mixin.world.raycast" = false
