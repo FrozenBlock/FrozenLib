@@ -144,10 +144,10 @@ public class ConfigEntry<T> implements Supplier<T> {
 
 	public void modify(Consumer<EntryValueHolder<T>> modification) {
 		this.modifications.add(new ConfigEntryModification<>(modification));
-		this.invalidateModifications();
+		this.invalidateModificationsAndCompute();
 	}
 
-	public void invalidateModifications() {
+	public void invalidateModificationsAndCompute() {
 		this.modifiedValue = Optional.ofNullable(ConfigEntryModification.modifyEntry(this, this.getActual()));
 	}
 
