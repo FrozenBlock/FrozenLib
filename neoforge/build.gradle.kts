@@ -15,12 +15,11 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
+val mod_version: String by project
 val subproject_prefix: String by project
+val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
-
-val neoforge_version: String by project
-val neoforge_loader_version_range: String by project
 
 val toml4j_version: String by project
 val jankson_version: String by project
@@ -37,35 +36,31 @@ base {
     archivesName.set(archives_base_name)
 }
 
+val release = findProperty("releaseType") == "stable"
+
 group = maven_group
+
+tasks.jar {
+    archiveClassifier.set("neoforge")
+}
 
 repositories {
     maven("https://maven.neoforged.net/releases") { name = "NeoForged" }
     if (!neoforgeSnapshotMaven.isNullOrBlank()) {
         maven(neoforgeSnapshotMaven) { name = "NeoForge Snapshots" }
     }
+    flatDir {
+        dirs("libs")
+    }
 }
 
 neoforge {
-    dependOn(project(":{$subproject_prefix}-common"))
-    accessWidener(project(":{$subproject_prefix}-common"))
+    dependOn(project(":$subproject_prefix-common"))
+    accessWidener(project(":$subproject_prefix-common"))
 }
 
-val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
-val licenseChecks: Boolean = githubActions
-
-val applyLicenses: Task by tasks
-
-tasks {
-    license {
-        if (licenseChecks) {
-            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
-            rule(rootProject.file("codeformat/HEADER"))
-
-            include("**//*.java")
-            include("**//*.kt")
-        }
-    }
+neoForge {
+    accessTransformers {} // Required for transitive AW to apply!
 }
 
 val relocImplementation: Configuration by configurations.creating {
@@ -104,6 +99,9 @@ dependencies {
     implementation(project(":neoforge-locator"))
     "jarJar"(project(":neoforge-locator"))
 }
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
 
 tasks {
     license {
@@ -144,13 +142,6 @@ tasks {
     named<Jar>("sourcesJar") {
         from(sourceSets.main.get().allSource)
     }
-
-    withType(JavaCompile::class) {
-        options.encoding = "UTF-8"
-        options.release = 25
-        options.isFork = true
-        options.isIncremental = true
-    }
 }
 
 shadow {
@@ -171,6 +162,27 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+val sourcesJar: Jar by tasks
+val javadocJar: Jar by tasks
+
+artifacts {
+    archives(sourcesJar)
+    archives(javadocJar)
+}
+
+val dev by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = true
+}
+
+tasks {
+    artifacts {
+        archives(jar)
+        archives(sourcesJar)
+        add("dev", jar)
+    }
+}
+
 val changelogText = run {
     val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
     check(split.size == 2) { "Malformed changelog" }
@@ -179,7 +191,7 @@ val changelogText = run {
 
 upload {
     maven {
-        name.set("{$mod_id}-neoforge")
+        name.set("$mod_id-neoforge")
     }
 
     forEach {

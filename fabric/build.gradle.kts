@@ -15,7 +15,9 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
+val mod_version: String by project
 val subproject_prefix: String by project
+val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 val fabric_loader_version: String by project
@@ -30,14 +32,18 @@ val fresult_version: String by project
 val modmenu_version: String by project
 val cloth_config_version: String by project
 
-val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
-val licenseChecks: Boolean = githubActions
-
 base {
     archivesName.set(archives_base_name)
 }
 
+val release = findProperty("releaseType") == "stable"
+
+version = getModVersion()
 group = maven_group
+
+tasks.jar {
+    archiveClassifier.set("fabric")
+}
 
 val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
@@ -45,10 +51,10 @@ val testmod by sourceSets.registering {
 }
 
 fabric {
-    dependOn(project(":{$subproject_prefix}-common"))
-    accessWidener(project(":{$subproject_prefix}-common"))
+    dependOn(project(":$subproject_prefix-common"))
+    accessWidener(project(":$subproject_prefix-common"))
     dataGen {
-        owner = project(":{$subproject_prefix}-common")
+        owner = project(":$subproject_prefix-common")
         splitSourceSet("datagen")
     }
 }
@@ -150,13 +156,13 @@ repositories {
 
 dependencies {
     // Fabric
-    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
-    testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
-    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
+    implementation("net.fabricmc:fabric-loader:$fabric_loader_version")
+    testImplementation("net.fabricmc:fabric-loader-junit:$fabric_loader_version")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
     implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    compileOnly("com.terraformersmc:modmenu:${modmenu_version}")
+    compileOnly("com.terraformersmc:modmenu:$modmenu_version")
 
     // Cloth Config
     compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
@@ -183,6 +189,9 @@ dependencies {
     "testmodImplementation"(sourceSets.main.get().output)
     implementation(kotlin("stdlib-jdk8"))
 }
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
 
 tasks {
     license {
@@ -250,19 +259,13 @@ tasks.withType<org.gradle.api.publish.maven.tasks.AbstractPublishToMaven>().conf
     dependsOn(tasks.named("shadowJar"))
 }
 
-val build: Task by tasks
-val applyLicenses: Task by tasks
-val test: Task by tasks
-val runClient: Task by tasks
-
-val jar: Jar by tasks
-val sourcesJar: Jar by tasks
-val javadocJar: Jar by tasks
-
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
+
+val sourcesJar: Jar by tasks
+val javadocJar: Jar by tasks
 
 artifacts {
     archives(sourcesJar)
@@ -282,6 +285,16 @@ tasks {
     }
 }
 
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
+
+    if (!release) {
+        version += "-unstable"
+    }
+
+    return version
+}
+
 val changelogText = run {
     val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
     check(split.size == 2) { "Malformed changelog" }
@@ -290,7 +303,7 @@ val changelogText = run {
 
 upload {
     maven {
-        name.set("{$mod_id}-fabric")
+        name.set("$mod_id-fabric")
     }
 
     forEach {
