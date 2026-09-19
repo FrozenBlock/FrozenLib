@@ -19,18 +19,21 @@ package net.frozenblock.lib.renderer.entity.platform;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
+@UtilityClass
 @ClientOnly
 public final class EntityRendererRegistryImpl {
 	private static final List<Entry<?>> ENTRIES = new ArrayList<>();
 
-	public static <T extends Entity> void register(EntityType<? extends T> entityType, EntityRendererProvider<T> provider) {
-		ENTRIES.add(new Entry<>(entityType, provider));
+	public static <T extends Entity> void register(Supplier<EntityType<? extends T>> type, EntityRendererProvider<T> provider) {
+		ENTRIES.add(new Entry<>(type, provider));
 	}
 
 	public static void flush(EntityRenderersEvent.RegisterRenderers event) {
@@ -38,8 +41,8 @@ public final class EntityRendererRegistryImpl {
 	}
 
 	private static <T extends Entity> void flushEntry(EntityRenderersEvent.RegisterRenderers event, Entry<T> entry) {
-		event.registerEntityRenderer(entry.entityType(), entry.provider());
+		event.registerEntityRenderer(entry.type().get(), entry.provider());
 	}
 
-	private record Entry<T extends Entity>(EntityType<? extends T> entityType, EntityRendererProvider<T> provider) {}
+	private record Entry<T extends Entity>(Supplier<EntityType<? extends T>> type, EntityRendererProvider<T> provider) {}
 }

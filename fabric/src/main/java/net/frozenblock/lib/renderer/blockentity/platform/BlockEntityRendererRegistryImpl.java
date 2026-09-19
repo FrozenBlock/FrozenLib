@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.renderer.blockentity.platform;
 
+import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -24,13 +26,14 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+@UtilityClass
 @ClientOnly
 public final class BlockEntityRendererRegistryImpl {
 
 	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
-		BlockEntityType<? extends T> blockEntityType,
+		Supplier<BlockEntityType<? extends T>> type,
 		BlockEntityRendererProvider<T, S> provider
 	) {
-		BlockEntityRenderers.register(blockEntityType, provider);
+		BlockEntityRenderers.register(type.get(), provider);
 	}
 }

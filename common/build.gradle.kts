@@ -11,26 +11,45 @@ checkstyle {
     toolVersion = "10.20.2"
 }
 
-val minecraft_version: String by project
-val asm_version: String by project
-
+val mod_id: String by project
 val cloth_config_version: String by project
-
 val toml4j_version: String by project
-val jankson_version: String by project
 val xjs_data_version: String by project
 val xjs_compat_version: String by project
 val fresult_version: String by project
-
-val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
-val licenseChecks: Boolean = githubActions
-
-val applyLicenses: Task by tasks
 
 common {
     accessWidener()
     enableKotlin()
 }
+
+neoForge {
+    accessTransformers {} // Required for transitive AW to apply!
+}
+
+dependencies {
+    // Cloth Config
+    compileOnly("me.shedaniel.cloth:cloth-config:$cloth_config_version")
+
+    // Toml
+    api("com.moandjiezana.toml:toml4j:$toml4j_version")
+
+    // Jankson
+    compileOnlyApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+
+    // ExJson
+    compileOnlyApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
+    compileOnlyApi("org.exjson:xjs-compat:$xjs_compat_version")
+
+    // Fresult
+    compileOnlyApi("com.personthecat:fresult:$fresult_version")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
+}
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
 
 tasks {
     license {
@@ -42,27 +61,6 @@ tasks {
             include("**//*.kt")
         }
     }
-}
-
-dependencies {
-    compileOnly("me.shedaniel.cloth:cloth-config:$cloth_config_version")
-
-    // Toml
-    api("com.moandjiezana.toml:toml4j:${toml4j_version}")
-
-    compileOnlyApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
-
-    compileOnlyApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
-    compileOnlyApi("org.exjson:xjs-compat:$xjs_compat_version")
-    compileOnlyApi("com.personthecat:fresult:$fresult_version")
-
-    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
-}
-
-val mergeCommonResources by tasks.registering(Sync::class) {
-    from(sourceSets.main.get().resources.srcDirs)
-    into(layout.buildDirectory.dir("merged-resources"))
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 configurations {
@@ -77,5 +75,5 @@ configurations {
 }
 
 upload.maven {
-    name.set("frozenlib-common")
+    name.set("$mod_id-common")
 }

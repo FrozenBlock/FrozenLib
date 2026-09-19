@@ -53,6 +53,10 @@ public final class RegistryHelperImpl {
 		return new FabricDeferredRegister.Entities(namespace);
 	}
 
+	public static DeferredRegister.BlockEntities createDeferredBlockEntitiesRegister(String namespace) {
+		return new FabricDeferredRegister.BlockEntities(namespace);
+	}
+
 	public static DeferredRegister.SoundEvents createDeferredSoundEventsRegister(String namespace) {
 		return new FabricDeferredRegister.SoundEvents(namespace);
 	}

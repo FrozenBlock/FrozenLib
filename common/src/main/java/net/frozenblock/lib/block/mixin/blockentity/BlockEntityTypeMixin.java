@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockEntityType.class)
-public class BlockEntityTypeMixin<T extends BlockEntity> implements BlockEntityTypeExtension {
+public class BlockEntityTypeMixin<T extends BlockEntity> implements BlockEntityTypeExtension<T> {
 
 	@Mutable
 	@Shadow

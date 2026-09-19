@@ -15,11 +15,11 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
+val mod_version: String by project
+val subproject_prefix: String by project
+val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
-
-val neoforge_version: String by project
-val neoforge_loader_version_range: String by project
 
 val toml4j_version: String by project
 val jankson_version: String by project
@@ -36,35 +36,31 @@ base {
     archivesName.set(archives_base_name)
 }
 
+val release = findProperty("releaseType") == "stable"
+
 group = maven_group
+
+tasks.jar {
+    archiveClassifier.set("neoforge")
+}
 
 repositories {
     maven("https://maven.neoforged.net/releases") { name = "NeoForged" }
     if (!neoforgeSnapshotMaven.isNullOrBlank()) {
         maven(neoforgeSnapshotMaven) { name = "NeoForge Snapshots" }
     }
+    flatDir {
+        dirs("libs")
+    }
 }
 
 neoforge {
-    dependOn(project(":flib-common"))
-    accessWidener(project(":flib-common"))
+    dependOn(project(":$subproject_prefix-common"))
+    accessWidener(project(":$subproject_prefix-common"))
 }
 
-val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
-val licenseChecks: Boolean = githubActions
-
-val applyLicenses: Task by tasks
-
-tasks {
-    license {
-        if (licenseChecks) {
-            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
-            rule(rootProject.file("codeformat/HEADER"))
-
-            include("**//*.java")
-            include("**//*.kt")
-        }
-    }
+neoForge {
+    accessTransformers {} // Required for transitive AW to apply!
 }
 
 val relocImplementation: Configuration by configurations.creating {
@@ -76,8 +72,6 @@ val relocApi: Configuration by configurations.creating {
 }
 
 dependencies {
-    //"neoForge"("net.neoforged:neoforge:$neoforge_version")
-
     // Toml
     api("com.moandjiezana.toml:toml4j:$toml4j_version")
 
@@ -87,13 +81,17 @@ dependencies {
     // ExJson
     relocApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
     relocApi("org.exjson:xjs-compat:$xjs_compat_version")
+
+    // Fresult
     relocApi("com.personthecat:fresult:$fresult_version")
+
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     // Kotlin for NeoForge
     //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 
-    // Cloth Config (NeoForge edition)
+    // Cloth Config
     implementation("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
         exclude(group = "net.neoforged")
     }
@@ -102,14 +100,17 @@ dependencies {
     "jarJar"(project(":neoforge-locator"))
 }
 
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
+
 tasks {
-    processResources {
-        val properties = HashMap<String, Any>()
+    license {
+        if (licenseChecks) {
+            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(rootProject.file("codeformat/HEADER"))
 
-        properties.forEach { (a, b) -> inputs.property(a, b) }
-
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(properties)
+            include("**//*.java")
+            include("**//*.kt")
         }
     }
 
@@ -141,13 +142,6 @@ tasks {
     named<Jar>("sourcesJar") {
         from(sourceSets.main.get().allSource)
     }
-
-    withType(JavaCompile::class) {
-        options.encoding = "UTF-8"
-        options.release = 25
-        options.isFork = true
-        options.isIncremental = true
-    }
 }
 
 shadow {
@@ -167,6 +161,27 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+val sourcesJar: Jar by tasks
+val javadocJar: Jar by tasks
+
+artifacts {
+    archives(sourcesJar)
+    archives(javadocJar)
+}
+
+val dev by configurations.creating {
+    isCanBeResolved = true
+    isCanBeConsumed = true
+}
+
+tasks {
+    artifacts {
+        archives(jar)
+        archives(sourcesJar)
+        add("dev", jar)
+    }
+}
+
 val changelogText = run {
     val split = rootProject.file("CHANGELOG.md").readText().split("-----------------")
     check(split.size == 2) { "Malformed changelog" }
@@ -175,7 +190,7 @@ val changelogText = run {
 
 upload {
     maven {
-        name.set("frozenlib-neoforge")
+        name.set("$mod_id-neoforge")
     }
 
     forEach {
