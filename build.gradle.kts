@@ -1,3 +1,4 @@
+import com.possible_triangle.gradle.ModVersionProperties
 import com.possible_triangle.gradle.upload.FrozenBlockVersionStrategy
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -136,6 +137,8 @@ subprojects {
         versionStrategy = FrozenBlockVersionStrategy()
     }
 
+    version = mod.versionStrategy.get().artifactVersion(mod as ModVersionProperties)
+
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", "4000"))
         options.release.set(25)
@@ -205,5 +208,10 @@ subprojects {
                 jvmTarget = JvmTarget.JVM_25
             }
         }
+    }
+
+    afterEvaluate {
+        tasks.findByName("curseforge")?.dependsOn("shadowJar")
+        tasks.findByName("modrinth")?.dependsOn("shadowJar")
     }
 }

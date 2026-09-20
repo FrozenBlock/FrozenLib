@@ -15,9 +15,7 @@ checkstyle {
 withKotlin()
 
 val mod_id: String by project
-val mod_version: String by project
 val subproject_prefix: String by project
-val minecraft_version: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 val fabric_loader_version: String by project
@@ -36,9 +34,6 @@ base {
     archivesName.set(archives_base_name)
 }
 
-val release = findProperty("releaseType") == "stable"
-
-version = getModVersion()
 group = maven_group
 
 tasks.jar {
@@ -283,16 +278,6 @@ tasks {
         archives(sourcesJar)
         add("dev", jar)
     }
-}
-
-fun getModVersion(): String {
-    var version = "$mod_version-mc$minecraft_version"
-
-    if (!release) {
-        version += "-unstable"
-    }
-
-    return version
 }
 
 val changelogText = run {
