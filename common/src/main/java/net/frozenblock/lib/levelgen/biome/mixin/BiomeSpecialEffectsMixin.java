@@ -24,6 +24,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(BiomeSpecialEffects.class)
 public class BiomeSpecialEffectsMixin implements BiomeSpecialEffectsInterface {
@@ -52,26 +53,31 @@ public class BiomeSpecialEffectsMixin implements BiomeSpecialEffectsInterface {
 	@Final
 	private BiomeSpecialEffects.GrassColorModifier grassColorModifier;
 
+	@Unique
 	@Override
 	public void frozenLib$setWaterColor(int color) {
 		this.waterColor = color;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setFoliageColorOverride(Optional<Integer> color) {
 		this.foliageColorOverride = color;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setDryFoliageColorOverride(Optional<Integer> color) {
 		this.dryFoliageColorOverride = color;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setGrassColorOverride(Optional<Integer> color) {
 		this.grassColorOverride = color;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setGrassColorModifier(BiomeSpecialEffects.GrassColorModifier colorModifier) {
 		this.grassColorModifier = colorModifier;

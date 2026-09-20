@@ -20,6 +20,7 @@ package net.frozenblock.lib.levelgen.biome.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.levelgen.biome.impl.FrozenLibGrassColorModifier;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeInterface;
+import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,11 +30,16 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Biome.class)
-public class BiomeMixin implements BiomeInterface {
+public class BiomeMixin implements BiomeInterface { // In common mixins.json
 	@Mutable
 	@Shadow
 	@Final
 	private Biome.ClimateSettings climateSettings;
+
+	@Mutable
+	@Shadow
+	@Final
+	private EnvironmentAttributeMap attributes;
 
 	@Unique
 	private FrozenLibGrassColorModifier frozenLib$frozenLibGrassColorModifier;
@@ -44,21 +50,37 @@ public class BiomeMixin implements BiomeInterface {
 		return original;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setFrozenLibGrassColorModifier(FrozenLibGrassColorModifier modifier) {
 		this.frozenLib$frozenLibGrassColorModifier = modifier;
 	}
 
+	@Unique
 	@Override
 	public FrozenLibGrassColorModifier frozenLib$getFrozenLibGrassColorModifier() {
 		return this.frozenLib$frozenLibGrassColorModifier;
 	}
 
+	@Unique
+	@Override
+	public EnvironmentAttributeMap frozenLib$attributes() {
+		return this.attributes;
+	}
+
+	@Unique
+	@Override
+	public void frozenLib$setAttributes(EnvironmentAttributeMap attributes) {
+		this.attributes = attributes;
+	}
+
+	@Unique
 	@Override
 	public Biome.ClimateSettings frozenLib$getClimateSettings() {
 		return this.climateSettings;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setClimateSettings(Biome.ClimateSettings settings) {
 		this.climateSettings = settings;

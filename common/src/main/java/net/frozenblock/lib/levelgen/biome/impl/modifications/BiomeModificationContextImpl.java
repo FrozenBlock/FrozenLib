@@ -168,9 +168,9 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		private void addAllRaw(EnvironmentAttributeMap map) {
-			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.getAttributes());
+			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.frozenLib$attributes());
 			attributes.putAll(map);
-			biome.attributes = attributes.build();
+			biome.frozenLib$setAttributes(attributes.build());
 		}
 
 		@Override
@@ -184,9 +184,9 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		private <T> void setRaw(EnvironmentAttribute<T> key, T value) {
-			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.getAttributes());
+			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.frozenLib$attributes());
 			attributes.set(key, value);
-			biome.attributes = attributes.build();
+			biome.frozenLib$setAttributes(attributes.build());
 		}
 
 		@Override
@@ -200,9 +200,9 @@ public class BiomeModificationContextImpl implements BiomeModificationContext {
 		}
 
 		private <T, M> void setModifierRaw(EnvironmentAttribute<T> key, AttributeModifier<T, M> modifier, M value) {
-			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.getAttributes());
+			EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder().putAll(biome.frozenLib$attributes());
 			attributes.modify(key, modifier, value);
-			biome.attributes = attributes.build();
+			biome.frozenLib$setAttributes(attributes.build());
 		}
 
 		private void updateSpawnSettings(Runnable update) {

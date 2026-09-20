@@ -468,8 +468,6 @@ transitive-extendable method net/minecraft/world/level/levelgen/feature/Vegetati
 # Biomes
 transitive-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
 transitive-accessible method net/minecraft/world/level/biome/Biome$ClimateSettings <init> (ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V
-transitive-accessible field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
-transitive-mutable field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
 transitive-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
 transitive-mutable field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
 transitive-accessible field net/minecraft/world/level/biome/BiomeGenerationSettings featureSet Ljava/util/function/Supplier;

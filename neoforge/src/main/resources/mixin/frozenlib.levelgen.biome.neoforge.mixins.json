@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.levelgen.biome.mixin.neoforge",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ModifiableBiomeInfoAccessor"
+  ],
+  "client": [
+  ]
+}

@@ -18,9 +18,19 @@
 package net.frozenblock.lib.levelgen.biome.impl.modifications;
 
 import net.frozenblock.lib.levelgen.biome.impl.FrozenLibGrassColorModifier;
+import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.level.biome.Biome;
 
 public interface BiomeInterface {
+
+	default EnvironmentAttributeMap frozenLib$attributes() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setAttributes(EnvironmentAttributeMap attributes) {
+		throw new AssertionError();
+	}
+
 	default Biome.ClimateSettings frozenLib$getClimateSettings() {
 		throw new AssertionError();
 	}
