@@ -118,8 +118,7 @@ public final class BlockTickRegistry {
 		ticks.forEach(tick -> tick.tick(state, level, pos, random));
 	}
 
-	@ApiStatus.Internal
-	private static void addTick(Block block, Tick tick) {
+	public static void addTick(Block block, Tick tick) {
 		final List<Tick> ticks = block.frozenLib$getAttachedOrDefault(TICK_KEY, new ArrayList<>());
 		ticks.add(tick);
 		block.frozenLib$setAttached(TICK_KEY, ticks);
@@ -132,8 +131,7 @@ public final class BlockTickRegistry {
 		randomTicks.forEach(randomTick -> randomTick.randomTick(state, level, pos, random));
 	}
 
-	@ApiStatus.Internal
-	private static void addRandomTick(Block block, RandomTick randomTick) {
+	public static void addRandomTick(Block block, RandomTick randomTick) {
 		final List<RandomTick> randomTicks = block.frozenLib$getAttachedOrDefault(RANDOM_TICK_KEY, new ArrayList<>());
 		randomTicks.add(randomTick);
 		block.frozenLib$setAttached(RANDOM_TICK_KEY, randomTicks);
@@ -146,8 +144,7 @@ public final class BlockTickRegistry {
 		animateTicks.forEach(animateTick -> animateTick.animateTick(state, level, pos, random));
 	}
 
-	@ApiStatus.Internal
-	private static void addAnimateTick(Block block, AnimateTick animateTick) {
+	public static void addAnimateTick(Block block, AnimateTick animateTick) {
 		final List<AnimateTick> animateTicks = block.frozenLib$getAttachedOrDefault(ANIMATE_TICK_KEY, new ArrayList<>());
 		animateTicks.add(animateTick);
 		block.frozenLib$setAttached(ANIMATE_TICK_KEY, animateTicks);
