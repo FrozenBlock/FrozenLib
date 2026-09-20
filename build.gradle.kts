@@ -56,7 +56,7 @@ mod {
     additional.add("source_url", source_url)
     additional.add("issues_url", issues_url)
     additional.add("fabric_loader_version", ">=$min_fabric_loader_version")
-    additional.add("fabric_kotlin_version", "$fabric_kotlin_version")
+    additional.add("fabric_kotlin_version", fabric_kotlin_version)
     additional.add("fabric_api_version", ">=$fabric_api_version")
     additional.add("minecraft_version", "~$minecraft_version-")
 }
