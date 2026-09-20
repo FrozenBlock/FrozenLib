@@ -97,10 +97,11 @@ public final class FrozenLibClientNeoForge {
 				});
 			});
 
-		ModLoadingContext.get().registerExtensionPoint(
-			IConfigScreenFactory.class,
-			() -> (container, parent) ->
-				FrozenLibConfigGui.buildScreen(parent)
-		);
+		if (FrozenLibEarlyConstants.HAS_CLOTH_CONFIG) {
+			ModLoadingContext.get().registerExtensionPoint(
+				IConfigScreenFactory.class,
+				() -> (container, parent) -> FrozenLibConfigGui.buildScreen(parent)
+			);
+		}
 	}
 }
