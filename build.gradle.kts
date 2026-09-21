@@ -132,10 +132,6 @@ subprojects {
         }
     }
 
-    mod {
-        versionStrategy = FrozenBlockVersionStrategy()
-    }
-
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", "4000"))
         options.release.set(25)
