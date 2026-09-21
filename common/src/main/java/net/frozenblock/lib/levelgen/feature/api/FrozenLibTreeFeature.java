@@ -19,7 +19,6 @@ package net.frozenblock.lib.levelgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.minecraft.core.Holder;

@@ -141,7 +141,7 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 	@Inject(method = "saveAdditional", at = @At("TAIL"))
 	public void frozenLib$saveAdditional(ValueOutput output, CallbackInfo info) {
 		if (this.frozenLib$pushedBlockEntityTag == null) return;
-		
+
 		NbtUtils.addCurrentDataVersion(this.frozenLib$pushedBlockEntityTag);
 		output.storeNullable("frozenLib_PushedBlockEntity", CompoundTag.CODEC, this.frozenLib$pushedBlockEntityTag);
 	}

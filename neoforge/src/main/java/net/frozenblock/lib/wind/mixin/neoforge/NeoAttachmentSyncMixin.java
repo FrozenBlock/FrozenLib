@@ -50,7 +50,6 @@ public class NeoAttachmentSyncMixin {
 			holder = ((AttachmentHolderAsFieldAccessor)asField).frozenLib$getExposedHolder();
 		}
 
-
 		final Level level;
 		final DataAttachmentTarget target;
 
