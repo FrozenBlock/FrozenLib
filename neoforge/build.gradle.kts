@@ -148,11 +148,12 @@ shadow {
     addShadowVariantIntoJavaComponent.set(false)
 }
 
-// make shadowJar used when something tries to use jar
-tasks.withType<GenerateModuleMetadata>().configureEach {
+// tasks reading the `jar` archive file (whose content is actually overwritten by shadowJar,
+// see above) must be ordered after shadowJar so they see the final shaded content
+tasks.withType<org.gradle.api.publish.tasks.GenerateModuleMetadata>().configureEach {
     dependsOn(tasks.named("shadowJar"))
 }
-tasks.withType<AbstractPublishToMaven>().configureEach {
+tasks.withType<org.gradle.api.publish.maven.tasks.AbstractPublishToMaven>().configureEach {
     dependsOn(tasks.named("shadowJar"))
 }
 
