@@ -18,9 +18,10 @@
 package net.frozenblock.lib.platform.api.attachment.platform;
 
 import com.mojang.serialization.Codec;
+import it.unimi.dsi.fastutil.objects.AbstractObject2BooleanMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentSyncPredicate;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
@@ -37,22 +38,27 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public final class DataAttachmentHelperImpl {
-	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(
-		NeoForgeRegistries.Keys.ATTACHMENT_TYPES,
-		FrozenLibConstants.MOD_ID
-	);
+	private static final AbstractObject2BooleanMap<DeferredRegister<AttachmentType<?>>> DEFERRED_REGISTERS = new Object2BooleanOpenHashMap<>();
+	private static IEventBus eventBus = null;
 
 	public static void register(IEventBus modBus) {
-		ATTACHMENT_TYPES.register(modBus);
+		eventBus = modBus;
+		DEFERRED_REGISTERS.forEach((register, registered) -> {
+			if (registered) return;
+			register.register(eventBus);
+			DEFERRED_REGISTERS.put(register, true);
+		});
 	}
 
 	@SuppressWarnings("unchecked")
 	public static <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
+		final Identifier id = builder.id();
+		final DeferredRegister<AttachmentType<?>> register = getOrCreateRegister(id.getNamespace());
+
 		final Supplier<T> initializer = builder.initializer();
 		final DataAttachmentSyncPredicate syncPredicate = builder.syncPredicate();
-
-		DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder = ATTACHMENT_TYPES.register(
-			builder.id().getPath(),
+		final DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder = register.register(
+			id.getPath(),
 			() -> {
 				final Supplier<T> defaultSupplier = initializer != null ? initializer : () -> (T) null;
 				final AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(defaultSupplier);
@@ -83,6 +89,24 @@ public final class DataAttachmentHelperImpl {
 
 	public static String getAttachmentsNBTKey() {
 		return AttachmentHolder.ATTACHMENTS_NBT_KEY;
+	}
+
+	private static DeferredRegister<AttachmentType<?>> getOrCreateRegister(String namespace) {
+		return DEFERRED_REGISTERS.keySet()
+			.stream()
+			.filter(deferredRegister -> deferredRegister.getNamespace().equals(namespace))
+			.findFirst()
+			.or(() -> {
+				final DeferredRegister<AttachmentType<?>> newRegister = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, namespace);
+				if (eventBus != null) {
+					newRegister.register(eventBus);
+					DEFERRED_REGISTERS.put(newRegister, true);
+				} else {
+					DEFERRED_REGISTERS.put(newRegister, false);
+				}
+				return Optional.of(newRegister);
+			})
+			.orElseThrow();
 	}
 
 	private static final class NeoDataAttachmentType<T> implements DataAttachmentType<T> {
