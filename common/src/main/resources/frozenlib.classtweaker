@@ -325,11 +325,34 @@ transitive-accessible method net/minecraft/client/renderer/entity/EntityRenderer
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
 transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
 
-transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
-transitive-inject-interface net/minecraft/client/renderer/state/level/PlayerRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
-transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
-transitive-inject-interface net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
-transitive-inject-interface net/minecraft/client/renderer/state/level/LevelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/block/BlockModelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/entity/state/EntityRenderState$LeashState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface net/minecraft/client/renderer/state/level/FirstPersonHandsAndItemsRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/fog/FogData net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/item/ItemStackRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/item/ItemStackRenderState$LayerRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/GameRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/LightmapRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/MapRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/MapRenderState$MapDecorationRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/OptionsRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/WindowRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/gui/GuiRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/gui/PanoramaRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/BlockBreakingRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/BlockOutlineRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface net/minecraft/client/renderer/state/level/CameraEntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/CameraRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/LevelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/ParticlesRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/PlayerRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/PlayerRenderState$ItemActivationRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/SkyRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/WeatherRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
+transitive-inject-interface	net/minecraft/client/renderer/state/level/WorldBorderRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 
 # Mob Effect
 ####################################################################################

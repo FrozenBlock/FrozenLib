@@ -7,10 +7,8 @@
     "defaultRequire": 1
   },
   "client": [
-    "BlockEntityRenderStateMixin",
+    "BaseRenderStateMixin",
     "FrozenLibRenderStateMixin",
-    "PlayerRenderStateDataKeyMixin",
-    "RenderStateDataKeyMixin",
     "camera.CameraMixin",
     "camera.CameraRenderStateMixin",
     "model.ModelMixin",

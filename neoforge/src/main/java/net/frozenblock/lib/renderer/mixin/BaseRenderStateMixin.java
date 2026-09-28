@@ -23,30 +23,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.renderer.FrozenLibRenderState;
-import net.frozenblock.lib.renderer.RenderStateDataKey;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.MapRenderState;
 import net.minecraft.util.context.ContextKey;
 import net.neoforged.neoforge.client.renderstate.BaseRenderState;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @ClientOnly
 @Mixin(BaseRenderState.class)
-public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
-
-	@Shadow
-	public abstract <T> T getRenderData(ContextKey<T> key);
-
-	@Shadow
-	public abstract <T> void setRenderData(ContextKey<T> key, @Nullable T data);
-
-	@Shadow
-	public abstract void resetRenderData();
+public abstract class BaseRenderStateMixin implements FrozenLibRenderState {
 
 	@WrapOperation(
 		method = "resetRenderData",
@@ -66,30 +53,5 @@ public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 
 		original.call(extensions);
 		extensions.putAll(frozenLibData);
-	}
-
-	@Unique
-	@Override
-	public <T> T frozenLib$getData(RenderStateDataKey<T> key) {
-		return this.getRenderData(key.asContextKey());
-	}
-
-	@Unique
-	@Override
-	public <T> T frozenLib$getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
-		final T value = this.frozenLib$getData(key);
-		return value != null ? value : defaultValue;
-	}
-
-	@Unique
-	@Override
-	public <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
-		this.setRenderData(key.asContextKey(), value);
-	}
-
-	@Unique
-	@Override
-	public void frozenLib$clearExtraData() {
-		this.resetRenderData();
 	}
 }

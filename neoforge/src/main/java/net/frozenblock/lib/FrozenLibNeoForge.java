@@ -55,7 +55,7 @@ import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
 import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.DelayedRegistry;
@@ -68,7 +68,7 @@ public final class FrozenLibNeoForge {
 		DelayedRegistry.setFactory(NeoForgeDelayedRegistry::new);
 
 		modBus.addListener(NewRegistryEvent.class, RegistryHelperImpl::flushRegistries);
-		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
+		modBus.addListener(NewDatapackRegistryEvent.class,event -> {
 			FrozenLibRegistries.setup();
 			RegistryHelperImpl.flushDynamicRegistries(event);
 		});

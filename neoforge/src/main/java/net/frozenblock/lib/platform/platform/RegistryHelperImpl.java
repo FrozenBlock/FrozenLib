@@ -28,7 +28,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewDatapackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -117,13 +117,13 @@ public final class RegistryHelperImpl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void flushDynamicRegistries(DataPackRegistryEvent.NewRegistry event) {
+	public static void flushDynamicRegistries(NewDatapackRegistryEvent event) {
 		for (DynamicRegistryEntry<?> entry : PENDING_DYNAMIC_REGISTRIES) {
 			final DynamicRegistryEntry typedEntry = entry;
 			if (typedEntry.synced()) {
-				event.dataPackRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.networkCodec());
+				event.worldRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.networkCodec());
 			} else {
-				event.dataPackRegistry(typedEntry.key(), typedEntry.codec());
+				event.worldRegistry(typedEntry.key(), typedEntry.codec());
 			}
 		}
 		PENDING_DYNAMIC_REGISTRIES.clear();
