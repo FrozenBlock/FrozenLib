@@ -53,10 +53,12 @@ public class ServerTextureDownloader {
 	private static final Logger LOGGER = LogUtils.getLogger();
 
 	public static Identifier getOrLoadServerTexture(
-		Identifier texture, String destPath, String string,
+		Identifier texture,
+		String destPath,
+		String fileName,
 		Identifier fallback
 	) {
-		downloadAndRegisterServerTexture(texture, destPath, string);
+		downloadAndRegisterServerTexture(texture, destPath, fileName);
 		if (LOADED_TEXTURES.contains(texture)) return texture;
 		return fallback;
 	}

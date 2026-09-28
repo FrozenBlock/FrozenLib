@@ -74,17 +74,20 @@ public final class FrozenLibNetworking {
 				final List<String> fileExtensions = packet.fileExtensions();
 				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, player)) return;
 
-				final Path requestedPath = server.getServerDirectory().resolve(requestPath);
-				for (String fileExtension : fileExtensions) {
-					final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
-					final String fileNameWithExtension = fileName + "." + fixedExtension;
-					final File file = requestedPath.resolve(fileNameWithExtension).toFile();
-					if (!file.exists()) continue;
+				final Path defaultPath = server.getServerDirectory().resolve(requestPath);
+				final Path localPath = server.getServerDirectory().resolve(requestPath).resolve(FileTransferPacket.LOCAL_SOURCE);
+				for (Path requestedPath : new Path[]{defaultPath, localPath}) {
+					for (String fileExtension : fileExtensions) {
+						final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
+						final String fileNameWithExtension = fileName + "." + fixedExtension;
+						final File file = requestedPath.resolve(fileNameWithExtension).toFile();
+						if (!file.exists()) continue;
 
-					try {
-						NetworkingHelper.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
-						return;
-					} catch (IOException ignored) {}
+						try {
+							NetworkingHelper.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
+							return;
+						} catch (IOException ignored) {}
+					}
 				}
 
 				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packets for file {} on server!", fileName);
