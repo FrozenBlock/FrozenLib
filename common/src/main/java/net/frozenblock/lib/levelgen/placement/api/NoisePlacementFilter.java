@@ -77,7 +77,7 @@ public class NoisePlacementFilter implements PlacementFilter {
 
 	@Override
 	public boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
-		final WorldGenLevel level = context.level();
+		final WorldGenLevel level = context.getLevel();
 		final PerlinNoise sampler = this.noiseType.createNoise(level.getSeed());
 		final double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 

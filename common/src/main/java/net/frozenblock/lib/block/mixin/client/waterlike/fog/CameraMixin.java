@@ -37,10 +37,10 @@ public abstract class CameraMixin {
 	private Level level;
 
 	@Shadow
-	public abstract BlockPos blockPosition();
+	public abstract FogType getFluidInCamera();
 
 	@Shadow
-	private FogType fogType;
+	public abstract BlockPos blockPosition();
 
 	@Inject(
 		method = "tick",
@@ -50,7 +50,7 @@ public abstract class CameraMixin {
 		)
 	)
 	private void frozenLib$tickWaterLikeFogHandler(CallbackInfo info) {
-		WaterLikeFogUtil.tick(this.level, this.blockPosition(), this.fogType, false);
+		WaterLikeFogUtil.tick(this.level, this.blockPosition(), this.getFluidInCamera(), false);
 	}
 
 	@Inject(method = "reset", at = @At("HEAD"))

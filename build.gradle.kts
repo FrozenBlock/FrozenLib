@@ -58,9 +58,7 @@ mod {
     additional.add("fabric_loader_version", ">=$min_fabric_loader_version")
     additional.add("fabric_kotlin_version", fabric_kotlin_version)
     additional.add("fabric_api_version", ">=$fabric_api_version")
-    additional.add("minecraft_version", "~26.4-")
-    if (!minecraftVersion.get().contains("snapshot")) throw GradleException("WERE OUTTA SNAPS NOW")
-    // additional.add("minecraft_version", "~$minecraft_version-")
+    additional.add("minecraft_version", "~$minecraft_version-")
 }
 
 val changelogText = run {

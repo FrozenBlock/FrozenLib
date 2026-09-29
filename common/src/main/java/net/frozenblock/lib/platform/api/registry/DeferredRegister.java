@@ -62,7 +62,7 @@ import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.JukeboxSong;
-import net.minecraft.world.item.PlaceOnFluidBlockItem;
+import net.minecraft.world.item.PlaceOnWaterBlockItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
@@ -868,12 +868,12 @@ public interface DeferredRegister<T> {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS));
 		}
 
-		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
-			return this.registerBlockItem(key, (properties, block) -> new PlaceOnFluidBlockItem(block, properties), base, propertiesOp);
+		default DeferredItem<PlaceOnWaterBlockItem> registerPlaceOnWaterBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
+			return this.registerBlockItem(key, (properties, block) -> new PlaceOnWaterBlockItem(block, properties), base, propertiesOp);
 		}
 
-		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlockItem(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerPlaceOnFluidBlockItem(key, base, properties -> properties);
+		default DeferredItem<PlaceOnWaterBlockItem> registerPlaceOnWaterBlockItem(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerPlaceOnWaterBlockItem(key, base, properties -> properties);
 		}
 
 		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {

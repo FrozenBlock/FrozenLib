@@ -56,17 +56,17 @@ public abstract class EntityMixin implements EntityGravityInterface {
 		method = "applyGravity",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;addDeltaMovement(DDD)V"
+			target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"
 		)
 	)
-	public void frozenLib$applyGravity(
-		Entity instance, double xd, double yd, double zd, Operation<Void> original,
+	public Vec3 frozenLib$applyGravity(
+		Vec3 instance, double x, double y, double z, Operation<Vec3> original,
 		@Local(name = "gravity") double gravity
 	) {
 		final Vec3 gravityVec = GravityAPI.calculateGravity(Entity.class.cast(this)).scale(gravity);
-		final Vec3 directional = new Vec3(xd, yd + gravity, zd).subtract(gravityVec);
+		final Vec3 directional = new Vec3(x, y + gravity, z).subtract(gravityVec);
 
-		original.call(instance, directional.x, directional.y, directional.z);
+		return original.call(instance, directional.x, directional.y, directional.z);
 	}
 
 	@Unique

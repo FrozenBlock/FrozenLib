@@ -18,12 +18,13 @@
 package net.frozenblock.lib.debug.client.gui;
 
 import com.google.common.collect.ImmutableList;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.debug.DebugGroups;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -33,6 +34,7 @@ import org.jspecify.annotations.Nullable;
 @ApiStatus.Internal
 @ClientOnly
 public class DebugEntryStructureStatuses implements DebugScreenEntry {
+	private static final Identifier GROUP = FrozenLibConstants.id("structure_status");
 
 	@Override
 	public void display(
@@ -46,7 +48,7 @@ public class DebugEntryStructureStatuses implements DebugScreenEntry {
 		if (entity == null) return;
 
 		StructureStatus.ATTACHMENT_TYPE.getAttachedOrElseGet(entity, ImmutableList::of).forEach(structureStatus -> {
-			displayer.addToGroup(DebugGroups.POSITION, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
+			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
 		});
 	}
 }
