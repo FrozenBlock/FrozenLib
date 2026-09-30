@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.levelgen.music.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+  ],
+  "client": [
+    "client.pitch.CameraMixin",
+    "client.structure.MinecraftMixin",
+    "client.pitch.MusicManagerMixin",
+    "client.pitch.SoundEngineMixin"
+  ]
+}

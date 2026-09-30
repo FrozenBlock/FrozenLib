@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.mixin.client;
+package net.frozenblock.lib.levelgen.music.mixin.client.pitch;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
+import net.frozenblock.lib.levelgen.music.pitch.api.MusicPitchApi;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

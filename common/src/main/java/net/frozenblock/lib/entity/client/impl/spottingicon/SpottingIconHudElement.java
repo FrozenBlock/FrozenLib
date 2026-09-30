@@ -90,7 +90,7 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 				final float screenX = (float) ((project.x + 1D) / 2D * graphics.guiWidth());
 				final float screenY = (float) ((1D - project.y) / 2D * graphics.guiHeight());
 				final float scaleDifference = scale - lastScale;
-				startPos += scaleDifference * (ICON_HALF);
+				startPos += scaleDifference * ICON_HALF;
 				startPos += ICON_SPACING;
 
 				graphics.pose().pushMatrix();

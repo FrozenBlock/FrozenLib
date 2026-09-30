@@ -22,7 +22,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 
 public class AllOfPredicate extends CombiningPredicate {
-	public static final MapCodec<AllOfPredicate> CODEC = codec(AllOfPredicate::new);
+	public static final MapCodec<AllOfPredicate> CODEC = createCodec(AllOfPredicate::new);
 
 	public AllOfPredicate(HolderSet<ConfigPredicate> predicates) {
 		super(predicates);

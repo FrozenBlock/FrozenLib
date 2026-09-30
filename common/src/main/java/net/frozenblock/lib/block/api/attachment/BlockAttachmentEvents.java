@@ -52,6 +52,14 @@ public final class BlockAttachmentEvents {
 		for (var callback : callbacks) callback.onSet(block, key, value);
 	});
 
+	/**
+	 * The event that is triggered when data is removed from a {@link Block}.
+	 */
+	public static final Event<OnRemove> ON_REMOVE = EventRegistry.createEnvironmentEvent(OnRemove.class,
+		callbacks -> (block, key, value) -> {
+			for (var callback : callbacks) callback.onRemove(block, key, value);
+		});
+
 	@ApiStatus.Internal
 	public static void init() {
 		CommonLifecycleEvents.TAGS_LOADED.register(((registries, client) -> {
@@ -101,5 +109,21 @@ public final class BlockAttachmentEvents {
 		 * @param value the value that was attached to the {@link Block}.
 		 */
 		void onSet(Block block, BlockAttachmentKey<?> key, Object value);
+	}
+
+	/**
+	 * A functional interface representing an On Remove event.
+	 */
+	@FunctionalInterface
+	public interface OnRemove extends CommonEventEntrypoint {
+		/**
+		 * Runs when data is removed from a {@link Block}.
+		 * <p>
+		 * This event can help with clearing/resetting temporary changes made to a {@link Block} based on attached data.
+		 * @param block the {@link Block} the data was attached to.
+		 * @param key the {@link BlockAttachmentKey} the data was attached with.
+		 * @param value the value that was attached to the {@link Block}.
+		 */
+		void onRemove(Block block, BlockAttachmentKey<?> key, Object value);
 	}
 }

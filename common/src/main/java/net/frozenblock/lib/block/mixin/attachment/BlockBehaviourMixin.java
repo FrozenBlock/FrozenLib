@@ -78,15 +78,20 @@ public class BlockBehaviourMixin implements BlockAttachmentHolder {
 	@Override
 	public <T> T frozenLib$removeAttached(BlockAttachmentKey<T> key) {
 		if (this.frozenLib$attachments == null) return null;
-		return (T) this.frozenLib$attachments.remove(key);
+
+		final Object value = this.frozenLib$attachments.remove(key);
+		if (value == null) return null;
+
+		if (BlockBehaviour.class.cast(this) instanceof Block block) BlockAttachmentEvents.ON_REMOVE.invoker().onRemove(block, key, value);
+		return (T) value;
 	}
 
 	@Unique
 	@Override
 	public void frozenLib$clearAttachments() {
-		if (this.frozenLib$attachments != null) {
-			this.frozenLib$attachments.keySet().removeIf(key -> !key.persistent());
-			if (this.frozenLib$attachments.isEmpty())  this.frozenLib$attachments = null;
-		}
+		if (this.frozenLib$attachments == null) return;
+
+		this.frozenLib$attachments.keySet().removeIf(key -> !key.persistent());
+		if (this.frozenLib$attachments.isEmpty())  this.frozenLib$attachments = null;
 	}
 }

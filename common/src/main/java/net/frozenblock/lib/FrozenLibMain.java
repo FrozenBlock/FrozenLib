@@ -18,16 +18,16 @@
 package net.frozenblock.lib;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 import lombok.experimental.UtilityClass;
+import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateTypes;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
@@ -47,6 +47,7 @@ import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
 import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
+import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProviderTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
@@ -119,6 +120,7 @@ public final class FrozenLibMain {
 		FrozenLibTreeDecoratorTypes.init();
 		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
+		PitchProviderTypes.init();
 		FrozenLibSpawnConditions.init();
 		WindManager.init();
 		WindManagerExtensionType.init();

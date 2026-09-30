@@ -15,12 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.impl.structure;
+package net.frozenblock.lib.levelgen.music.structure.impl;
 
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
-import net.frozenblock.lib.music.api.structure.StructureMusic;
+import net.frozenblock.lib.levelgen.music.structure.api.StructureMusic;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 @ApiStatus.Internal
-public class StructureMusicSelector {
+public final class StructureMusicSelector {
 
 	private static Optional<BackgroundMusic> getCurrentStructureMusic(Player player, RegistryAccess registryAccess) {
 		final Optional<StructureStatus> optionalStructureStatus = StructureStatus.getProminentStructureStatus(player);

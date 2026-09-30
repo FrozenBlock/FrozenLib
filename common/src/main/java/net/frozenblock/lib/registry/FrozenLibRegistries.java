@@ -33,7 +33,8 @@ import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
 import net.frozenblock.lib.levelgen.material.impl.MaterialRuleAddition;
 import net.frozenblock.lib.levelgen.structure.impl.processor.StructureProcessorListAddition;
-import net.frozenblock.lib.music.api.structure.StructureMusic;
+import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProvider;
+import net.frozenblock.lib.levelgen.music.structure.api.StructureMusic;
 import net.frozenblock.lib.platform.RegistryHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
@@ -82,12 +83,16 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<MapCodec<? extends ConfigPredicate>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
 	public static final MappedRegistry<MapCodec<? extends ConfigPredicate>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());
 
+	public static final ResourceKey<Registry<MapCodec<? extends PitchProvider>>> PITCH_PROVIDER_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("pitch_provider_type"));
+	public static final MappedRegistry<MapCodec<? extends PitchProvider>> PITCH_PROVIDER_TYPE = createSimple(PITCH_PROVIDER_TYPE_REGISTRY, Lifecycle.stable());
+
 	public static final ResourceKey<Registry<MovingSoundType<?>>> MOVING_SOUND_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("moving_sound_type"));
 	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = createSimple(MOVING_SOUND_TYPE_REGISTRY, Lifecycle.stable());
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE_PROVIDER = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_provider"));
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
+	public static final ResourceKey<Registry<PitchProvider>> MUSIC_PITCH_PROVIDER = ResourceKey.createRegistryKey(FrozenLibConstants.id("music_pitch_provider"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = ResourceKey.createRegistryKey(FrozenLibConstants.id("biome_environment_attribute_modification"));
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
@@ -102,6 +107,7 @@ public class FrozenLibRegistries {
 	public static void setup() {
 		RegistryHelper.registerSyncedDynamicRegistry(CONFIG_PREDICATE_PROVIDER, ConfigPredicate.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(MUSIC_PITCH_PROVIDER, PitchProvider.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);

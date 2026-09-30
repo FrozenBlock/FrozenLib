@@ -544,7 +544,7 @@ transitive-mutable field net/minecraft/client/resources/sounds/AbstractSoundInst
 transitive-extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
 transitive-accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
 
-transitive-inject-interface net/minecraft/client/sounds/SoundEngine net/frozenblock/lib/music/impl/client/SoundEngineInterface
+transitive-inject-interface net/minecraft/client/sounds/SoundEngine net/frozenblock/lib/levelgen/music/pitch/impl/client/SoundEnginePitchInterface
 
 # Particle
 ####################################################################################

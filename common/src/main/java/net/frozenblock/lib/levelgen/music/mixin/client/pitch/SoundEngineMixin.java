@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.mixin.client;
+package net.frozenblock.lib.levelgen.music.mixin.client.pitch;
 
 import java.util.Map;
-import net.frozenblock.lib.music.impl.client.SoundEngineInterface;
+import net.frozenblock.lib.levelgen.music.pitch.impl.client.SoundEnginePitchInterface;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.ChannelAccess;
@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @ClientOnly
 @Mixin(SoundEngine.class)
-public class SoundEngineMixin implements SoundEngineInterface {
+public class SoundEngineMixin implements SoundEnginePitchInterface {
 
 	@Shadow
 	private boolean loaded;

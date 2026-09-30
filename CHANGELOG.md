@@ -1,10 +1,50 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Fixed an issue that caused Data Attachments created with FrozenLib to always use the `frozenlib` namespace on NeoForge.
-- Likely fixed an issue that prevented non-host Players on LAN servers from receiving Photographs taken with Freeze Frame.
 
-### 26.3+
-- Implemented `FrozenLibRenderState` in many instances it was unintentionally skipped, now in parity with Fabric.
-  - This also fixes a crash on NeoForge when using a Piston. ([#84](https://github.com/FrozenBlock/FrozenLib/issues/84))
-- Fixed a crash on boot with NeoForge 26.3.0.20-beta+. ([#85](https://github.com/FrozenBlock/FrozenLib/issues/85))
+### 26.4+
+- Added the `frozenlib:music_pitch_provider` Dynamic Registry, used to modify the pitch of background music, with the following Pitch Provider Types:
+  - `biome`
+    - `required_biomes`: A Biome's ID, a list of Biome IDs, or a Biome Tag this is applicable in.
+    - `provider`: The Pitch Provider to sample from.
+  - `structure`
+    - `required_structures`: A Structure's ID or a list of Structure IDs this is applicable in.
+    - `provider`: The Pitch Provider to sample from.
+  - `dimension`
+    - `required_dimensions`: A Dimension's ID or a list of Dimension IDs this is applicable in.
+    - `provider`: The Pitch Provider to sample from.
+  - `constant`
+    - `value`: A constant value to provide.
+  - `add`:
+    - `provider`: A Pitch Provider to sample from.
+    - `operand`: A Pitch Provider to provide a value to be added onto `provider`'s sample.
+  - `subtract`
+    - `provider`: A Pitch Provider to sample from.
+    - `operand`: A Pitch Provider to provide a value to be subtracted from `provider`'s sample.
+  - `multiply`
+    - `provider`: A Pitch Provider to sample from.
+    - `operand`: A Pitch Provider to provide a value to be multiplied with `provider`'s sample.
+  - `divide`
+    - `provider`: A Pitch Provider to sample from.
+    - `operand`: A Pitch Provider to provide a value to divide `provider`'s sample by.
+  - `sine`
+    - `wave_length`: The time, in ticks, that the sine wave will have completed one cycle.
+  - `cosine`
+    - `wave_length`: The time, in ticks, that the cosine wave will have completed one cycle.
+  - `clamp`
+    - `provider`: A Pitch Provider to sample from.
+    - `min`: A Pitch Provider to provide a value to be used as the minimum-allowed value.
+    - `max`: A Pitch Provider to provide a value to be used as the maximum-allowed value.
+  - `lerp`
+    - `provider`: A Pitch Provider to provide a value to be used as the `progress` of the linear interpolation function.
+      - It is expected that this will provide values strictly between 0 and 1, anything else may produce unintended results.
+    - `start`: A Pitch Provider to sample from to be used as the minimum value.
+    - `end`: A Pitch Provider to sample from to be used as the maximum value.
+  - `config_predicate`
+    - `predicate`: A Config Predicate, determining whether this is currently applicable.
+    - `provider`: The Pitch Provider to sample from.
+  - `config_predicate_selector`
+    - `predicate`: A Config Predicate, determining which provider should be sampled from.
+    - `when_true`: The Pitch Provider to sample from when `predicate` is true.
+    - `when_false`: The Pitch Provider to sample from when `predicate` is false.
+- Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.

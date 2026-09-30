@@ -29,7 +29,7 @@ public abstract class CombiningPredicate implements ConfigPredicate {
 		this.predicates = predicates;
 	}
 
-	public static <T extends CombiningPredicate> MapCodec<T> codec(Function<HolderSet<ConfigPredicate>, T> constructor) {
+	protected static <T extends CombiningPredicate> MapCodec<T> createCodec(Function<HolderSet<ConfigPredicate>, T> constructor) {
 		return RecordCodecBuilder.mapCodec(instance -> instance.group(
 			HOLDER_SET_CODEC.fieldOf("predicates").forGetter(predicate -> predicate.predicates)
 		).apply(instance, constructor));

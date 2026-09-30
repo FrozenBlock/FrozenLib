@@ -15,22 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.mixin.client;
+package net.frozenblock.lib.levelgen.music.pitch.impl.client;
 
-import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.Camera;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.resources.sounds.SoundInstance;
 
 @ClientOnly
-@Mixin(Camera.class)
-public class CameraMixin {
-
-	@Inject(method = "reset", at = @At("HEAD"))
-	public void frozenLib$resetPitch(CallbackInfo info) {
-		MusicPitchApi.resetCurrentPitch();
+public interface SoundEnginePitchInterface {
+	default void frozenLib$setPitch(SoundInstance sound, float pitch) {
+		throw new AssertionError();
 	}
 }

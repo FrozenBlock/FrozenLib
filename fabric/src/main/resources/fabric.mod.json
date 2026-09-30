@@ -59,7 +59,6 @@
     "mixin/frozenlib.item.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.modmenu.fabric.mixins.json",
-    "mixin/frozenlib.music.mixins.json",
     "mixin/frozenlib.networking.mixins.json",
     "mixin/frozenlib.particle.mixins.json",
     "mixin/frozenlib.renderer.mixins.json",
@@ -75,6 +74,7 @@
     "mixin/frozenlib.levelgen.attribute.mixins.json",
     "mixin/frozenlib.levelgen.biome.mixins.json",
     "mixin/frozenlib.levelgen.material.mixins.json",
+    "mixin/frozenlib.levelgen.music.mixins.json",
     "mixin/frozenlib.levelgen.structure.mixins.json",
 
     "mixin/frozenlib_fabricmc_datafixer.mixins.json",

@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.mixin.client;
+package net.frozenblock.lib.levelgen.music.mixin.client.structure;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.frozenblock.lib.music.impl.structure.StructureMusicSelector;
+import net.frozenblock.lib.levelgen.music.structure.impl.StructureMusicSelector;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
