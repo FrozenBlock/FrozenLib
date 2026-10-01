@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.v2.impl;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.Collection;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,6 +28,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
+@UtilityClass
 public final class ConfigCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {

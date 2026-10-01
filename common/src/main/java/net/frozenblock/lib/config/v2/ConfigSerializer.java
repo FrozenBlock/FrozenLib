@@ -40,7 +40,7 @@ import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.Nullable;
 
-public class ConfigSerializer {
+public final class ConfigSerializer {
 	private static final Path CONFIG_PATH = ModLoader.getConfigDir();
 
 	public static <T> void saveConfig(ConfigData<T> data) {
@@ -286,15 +286,17 @@ public class ConfigSerializer {
 			);
 		}
 
-		public void logNoPathError(String entry) {
+		public void logNoPathError(String entryName) {
 			FrozenLibLogUtils.logError(
-				"Config entry " + entry + " has no field name to " + (this.isForSaving() ? "save to" : "read from") + "!\nSeparate config ids from fields using '/'."
+				"Config entry %s has no field name to %s!\nSeparate config ids from fields using '/'"
+					.formatted(entryName, this.isForSaving() ? "save to" : "read from")
 			);
 		}
 
-		public void logUnableToUseError(String entry) {
+		public void logUnableToUseError(String entryName) {
 			FrozenLibLogUtils.logError(
-				"Unable to " + (this.isForSaving() ? "save" : "read") + " config entry " + entry
+				"Unable to %s config entry %s"
+					.formatted(this.isForSaving() ? "save" : "read", entryName)
 			);
 		}
 

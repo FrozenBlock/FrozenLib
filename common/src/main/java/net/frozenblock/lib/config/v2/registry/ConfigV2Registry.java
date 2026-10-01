@@ -21,12 +21,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Collection;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.minecraft.resources.Identifier;
 import org.jspecify.annotations.Nullable;
 
-public class ConfigV2Registry {
+@UtilityClass
+public final class ConfigV2Registry {
 	public static final Map<ID, ConfigData<?>> CONFIG_DATA = new Object2ObjectOpenHashMap<>();
 	public static final Map<ID, ConfigEntry<?>> CONFIG_ENTRY = new Object2ObjectLinkedOpenHashMap<>();
 

@@ -135,7 +135,6 @@ public class LocalPlayerMixin {
 
 		if (!hasAnyWaterLikeTypes) {
 			UnderWaterAmbientSoundInstanceHandler.tryPlayVanillaSound(
-				// TODO: see if we can just wrapOperation the underwater condition and invalidate if inside types with custom ambience
 				UnderLiquidAmbientSoundInstance.underwater(LocalPlayer.class.cast(this)),
 				this.minecraft.getSoundManager()
 			);

@@ -129,7 +129,7 @@ public class ConfigData<T> {
 	public void optimizeConfigMap() {
 		this.load(true);
 		this.optimizedConfigMap.clear();
-		this.optimizedConfigMap.putAll(ConfigSerializer.convertToOptimizedConfigMap(this, this.unoptimizedConfigMap));
+		if (!this.unoptimizedConfigMap.isEmpty()) this.optimizedConfigMap.putAll(ConfigSerializer.convertToOptimizedConfigMap(this, this.unoptimizedConfigMap));
 		this.optimizedMap = true;
 		this.unoptimizedConfigMap.clear();
 	}

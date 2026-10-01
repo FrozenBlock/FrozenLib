@@ -75,11 +75,10 @@ public record ID(String namespace, String path) {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		final ID id = (ID) o;
-		return this.namespace.equals(id.namespace) && this.path.equals(id.path);
+	public boolean equals(Object other) {
+		if (this == other) return true;
+		if (other == null || getClass() != other.getClass()) return false;
+		return other instanceof ID id && this.namespace.equals(id.namespace) && this.path.equals(id.path);
 	}
 
 	@Override

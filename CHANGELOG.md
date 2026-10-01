@@ -48,3 +48,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `when_true`: The Pitch Provider to sample from when `predicate` is true.
     - `when_false`: The Pitch Provider to sample from when `predicate` is false.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
+- Configs will no longer log errors per-entry if the config file itself is not present.
