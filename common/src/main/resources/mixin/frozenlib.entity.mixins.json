@@ -11,6 +11,7 @@
     "EntityMixin",
     "PriorityProviderMixin",
     "behavior.BehaviorMixin",
+    "behavior.SmoothSwimmingMoveControlMixin",
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin",

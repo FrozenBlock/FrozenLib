@@ -18,6 +18,7 @@
 package net.frozenblock.lib.resource.mixin.client.texture;
 
 import net.frozenblock.lib.resource.client.api.texture.ServerTexture;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@ClientOnly
 @Mixin(TextureManager.class)
 public class TextureManagerMixin {
 
@@ -32,5 +34,4 @@ public class TextureManagerMixin {
     public void frozenLib$updateServerTextureReferenceTime(CallbackInfoReturnable<AbstractTexture> info) {
         if (info.getReturnValue() instanceof ServerTexture timedTexture) timedTexture.updateReferenceTime();
     }
-
 }

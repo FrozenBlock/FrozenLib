@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.levelgen.material.api;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.levelgen.material.MaterialRules;
 import net.minecraft.world.level.levelgen.material.condition.BiomeCondition;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
+@UtilityClass
 public final class FrozenLibMaterialRules {
 	public static final MaterialRule AIR = makeStateRule(Blocks.AIR);
 	public static final MaterialRule BEDROCK = makeStateRule(Blocks.BEDROCK);

@@ -19,8 +19,7 @@ package net.frozenblock.lib.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.frozenblock.lib.config.v2.impl.ConfigCommand;
-import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
-import net.frozenblock.lib.entity.client.api.spottingicon.command.SpottingIconCommand;
+import net.frozenblock.lib.entity.api.spottingicon.command.SpottingIconCommand;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.tag.api.TagListCommand;
@@ -36,7 +35,6 @@ public final class FrozenLibCommand {
 		dispatcher.register(Commands.literal("frozenlib")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(ConfigCommand.buildSubCommand())
-			.then(ScaleEntityCommand.buildSubCommand())
 			.then(ScreenShakeCommand.buildSubCommand())
 			.then(SpottingIconCommand.buildSubcommand())
 			.then(StructureUpgradeCommand.buildSubCommand())

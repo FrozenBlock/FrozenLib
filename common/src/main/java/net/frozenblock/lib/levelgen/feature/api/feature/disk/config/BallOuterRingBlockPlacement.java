@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class BallOuterRingBlockPlacement {
+public final class BallOuterRingBlockPlacement {
 	public static final Codec<BallOuterRingBlockPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.stateProvider),
 		Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),

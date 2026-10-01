@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.impl;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchFeature;
 import net.frozenblock.lib.levelgen.feature.api.feature.CircularLavaVegetationPatchLessBordersFeature;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibFeatureTypes {
 
 	public static void init() {

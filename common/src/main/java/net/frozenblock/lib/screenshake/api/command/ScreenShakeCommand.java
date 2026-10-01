@@ -23,6 +23,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.commands.CommandSourceStack;
@@ -34,7 +35,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class ScreenShakeCommand {
+@UtilityClass
+public final class ScreenShakeCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("screenshake")

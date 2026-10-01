@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class NoiseBandBlockPlacement {
+public final class NoiseBandBlockPlacement {
 	public static final Codec<NoiseBandBlockPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
 		Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("minimum_noise_threshold", 1D).forGetter(config -> config.minNoiseThreshold),

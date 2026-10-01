@@ -15,32 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature_flag.mixin;
+package net.frozenblock.lib.entity.mixin.behavior;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.feature_flag.api.FeatureFlagApi;
-import net.minecraft.world.flag.FeatureFlagRegistry;
-import net.minecraft.world.flag.FeatureFlags;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.frozenblock.lib.entity.api.behavior.SmootherSwimmingMoveControl;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(FeatureFlags.class)
-public class FeatureFlagsMixin {
+@Mixin(value = SmoothSwimmingMoveControl.class, priority = 1500)
+public class SmoothSwimmingMoveControlMixin {
 
-	@Inject(
-		method = "<clinit>",
+	@ModifyExpressionValue(
+		method = "tick",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/flag/FeatureFlagRegistry$Builder;createVanilla(Ljava/lang/String;)Lnet/minecraft/world/flag/FeatureFlag;",
-			ordinal = 0
+			target = "Lnet/minecraft/world/entity/ai/control/SmoothSwimmingMoveControl;getTurningSpeedFactor(F)F"
 		)
 	)
-	private static void frozenLib$captureFeatureFlagBuilder(
-		CallbackInfo info,
-		@Local(name = "builder") FeatureFlagRegistry.Builder builder
-	) {
-		FeatureFlagApi.builder = builder;
+	public float frozenLib$discardTurningSpeedFactorIfSmoother(float original) {
+		if (SmoothSwimmingMoveControl.class.cast(this) instanceof SmootherSwimmingMoveControl<?>) return 1F;
+		return original;
 	}
 }

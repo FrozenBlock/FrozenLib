@@ -32,14 +32,12 @@ public class ServerTexture extends DynamicTexture implements TickableTexture {
 	private final String destPath;
 	private final String fileName;
 	private boolean closed;
-
 	/**
 	 * The amount of miliseconds after the texture's last usage to keep its {@link NativeImage} loaded before closing it.
 	 */
 	private final long timeInMilisBeforeClose;
 	private long timeSinceLastReference;
 
-	// TODO: Look into GpuTexture.getLabel(); usage
 	public ServerTexture(NativeImage image, String destPath, String fileName) {
 		super(() -> fileName, image);
 		this.timeInMilisBeforeClose = 5000L;
@@ -61,6 +59,8 @@ public class ServerTexture extends DynamicTexture implements TickableTexture {
 		this.closed = false;
 		try {
 			this.setPixels(ServerTextureDownloader.downloadServerTexture(null, this.destPath, this.fileName));
+			this.createTexture(this.fileName);
+			this.upload();
 		} catch (Exception ignored) {}
 	}
 
@@ -68,8 +68,7 @@ public class ServerTexture extends DynamicTexture implements TickableTexture {
 	public void tick() {
 		if (this.closed || (System.currentTimeMillis() - this.timeSinceLastReference) <= this.timeInMilisBeforeClose) return;
 
-		final NativeImage image = this.getPixels();
-		if (image != null) image.close();
+		this.close();
 		this.closed = true;
 	}
 }

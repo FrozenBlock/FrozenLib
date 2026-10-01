@@ -25,7 +25,7 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 
-public class FrozenLibConfig {
+public final class FrozenLibConfig {
 	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(FrozenLibConstants.config("main"), ConfigSettings.JSON5_UNQUOTED_KEYS);
 
 	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = CONFIG.entry("saveItemCooldowns", EntryType.BOOL, false);
@@ -45,4 +45,6 @@ public class FrozenLibConfig {
 		EntryType.STRING.asList(),
 		List.of("world_gen_settings")
 	).comment("Mods can only add to this list. User settings will always apply.").build();
+
+	private FrozenLibConfig() {}
 }

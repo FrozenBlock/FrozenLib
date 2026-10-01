@@ -62,5 +62,4 @@ public class TooltipListEntryMixin {
 		}
 		return list;
 	}
-
 }

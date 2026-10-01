@@ -55,5 +55,4 @@ public abstract class SilentTicker extends Marker {
 	public int getTicks() {
 		return this.ticks;
 	}
-
 }

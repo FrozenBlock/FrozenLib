@@ -60,7 +60,6 @@ import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 
 @ClientOnly
 public final class ModResourcePackApi {
@@ -514,7 +513,6 @@ public final class ModResourcePackApi {
 			this.groupName = packGroup;
 		}
 
-		@Contract("_ -> new")
 		public static PackDownloadGroup create(String packGroup) {
 			return new PackDownloadGroup(packGroup);
 		}
@@ -576,12 +574,10 @@ public final class ModResourcePackApi {
 			this.packGroup = packGroup;
 		}
 
-		@Contract("_, _, _ -> new")
 		public static PackDownloadInfo of(String url, String packName, PackDownloadGroup packGroup) {
 			return new PackDownloadInfo(url, packName, Optional.ofNullable(packGroup));
 		}
 
-		@Contract("_, _ -> new")
 		public static PackDownloadInfo of(String url, String packName) {
 			return new PackDownloadInfo(url, packName, Optional.empty());
 		}

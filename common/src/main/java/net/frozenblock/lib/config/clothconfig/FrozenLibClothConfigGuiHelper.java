@@ -19,6 +19,7 @@ package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -36,6 +37,7 @@ import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
+@UtilityClass
 @ClientOnly
 public final class FrozenLibClothConfigGuiHelper {
 

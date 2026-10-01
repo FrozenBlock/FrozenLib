@@ -17,70 +17,17 @@
 
 package net.frozenblock.lib.entity.api.behavior;
 
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 
 /**
- * A smoother version of {@link net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl}.
+ * A smoother version of {@link SmoothSwimmingMoveControl}.
+ * <p>
+ * Implemented via {@link net.frozenblock.lib.entity.mixin.behavior.SmoothSwimmingMoveControlMixin SmoothSwimmingMoveControlMixin}.
  */
-public class SmootherSwimmingMoveControl<T extends Mob> extends MoveControl<T> {
-	private final float maxTurnX;
-	private final float maxTurnY;
-	private final float inWaterSpeedModifier;
-	private final float outsideWaterSpeedModifier;
-	private final boolean applyGravity;
+public class SmootherSwimmingMoveControl<T extends Mob> extends SmoothSwimmingMoveControl<T> {
 
-	public SmootherSwimmingMoveControl(T mob, float maxTurnX, float maxTurnY, float inWaterSpeedModifier, float outsideWaterSpeedModifier, boolean applyGravity) {
-		super(mob);
-		this.maxTurnX = maxTurnX;
-		this.maxTurnY = maxTurnY;
-		this.inWaterSpeedModifier = inWaterSpeedModifier;
-		this.outsideWaterSpeedModifier = outsideWaterSpeedModifier;
-		this.applyGravity = applyGravity;
-	}
-
-	@Override
-	public void tick() {
-		if (this.applyGravity && this.mob.isInWater()) this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(0D, 0.005D, 0D));
-
-		if (this.operation == Operation.MOVE_TO && !this.mob.getNavigation().isDone()) {
-			final double xDifference = this.wantedX - this.mob.getX();
-			final double yDifference = this.wantedY - this.mob.getY();
-			final double zDifference = this.wantedZ - this.mob.getZ();
-			final double differenceSqr = xDifference * xDifference + yDifference * yDifference + zDifference * zDifference;
-			if (differenceSqr < 2.5000003E-7F) {
-				this.mob.setZza(0F);
-			} else {
-				final float h = (float) (Mth.atan2(zDifference, xDifference) * Mth.RAD_TO_DEG) - 90F;
-				this.mob.setYRot(this.rotlerp(this.mob.getYRot(), h, this.maxTurnY));
-				this.mob.yBodyRot = this.mob.getYRot();
-				this.mob.yHeadRot = this.mob.getYRot();
-				float i = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
-				if (this.mob.isInWater()) {
-					this.mob.setSpeed(i * this.inWaterSpeedModifier);
-					double j = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
-					if (Math.abs(yDifference) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
-						float k = -((float) (Mth.atan2(yDifference, j) * Mth.RAD_TO_DEG));
-						k = Mth.clamp(Mth.wrapDegrees(k), -this.maxTurnX, this.maxTurnX);
-						this.mob.setXRot(this.rotlerp(this.mob.getXRot(), k, 5F));
-					}
-
-					final float k = Mth.cos(this.mob.getXRot() * Mth.DEG_TO_RAD);
-					final float l = Mth.sin(this.mob.getXRot() * Mth.DEG_TO_RAD);
-					this.mob.zza = k * i;
-					this.mob.yya = -l * i;
-				} else {
-					this.mob.setSpeed(i * this.outsideWaterSpeedModifier);
-				}
-
-			}
-		} else {
-			this.mob.setSpeed(0F);
-			this.mob.setXxa(0F);
-			this.mob.setYya(0F);
-			this.mob.setZza(0F);
-		}
+	public SmootherSwimmingMoveControl(T mob, int maxTurnX, int maxTurnY, float inWaterSpeedModifier, float outsideWaterSpeedModifier, boolean applyGravity) {
+		super(mob, maxTurnX, maxTurnY, inWaterSpeedModifier, outsideWaterSpeedModifier, applyGravity);
 	}
 }

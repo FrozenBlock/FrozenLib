@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.placement.impl;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibPlacementModifierTypes {
 
 	public static void init() {

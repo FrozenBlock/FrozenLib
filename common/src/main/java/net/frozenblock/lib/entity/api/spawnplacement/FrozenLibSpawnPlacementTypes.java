@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.entity.api.spawnplacement;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -29,7 +30,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenLibSpawnPlacementTypes {
+@UtilityClass
+public final class FrozenLibSpawnPlacementTypes {
 	/**
 	 * A {@link SpawnPlacementType} that spawns entities either on the ground or on the surface of Lava.
 	 */

@@ -25,7 +25,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 
-public class ConfigPlacementFilter implements PlacementFilter {
+public final class ConfigPlacementFilter implements PlacementFilter {
 	public static final MapCodec<ConfigPlacementFilter> CODEC = ConfigPredicate.HOLDER_CODEC
 		.fieldOf("config_predicate")
 		.xmap(ConfigPlacementFilter::new, config -> config.configPredicate);

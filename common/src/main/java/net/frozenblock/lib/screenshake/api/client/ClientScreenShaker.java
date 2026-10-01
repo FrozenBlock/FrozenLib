@@ -20,8 +20,10 @@ package net.frozenblock.lib.screenshake.api.client;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
@@ -31,7 +33,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-public class ClientScreenShaker {
+@UtilityClass
+@ClientOnly
+public final class ClientScreenShaker {
 	private static float prevYRot;
 	private static float yRot;
 	private static float prevXRot;

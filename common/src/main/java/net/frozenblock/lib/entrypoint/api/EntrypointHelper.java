@@ -20,7 +20,7 @@ package net.frozenblock.lib.entrypoint.api;
 import java.util.function.Consumer;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
-public class EntrypointHelper {
+public final class EntrypointHelper {
 
 	/**
 	 * Executes a {@link Consumer} for each {@link Entrypoint} instance found, keyed by the class's

@@ -49,3 +49,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `when_false`: The Pitch Provider to sample from when `predicate` is false.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
 - Configs will no longer log errors per-entry if the config file itself is not present.
+- `ServerTexture`s now close their `texture` and `textureView` when `pixels` is closed.
+  - Both `texture` and `textureView` are recreated when the `ServerTexture` is referenced once again.
+- Removed the `/frozenlib scale` command, as this functionality is already provided via the `/attribute` command.

@@ -151,12 +151,14 @@ public final class SuffocationManager {
 
 	private static boolean tickLoad(Holder<SuffocationType> holder, SuffocationType type, int direction, Map<Holder<SuffocationType>, Integer> units) {
 		if (direction == 0) return false;
+
 		final SuffocationType.Mechanics mechanics = type.mechanics();
 		final int capacity = mechanics.capacity();
 		final int current = units.getOrDefault(holder, 0);
 		final int step = direction > 0 ? perTick(capacity, mechanics.fillTime()) : -perTick(capacity, mechanics.drainTime());
 		final int next = Mth.clamp(current + step, 0, capacity);
 		if (next <= 0) return units.remove(holder) != null;
+
 		return !Objects.equals(units.put(holder, next), next);
 	}
 

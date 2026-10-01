@@ -18,6 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.impl.treedecorators;
 
 import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ConfigPredicateDecorator;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ProbabilityDecorator;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorTy
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibTreeDecoratorTypes {
 	private static final DeferredRegister<TreeDecoratorType<?>> REGISTER = DeferredRegister.create(
 		Registries.TREE_DECORATOR_TYPE,
