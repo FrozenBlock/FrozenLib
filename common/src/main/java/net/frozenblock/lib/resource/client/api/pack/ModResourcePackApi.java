@@ -27,9 +27,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -59,6 +59,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @ClientOnly
@@ -193,6 +194,7 @@ public final class ModResourcePackApi {
 		CompletableFuture.supplyAsync(
 			() -> {
 				Optional<ToastInfo> failToast = Optional.empty();
+				InputStream input = null;
 				try {
 					final File destFile = new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 					// Check if the pack already exists
@@ -204,14 +206,14 @@ public final class ModResourcePackApi {
 
 					// Connect online to attempt pack download
 					final URL url = URI.create(downloadInfo.getURL()).toURL();
-					final URLConnection request = url.openConnection();
-					request.connect();
+					final HttpURLConnection connection = (HttpURLConnection) url.openConnection(Minecraft.getInstance().getProxy());
+					input = connection.getInputStream();
 
 					// Parse JSON
-					final JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
+					final JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader(input));
 					final JsonObject packDir = parsedJson.getAsJsonObject();
 					final String packURL = packDir.get("pack").getAsString();
-					int packVersion = packDir.get("version").getAsInt();
+					final int packVersion = packDir.get("version").getAsInt();
 
 					// Check if the version has changed
 					boolean hasDownloadVersionChanged = skipVersionCheck || hasDownloadVersionChanged(packName, packVersion);
@@ -227,6 +229,8 @@ public final class ModResourcePackApi {
 						: failToast;
 				} catch (IOException ignored) {
 					return failToast;
+				} finally {
+					IOUtils.closeQuietly(input);
 				}
 			},
 			Util.nonCriticalIoPool().forName("downloadModResourcePack")
@@ -243,16 +247,16 @@ public final class ModResourcePackApi {
 	 * @param newVersion The new version number of the Resource Pack to store to the download record.
 	 */
 	private static Optional<File> downloadPackFromURL(String urlString, String packName, File destFile, int newVersion) {
+		InputStream input = null;
 		try {
 			if (destFile.exists()) destFile.delete();
 
 			final URL url = URI.create(urlString).toURL();
-			final URLConnection request = url.openConnection();
-			request.connect();
+			final HttpURLConnection connection = (HttpURLConnection) url.openConnection(Minecraft.getInstance().getProxy());
+			connection.setInstanceFollowRedirects(true);
 
-			final InputStream input = (InputStream) request.getContent();
+			input = connection.getInputStream();
 			FileUtils.copyInputStreamToFile(input, destFile);
-			input.close();
 
 			// Update the download record after successful download
 			updateDownloadRecord(packName, newVersion);
@@ -260,6 +264,8 @@ public final class ModResourcePackApi {
 			return Optional.of(destFile);
 		} catch (IOException ignored) {
 			FrozenLibConstants.LOGGER.error("Failed to download pack from URL: {}", urlString);
+		} finally {
+			IOUtils.closeQuietly(input);
 		}
 		return Optional.empty();
 	}
