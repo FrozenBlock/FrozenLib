@@ -1,15 +1,12 @@
 {
-  "option.frozenlib.component.title": "FrozenLib Options",
-
-  "option.frozenlib.config": "FrozenLib Config",
-
-  "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind On Non-FrozenLib Servers",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cOFF",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aON",
-  "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "When disabled, the client won't use wind on servers that\ndon't have FrozenLib installed.\nWhen enabled, the client will generate a random seed to use\nfor wind on servers that don't have FrozenLib installed.",
-
-  "option.frozenlib.save_item_cooldowns": "Save Item Cooldowns",
-  "option.frozenlib.save_item_cooldowns.false": "§cOFF",
-  "option.frozenlib.save_item_cooldowns.true": "§aON",
-  "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world."
+    "option.frozenlib.component.title": "FrozenLib Options",
+    "option.frozenlib.config": "FrozenLib Config",
+    "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind On Non-FrozenLib Servers",
+    "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cOFF",
+    "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aON",
+    "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "When disabled, the client won't use wind on servers that\ndon't have FrozenLib installed.\nWhen enabled, the client will generate a random seed to use\nfor wind on servers that don't have FrozenLib installed.",
+    "option.frozenlib.save_item_cooldowns": "Save Item Cooldowns",
+    "option.frozenlib.save_item_cooldowns.false": "§cOFF",
+    "option.frozenlib.save_item_cooldowns.true": "§aON",
+    "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world."
 }
