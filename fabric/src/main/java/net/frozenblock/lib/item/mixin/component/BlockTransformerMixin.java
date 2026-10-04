@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockTransformer.class)
-public class BlockTransformerMixin {
+public class BlockTransformerMixin { // In common mixins.json
 
 	@Inject(
 		method = "transformBlock",
@@ -42,7 +42,7 @@ public class BlockTransformerMixin {
 			target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
 		)
 	)
-	private static void frozenLib$invokeOnTransformEvent(
+	private void frozenLib$invokeOnTransformEvent(
 		UseOnContext context,
 		CallbackInfoReturnable<InteractionResult> info,
 		@Local(name = "pos") BlockPos pos,
