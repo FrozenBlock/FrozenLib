@@ -1,7 +1,6 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-
 ### 26.4+
 - Added the `frozenlib:music_pitch_provider` Dynamic Registry, used to modify the pitch of background music, with the following Pitch Provider Types:
   - `biome`
