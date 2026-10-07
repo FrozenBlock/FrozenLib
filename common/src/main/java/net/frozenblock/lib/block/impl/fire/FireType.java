@@ -24,18 +24,21 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.codec.RegistryFixedCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
+import org.joml.Vector3f;
 
 public record FireType(
 	SourceSettings sourceSettings,
@@ -43,6 +46,7 @@ public record FireType(
 	SpreadSettings spreadSettings,
 	TextureSettings textures,
 	ParticleSettings particleSettings,
+	int color,
 	Optional<Holder<ConfigPredicate>> enabledWhen
 ) {
 	public static final Codec<FireType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -51,6 +55,7 @@ public record FireType(
 		SpreadSettings.CODEC.fieldOf("spread_settings").forGetter(FireType::spreadSettings),
 		TextureSettings.CODEC.fieldOf("textures").forGetter(FireType::textures),
 		ParticleSettings.CODEC.fieldOf("particle_settings").forGetter(FireType::particleSettings),
+		ExtraCodecs.RGB_COLOR_CODEC.optionalFieldOf("color", -1).forGetter(FireType::color),
 		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabledWhen)
 	).apply(instance, FireType::new));
 	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
@@ -227,6 +232,8 @@ public record FireType(
 		Holder<ConfigPredicate> flameEnabledWhen = null;
 		ParticleOptions lavaParticle = null;
 		Holder<ConfigPredicate> lavaEnabledWhen = null;
+		// COLOR
+		private int color = -1;
 		// ENABLED
 		private Holder<ConfigPredicate> enabledWhen = null;
 
@@ -339,6 +346,26 @@ public record FireType(
 			return this;
 		}
 
+		public Builder color(int color) {
+			this.color = color;
+			return this;
+		}
+
+		public Builder color(Vector3f color) {
+			this.color = ARGB.colorFromVector3f(color);
+			return this;
+		}
+
+		public Builder color(float red, float green, float blue) {
+			this.color = ARGB.colorFromFloat(1F, red, green, blue);
+			return this;
+		}
+
+		public Builder color(int red, int green, int blue) {
+			this.color = ARGB.color(red, green, blue);
+			return this;
+		}
+
 		public Builder enabledWhen(Holder<ConfigPredicate> enabledWhen) {
 			this.enabledWhen = enabledWhen;
 			return this;
@@ -383,6 +410,7 @@ public record FireType(
 					Optional.ofNullable(this.lavaParticle),
 					Optional.ofNullable(this.lavaEnabledWhen)
 				),
+				this.color,
 				Optional.ofNullable(this.enabledWhen)
 			);
 		}

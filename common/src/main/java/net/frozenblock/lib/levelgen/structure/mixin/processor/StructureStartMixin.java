@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.levelgen.structure.mixin.processor;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -50,7 +49,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartInterface {
-
 	@Shadow
 	@Final
 	private Structure structure;
@@ -58,35 +56,6 @@ public class StructureStartMixin implements StructureStartInterface {
 	@Unique
 	@Nullable
 	private Identifier frozenLib$id;
-
-	@ModifyExpressionValue(
-		method = "loadStaticStart",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/resources/Identifier;parse(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;"
-		)
-	)
-	private static Identifier frozenLib$loadStaticStartA(
-		Identifier original,
-		@Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
-	) {
-		identifierRef.set(original);
-		return original;
-	}
-
-	@ModifyExpressionValue(
-		method = "loadStaticStart",
-		at = @At(
-			value = "NEW",
-			target = "(Lnet/minecraft/world/level/levelgen/structure/Structure;Lnet/minecraft/world/level/ChunkPos;ILnet/minecraft/world/level/levelgen/structure/pieces/PiecesContainer;)Lnet/minecraft/world/level/levelgen/structure/StructureStart;"
-		)
-	)
-	private static StructureStart frozenLib$loadStaticStartB(
-		StructureStart structureStart, @Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
-	) {
-		structureStart.frozenLib$setId(identifierRef.get());
-		return structureStart;
-	}
 
 	@Inject(
 		method = "placeInChunk",

@@ -95,3 +95,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
 - Configs will no longer log errors per-entry if the config file itself is not present.
 - Removed the `/frozenlib scale` command, as this functionality is already present in the `/attribute` command.
+- Fire Types now have an optional `color` field, providing a color to be used by mods that may want to dynamically-color something (such as a particle) based on a Fire Type.
+- The `#minecraft:freeze_hurts_extra_types` Entity Type Tag now contains the `#frozenlib:blazes` Entity Type Tag.

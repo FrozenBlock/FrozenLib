@@ -19,7 +19,7 @@ package net.frozenblock.lib.entity.mixin.pathfinding;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.objectweb.asm.Opcodes;
@@ -46,6 +46,7 @@ public class EntityTypeMixin {
 		)
 	)
 	private boolean frozenLib$isBlockDamaging(BlockState state, Object block, Operation<Boolean> operation) {
-		return operation.call(state, block) || state.is(FrozenLibBlockTags.PATHFINDING_DAMAGING_BLOCKS);
+		// TODO: see if mojang actually uses the tags here eventually
+		return operation.call(state, block) || state.is(BlockTags.PATHFINDING_DAMAGE_CAUTIOUS) || state.is(BlockTags.PATHFINDING_DAMAGING);
 	}
 }

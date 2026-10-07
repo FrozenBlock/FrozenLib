@@ -16,7 +16,6 @@
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin",
     "pathfinding.EntityTypeMixin",
-    "pathfinding.WalkNodeEvaluatorMixin",
     "suffocation.LivingEntityMixin"
   ],
   "client": [

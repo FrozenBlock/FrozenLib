@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityTypeIds;
 
 public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsProvider {
@@ -47,6 +48,9 @@ public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.En
 
 		this.tag(FrozenLibEntityTypeTags.ON_FIRE)
 			.add(EntityTypeIds.FIREBALL, EntityTypeIds.SMALL_FIREBALL)
+			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
+
+		this.tag(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)
 			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
 	}
 }

@@ -8,16 +8,17 @@
   },
   "mixins": [
     "placement.ChunkGeneratorStructureStateMixin",
-    "processor.ListPoolElementMixin",
-    "processor.PoolElementStructurePieceMixin",
-    "pools.RandomPoolAliasMixin",
-    "processor.SinglePoolElementMixin",
-    "processor.StructureMixin",
     "placement.StructurePlacementMixin",
     "placement.StructureSetMixin",
+    "pools.RandomPoolAliasMixin",
+    "pools.StructureTemplatePoolMixin",
+    "processor.ListPoolElementMixin",
+    "processor.PoolElementStructurePieceMixin",
+    "processor.SerializableChunkDataMixin",
+    "processor.SinglePoolElementMixin",
+    "processor.StructureMixin",
     "processor.StructureStartMixin",
     "processor.StructureTemplateMixin",
-    "pools.StructureTemplatePoolMixin",
     "processor.TemplateStructurePieceMixin"
   ]
 }

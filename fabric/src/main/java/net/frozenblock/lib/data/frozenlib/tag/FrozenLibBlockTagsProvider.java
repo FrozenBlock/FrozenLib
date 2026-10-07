@@ -53,7 +53,5 @@ public final class FrozenLibBlockTagsProvider extends FabricTagsProvider.BlockTa
 			.add(BlockIds.WALL_TORCH);
 
 		this.tag(FrozenLibBlockTags.SOUL_FIRE_BLOCKS);
-
-		this.tag(FrozenLibBlockTags.PATHFINDING_DAMAGING_BLOCKS);
 	}
 }
