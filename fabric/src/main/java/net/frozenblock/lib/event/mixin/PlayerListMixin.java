@@ -29,7 +29,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.io.IOException;
 
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
@@ -39,7 +38,7 @@ public class PlayerListMixin {
 	private MinecraftServer server;
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
-	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo info) throws IOException {
+	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo info) {
 		ServerPlayerEvents.JOIN.invoker().onJoin(this.server, player);
 	}
 }

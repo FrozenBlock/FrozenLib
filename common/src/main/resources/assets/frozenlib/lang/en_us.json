@@ -105,11 +105,11 @@
   "frozenlib.resourcepack.download.present": "(DEBUG) Resource Packs are already present:",
   "frozenlib.resourcepack.download.group": "%s: (%s/%s)",
 
-  "frozenlib.file_transfer.transfer": "(DEBUG) File Transfer(s) Received:",
-  "frozenlib.file_transfer.request": "(DEBUG) File Request(s) Received:",
-  "frozenlib.file_transfer.transfer.fail": "(DEBUG) Outgoing File Transfer(s) Failed:",
-  "frozenlib.file_transfer.request.fail": "(DEBUG) Outgoing File Request(s) Failed:",
-  "frozenlib.file_transfer.illegal": "Invalid File Transfer(s) Detected!",
-  "frozenlib.file_transfer.illegal.warn": "File Transfers are filtered out if not explicitly allowed by FrozenLib.\nPlease contact this server's administrators and leave as soon as possible.",
-  "frozenlib.file_transfer.info": "- %s/%s"
+  "frozenlib.file_transfer.transfer": "(DEBUG) File Transfers Received:",
+  "frozenlib.file_transfer.request": "(DEBUG) File Requests Received:",
+  "frozenlib.file_transfer.transfer.fail": "(DEBUG) Outgoing File Transfers Failed:",
+  "frozenlib.file_transfer.request.fail": "(DEBUG) Outgoing File Requests Failed:",
+  "frozenlib.file_transfer.illegal": "Invalid File Transfer Detected!",
+  "frozenlib.file_transfer.illegal.warn": "File Transfers are filtered out if not explicitly allowed by FrozenLib.\nThis server is attempting to send/request an invalid file.\nPlease contact this server's administrators and leave as soon as possible.",
+  "frozenlib.file_transfer.info": "%s - %s"
 }

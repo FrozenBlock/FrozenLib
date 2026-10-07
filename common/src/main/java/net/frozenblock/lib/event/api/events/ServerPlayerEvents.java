@@ -24,7 +24,6 @@ import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import java.io.IOException;
 
 @UtilityClass
 public final class ServerPlayerEvents {
@@ -59,7 +58,7 @@ public final class ServerPlayerEvents {
 		 * @param server the Minecraft server instance
 		 * @param player the player joining the server
 		 */
-		void onJoin(MinecraftServer server, ServerPlayer player) throws IOException;
+		void onJoin(MinecraftServer server, ServerPlayer player);
 	}
 
 	/**
