@@ -13,6 +13,7 @@
     "client.pack.ClientPackSourceMixin",
     "client.pack.FolderRepositorySourceMixin",
     "client.pack.PackSelectionModelMixin",
+    "client.texture.GameRendererMixin",
     "client.texture.MinecraftMixin"
   ]
 }

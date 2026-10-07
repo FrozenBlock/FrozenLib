@@ -52,4 +52,26 @@ public class MinecraftMixin implements MinecraftServerTextureInterface {
 	public ServerTextureManager frozenLib$serverTextureManager() {
 		return this.frozenLib$serverTextureManager;
 	}
+
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/sounds/MusicManager;tick()V"
+		)
+	)
+	public void frozenLib$tickServerTextureManager(CallbackInfo info) {
+		this.frozenLib$serverTextureManager.tick();
+	}
+
+	@Inject(
+		method = "close",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/resources/MapTextureManager;close()V"
+		)
+	)
+	public void frozenLib$closeServerTextureManager(CallbackInfo info) {
+		this.frozenLib$serverTextureManager.close();
+	}
 }
