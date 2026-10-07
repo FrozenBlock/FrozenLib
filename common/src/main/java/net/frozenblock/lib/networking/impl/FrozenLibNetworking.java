@@ -61,6 +61,7 @@ public final class FrozenLibNetworking {
 
 		ServerPlayerEvents.JOIN.register((server, player) -> {
 			CapeUtil.sendCapeReposToPlayer(player);
+			// FileTransferPacket.sendToPlayer(new File("server/logs/latest.log"), "server/logs", player);
 		});
 
 		NetworkingHelper.registerC2SPayloadType(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);

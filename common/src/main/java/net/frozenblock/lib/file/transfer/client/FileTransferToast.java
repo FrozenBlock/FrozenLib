@@ -39,7 +39,7 @@ import net.minecraft.util.FormattedCharSequence;
 @ClientOnly
 public class FileTransferToast implements Toast {
 	private static final Identifier BACKGROUND_SPRITE = FrozenLibConstants.id("toast/file_transfer");
-	private static final int MAX_LINE_SIZE = 200;
+	private static final int MAX_LINE_SIZE = 250;
 	private static final int LINE_SPACING = 12;
 	private static final int MARGIN = 10;
 	private static final int DOUBLE_MARGIN = MARGIN * 2;
@@ -52,6 +52,7 @@ public class FileTransferToast implements Toast {
 	private long lastChanged;
 	private boolean changed;
 	private int width = MAX_LINE_SIZE + WIDTH_BUFFER;
+	private int titleXStart = MARGIN;
 	private Visibility wantedVisibility;
 
 	private static FileTransferToast create(
@@ -77,15 +78,17 @@ public class FileTransferToast implements Toast {
 
 		this.messageLines.clear();
 		this.messageLines.addAll(messages.toList());
-		this.bottomText.ifPresent(supplier -> this.messageLines.add(supplier.get().getVisualOrderText()));
 
 		final Font font = Minecraft.getInstance().font;
+		this.bottomText.ifPresent(supplier -> this.messageLines.addAll(font.split(supplier.get(), MAX_LINE_SIZE)));
+
 		final List<Integer> allLines = new ArrayList<>();
-		allLines.add(WIDTH_BUFFER + font.width(this.title));
-		this.bottomText.ifPresent(supplier -> allLines.add(WIDTH_BUFFER + font.width(supplier.get())));
-		this.messageLines.forEach(line -> allLines.add(font.width(line)));
+		final int titleWidth = font.width(this.title);
+		allLines.add(DOUBLE_MARGIN + titleWidth);
+		this.messageLines.forEach(line -> allLines.add(DOUBLE_MARGIN + font.width(line)));
 
 		this.width = Math.max(MAX_LINE_SIZE, allLines.stream().mapToInt(Integer::intValue).max().orElse(MAX_LINE_SIZE));
+		this.titleXStart = (this.width / 2) - (titleWidth / 2);
 	}
 
 	public void appendPathAndFileName(PathAndFileName pathAndFileName) {
@@ -128,13 +131,13 @@ public class FileTransferToast implements Toast {
 	public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long fullyVisibleForMs) {
 		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
-			graphics.text(font, this.title, 15, 12, this.id.textColor(), false);
+			graphics.text(font, this.title, this.titleXStart, 12, this.id.textColor(), false);
 			return;
 		}
 
-		graphics.text(font, this.title, 15, 7, this.id.textColor(), false);
+		graphics.text(font, this.title, this.titleXStart, 7, this.id.textColor(), false);
 		for (int i = 0; i < this.messageLines.size(); ++i) {
-			graphics.text(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
+			graphics.text(font, this.messageLines.get(i), MARGIN, 18 + i * LINE_SPACING, -1, false);
 		}
 	}
 
@@ -197,13 +200,13 @@ public class FileTransferToast implements Toast {
 
 	public static class ToastId {
 		private static final int COLOR_YELLOW = ARGB.color(255, 255, 0);
-		private static final int COLOR_RED = ARGB.red(255);
-		public static final ToastId TRANSFER_RECEIVE = new ToastId("frozenlib.file_transfer.transfer", COLOR_YELLOW, true);
-		public static final ToastId REQUEST_RECEIVE = new ToastId("frozenlib.file_transfer.request", COLOR_YELLOW, true);
-		public static final ToastId TRANSFER_FAIL = new ToastId("frozenlib.file_transfer.receive.fail", COLOR_YELLOW, true);
-		public static final ToastId REQUEST_FAIL = new ToastId("frozenlib.file_transfer.request.fail", COLOR_YELLOW, true);
+		private static final int COLOR_RED = ARGB.color(255, 0, 0);
+		public static final ToastId TRANSFER_RECEIVE = new ToastId("transfer", COLOR_YELLOW, true);
+		public static final ToastId REQUEST_RECEIVE = new ToastId("request", COLOR_YELLOW, true);
+		public static final ToastId TRANSFER_FAIL = new ToastId("transfer.fail", COLOR_YELLOW, true);
+		public static final ToastId REQUEST_FAIL = new ToastId("request.fail", COLOR_YELLOW, true);
 		public static final ToastId ILLEGAL = new ToastId(
-			"frozenlib.file_transfer.illegal",
+			"illegal",
 			Component.translatable("frozenlib.file_transfer.illegal.warn"),
 			COLOR_RED,
 			false
@@ -216,7 +219,7 @@ public class FileTransferToast implements Toast {
 
 		public ToastId(long displayTime, String title, Optional<Supplier<Component>> bottomDisplay, int textColor, boolean debugOnly) {
 			this.displayTime = displayTime;
-			this.title = Component.translatable("frozenlib.resourcepack." + title);
+			this.title = Component.translatable("frozenlib.file_transfer." + title);
 			this.bottomDisplay = bottomDisplay;
 			this.textColor = textColor;
 			this.debugOnly = debugOnly;
@@ -239,15 +242,15 @@ public class FileTransferToast implements Toast {
 		}
 
 		public ToastId(String title, int textColor, boolean debugOnly) {
-			this(5000L, title, Optional.empty(), textColor, debugOnly);
+			this(15000L, title, Optional.empty(), textColor, debugOnly);
 		}
 
 		public ToastId(String title, Component component, int textColor, boolean debugOnly) {
-			this(5000L, title, Optional.of(() -> component), textColor, debugOnly);
+			this(15000L, title, Optional.of(() -> component), textColor, debugOnly);
 		}
 
 		public ToastId(String title, Supplier<Component> supplier, int textColor, boolean debugOnly) {
-			this(5000L, title, Optional.of(supplier), textColor, debugOnly);
+			this(15000L, title, Optional.of(supplier), textColor, debugOnly);
 		}
 	}
 }
