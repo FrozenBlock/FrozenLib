@@ -22,15 +22,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncUtil;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
+import net.frozenblock.lib.file.transfer.FileTransferEvents;
+import net.frozenblock.lib.file.transfer.FileTransferFailPacket;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.cooldown.CooldownChangePacket;
@@ -39,7 +42,6 @@ import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldownsSyncPacket;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
-import net.frozenblock.lib.resource.client.api.texture.ServerTextureDownloader;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.client.api.sounds.RelativeMovingSoundInstance;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
@@ -69,6 +71,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @ClientOnly
@@ -96,6 +99,7 @@ public final class FrozenLibClientNetworking {
 		receiveForcedCooldownPacket();
 		receiveSerializableItemCooldownsSyncPacket();
 		receiveFileTransferPacket();
+		receiveFileTransferFailPacket();
 		receiveWindDebugPacket();
 	}
 
@@ -220,13 +224,22 @@ public final class FrozenLibClientNetworking {
 
 	private static void receiveFileTransferPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(FileTransferPacket.PACKET_TYPE, (packet, minecraft, player) -> {
-			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
-
-			if (packet.request()) {
+			if (packet.request()) { // Sending
 				final String requestPath = packet.transferPath();
 				final String fileName = packet.fileName();
 				final List<String> fileExtensions = packet.fileExtensions();
-				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, null)) return;
+
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, null)) {
+					FileTransferEvents.ILLEGAL_REQUEST_RECEIVE.invoker().onIllegalRequestReceived(requestPath, fileName, fileExtensions, true);
+					return;
+				}
+
+				if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) {
+					ClientNetworkingHelper.sendToServer(FileTransferFailPacket.create(requestPath, fileName, true));
+					return;
+				}
+
+				FileTransferEvents.REQUEST_RECEIVE.invoker().onRequestReceived(requestPath, fileName, fileExtensions, true);
 
 				final Path requestedPath = minecraft.gameDirectory.toPath().resolve(requestPath);
 				for (String fileExtension : fileExtensions) {
@@ -239,30 +252,62 @@ public final class FrozenLibClientNetworking {
 					if (sendingFile == null) continue;
 
 					if (NetworkingHelper.connectedToIntegratedServer()) {
-						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
+						FileTransferEvents.FILE_RECEIVE.invoker().onFileReceived(requestPath, fileName, sendingFile, true);
 						return;
 					} else {
 						try {
 							ClientNetworkingHelper.sendToServer(FileTransferPacket.create(requestPath, sendingFile));
+							FileTransferEvents.FILE_SEND.invoker().onFileSent(requestPath, fileName, sendingFile, true);
 							return;
 						} catch (IOException ignored) {}
 					}
 				}
 
-				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {}!", packet.fileName());
-			} else {
-				final String destPath = packet.transferPath();
+				FileTransferEvents.TRANSFER_FAIL.invoker().onTransferFailed(requestPath, fileName, false, true);
+				ClientNetworkingHelper.sendToServer(FileTransferFailPacket.create(requestPath, fileName, true));
+				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {} on client!", fileName);
+			} else { // Receiving
+				final String destinationPath = packet.transferPath();
 				final String fileName = packet.fileName();
-				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, null)) return;
+				final String fileNameWithoutExtension = FilenameUtils.removeExtension(fileName);
 
-				try {
-					final Path path = minecraft.gameDirectory.toPath().resolve(destPath).resolve(fileName);
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), path.toFile());
-					FrozenLibConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
-					ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
-				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
+				if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) {
+					ClientNetworkingHelper.sendToServer(FileTransferFailPacket.create(destinationPath, fileNameWithoutExtension, false));
+					FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(destinationPath, fileNameWithoutExtension, true, true);
+					return;
 				}
+
+				if (!FileTransferFilter.isTransferAcceptable(destinationPath, fileName, null)) {
+					FileTransferEvents.ILLEGAL_TRANSFER_RECEIVE.invoker().onIllegalTransferReceived(destinationPath, FilenameUtils.removeExtension(fileName), true);
+					return;
+				}
+
+				final Path filePath = minecraft.gameDirectory.toPath().resolve(destinationPath).resolve(fileName);
+				CompletableFuture.runAsync(() -> {
+					try {
+						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), filePath.toFile());
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}).whenComplete((ignored, throwable) -> {
+					if (throwable != null) {
+						FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(destinationPath, fileNameWithoutExtension, false, true);
+						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
+					} else {
+						FileTransferEvents.FILE_RECEIVE.invoker().onFileReceived(destinationPath, fileNameWithoutExtension, filePath.toFile(), true);
+						FrozenLibConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
+					}
+				});
+			}
+		});
+	}
+
+	private static void receiveFileTransferFailPacket() {
+		ClientNetworkingHelper.registerGlobalClientReceiver(FileTransferFailPacket.PACKET_TYPE, (packet, server, player) -> {
+			if (packet.request()) {
+				FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(packet.targetPath(), packet.fileName(), false, true);
+			} else {
+				FileTransferEvents.TRANSFER_FAIL.invoker().onTransferFailed(packet.targetPath(), packet.fileName(), false, true);
 			}
 		});
 	}

@@ -3,51 +3,95 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 ### 26.4+
 - Added the `frozenlib:music_pitch_provider` Dynamic Registry, used to modify the pitch of background music, with the following Pitch Provider Types:
-  - `biome`
-    - `required_biomes`: A Biome's ID, a list of Biome IDs, or a Biome Tag this is applicable in.
-    - `provider`: The Pitch Provider to sample from.
-  - `structure`
-    - `required_structures`: A Structure's ID or a list of Structure IDs this is applicable in.
-    - `provider`: The Pitch Provider to sample from.
-  - `dimension`
-    - `required_dimensions`: A Dimension's ID or a list of Dimension IDs this is applicable in.
-    - `provider`: The Pitch Provider to sample from.
-  - `constant`
-    - `value`: A constant value to provide.
-  - `add`:
-    - `provider`: A Pitch Provider to sample from.
-    - `operand`: A Pitch Provider to provide a value to be added onto `provider`'s sample.
-  - `subtract`
-    - `provider`: A Pitch Provider to sample from.
-    - `operand`: A Pitch Provider to provide a value to be subtracted from `provider`'s sample.
-  - `multiply`
-    - `provider`: A Pitch Provider to sample from.
-    - `operand`: A Pitch Provider to provide a value to be multiplied with `provider`'s sample.
-  - `divide`
-    - `provider`: A Pitch Provider to sample from.
-    - `operand`: A Pitch Provider to provide a value to divide `provider`'s sample by.
-  - `sine`
-    - `wave_length`: The time, in ticks, that the sine wave will have completed one cycle.
-  - `cosine`
-    - `wave_length`: The time, in ticks, that the cosine wave will have completed one cycle.
-  - `clamp`
-    - `provider`: A Pitch Provider to sample from.
-    - `min`: A Pitch Provider to provide a value to be used as the minimum-allowed value.
-    - `max`: A Pitch Provider to provide a value to be used as the maximum-allowed value.
-  - `lerp`
-    - `provider`: A Pitch Provider to provide a value to be used as the `progress` of the linear interpolation function.
-      - It is expected that this will provide values strictly between 0 and 1, anything else may produce unintended results.
-    - `start`: A Pitch Provider to sample from to be used as the minimum value.
-    - `end`: A Pitch Provider to sample from to be used as the maximum value.
-  - `config_predicate`
-    - `predicate`: A Config Predicate, determining whether this is currently applicable.
-    - `provider`: The Pitch Provider to sample from.
-  - `config_predicate_selector`
-    - `predicate`: A Config Predicate, determining which provider should be sampled from.
-    - `when_true`: The Pitch Provider to sample from when `predicate` is true.
-    - `when_false`: The Pitch Provider to sample from when `predicate` is false.
+  - Requirement Providers
+    - The format of Requirement Providers is as follows:
+      - `requirements`: The requirements to be met in order for the Pitch Provider to apply.
+      - `provider`: The Pitch Provider to be applied when `requirements` are all met.
+    - `biome_requirement`
+      - `requirements`: A Biome's ID, a list of Biome IDs, or a Biome Tag.
+    - `structure_requirement`
+      - `requirements`: A list of Structure IDs and a Boolean, in the following format:
+        - `id`: The structure's ID.
+        - `inside_piece`: Whether the Player must be located inside a piece of the Structure for the Pitch Provider to apply.
+    - `dimension_requirement`:
+      - `requirements`: A Dimension's ID or a list of Dimension IDs.
+    - `config_predicate_requirement`:
+      - `requirements`: A Config Predicate, or the ID of a Config Predicate.
+  - Unary Providers
+    - The format of Unary Providers is as follows:
+      - `input`: A Pitch Provider, or the ID of a Pitch Provider to sample from.
+    - `abs`: Returns the absolute value of its input.
+    - `ceil`: Returns the rounded-up value of its input.
+    - `floor`: Returns the rounded-down value of its input.
+    - `round`: Returns the rounded value of its input.
+    - `truncate`: Returns the rounded-down value of its input if it's above 0, or the rounded-up value of its input if it's below 0.
+    - `negate`: Returns the value of its input multiplied by -1.
+    - `sqrt`: Returns the square root of its input.
+    - `sin`: Returns the sine value of the current game time, using `input` as the wavelength.
+    - `cos`: Returns the cosine value of the current game time, using `input` as the wavelength.
+  - Binary Providers
+    - The format of Binary providers is as follows:
+      - `left`: A Pitch Provider, or the ID of a Pitch Provider to use as the first value.
+      - `right`: A Pitch Provider, or the ID of a Pitch Provider to use as the second value.
+    - `sub`: Returns the difference of `left` minus `right`.
+    - `div`: Returns the quotient of `left` divided by `right`.
+    - `mod`: Returns the remainder of `left` divided by `right`.
+  - Aggregate Providers
+    - The format of Aggregate Providers is as follows:
+      - `inputs`: A Pitch Provider, the ID of a Pitch Provider, a list of Pitch Providers, or a list of IDs of Pitch Providers to sample from.
+    - `avg`: Returns the average of all `inputs`.
+    - `length`: Returns the length of all `inputs` combined, as if each input were a distance.
+    - `min`: Returns the lowest value of all `inputs`.
+    - `max`: Returns the highest value of all `inputs`.
+    - `add`: Returns the sum of all `inputs`.
+    - `mul`: Returns the product of all `inputs`
+  - Other Providers
+    - These use their own formats.
+    - `constant`: Returns a constant value.
+      - `value`: The constant value to use.
+    - `pow`: Returns `base` raised to the power of `exponent`.
+      - `base`: A Pitch Provider, or the ID of a Pitch Provider to use as the base.
+      - `exponent`: A Pitch Provider, or the ID of a Pitch Provider to use as the exponent.
+    - `environment_attribute`: Returns the value of an Environment Attribute at the Player's location, assuming it can be converted to a Float.
+      - `attribute`: The ID of the Environment Attribute to sample from.
+    - `conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
+      - `condition`: A Config Predicate, or the ID of a Config Predicate.
+      - `on_true`: A Pitch Provider, or the ID of a Pitch Provider.
+      - `on_false`: A Pitch Provider, or the ID of a Pitch Provider.
+- Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
+  - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
+  - Renamed the `sound_type` field to `sound_set`.
+  - The `sound_set` field now accepts either a Block Sound Set, or the ID of a Block Sound Set.
+- Added Toasts related to File Transfers:
+  - Transfer Receive
+    - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
+    - Displays when the client receives a file transfer (file is sent to the client.)
+  - Request Receive
+    - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
+    - Displays when the client receives a file request (server requests a file from the client.)
+  - Transfer Fail
+    - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
+    - Displays when the client fails to send a file to the server.
+  - Request Fail
+    - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
+    - Displays when the client fails to receive/save a file, or if the server doesn't have the requested file.
+  - Invalid Transfer
+    - Displays regardless of environment and launch arguments.
+    - Displays a warning, explaining that an invalid file transfer/request was attempted.
+    - FrozenLib only allows for certain file paths and extensions to be used.
+      - As such, this warning can only be triggered if another player/mod is attempting an exploit or a mod is unaware of these limitations.
+- Added `FileTransferEvents`, with the following Events:
+  - `FILE_RECEIVE`: Triggers when a file is received.
+  - `ILLEGAL_TRANSFER_RECEIVE`: Triggers when a file transfer is attempted that contains an invalid destination or file extension.
+  - `FILE_SEND`: Triggers when a file is sent.
+  - `TRANSFER_FAIL`: Triggers when a file transfer fails.
+  - `REQUEST_RECEIVE`: Triggers when a file request is received.
+  - `ILLEGAL_REQUEST_RECEIVE`: Triggers when a file request is attempted that contains an invalid request path or file extension.
+  - `REQUEST_SEND`: Triggers when a file request is sent.
+  - `REQUEST_FAIL`: Triggers when a file request fails or a received file fails to save.
+- Revamped the implementation of the `ServerTexture`, now relying on `ServerTextureManager` and `ServerTextureDownloader` with much cleaner implementation.
+  - This resolves scenarios where multiple file transfers/requests would be attempted in a row, as the status of each texture download is stored from start to finish.
+  - `ServerTextureManager` can be accessed via the injected `frozenLib$serverTextureManager` method in `Minecraft`.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
 - Configs will no longer log errors per-entry if the config file itself is not present.
-- `ServerTexture`s now close their `texture` and `textureView` when `pixels` is closed.
-  - Both `texture` and `textureView` are recreated when the `ServerTexture` is referenced once again.
-- Removed the `/frozenlib scale` command, as this functionality is already provided via the `/attribute` command.
+- Removed the `/frozenlib scale` command, as this functionality is already present in the `/attribute` command.

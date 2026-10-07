@@ -18,9 +18,11 @@
 package net.frozenblock.lib.block.api.registry;
 
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 public final class BlockSetTypeBuilder {
@@ -28,7 +30,7 @@ public final class BlockSetTypeBuilder {
 	private boolean openableByWindCharge = true;
 	private boolean buttonActivatedByArrows = true;
 	private BlockSetType.PressurePlateSensitivity pressurePlateActivationRule = BlockSetType.PressurePlateSensitivity.EVERYTHING;
-	private SoundType soundType = SoundType.WOOD;
+	private ResourceKey<BlockSoundSet> blockSoundSet = BlockSoundSets.WOOD;
 	private SoundEvent doorCloseSound = SoundEvents.WOODEN_DOOR_CLOSE;
 	private SoundEvent doorOpenSound = SoundEvents.WOODEN_DOOR_OPEN;
 	private SoundEvent trapdoorCloseSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE;
@@ -60,8 +62,8 @@ public final class BlockSetTypeBuilder {
 		return this;
 	}
 
-	public BlockSetTypeBuilder soundType(SoundType soundType) {
-		this.soundType = soundType;
+	public BlockSetTypeBuilder blockSoundSet(ResourceKey<BlockSoundSet> blockSoundSet) {
+		this.blockSoundSet = blockSoundSet;
 		return this;
 	}
 
@@ -111,7 +113,7 @@ public final class BlockSetTypeBuilder {
 			.openableByWindCharge(builder.openableByWindCharge)
 			.buttonActivatedByArrows(builder.buttonActivatedByArrows)
 			.pressurePlateActivationRule(builder.pressurePlateActivationRule)
-			.soundType(builder.soundType)
+			.blockSoundSet(builder.blockSoundSet)
 			.doorCloseSound(builder.doorCloseSound)
 			.doorOpenSound(builder.doorOpenSound)
 			.trapdoorCloseSound(builder.trapdoorCloseSound)
@@ -128,7 +130,7 @@ public final class BlockSetTypeBuilder {
 			.openableByWindCharge(type.canOpenByWindCharge())
 			.buttonActivatedByArrows(type.canButtonBeActivatedByArrows())
 			.pressurePlateActivationRule(type.pressurePlateSensitivity())
-			.soundType(type.soundType())
+			.blockSoundSet(type.blockSoundSet())
 			.doorCloseSound(type.doorClose())
 			.doorOpenSound(type.doorOpen())
 			.trapdoorCloseSound(type.trapdoorClose())
@@ -150,7 +152,7 @@ public final class BlockSetTypeBuilder {
 			this.openableByWindCharge,
 			this.buttonActivatedByArrows,
 			this.pressurePlateActivationRule,
-			this.soundType,
+			this.blockSoundSet,
 			this.doorCloseSound,
 			this.doorOpenSound,
 			this.trapdoorCloseSound,

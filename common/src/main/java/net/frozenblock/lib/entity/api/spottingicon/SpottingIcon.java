@@ -103,10 +103,8 @@ public record SpottingIcon(Identifier texture, Attributes attributes) {
 
 		public float calculateTransparency(double distance) {
 			float transparency = 1F;
-			for (Fade fade : this.faders) {
-				transparency *= fade.calculate(distance);
-			}
-			return Mth.clamp(transparency, 0F, 1F);
+			for (Fade fade : this.faders) transparency *= fade.calculate(distance);
+			return Math.clamp(transparency, 0F, 1F);
 		}
 	}
 

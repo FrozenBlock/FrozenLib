@@ -59,8 +59,8 @@ public final class SuffocationBubbleRenderer {
 
 	public static int waterAirBubbles(Player player) {
 		final int maxAir = Math.max(1, player.getMaxAirSupply());
-		final int air = Mth.clamp(player.getAirSupply(), 0, maxAir);
-		return Mth.clamp(Mth.ceil((float) ((air - 2) * Hud.NUM_AIR_BUBBLES) / (float) maxAir), 0, Hud.NUM_AIR_BUBBLES);
+		final int air = Math.clamp(player.getAirSupply(), 0, maxAir);
+		return Math.clamp(Mth.ceil((float) ((air - 2) * Hud.NUM_AIR_BUBBLES) / (float) maxAir), 0, Hud.NUM_AIR_BUBBLES);
 	}
 
 	public static Identifier tryGetAirSprite(Player player, int airBubble, Identifier vanilla) {
@@ -107,8 +107,8 @@ public final class SuffocationBubbleRenderer {
 		for (Active a : gasHazards(player)) {
 			if (used >= Hud.NUM_AIR_BUBBLES) break;
 			final int capacity = Math.max(1, a.type().mechanics().capacity());
-			final float fill = Mth.clamp((float) a.units() / (float) capacity, 0F, 1F) * Hud.NUM_AIR_BUBBLES;
-			final int count = Mth.clamp(Mth.ceil(fill), 0, Hud.NUM_AIR_BUBBLES - used);
+			final float fill = Math.clamp((float) a.units() / (float) capacity, 0F, 1F) * Hud.NUM_AIR_BUBBLES;
+			final int count = Math.clamp(Mth.ceil(fill), 0, Hud.NUM_AIR_BUBBLES - used);
 			if (count <= 0) continue;
 			out.add(new Segment(a.type(), count, Math.min(fill, count) - (count - 1), ClientSuffocationState.isRising(a.holder())));
 			used += count;

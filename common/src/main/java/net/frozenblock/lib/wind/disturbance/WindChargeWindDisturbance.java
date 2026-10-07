@@ -20,7 +20,6 @@ package net.frozenblock.lib.wind.disturbance;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -51,7 +50,7 @@ public class WindChargeWindDisturbance extends EntityWindDisturbance<AbstractWin
 		if (distance > scaledRange) return WindDisturbanceResult.PASS;
 
 		final Vec3 chargeMovement = source.getDeltaMovement();
-		final double strengthFromDistance = Mth.clamp((scaledRange - distance) / (scaledRange * 0.5D), 0D, 1D);
+		final double strengthFromDistance = Math.clamp((scaledRange - distance) / (scaledRange * 0.5D), 0D, 1D);
 		final Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(3D * strengthFromDistance);
 
 		return WindDisturbanceResult.success(strengthFromDistance * scale,

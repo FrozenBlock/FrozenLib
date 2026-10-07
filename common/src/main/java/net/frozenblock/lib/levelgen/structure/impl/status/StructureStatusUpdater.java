@@ -53,7 +53,7 @@ public final class StructureStatusUpdater {
 
 		for (Structure structure : structureManager.getAllStructuresAt(pos).keySet()) {
 			final StructureStart structureStart = structureManager.getStructureAt(pos, structure);
-			if (structureStart == StructureStart.INVALID_START) continue;
+			if (structureStart == null) continue;
 
 			final boolean insidePiece = structureManager.structureHasPieceAt(pos, structureStart);
 			newStructureStatuses.add(new StructureStatus(structureRegistry.getKey(structure), insidePiece));

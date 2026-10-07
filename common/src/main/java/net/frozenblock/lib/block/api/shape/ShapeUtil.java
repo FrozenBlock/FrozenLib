@@ -25,7 +25,6 @@ import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -91,9 +90,9 @@ public final class ShapeUtil {
 
 		Vec3[] vec3s = new Vec3[1];
 		blockShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
-			final double clampedX = Mth.clamp(point.x(), minX + x, maxX + x);
-			final double clampedY = Mth.clamp(point.y(), minY + y, maxY + y);
-			final double clampedZ = Mth.clamp(point.z(), minZ + z, maxZ + z);
+			final double clampedX = Math.clamp(point.x(), minX + x, maxX + x);
+			final double clampedY = Math.clamp(point.y(), minY + y, maxY + y);
+			final double clampedZ = Math.clamp(point.z(), minZ + z, maxZ + z);
 			if (vec3s[0] == null || point.distanceToSqr(clampedX, clampedY, clampedZ) < point.distanceToSqr(vec3s[0])) vec3s[0] = new Vec3(clampedX, clampedY, clampedZ);
 		});
 		return Optional.of(vec3s[0]);

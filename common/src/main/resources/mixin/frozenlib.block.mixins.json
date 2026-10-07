@@ -39,7 +39,7 @@
     "piston.shelf.ShelfBlockUnpowerOnMoveMixin",
     "registry.BlockBehaviourAccessor",
     "registry.BlockStateBaseMixin",
-    "sound.BlockBehaviourMixin",
+    "sound.BlockStateBaseMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",
     "waterlike.BlockStateBaseMixin",

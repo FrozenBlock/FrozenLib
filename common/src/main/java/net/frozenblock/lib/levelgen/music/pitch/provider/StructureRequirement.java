@@ -17,23 +17,28 @@
 
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
-public record StructureProvider(List<Identifier> requiredStructures, boolean requireInsidePiece, PitchProvider provider) implements PitchProvider {
-	public static final MapCodec<StructureProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		Identifier.CODEC.listOf().fieldOf("required_structures").forGetter(StructureProvider::requiredStructures),
-		Codec.BOOL.optionalFieldOf("require_inside_piece", true).forGetter(StructureProvider::requireInsidePiece),
-		DIRECT_CODEC.fieldOf("provider").forGetter(StructureProvider::provider)
-	).apply(instance, StructureProvider::new));
+public record StructureRequirement(List<Pair<Identifier, Boolean>> requirements, Holder<PitchProvider> provider) implements PitchProvider {
+	public static final MapCodec<StructureRequirement> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		Codec.list(
+			Codec.mapPair(Identifier.CODEC.fieldOf("id"), Codec.BOOL.fieldOf("inside_piece")).codec()
+		).fieldOf("requirements").forGetter(StructureRequirement::requirements),
+		HOLDER_CODEC.fieldOf("provider").forGetter(StructureRequirement::provider)
+	).apply(instance, StructureRequirement::new));
 
 	@Override
-	public float sample(long gameTime) {
-		return this.provider.sample(gameTime);
+	public float sample(Context context) {
+		return this.provider.value().sample(context);
 	}
 
 	@Override
@@ -41,13 +46,17 @@ public record StructureProvider(List<Identifier> requiredStructures, boolean req
 		if (context.structureStatus().isEmpty()) return false;
 
 		final StructureStatus status = context.structureStatus().get();
-		return status.insidePiece() == this.requireInsidePiece
-			&& this.requiredStructures.contains(status.structure())
-			&& this.provider.applicable(context);
+		return this.provider.value().applicable(context) &&
+			this.requirements.stream().anyMatch(pair -> pair.getSecond() == status.insidePiece() && pair.getFirst().equals(status.structure()));
 	}
 
 	@Override
-	public MapCodec<StructureProvider> codec() {
-		return CODEC;
+	public MapCodec<StructureRequirement> codec() {
+		return MAP_CODEC;
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		Validatable.validateHolder(context, "provider", this.provider);
 	}
 }

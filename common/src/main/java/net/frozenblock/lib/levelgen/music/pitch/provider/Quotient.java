@@ -18,23 +18,24 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Mth;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.providers.number.BinaryProvider;
 
-public record ClampedPitch(PitchProvider provider, PitchProvider min, PitchProvider max) implements PitchProvider {
-	public static MapCodec<ClampedPitch> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		DIRECT_CODEC.fieldOf("provider").forGetter(ClampedPitch::provider),
-		DIRECT_CODEC.fieldOf("min").forGetter(ClampedPitch::min),
-		DIRECT_CODEC.fieldOf("max").forGetter(ClampedPitch::max)
-	).apply(instance, ClampedPitch::new));
+public record Quotient(Holder<PitchProvider> left, Holder<PitchProvider> right) implements PitchProvider, BinaryProvider<PitchProvider> {
+	public static final MapCodec<Quotient> MAP_CODEC = BinaryProvider.mapCodec(HOLDER_CODEC, Quotient::new);
 
 	@Override
-	public float sample(long gameTime) {
-		return Mth.clamp(this.provider.sample(gameTime), this.min.sample(gameTime), this.max.sample(gameTime));
+	public MapCodec<Quotient> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	public MapCodec<ClampedPitch> codec() {
-		return CODEC;
+	public float sample(Context context) {
+		return this.left.value().sample(context) / this.right.value().sample(context);
+	}
+
+	@Override
+	public boolean applicable(Context context) {
+		return this.left.value().applicable(context) && this.right.value().applicable(context);
 	}
 }

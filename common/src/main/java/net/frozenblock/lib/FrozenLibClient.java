@@ -30,6 +30,7 @@ import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
+import net.frozenblock.lib.file.transfer.client.FileTransferEventListenerClient;
 import net.frozenblock.lib.particle.client.impl.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
@@ -66,6 +67,7 @@ public final class FrozenLibClient {
 		ModResourcePackApi.init();
 		ClientWindUtil.init();
 		FrozenLibDebugScreenEntries.init();
+		FileTransferEventListenerClient.init();
 
 		HudElementRegistry.attachElementAfter(
 			VanillaHudAnchor.MISC_OVERLAYS,

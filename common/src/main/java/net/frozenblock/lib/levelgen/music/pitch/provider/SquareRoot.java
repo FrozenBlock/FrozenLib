@@ -18,21 +18,30 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
 
-public class Add extends OperationProvider {
-	public static final MapCodec<Add> CODEC = createCodec(Add::new);
+public record SquareRoot(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
+	public static final MapCodec<SquareRoot> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, SquareRoot::new);
 
-	protected Add(PitchProvider provider, PitchProvider operand) {
-		super(provider, operand);
+	@Override
+	public MapCodec<? extends PitchProvider> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	protected float applyOperation(float sample, float operand) {
-		return sample + operand;
+	public Holder<PitchProvider> input() {
+		return this.input;
 	}
 
 	@Override
-	public MapCodec<Add> codec() {
-		return CODEC;
+	public float sample(Context context) {
+		return Mth.sqrt(this.input.value().sample(context));
+	}
+
+	@Override
+	public boolean applicable(Context context) {
+		return this.input.value().applicable(context);
 	}
 }

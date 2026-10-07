@@ -18,28 +18,30 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
 
-public record LerpedPitch(PitchProvider provider, PitchProvider start, PitchProvider end) implements PitchProvider {
-	public static MapCodec<LerpedPitch> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		DIRECT_CODEC.fieldOf("provider").forGetter(LerpedPitch::provider),
-		DIRECT_CODEC.fieldOf("start").forGetter(LerpedPitch::start),
-		DIRECT_CODEC.fieldOf("end").forGetter(LerpedPitch::end)
-	).apply(instance, LerpedPitch::new));
+public record Absolute(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
+	public static final MapCodec<Absolute> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Absolute::new);
 
 	@Override
-	public float sample(long gameTime) {
-		return Mth.lerp(this.provider.sample(gameTime), this.start.sample(gameTime), this.end.sample(gameTime));
+	public MapCodec<? extends PitchProvider> codec() {
+		return MAP_CODEC;
+	}
+
+	@Override
+	public Holder<PitchProvider> input() {
+		return this.input;
+	}
+
+	@Override
+	public float sample(Context context) {
+		return Mth.abs(this.input.value().sample(context));
 	}
 
 	@Override
 	public boolean applicable(Context context) {
-		return this.provider.applicable(context) && this.start.applicable(context) && this.end.applicable(context);
-	}
-
-	@Override
-	public MapCodec<LerpedPitch> codec() {
-		return CODEC;
+		return this.input.value().applicable(context);
 	}
 }

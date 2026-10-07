@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import java.util.List;
@@ -27,16 +28,22 @@ import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.phys.Vec3;
 
-public interface PitchProvider {
+public interface PitchProvider extends Validatable {
 	Codec<PitchProvider> DIRECT_CODEC = FrozenLibRegistries.PITCH_PROVIDER_TYPE.byNameCodec().dispatch(PitchProvider::codec, Function.identity());
+	Codec<Holder<PitchProvider>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
+	Codec<HolderSet<PitchProvider>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
 
-	float sample(long gameTime);
+	float sample(Context context);
 
 	default boolean applicable(Context context) {
 		return true;
@@ -44,121 +51,146 @@ public interface PitchProvider {
 
 	MapCodec<? extends PitchProvider> codec();
 
-	static PitchProvider constant(float value) {
-		return new Constant(value);
+	static Holder<PitchProvider> abs(Holder<PitchProvider> input) {
+		return Holder.direct(new Absolute(input));
 	}
 
-	static PitchProvider add(PitchProvider provider, PitchProvider operand) {
-		return new Add(provider, operand);
+	@SafeVarargs
+	static Holder<PitchProvider> avg(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Average(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider add(PitchProvider provider, float operand) {
-		return add(provider, constant(operand));
+	static Holder<PitchProvider> ceiling(Holder<PitchProvider> input) {
+		return Holder.direct(new Ceiling(input));
 	}
 
-	static PitchProvider subtract(PitchProvider provider, PitchProvider operand) {
-		return new Subtract(provider, operand);
+	static Holder<PitchProvider> exactly(float value) {
+		return Holder.direct(new ConstantValue(value));
 	}
 
-	static PitchProvider subtract(PitchProvider provider, float operand) {
-		return subtract(provider, constant(operand));
+	static Holder<PitchProvider> cos(Holder<PitchProvider> waveLength) {
+		return Holder.direct(new Cosine(waveLength));
 	}
 
-	static PitchProvider multiply(PitchProvider provider, PitchProvider operand) {
-		return new Multiply(provider, operand);
+	static Holder<PitchProvider> cos(Holder<PitchProvider> waveLength, Holder<PitchProvider> amplitude) {
+		return mul(cos(waveLength), amplitude);
 	}
 
-	static PitchProvider multiply(PitchProvider provider, float operand) {
-		return multiply(provider, constant(operand));
+	static Holder<PitchProvider> cos(Holder<PitchProvider> waveLength, Holder<PitchProvider> amplitude, Holder<PitchProvider> midline) {
+		return add(midline, cos(waveLength, amplitude));
 	}
 
-	static PitchProvider divide(PitchProvider provider, PitchProvider operand) {
-		return new Divide(provider, operand);
+	static Holder<PitchProvider> sub(Holder<PitchProvider> provider, Holder<PitchProvider> operand) {
+		return Holder.direct(new Difference(provider, operand));
 	}
 
-	static PitchProvider divide(PitchProvider provider, float operand) {
-		return divide(provider, constant(operand));
+	static Holder<PitchProvider> forEnvironmentAttribute(EnvironmentAttribute<?> attribute) {
+		return Holder.direct(new EnvironmentAttributeValue(attribute));
 	}
 
-	static PitchProvider sine(float waveLength) {
-		return new Sine(waveLength);
+	@SafeVarargs
+	static Holder<PitchProvider> length(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Length(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider sine(float waveLength, float amplitude) {
-		return multiply(sine(waveLength), constant(amplitude));
+	@SafeVarargs
+	static Holder<PitchProvider> max(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Maximum(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider sine(float waveLength, float amplitude, float midline) {
-		return add(constant(midline), sine(waveLength, amplitude));
+	@SafeVarargs
+	static Holder<PitchProvider> min(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Minimum(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider cosine(float waveLength) {
-		return new Cosine(waveLength);
+	static Holder<PitchProvider> mod(Holder<PitchProvider> left, Holder<PitchProvider> right) {
+		return Holder.direct(new Modulus(left, right));
 	}
 
-	static PitchProvider cosine(float waveLength, float amplitude) {
-		return multiply(cosine(waveLength), constant(amplitude));
+	static Holder<PitchProvider> negate(Holder<PitchProvider> input) {
+		return Holder.direct(new Negate(input));
 	}
 
-	static PitchProvider cosine(float waveLength, float amplitude, float midline) {
-		return add(constant(midline), cosine(waveLength, amplitude));
+	static Holder<PitchProvider> pow(Holder<PitchProvider> base, Holder<PitchProvider> exponent) {
+		return Holder.direct(new Power(base, exponent));
 	}
 
-	static PitchProvider clamped(PitchProvider provider, PitchProvider min, PitchProvider max) {
-		return new ClampedPitch(provider, min, max);
+	@SafeVarargs
+	static Holder<PitchProvider> mul(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Product(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider clamped(PitchProvider provider, float min, float max) {
-		return clamped(provider, constant(min), constant(max));
+	static Holder<PitchProvider> div(Holder<PitchProvider> left, Holder<PitchProvider> right) {
+		return Holder.direct(new Quotient(left, right));
 	}
 
-	static PitchProvider whenTrue(Holder<ConfigPredicate> predicate, PitchProvider provider) {
-		return new ConfigPredicatePitch(predicate, provider);
+	static Holder<PitchProvider> round(Holder<PitchProvider> input) {
+		return Holder.direct(new Round(input));
 	}
 
-	static PitchProvider whenTrue(ConfigPredicate predicate, PitchProvider provider) {
-		return whenTrue(predicate.asHolder(), provider);
+	static Holder<PitchProvider> sin(Holder<PitchProvider> input) {
+		return Holder.direct(new Sine(input));
 	}
 
-	static PitchProvider selector(Holder<ConfigPredicate> selector, PitchProvider whenTrue, PitchProvider whenFalse) {
-		return new ConfigPredicateSelectorPitch(selector, whenTrue, whenFalse);
+	static Holder<PitchProvider> sqrt(Holder<PitchProvider> input) {
+		return Holder.direct(new SquareRoot(input));
 	}
 
-	static PitchProvider selector(ConfigPredicate selector, PitchProvider whenTrue, PitchProvider whenFalse) {
-		return selector(selector.asHolder(), whenTrue, whenFalse);
+	@SafeVarargs
+	static Holder<PitchProvider> add(Holder<PitchProvider>... inputs) {
+		return Holder.direct(new Sum(HolderSet.direct(inputs)));
 	}
 
-	static PitchProvider biomes(HolderSet<Biome> biomes, PitchProvider provider) {
-		return new BiomeProvider(biomes, provider);
+	static Holder<PitchProvider> trunc(Holder<PitchProvider> input) {
+		return Holder.direct(new Truncate(input));
 	}
 
-	static PitchProvider biome(Holder<Biome> biome, PitchProvider provider) {
+	static Holder<PitchProvider> clamp(Holder<PitchProvider> input, Holder<PitchProvider> min, Holder<PitchProvider> max) {
+		return max(min(input, min), max);
+	}
+
+	static Holder<PitchProvider> configPredicate(Holder<ConfigPredicate> predicate, Holder<PitchProvider> provider) {
+		return Holder.direct(new ConfigRequirement(predicate, provider));
+	}
+
+	static Holder<PitchProvider> conditional(Holder<ConfigPredicate> selector, Holder<PitchProvider> onTrue, Holder<PitchProvider> onFalse) {
+		return Holder.direct(new ConditionalValue(selector, onTrue, onFalse));
+	}
+
+	static Holder<PitchProvider> biomes(HolderSet<Biome> biomes, Holder<PitchProvider> provider) {
+		return Holder.direct(new BiomeRequirement(biomes, provider));
+	}
+
+	static Holder<PitchProvider> biome(Holder<Biome> biome, Holder<PitchProvider> provider) {
 		return biomes(HolderSet.direct(biome), provider);
 	}
 
-	static PitchProvider structuresFromIds(List<Identifier> structures, boolean requireInsidePiece, PitchProvider provider) {
-		return new StructureProvider(structures, requireInsidePiece, provider);
+	static Holder<PitchProvider> structuresFromIds(List<Pair<Identifier, Boolean>> requirements, Holder<PitchProvider> provider) {
+		return Holder.direct(new StructureRequirement(requirements, provider));
 	}
 
-	static PitchProvider structuresFromKeys(List<ResourceKey<Structure>> structures, boolean requireInsidePiece, PitchProvider provider) {
-		return structuresFromIds(structures.stream().map(ResourceKey::identifier).toList(), requireInsidePiece, provider);
+	static Holder<PitchProvider> structuresFromKeys(List<Pair<ResourceKey<Structure>, Boolean>> requirements, Holder<PitchProvider> provider) {
+		return structuresFromIds(
+			requirements.stream().map(pair -> Pair.of(pair.getFirst().identifier(), pair.getSecond())).toList(),
+			provider
+		);
 	}
 
-	static PitchProvider structure(Identifier structure, boolean requireInsidePiece, PitchProvider provider) {
-		return structuresFromIds(List.of(structure), requireInsidePiece, provider);
+	static Holder<PitchProvider> structure(Identifier structure, boolean requireInsidePiece, Holder<PitchProvider> provider) {
+		return structuresFromIds(List.of(Pair.of(structure, requireInsidePiece)), provider);
 	}
 
-	static PitchProvider structure(ResourceKey<Structure> structure, boolean requireInsidePiece, PitchProvider provider) {
+	static Holder<PitchProvider> structure(ResourceKey<Structure> structure, boolean requireInsidePiece, Holder<PitchProvider> provider) {
 		return structure(structure.identifier(), requireInsidePiece, provider);
 	}
 
-	static PitchProvider dimensions(List<Identifier> dimensions, PitchProvider provider) {
-		return new DimensionProvider(dimensions, provider);
+	static Holder<PitchProvider> dimensions(List<Identifier> dimensions, Holder<PitchProvider> provider) {
+		return Holder.direct(new DimensionRequirement(dimensions, provider));
 	}
 
-	static PitchProvider dimension(Identifier dimension, PitchProvider provider) {
+	static Holder<PitchProvider> dimension(Identifier dimension, Holder<PitchProvider> provider) {
 		return dimensions(List.of(dimension), provider);
 	}
 
-	record Context(Level level, Identifier dimension, Holder<Biome> biome, Optional<StructureStatus> structureStatus) {}
+	record Context(Level level, Identifier dimension, Holder<Biome> biome, Optional<StructureStatus> structureStatus, Vec3 origin, long gameTime) {}
 }

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -29,6 +30,8 @@ import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.event.api.events.ServerPlayerEvents;
+import net.frozenblock.lib.file.transfer.FileTransferEvents;
+import net.frozenblock.lib.file.transfer.FileTransferFailPacket;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.cooldown.CooldownChangePacket;
@@ -45,6 +48,7 @@ import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
@@ -67,46 +71,11 @@ public final class FrozenLibNetworking {
 
 		NetworkingHelper.registerS2CLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
 		NetworkingHelper.registerC2SLargePayloadType(FileTransferPacket.PACKET_TYPE, FileTransferPacket.CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
-		NetworkingHelper.registerGlobalServerReceiver(FileTransferPacket.PACKET_TYPE, (packet, server, player) -> {
-			if (packet.request()) {
-				final String requestPath = packet.transferPath();
-				final String fileName = packet.fileName();
-				final List<String> fileExtensions = packet.fileExtensions();
-				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, player)) return;
+		receiveFileTransferPacket();
 
-				final Path defaultPath = server.getServerDirectory().resolve(requestPath);
-				final Path localPath = server.getServerDirectory().resolve(requestPath).resolve(FileTransferPacket.LOCAL_SOURCE);
-				for (Path requestedPath : new Path[]{defaultPath, localPath}) {
-					for (String fileExtension : fileExtensions) {
-						final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
-						final String fileNameWithExtension = fileName + "." + fixedExtension;
-						final File file = requestedPath.resolve(fileNameWithExtension).toFile();
-						if (!file.exists()) continue;
-
-						try {
-							NetworkingHelper.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
-							return;
-						} catch (IOException ignored) {}
-					}
-				}
-
-				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packets for file {} on server!", fileName);
-			} else {
-				if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
-
-				final String destPath = packet.transferPath().replace("/" + FileTransferPacket.LOCAL_SOURCE, "");
-				final String fileName = packet.fileName();
-				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, player)) return;
-
-				try {
-					final Path path = server.getServerDirectory().resolve(destPath).resolve(packet.fileName());
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), path.toFile());
-					FrozenLibConstants.LOGGER.debug("Saved transferred file {} on server!", fileName);
-				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
-				}
-			}
-		});
+		NetworkingHelper.registerS2CPayloadType(FileTransferFailPacket.PACKET_TYPE, FileTransferFailPacket.CODEC);
+		NetworkingHelper.registerC2SPayloadType(FileTransferFailPacket.PACKET_TYPE, FileTransferFailPacket.CODEC);
+		receiveFileTransferFailPacket();
 
 		NetworkingHelper.registerS2CPayloadType(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		NetworkingHelper.registerS2CPayloadType(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
@@ -128,5 +97,85 @@ public final class FrozenLibNetworking {
 
 		// WIND
 		NetworkingHelper.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.CODEC);
+	}
+
+	private static void receiveFileTransferPacket() {
+		NetworkingHelper.registerGlobalServerReceiver(FileTransferPacket.PACKET_TYPE, (packet, server, player) -> {
+			if (packet.request()) { // Sending
+				final String requestPath = packet.transferPath();
+				final String fileName = packet.fileName();
+				final List<String> fileExtensions = packet.fileExtensions();
+
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, player)) {
+					FileTransferEvents.ILLEGAL_REQUEST_RECEIVE.invoker().onIllegalRequestReceived(requestPath, fileName, fileExtensions, false);
+					return;
+				}
+
+				FileTransferEvents.REQUEST_RECEIVE.invoker().onRequestReceived(requestPath, fileName, fileExtensions, false);
+
+				final Path defaultPath = server.getServerDirectory().resolve(requestPath);
+				final Path localPath = server.getServerDirectory().resolve(requestPath).resolve(FileTransferPacket.LOCAL_SOURCE);
+				for (Path requestedPath : new Path[]{defaultPath, localPath}) {
+					for (String fileExtension : fileExtensions) {
+						final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
+						final String fileNameWithExtension = fileName + "." + fixedExtension;
+						final File file = requestedPath.resolve(fileNameWithExtension).toFile();
+						if (!file.exists()) continue;
+
+						try {
+							NetworkingHelper.sendToPlayer(player, FileTransferPacket.create(requestPath, file));
+							FileTransferEvents.FILE_SEND.invoker().onFileSent(requestPath, fileName, file, false);
+							return;
+						} catch (IOException ignored) {}
+					}
+				}
+
+				FileTransferEvents.TRANSFER_FAIL.invoker().onTransferFailed(requestPath, fileName, false, false);
+				FileTransferFailPacket.sendToPlayer(fileName, requestPath, true, player);
+				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {} on server!", fileName);
+			} else { // Receiving
+				final String destinationPath = packet.transferPath().replace("/" + FileTransferPacket.LOCAL_SOURCE, "");
+				final String fileName = packet.fileName();
+				final String fileNameWithoutExtension = FilenameUtils.removeExtension(fileName);
+
+				if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) {
+					NetworkingHelper.sendToPlayer(player, FileTransferFailPacket.create(destinationPath, fileNameWithoutExtension, false));
+					FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(destinationPath, fileNameWithoutExtension, true, false);
+					return;
+				}
+
+				if (!FileTransferFilter.isTransferAcceptable(destinationPath, fileName, player)) {
+					FileTransferEvents.ILLEGAL_TRANSFER_RECEIVE.invoker().onIllegalTransferReceived(destinationPath, fileNameWithoutExtension, false);
+					return;
+				}
+
+				final Path filePath = server.getServerDirectory().resolve(destinationPath).resolve(packet.fileName());
+				CompletableFuture.runAsync(() -> {
+					try {
+						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), filePath.toFile());
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}).whenComplete((ignored, throwable) -> {
+					if (throwable != null) {
+						FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(destinationPath, fileNameWithoutExtension, false, false);
+						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", fileName);
+					} else {
+						FileTransferEvents.FILE_RECEIVE.invoker().onFileReceived(destinationPath, fileNameWithoutExtension, filePath.toFile(), false);
+						FrozenLibConstants.LOGGER.debug("Saved transferred file {} on server!", fileName);
+					}
+				});
+			}
+		});
+	}
+
+	private static void receiveFileTransferFailPacket() {
+		NetworkingHelper.registerGlobalServerReceiver(FileTransferFailPacket.PACKET_TYPE, (packet, server, player) -> {
+			if (packet.request()) {
+				FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(packet.targetPath(), packet.fileName(), false, false);
+			} else {
+				FileTransferEvents.TRANSFER_FAIL.invoker().onTransferFailed(packet.targetPath(), packet.fileName(), false, false);
+			}
+		});
 	}
 }

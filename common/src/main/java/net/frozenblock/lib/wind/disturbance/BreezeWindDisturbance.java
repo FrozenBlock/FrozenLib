@@ -59,7 +59,7 @@ public class BreezeWindDisturbance extends EntityWindDisturbance<Breeze> {
 		final Vec3 breezeLookVec = source.getForward();
 		final Vec3 differenceInPoses = origin.subtract(target);
 		final double scaledDistance = (scaledRange - distance) / scaledRange;
-		final double strengthFromDistance = Mth.clamp((scaledRange - distance) / (scaledRange * 0.75D), 0D, 1D);
+		final double strengthFromDistance = Math.clamp((scaledRange - distance) / (scaledRange * 0.75D), 0D, 1D);
 		final double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses) * Mth.DEG_TO_RAD;
 
 		double x = Math.cos(angleBetween);

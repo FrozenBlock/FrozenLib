@@ -38,7 +38,8 @@ transitive-accessible field net/minecraft/resources/RegistryLoadTask registry Ln
 
 # Textures
 transitive-accessible field net/minecraft/client/resources/SkinManager skinTextureDownloader Lnet/minecraft/client/renderer/texture/SkinTextureDownloader;
-transitive-accessible method net/minecraft/client/renderer/texture/DynamicTexture createTexture (Ljava/lang/String;)V
+
+transitive-inject-interface net/minecraft/client/Minecraft net/frozenblock/lib/resource/client/impl/texture/MinecraftServerTextureInterface
 
 # Splashes
 transitive-accessible method net/minecraft/client/resources/SplashManager literalSplash (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
@@ -86,10 +87,10 @@ transitive-accessible method net/minecraft/world/level/block/Block registerDefau
 transitive-accessible field net/minecraft/world/level/block/state/StateHolder propertyKeys [Lnet/minecraft/world/level/block/state/properties/Property;
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties destroyTime F
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties instrument Lnet/minecraft/world/level/block/state/properties/NoteBlockInstrument;
-transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties soundType Lnet/minecraft/world/level/block/SoundType;
+transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties blockSoundSet Ljava/util/Optional;
 transitive-accessible class net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase$Cache
-transitive-accessible method net/minecraft/world/level/block/Blocks logProperties (Lnet/minecraft/world/level/material/MapColor;Lnet/minecraft/world/level/material/MapColor;Lnet/minecraft/world/level/block/SoundType;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
-transitive-accessible method net/minecraft/world/level/block/Blocks leavesProperties (Lnet/minecraft/world/level/block/SoundType;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks leavesProperties (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+transitive-accessible method net/minecraft/world/level/block/Blocks logProperties (Lnet/minecraft/world/level/material/MapColor;Lnet/minecraft/world/level/material/MapColor;Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks flowerPotProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks buttonProperties ()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 transitive-accessible method net/minecraft/world/level/block/Blocks netherStemProperties (Lnet/minecraft/world/level/material/MapColor;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;

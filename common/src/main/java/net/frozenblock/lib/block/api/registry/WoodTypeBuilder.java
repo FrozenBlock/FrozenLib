@@ -18,27 +18,29 @@
 package net.frozenblock.lib.block.api.registry;
 
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
+import net.minecraft.world.level.block.sounds.BlockSoundSets;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 
 public final class WoodTypeBuilder {
-	private SoundType soundType = SoundType.WOOD;
-	private SoundType hangingSignSoundType = SoundType.HANGING_SIGN;
+	private ResourceKey<BlockSoundSet> blockSoundSet = BlockSoundSets.WOOD;
+	private ResourceKey<BlockSoundSet> hangingSignSoundSet = BlockSoundSets.HANGING_SIGN;
 	private SoundEvent fenceGateCloseSound = SoundEvents.FENCE_GATE_CLOSE;
 	private SoundEvent fenceGateOpenSound = SoundEvents.FENCE_GATE_OPEN;
 
 	public WoodTypeBuilder() {}
 
-	public WoodTypeBuilder soundType(SoundType soundType) {
-		this.soundType = soundType;
+	public WoodTypeBuilder blockSoundSet(ResourceKey<BlockSoundSet> blockSoundSet) {
+		this.blockSoundSet = blockSoundSet;
 		return this;
 	}
 
-	public WoodTypeBuilder hangingSignSoundType(SoundType hangingSignSoundType) {
-		this.hangingSignSoundType = hangingSignSoundType;
+	public WoodTypeBuilder hangingSignSoundSet(ResourceKey<BlockSoundSet> hangingSignSoundSet) {
+		this.hangingSignSoundSet = hangingSignSoundSet;
 		return this;
 	}
 
@@ -54,16 +56,16 @@ public final class WoodTypeBuilder {
 
 	public static WoodTypeBuilder copyOf(WoodTypeBuilder builder) {
 		return new WoodTypeBuilder()
-			.soundType(builder.soundType)
-			.hangingSignSoundType(builder.hangingSignSoundType)
+			.blockSoundSet(builder.blockSoundSet)
+			.hangingSignSoundSet(builder.hangingSignSoundSet)
 			.fenceGateCloseSound(builder.fenceGateCloseSound)
 			.fenceGateOpenSound(builder.fenceGateOpenSound);
 	}
 
 	public static WoodTypeBuilder copyOf(WoodType type) {
 		return new WoodTypeBuilder()
-			.soundType(type.soundType())
-			.hangingSignSoundType(type.hangingSignSoundType())
+			.blockSoundSet(type.blockSoundSet())
+			.hangingSignSoundSet(type.hangingSignSoundSet())
 			.fenceGateCloseSound(type.fenceGateClose())
 			.fenceGateOpenSound(type.fenceGateOpen());
 	}
@@ -76,8 +78,8 @@ public final class WoodTypeBuilder {
 		return new WoodType(
 			id.toString(),
 			blockSetType,
-			this.soundType,
-			this.hangingSignSoundType,
+			this.blockSoundSet,
+			this.hangingSignSoundSet,
 			this.fenceGateCloseSound,
 			this.fenceGateOpenSound
 		);

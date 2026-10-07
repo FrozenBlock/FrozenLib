@@ -21,7 +21,7 @@ import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
-import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
+import net.frozenblock.lib.block.api.sound.BlockSoundSetOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
@@ -84,7 +84,7 @@ public final class FrozenLibMain {
 		BlockAttachmentEvents.init();
 		FireData.init();
 		SerializableItemCooldowns.init();
-		SoundTypeOverrides.init();
+		BlockSoundSetOverrides.init();
 		SuffocationData.init();
 		BiomeEnvironmentAttributeModification.init();
 	}

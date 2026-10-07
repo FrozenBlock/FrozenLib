@@ -140,7 +140,7 @@ public record LargeSpireFeature(
 		if (range.height() < 4) return false;
 
 		final int radiusByHeight = (int) ((float) range.height() * this.maxColumnRadiusToCaveHeightRatio);
-		final int clampedRadius = Mth.clamp(radiusByHeight, this.columnRadius.minInclusive(), this.columnRadius.maxInclusive());
+		final int clampedRadius = Math.clamp(radiusByHeight, this.columnRadius.minInclusive(), this.columnRadius.maxInclusive());
 		final int radius = Mth.randomBetweenInclusive(random, this.columnRadius.minInclusive(), clampedRadius);
 
 		final LargeSpire ceilingSpire = make(origin.atY(range.ceiling() - 1), false, random, radius, this.stalactiteBluntness, this.heightScale);

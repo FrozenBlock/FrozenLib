@@ -19,29 +19,25 @@ package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
+import net.minecraft.world.level.storage.loot.providers.number.PowerProvider;
 
-public record Cosine(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
-	public static final MapCodec<Cosine> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Cosine::new);
+public record Power(Holder<PitchProvider> base, Holder<PitchProvider> exponent) implements PitchProvider, PowerProvider<PitchProvider> {
+	public static final MapCodec<Power> MAP_CODEC = PowerProvider.mapCodec(HOLDER_CODEC, Power::new);
 
 	@Override
-	public MapCodec<? extends PitchProvider> codec() {
+	public MapCodec<Power> codec() {
 		return MAP_CODEC;
 	}
 
 	@Override
-	public Holder<PitchProvider> input() {
-		return this.input;
-	}
-
-	@Override
 	public float sample(Context context) {
-		return Mth.cos(context.gameTime() * (Mth.TWO_PI / this.input.value().sample(context)));
+		final float base = this.base.value().sample(context);
+		final float exponent = this.exponent.value().sample(context);
+		return base == 0F && exponent == 0F ? Float.NaN : (float) Math.pow(base, exponent);
 	}
 
 	@Override
 	public boolean applicable(Context context) {
-		return this.input.value().applicable(context);
+		return this.base.value().applicable(context) && this.exponent.value().applicable(context);
 	}
 }

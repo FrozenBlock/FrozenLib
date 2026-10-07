@@ -53,17 +53,28 @@ public final class MusicPitchApi {
 	}
 
 	public static void updateTargetMusicPitch(@Nullable Player player, Level level, Holder<Biome> biome) {
+		if (player == null) {
+			resetCurrentPitch();
+			return;
+		}
+
 		final List<Float> pitchSamples = new ArrayList<>();
 		final AtomicInteger providerCount = new AtomicInteger();
 
-		final long gameTime = level.getGameTime();
 		final Optional<StructureStatus> structureStatus = StructureStatus.getProminentStructureStatus(player);
-		final PitchProvider.Context context = new PitchProvider.Context(level, level.dimension().identifier(), biome, structureStatus);
+		final PitchProvider.Context context = new PitchProvider.Context(
+			level,
+			level.dimension().identifier(),
+			biome,
+			structureStatus,
+			player.position(),
+			level.getGameTime()
+		);
 		level.registryAccess().lookup(FrozenLibRegistries.MUSIC_PITCH_PROVIDER).ifPresent(registry -> {
 			for (PitchProvider provider : registry) {
 				if (!provider.applicable(context)) continue;
 
-				pitchSamples.add(provider.sample(gameTime));
+				pitchSamples.add(provider.sample(context));
 				providerCount.addAndGet(1);
 			}
 		});

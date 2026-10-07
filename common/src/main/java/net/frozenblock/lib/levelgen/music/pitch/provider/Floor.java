@@ -18,28 +18,29 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
 
-public record ConfigPredicatePitch(Holder<ConfigPredicate> predicate, PitchProvider provider) implements PitchProvider {
-	public static MapCodec<ConfigPredicatePitch> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigPredicate.HOLDER_CODEC.fieldOf("predicate").forGetter(ConfigPredicatePitch::predicate),
-		DIRECT_CODEC.fieldOf("provider").forGetter(ConfigPredicatePitch::provider)
-	).apply(instance, ConfigPredicatePitch::new));
+public record Floor(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
+	public static final MapCodec<Floor> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Floor::new);
 
 	@Override
-	public float sample(long gameTime) {
-		return this.provider.sample(gameTime);
+	public MapCodec<? extends PitchProvider> codec() {
+		return MAP_CODEC;
+	}
+
+	@Override
+	public Holder<PitchProvider> input() {
+		return this.input;
+	}
+
+	@Override
+	public float sample(Context context) {
+		return (float) Math.floor(this.input.value().sample(context));
 	}
 
 	@Override
 	public boolean applicable(Context context) {
-		return this.predicate.value().test() && this.provider.applicable(context);
-	}
-
-	@Override
-	public MapCodec<ConfigPredicatePitch> codec() {
-		return CODEC;
+		return this.input.value().applicable(context);
 	}
 }

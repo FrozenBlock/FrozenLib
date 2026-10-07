@@ -18,21 +18,32 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.world.level.storage.loot.providers.number.AggregateProvider;
 
-public class Subtract extends OperationProvider {
-	public static final MapCodec<Subtract> CODEC = createCodec(Subtract::new);
+public record Sum(HolderSet<PitchProvider> inputs) implements PitchProvider, AggregateProvider<PitchProvider> {
+	public static final MapCodec<Sum> MAP_CODEC = AggregateProvider.mapCodec(HOLDER_SET_CODEC, Sum::new);
 
-	protected Subtract(PitchProvider provider, PitchProvider operand) {
-		super(provider, operand);
+	@Override
+	public MapCodec<Sum> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	protected float applyOperation(float sample, float operand) {
-		return sample - operand;
+	public float sample(Context context) {
+		float value = 0F;
+		for (Holder<PitchProvider> input : this.inputs()) {
+			if (input.value().applicable(context)) value += input.value().sample(context);
+		}
+		return value;
 	}
 
 	@Override
-	public MapCodec<Subtract> codec() {
-		return CODEC;
+	public boolean applicable(Context context) {
+		for (Holder<PitchProvider> input : this.inputs()) {
+			if (input.value().applicable(context)) return true;
+		}
+		return false;
 	}
 }

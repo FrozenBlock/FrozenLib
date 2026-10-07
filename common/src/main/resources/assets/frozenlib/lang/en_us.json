@@ -87,27 +87,6 @@
   "commands.structure_upgrade.success": "Upgraded and saved %s structure pieces for %s.",
   "commands.structure_upgrade.failure": "No structure pieces found for %s.",
 
-  "debug.pathfinding": "Pathfinding",
-  "debug.water_level": "Water Level",
-  "debug.heightmap": "Heightmaps",
-  "debug.collision": "Block Collision",
-  "debug.support_block": "Supporting Blocks",
-  "debug.structure": "Structures",
-  "debug.sky_light": "Sky Light",
-  "debug.solid_face": "Solid Block Faces",
-  "debug.chunk_status": "Chunk Status",
-  "debug.brain": "Brain",
-  "debug.goal": "Goal",
-  "debug.village_sections": "Village Sections",
-  "debug.bee": "Bee",
-  "debug.raid": "Raid",
-  "debug.light": "Light",
-  "debug.breeze": "Breeze",
-  "debug.wind": "Wind",
-  "debug.wind_disturbance": "Wind Disturbance",
-  "debug.neighbor_update": "Neighbor Updates",
-  "debug.game_event": "Game Events",
-
   "frozenlib.core.registry_sync.more": "%s more...",
   "frozenlib.core.registry_sync.and": " and ",
   "frozenlib.core.registry_sync.unsupported_mod_protocol": "Unsupported mod protocol versions for:\n%s",
@@ -124,5 +103,13 @@
   "frozenlib.resourcepack.download.failure": "Could not download Resource Packs:",
   "frozenlib.resourcepack.download.failure.present": "(DEBUG) Could not verify Resource Packs are up to date:",
   "frozenlib.resourcepack.download.present": "(DEBUG) Resource Packs are already present:",
-  "frozenlib.resourcepack.download.group": "%s: (%s/%s)"
+  "frozenlib.resourcepack.download.group": "%s: (%s/%s)",
+
+  "frozenlib.file_transfer.transfer": "(DEBUG) File Transfers Received:",
+  "frozenlib.file_transfer.request": "(DEBUG) File Requests Received:",
+  "frozenlib.file_transfer.transfer.fail": "(DEBUG) Outgoing File Transfers Failed:",
+  "frozenlib.file_transfer.request.fail": "(DEBUG) Outgoing File Requests Failed:",
+  "frozenlib.file_transfer.illegal": "Invalid File Transfer Detected!",
+  "frozenlib.file_transfer.illegal.warn": "File Transfers are filtered out if not explicitly allowed by FrozenLib.\nThis server is attempting to send/request an invalid file.\nPlease contact this server's administrators and leave as soon as possible.",
+  "frozenlib.file_transfer.info": "%s - %s"
 }

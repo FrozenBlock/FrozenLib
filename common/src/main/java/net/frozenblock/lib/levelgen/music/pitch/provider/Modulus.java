@@ -17,22 +17,26 @@
 
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.providers.number.BinaryProvider;
 
-public record Constant(float value) implements PitchProvider {
-	public static MapCodec<Constant> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		Codec.FLOAT.optionalFieldOf("value", 1F).forGetter(Constant::value)
-	).apply(instance, Constant::new));
+public record Modulus(Holder<PitchProvider> left, Holder<PitchProvider> right) implements PitchProvider, BinaryProvider<PitchProvider> {
+	public static final MapCodec<Modulus> MAP_CODEC = BinaryProvider.mapCodec(HOLDER_CODEC, Modulus::new);
 
 	@Override
-	public float sample(long gameTime) {
-		return this.value;
+	public MapCodec<Modulus> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	public MapCodec<Constant> codec() {
-		return CODEC;
+	public float sample(Context context) {
+		final float rightValue = this.right().value().sample(context);
+		return rightValue == 0F ? Float.NaN : this.left().value().sample(context) % rightValue;
+	}
+
+	@Override
+	public boolean applicable(Context context) {
+		return this.left.value().applicable(context) && this.right.value().applicable(context);
 	}
 }

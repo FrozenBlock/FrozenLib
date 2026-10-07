@@ -19,11 +19,10 @@ package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
 
-public record Cosine(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
-	public static final MapCodec<Cosine> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Cosine::new);
+public record Truncate(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
+	public static final MapCodec<Truncate> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Truncate::new);
 
 	@Override
 	public MapCodec<? extends PitchProvider> codec() {
@@ -37,7 +36,8 @@ public record Cosine(Holder<PitchProvider> input) implements PitchProvider, Unar
 
 	@Override
 	public float sample(Context context) {
-		return Mth.cos(context.gameTime() * (Mth.TWO_PI / this.input.value().sample(context)));
+		final float value = this.input().value().sample(context);
+		return value > 0F ? (float) Math.floor(value) : (float) Math.ceil(value);
 	}
 
 	@Override

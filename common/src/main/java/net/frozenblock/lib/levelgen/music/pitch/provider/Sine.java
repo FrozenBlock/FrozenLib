@@ -18,22 +18,30 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
 
-public class Sine extends WaveProvider {
-	public static final MapCodec<Sine> CODEC = createCodec(Sine::new);
+public record Sine(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
+	public static final MapCodec<Sine> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Sine::new);
 
-	protected Sine(float waveLength) {
-		super(waveLength);
+	@Override
+	public MapCodec<? extends PitchProvider> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	protected float sampleFunction(float value) {
-		return Mth.sin(value);
+	public Holder<PitchProvider> input() {
+		return this.input;
 	}
 
 	@Override
-	public MapCodec<Sine> codec() {
-		return CODEC;
+	public float sample(Context context) {
+		return Mth.sin(context.gameTime() * (Mth.TWO_PI / this.input.value().sample(context)));
+	}
+
+	@Override
+	public boolean applicable(Context context) {
+		return this.input.value().applicable(context);
 	}
 }

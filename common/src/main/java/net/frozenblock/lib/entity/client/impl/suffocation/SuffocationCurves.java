@@ -35,7 +35,7 @@ public final class SuffocationCurves {
 			if (fraction <= frame.fraction()) {
 				if (previous == null) return frame.value();
 				final float span = frame.fraction() - previous.fraction();
-				final float t = span <= 0F ? 1F : Mth.clamp((fraction - previous.fraction()) / span, 0F, 1F);
+				final float t = span <= 0F ? 1F : Math.clamp((fraction - previous.fraction()) / span, 0F, 1F);
 				return Mth.lerp(t, previous.value(), frame.value());
 			}
 			previous = frame;
@@ -49,7 +49,7 @@ public final class SuffocationCurves {
 			case RELATIVE_TO_TOTAL -> {
 				float total = 0F;
 				for (float danger : allDangers) total += danger;
-				yield total <= 0F ? 0F : Mth.clamp(ownDanger / total, 0F, 1F);
+				yield total <= 0F ? 0F : Math.clamp(ownDanger / total, 0F, 1F);
 			}
 			case DOMINANT_ONLY -> {
 				float max = 0F;
@@ -60,6 +60,6 @@ public final class SuffocationCurves {
 	}
 
 	public static float intensity(List<Keyframe> curve, RelativeMode mode, float ownDanger, float[] allDangers) {
-		return Mth.clamp(eval(curve, ownDanger) * relativeScale(mode, ownDanger, allDangers), 0F, 1F);
+		return Math.clamp(eval(curve, ownDanger) * relativeScale(mode, ownDanger, allDangers), 0F, 1F);
 	}
 }

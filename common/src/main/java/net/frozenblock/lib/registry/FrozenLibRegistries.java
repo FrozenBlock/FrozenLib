@@ -23,7 +23,7 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
+import net.frozenblock.lib.block.impl.sound.BlockSoundSetOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
@@ -91,7 +91,7 @@ public class FrozenLibRegistries {
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE_PROVIDER = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_provider"));
-	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
+	public static final ResourceKey<Registry<BlockSoundSetOverride>> BLOCK_SOUND_SET_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("block_sound_set_override"));
 	public static final ResourceKey<Registry<PitchProvider>> MUSIC_PITCH_PROVIDER = ResourceKey.createRegistryKey(FrozenLibConstants.id("music_pitch_provider"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = ResourceKey.createRegistryKey(FrozenLibConstants.id("biome_environment_attribute_modification"));
@@ -106,7 +106,7 @@ public class FrozenLibRegistries {
 
 	public static void setup() {
 		RegistryHelper.registerSyncedDynamicRegistry(CONFIG_PREDICATE_PROVIDER, ConfigPredicate.DIRECT_CODEC);
-		RegistryHelper.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BLOCK_SOUND_SET_OVERRIDE, BlockSoundSetOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(MUSIC_PITCH_PROVIDER, PitchProvider.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);

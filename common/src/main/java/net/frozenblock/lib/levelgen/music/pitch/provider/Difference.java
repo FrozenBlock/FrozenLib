@@ -18,21 +18,24 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.providers.number.BinaryProvider;
 
-public class Divide extends OperationProvider {
-	public static final MapCodec<Divide> CODEC = createCodec(Divide::new);
+public record Difference(Holder<PitchProvider> left, Holder<PitchProvider> right) implements PitchProvider, BinaryProvider<PitchProvider> {
+	public static final MapCodec<Difference> MAP_CODEC = BinaryProvider.mapCodec(HOLDER_CODEC, Difference::new);
 
-	protected Divide(PitchProvider provider, PitchProvider operand) {
-		super(provider, operand);
+	@Override
+	public MapCodec<Difference> codec() {
+		return MAP_CODEC;
 	}
 
 	@Override
-	protected float applyOperation(float sample, float operand) {
-		return sample / operand;
+	public float sample(Context context) {
+		return this.left.value().sample(context) - this.right.value().sample(context);
 	}
 
 	@Override
-	public MapCodec<Divide> codec() {
-		return CODEC;
+	public boolean applicable(Context context) {
+		return this.left.value().applicable(context) && this.right.value().applicable(context);
 	}
 }

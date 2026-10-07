@@ -18,26 +18,24 @@
 package net.frozenblock.lib.item.impl.loot.predicates;
 
 import com.mojang.serialization.MapCodec;
-import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public class FrozenLibLootConditionTypes {
-	private static final DeferredRegister<MapCodec<? extends LootItemCondition>> REGISTER = DeferredRegister.create(
-		Registries.LOOT_CONDITION_TYPE,
-		FrozenLibConstants.MOD_ID
-	);
+@UtilityClass
+public final class FrozenLibLootConditionTypes {
 
 	public static void init() {
-		register("config_predicate", () -> ConfigLootCondition.MAP_CODEC);
+		final DeferredRegister<MapCodec<? extends LootItemCondition>> register = DeferredRegister.create(
+			Registries.LOOT_CONDITION_TYPE,
+			FrozenLibConstants.MOD_ID
+		);
 
-		REGISTER.register();
-	}
+		register.register("config_predicate", () -> ConfigLootCondition.MAP_CODEC);
 
-	private static <P extends LootItemCondition> void register(String name, Supplier<MapCodec<P>> mapCodec) {
-		REGISTER.register(name, mapCodec);
+		register.register();
 	}
 }

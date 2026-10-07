@@ -19,29 +19,32 @@ package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.storage.loot.providers.number.UnaryProvider;
+import net.minecraft.core.HolderSet;
+import net.minecraft.world.level.storage.loot.providers.number.AggregateProvider;
 
-public record Cosine(Holder<PitchProvider> input) implements PitchProvider, UnaryProvider<PitchProvider> {
-	public static final MapCodec<Cosine> MAP_CODEC = UnaryProvider.codec(HOLDER_CODEC, Cosine::new);
+public record Product(HolderSet<PitchProvider> inputs) implements PitchProvider, AggregateProvider<PitchProvider> {
+	public static final MapCodec<Product> MAP_CODEC = AggregateProvider.mapCodec(HOLDER_SET_CODEC, Product::new);
 
 	@Override
-	public MapCodec<? extends PitchProvider> codec() {
+	public MapCodec<Product> codec() {
 		return MAP_CODEC;
 	}
 
 	@Override
-	public Holder<PitchProvider> input() {
-		return this.input;
-	}
-
-	@Override
 	public float sample(Context context) {
-		return Mth.cos(context.gameTime() * (Mth.TWO_PI / this.input.value().sample(context)));
+		float value = 1F;
+		for (Holder<PitchProvider> input : this.inputs()) {
+			if (input.value().applicable(context)) value *= input.value().sample(context);
+		}
+
+		return value;
 	}
 
 	@Override
 	public boolean applicable(Context context) {
-		return this.input.value().applicable(context);
+		for (Holder<PitchProvider> input : this.inputs()) {
+			if (input.value().applicable(context)) return true;
+		}
+		return false;
 	}
 }

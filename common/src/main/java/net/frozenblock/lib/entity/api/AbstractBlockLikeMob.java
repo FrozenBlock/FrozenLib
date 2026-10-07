@@ -157,7 +157,7 @@ public abstract class AbstractBlockLikeMob extends Mob {
 		if (this.onGround() && this.getDeltaMovement().horizontalDistanceSqr() < Mth.square(0.001D) || isClimbing && Math.abs(this.getDeltaMovement().y) < 0.001D) {
 			final Vec3 blockGridDelta = Vec3.atBottomCenterOf(this.blockPosition()).subtract(this.position()).horizontal();
 			final double blockGridOffset = blockGridDelta.length();
-			final double rotationAlpha = (Mth.clamp(blockGridOffset * 64D, COLLISION_NUDGE_OFFSET, 1D) * this.blockGridSnapIntensity());
+			final double rotationAlpha = (Math.clamp(blockGridOffset * 64D, COLLISION_NUDGE_OFFSET, 1D) * this.blockGridSnapIntensity());
 			this.rotation.slerp(AdvancedMath.snapToNearestRightAngle(this.rotation), (float) rotationAlpha);
 			if (blockGridOffset > ROLL_ROTATION_DELTA_EPSILON && blockGridOffset <= BLOCK_SNAP_THRESHOLD && !this.level().isClientSide()) {
 				this.move(MoverType.SELF, blockGridDelta.scale(this.blockGridSnapIntensity()));

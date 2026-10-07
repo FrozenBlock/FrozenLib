@@ -469,6 +469,7 @@ public class WindManager {
 	 * @param windDisturbanceScale Multiplies the wind disturbance value.
 	 * @return the wind movement at a given position, multiplied, clamped, and with a separately multiplied wind disturbance value.
 	 */
+	// TODO: data-driven "wind queries"
 	public Vec3 getWindMovement(Vec3 target, double scale, double clamp, double windDisturbanceScale) {
 		if (!this.usable()) return Vec3.ZERO;
 		final double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(target));
@@ -487,9 +488,9 @@ public class WindManager {
 		}
 
 		return new Vec3(
-			Mth.clamp(windX, -clamp, clamp),
-			Mth.clamp(windY, -clamp, clamp),
-			Mth.clamp(windZ, -clamp, clamp)
+			Math.clamp(windX, -clamp, clamp),
+			Math.clamp(windY, -clamp, clamp),
+			Math.clamp(windZ, -clamp, clamp)
 		);
 	}
 

@@ -463,11 +463,11 @@ public final class ModResourcePackApi {
 
 	@ApiStatus.Internal
 	private enum ToastType {
-		SUCCESS_DOWNLOAD(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_SUCCESS, downloadInfo)),
-		SUCCESS_UPDATE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_UPDATE_SUCCESS, downloadInfo)),
-		FAILURE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_FAILURE, downloadInfo)),
-		FAILURE_PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_FAILURE_PRESENT, downloadInfo)),
-		PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_PRESENT, downloadInfo));
+		SUCCESS_DOWNLOAD(downloadInfo -> displayOrUpdateToast(PackDownloadToast.ToastId.PACK_DOWNLOAD_SUCCESS, downloadInfo)),
+		SUCCESS_UPDATE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.ToastId.PACK_UPDATE_SUCCESS, downloadInfo)),
+		FAILURE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.ToastId.PACK_DOWNLOAD_FAILURE, downloadInfo)),
+		FAILURE_PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.ToastId.PACK_DOWNLOAD_FAILURE_PRESENT, downloadInfo)),
+		PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.ToastId.PACK_DOWNLOAD_PRESENT, downloadInfo));
 		private final Consumer<PackDownloadInfo> toastMaker;
 
 		ToastType(Consumer<PackDownloadInfo> toastMaker) {
@@ -478,7 +478,7 @@ public final class ModResourcePackApi {
 			this.toastMaker.accept(downloadInfo);
 		}
 
-		private static void displayOrUpdateToast(PackDownloadToast.PackDownloadToastId id, PackDownloadInfo downloadInfo) {
+		private static void displayOrUpdateToast(PackDownloadToast.ToastId id, PackDownloadInfo downloadInfo) {
 			downloadInfo.setGroupStatus(id);
 			PackDownloadToast.addOrAppendIfNotPresent(Minecraft.getInstance().gui.toastManager(), id, downloadInfo);
 		}
@@ -513,7 +513,7 @@ public final class ModResourcePackApi {
 	public static class PackDownloadGroup implements PackDownloadStatusProvider {
 		private final String groupName;
 		private final List<PackDownloadInfo> packs = new ArrayList<>();
-		private final Map<PackDownloadToast.PackDownloadToastId, List<PackDownloadInfo>> packStatuses = new Object2ObjectLinkedOpenHashMap<>();
+		private final Map<PackDownloadToast.ToastId, List<PackDownloadInfo>> packStatuses = new Object2ObjectLinkedOpenHashMap<>();
 
 		private PackDownloadGroup(String packGroup) {
 			this.groupName = packGroup;
@@ -528,7 +528,7 @@ public final class ModResourcePackApi {
 			return this;
 		}
 
-		public void setPackStatus(PackDownloadToast.PackDownloadToastId id, PackDownloadInfo info) {
+		public void setPackStatus(PackDownloadToast.ToastId id, PackDownloadInfo info) {
 			for (List<PackDownloadInfo> list : this.packStatuses.values()) list.removeIf(foundInfo -> foundInfo.equals(info));
 			this.packStatuses.computeIfAbsent(id, toastId -> new ArrayList<>()).add(info);
 		}
@@ -541,7 +541,7 @@ public final class ModResourcePackApi {
 			return this.packs.size();
 		}
 
-		public int getPacksWithStatus(PackDownloadToast.PackDownloadToastId id) {
+		public int getPacksWithStatus(PackDownloadToast.ToastId id) {
 			return this.packStatuses.getOrDefault(id, List.of()).size();
 		}
 
@@ -559,7 +559,7 @@ public final class ModResourcePackApi {
 		}
 
 		@Override
-		public Component getComponent(PackDownloadToast.PackDownloadToastId id) {
+		public Component getComponent(PackDownloadToast.ToastId id) {
 			return Component.translatable(
 				"frozenlib.resourcepack.download.group",
 				Component.translatable("frozenlib.resourcepack.group." + this.groupName),
@@ -588,7 +588,7 @@ public final class ModResourcePackApi {
 			return new PackDownloadInfo(url, packName, Optional.empty());
 		}
 
-		public void setGroupStatus(PackDownloadToast.PackDownloadToastId id) {
+		public void setGroupStatus(PackDownloadToast.ToastId id) {
 			if (this.packGroup.isEmpty()) return;
 			this.packGroup.get().setPackStatus(id, this);
 		}
@@ -612,13 +612,13 @@ public final class ModResourcePackApi {
 		}
 
 		@Override
-		public Component getComponent(PackDownloadToast.PackDownloadToastId id) {
+		public Component getComponent(PackDownloadToast.ToastId id) {
 			return Component.translatable("frozenlib.resourcepack.pack." + this.packName);
 		}
 	}
 
 	public interface PackDownloadStatusProvider {
 		PackDownloadStatusProvider getDirectProvider();
-		Component getComponent(PackDownloadToast.PackDownloadToastId id);
+		Component getComponent(PackDownloadToast.ToastId id);
 	}
 }

@@ -131,8 +131,8 @@ public final class SuffocationManager {
 			if (bubbles >= BAR_BUBBLES) break;
 			final SuffocationType.Mechanics mechanics = entry.getKey().value().mechanics();
 			if (mechanics.airBehavior().usesVanillaAir() && mechanics.style() == MeterStyle.FILL && mechanics.capacity() > 0) {
-				final float fill = Mth.clamp((float) entry.getValue() / (float) mechanics.capacity(), 0F, 1F) * BAR_BUBBLES;
-				bubbles += Mth.clamp(Mth.ceil(fill), 0, BAR_BUBBLES - bubbles);
+				final float fill = Math.clamp((float) entry.getValue() / (float) mechanics.capacity(), 0F, 1F) * BAR_BUBBLES;
+				bubbles += Math.clamp(Mth.ceil(fill), 0, BAR_BUBBLES - bubbles);
 			}
 		}
 		return bubbles;
@@ -156,7 +156,7 @@ public final class SuffocationManager {
 		final int capacity = mechanics.capacity();
 		final int current = units.getOrDefault(holder, 0);
 		final int step = direction > 0 ? perTick(capacity, mechanics.fillTime()) : -perTick(capacity, mechanics.drainTime());
-		final int next = Mth.clamp(current + step, 0, capacity);
+		final int next = Math.clamp(current + step, 0, capacity);
 		if (next <= 0) return units.remove(holder) != null;
 
 		return !Objects.equals(units.put(holder, next), next);
@@ -184,7 +184,7 @@ public final class SuffocationManager {
 		final int capacity = mechanics.capacity();
 		final int rest = mechanics.style().restValue(capacity);
 		final int current = units.getOrDefault(holder, rest);
-		final int next = Mth.clamp(current + (active ? mechanics.dangerStep() : mechanics.recoveryStep()), 0, capacity);
+		final int next = Math.clamp(current + (active ? mechanics.dangerStep() : mechanics.recoveryStep()), 0, capacity);
 
 		if (active && mechanics.style().dangerFraction(next, capacity) >= 1F) {
 			final int interval = Math.max(1, type.damageSettings().intervalTicks());

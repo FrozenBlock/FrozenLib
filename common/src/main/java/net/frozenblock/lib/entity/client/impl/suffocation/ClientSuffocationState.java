@@ -109,7 +109,7 @@ public final class ClientSuffocationState {
 			final SuffocationType type = holder.value();
 			final int capacity = type.mechanics().capacity();
 			final float danger = type.mechanics().airBehavior().usesVanillaAir()
-				? (capacity > 0 ? Mth.clamp((float) units / (float) capacity, 0F, 1F) : 0F)
+				? (capacity > 0 ? Math.clamp((float) units / (float) capacity, 0F, 1F) : 0F)
 				: type.mechanics().style().dangerFraction(units, capacity);
 			result.add(new Active(holder, type, units, danger));
 		});

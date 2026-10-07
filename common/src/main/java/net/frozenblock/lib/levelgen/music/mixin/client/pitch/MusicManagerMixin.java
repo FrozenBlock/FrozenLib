@@ -24,7 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.MusicManager;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -79,14 +78,14 @@ public class MusicManagerMixin {
 		if (this.currentMusic == null || this.frozenLib$currentPitch == targetPitch) return;
 
 		if (this.frozenLib$currentPitch < targetPitch) {
-			this.frozenLib$currentPitch = this.frozenLib$currentPitch + Mth.clamp(this.frozenLib$currentPitch, 5.0E-4F, 0.005F);
+			this.frozenLib$currentPitch = this.frozenLib$currentPitch + Math.clamp(this.frozenLib$currentPitch, 5.0E-4F, 0.005F);
 			if (this.frozenLib$currentPitch > targetPitch) this.frozenLib$currentPitch = targetPitch;
 		} else {
 			this.frozenLib$currentPitch = 0.03F * targetPitch + 0.97F * this.frozenLib$currentPitch;
 			if (Math.abs(this.frozenLib$currentPitch - targetPitch) < 1.0E-4F || this.frozenLib$currentPitch < targetPitch) this.frozenLib$currentPitch = targetPitch;
 		}
 
-		this.frozenLib$currentPitch = Mth.clamp(this.frozenLib$currentPitch, 0F, 5F);
+		this.frozenLib$currentPitch = Math.clamp(this.frozenLib$currentPitch, 0F, 5F);
 		if (this.frozenLib$currentPitch <= 1.0E-4F) return;
 
 		this.minecraft.getSoundManager().soundEngine.frozenLib$setPitch(this.currentMusic, this.frozenLib$currentPitch);

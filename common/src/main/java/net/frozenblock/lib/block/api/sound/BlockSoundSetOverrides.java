@@ -23,7 +23,7 @@ import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentKey;
-import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
+import net.frozenblock.lib.block.impl.sound.BlockSoundSetOverride;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
@@ -32,61 +32,61 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
-public final class SoundTypeOverrides {
-	private static final BlockAttachmentKey<List<SoundTypeOverride>> ATTACHMENT_KEY = BlockAttachmentKey.create(() -> "SoundTypeOverride");
+public final class BlockSoundSetOverrides {
+	private static final BlockAttachmentKey<List<BlockSoundSetOverride>> ATTACHMENT_KEY = BlockAttachmentKey.create(() -> "SoundTypeOverride");
 
-	public static Optional<SoundType> getSoundType(BlockState state) {
-		final List<SoundTypeOverride> overrides = state.getBlock().frozenLib$getAttached(ATTACHMENT_KEY);
+	public static Optional<Holder<BlockSoundSet>> getSoundSet(BlockState state) {
+		final List<BlockSoundSetOverride> overrides = state.getBlock().frozenLib$getAttached(ATTACHMENT_KEY);
 		if (overrides == null) return Optional.empty();
 
-		return overrides.stream().filter(SoundTypeOverride::enabled).findFirst().map(SoundTypeOverride::soundType);
+		return overrides.stream().filter(BlockSoundSetOverride::enabled).findFirst().map(BlockSoundSetOverride::soundSet);
 	}
 
-	public static ResourceKey<SoundTypeOverride> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.SOUND_TYPE_OVERRIDE, id);
+	public static ResourceKey<BlockSoundSetOverride> createKey(Identifier id) {
+		return ResourceKey.create(FrozenLibRegistries.BLOCK_SOUND_SET_OVERRIDE, id);
 	}
 
 	public static void register(
-		BootstrapContext<SoundTypeOverride> context,
-		ResourceKey<SoundTypeOverride> name,
+		BootstrapContext<BlockSoundSetOverride> context,
+		ResourceKey<BlockSoundSetOverride> name,
 		HolderSet<Block> blocks,
-		SoundType soundType
+		Holder<BlockSoundSet> soundSet
 	) {
-		register(context, name, blocks, soundType, Optional.empty());
+		register(context, name, blocks, soundSet, Optional.empty());
 	}
 
 	public static void register(
-		BootstrapContext<SoundTypeOverride> context,
-		ResourceKey<SoundTypeOverride> name,
+		BootstrapContext<BlockSoundSetOverride> context,
+		ResourceKey<BlockSoundSetOverride> name,
 		HolderSet<Block> blocks,
-		SoundType soundType,
+		Holder<BlockSoundSet> soundSet,
 		Holder<ConfigPredicate> configPredicate
 	) {
-		register(context, name, blocks, soundType, Optional.of(configPredicate));
+		register(context, name, blocks, soundSet, Optional.of(configPredicate));
 	}
 
 	public static void register(
-		BootstrapContext<SoundTypeOverride> context,
-		ResourceKey<SoundTypeOverride> name,
+		BootstrapContext<BlockSoundSetOverride> context,
+		ResourceKey<BlockSoundSetOverride> name,
 		HolderSet<Block> blocks,
-		SoundType soundType,
+		Holder<BlockSoundSet> soundSet,
 		Optional<Holder<ConfigPredicate>> configPredicate
 	) {
-		context.register(name, new SoundTypeOverride(blocks, soundType, configPredicate));
+		context.register(name, new BlockSoundSetOverride(blocks, soundSet, configPredicate));
 	}
 
 	@ApiStatus.Internal
 	public static void init() {
 		BlockAttachmentEvents.REGISTER.register((registries -> {
-			registries.lookup(FrozenLibRegistries.SOUND_TYPE_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
+			registries.lookup(FrozenLibRegistries.BLOCK_SOUND_SET_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
 				soundTypeOverrideRegistry.forEach(override -> {
 					override.blocks().forEach(block -> {
-						final List<SoundTypeOverride> overrides = block.value().frozenLib$getAttachedOrDefault(ATTACHMENT_KEY, new ArrayList<>());
+						final List<BlockSoundSetOverride> overrides = block.value().frozenLib$getAttachedOrDefault(ATTACHMENT_KEY, new ArrayList<>());
 						overrides.add(override);
 						block.value().frozenLib$setAttached(ATTACHMENT_KEY, overrides);
 					});

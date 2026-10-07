@@ -20,34 +20,33 @@ package net.frozenblock.lib.block.impl.sound;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.block.api.sound.SoundTypeCodecs;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SoundTypeOverride {
-	public static final Codec<SoundTypeOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+public class BlockSoundSetOverride {
+	public static final Codec<BlockSoundSetOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.holderSet(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
-		SoundTypeCodecs.SOUND_TYPE.fieldOf("sound_type").forGetter(override -> override.soundType),
+		RegistryCodecs.holder(Registries.BLOCK_SOUND_SET, BlockSoundSet.DIRECT_CODEC).fieldOf("sound_set").forGetter(override -> override.soundSet),
 		ConfigPredicate.HOLDER_CODEC.optionalFieldOf("config_predicate").forGetter(override -> override.configPredicate)
-	).apply(instance, SoundTypeOverride::new));
+	).apply(instance, BlockSoundSetOverride::new));
 	private final HolderSet<Block> blocks;
-	private final SoundType soundType;
+	private final Holder<BlockSoundSet> soundSet;
 	private final Optional<Holder<ConfigPredicate>> configPredicate;
 
-	public SoundTypeOverride(HolderSet<Block> blocks, SoundType soundType, Optional<Holder<ConfigPredicate>> configPredicate) {
+	public BlockSoundSetOverride(HolderSet<Block> blocks, Holder<BlockSoundSet> soundSet, Optional<Holder<ConfigPredicate>> configPredicate) {
 		this.blocks = blocks;
-		this.soundType = soundType;
+		this.soundSet = soundSet;
 		this.configPredicate = configPredicate;
 	}
 
-	public SoundType soundType() {
-		return this.soundType;
+	public Holder<BlockSoundSet> soundSet() {
+		return this.soundSet;
 	}
 
 	public HolderSet<Block> blocks() {
