@@ -57,7 +57,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 	private Optional<T> modifiedValue = Optional.empty();
 	private Optional<T> syncedValue = Optional.empty();
 	private boolean dirty;
-	private boolean hasCheckedLoad;
+	private volatile boolean hasCheckedLoad;
 
 	public ConfigEntry(ConfigData<?> data, String id, EntryType<T> type, T defaultValue, EntryProperties properties) {
 		this.configData = data;
@@ -127,10 +127,16 @@ public class ConfigEntry<T> implements Supplier<T> {
 		}
 	}
 
+	// Entries can be read from several threads at once (e.g. parallel registry loading), so load
+	// under the ConfigData lock and only mark the entry loaded afterwards; otherwise another thread
+	// could see the flag and read the default value before the real one is loaded.
 	public void ensureIsLoaded() {
 		if (this.hasCheckedLoad) return;
-		this.hasCheckedLoad = true;
-		this.configData.loadEntry(this, true);
+		synchronized (this.configData) {
+			if (this.hasCheckedLoad) return;
+			this.configData.loadEntry(this, true);
+			this.hasCheckedLoad = true;
+		}
 	}
 
 	public void setSyncedValue(T value) {

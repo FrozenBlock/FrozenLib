@@ -44,7 +44,10 @@ public class OverworldBiomeBuilderParameters {
 		return getOrCreateParameters(location);
 	}
 
-	private static void runBiomes() {
+	// Synchronized because overworld biome lists can be built on several threads at once during
+	// parallel registry loading; the first caller fills the cache while the others wait.
+	// hasRun is set before filling so the nested call from OverworldBiomeBuilder below returns early.
+	private static synchronized void runBiomes() {
 		if (hasRun) return;
 		hasRun = true;
 		addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
@@ -59,7 +62,7 @@ public class OverworldBiomeBuilderParameters {
 		biomeParameters.add(parameters);
 	}
 
-	private static BiomeParameters getOrCreateParameters(Identifier biome) {
+	private static synchronized BiomeParameters getOrCreateParameters(Identifier biome) {
 		if (BIOMES.containsKey(biome)) return BIOMES.get(biome);
 		final BiomeParameters parameters = new BiomeParameters();
 		BIOMES.put(biome, parameters);
