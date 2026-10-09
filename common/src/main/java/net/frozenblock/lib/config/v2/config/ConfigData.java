@@ -110,7 +110,9 @@ public class ConfigData<T> {
 		return this.loaded;
 	}
 
-	public <V> void loadEntry(ConfigEntry<V> entry, boolean checkIfCurrentlyLoaded) {
+	// The loading methods below are synchronized: entries can be loaded from several threads at once,
+	// and the config maps are not thread-safe. ConfigEntry#ensureIsLoaded locks on this too.
+	public synchronized <V> void loadEntry(ConfigEntry<V> entry, boolean checkIfCurrentlyLoaded) {
 		this.load(checkIfCurrentlyLoaded);
 
 		if (this.optimizedMap) {
@@ -126,7 +128,7 @@ public class ConfigData<T> {
 		}
 	}
 
-	public void optimizeConfigMap() {
+	public synchronized void optimizeConfigMap() {
 		this.load(true);
 		this.optimizedConfigMap.clear();
 		if (!this.unoptimizedConfigMap.isEmpty()) this.optimizedConfigMap.putAll(ConfigSerializer.convertToOptimizedConfigMap(this, this.unoptimizedConfigMap));
@@ -134,7 +136,7 @@ public class ConfigData<T> {
 		this.unoptimizedConfigMap.clear();
 	}
 
-	public void load(boolean checkIfCurrentlyLoaded) {
+	public synchronized void load(boolean checkIfCurrentlyLoaded) {
 		if (checkIfCurrentlyLoaded && this.loaded) return;
 		this.unoptimizedConfigMap.clear();
 
@@ -150,7 +152,7 @@ public class ConfigData<T> {
 		ConfigSerializer.saveConfig(this);
 	}
 
-	public void reload() {
+	public synchronized void reload() {
 		this.load(false);
 
 		for (ConfigEntry<?> entry : this.entries.values()) {

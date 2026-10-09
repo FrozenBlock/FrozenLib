@@ -24,13 +24,19 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
 @UtilityClass
-public class FrozenLibEntityTypeTags {
+public final class FrozenLibEntityTypeTags {
     public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 	public static final TagKey<EntityType<?>> WARDEN_CANNOT_TARGET = bind("warden_cannot_target");
 	public static final TagKey<EntityType<?>> SCARES_PIGLIN = bind("scares_piglin");
 	public static final TagKey<EntityType<?>> BLAZES = bind("blazes");
 	public static final TagKey<EntityType<?>> HOGLINS = bind("hoglins");
 	public static final TagKey<EntityType<?>> GHOST_LIKE = bind("ghost_like");
+	public static final TagKey<EntityType<?>> SPIDERS = bind("spiders");
+	public static final TagKey<EntityType<?>> HORSES = bind("horses");
+	public static final TagKey<EntityType<?>> EQUINES = bind("equines");
+	public static final TagKey<EntityType<?>> CAMELS = bind("camels");
+	public static final TagKey<EntityType<?>> NAUTILI = bind("nautili");
+	public static final TagKey<EntityType<?>> GOLEMS = bind("golems");
 	public static final TagKey<EntityType<?>> ON_FIRE = bind("on_fire");
 
     private static TagKey<EntityType<?>> bind(String path) {

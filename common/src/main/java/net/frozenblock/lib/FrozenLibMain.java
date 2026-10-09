@@ -17,14 +17,15 @@
 
 package net.frozenblock.lib;
 
-import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
+import net.frozenblock.lib.advancement.impl.predicates.entity.FrozenLibEntitySubPredicateTypes;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.BlockSoundSetOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.command.FrozenLibArgumentTypes;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
@@ -46,7 +47,7 @@ import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicate
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
-import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
+import net.frozenblock.lib.levelgen.material.impl.FrozenLibMaterialConditionTypes;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProviderTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
@@ -59,19 +60,13 @@ import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
-import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
-import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
-import net.minecraft.commands.synchronization.ArgumentTypeInfo;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
@@ -96,14 +91,7 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		final DeferredRegister<ArgumentTypeInfo<?, ?>> argumentTypes = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
-		argumentTypes.register(
-			"tag_key",
-			() -> new TagKeyArgument.Info<>(),
-			info -> ArgumentTypeInfos.BY_CLASS.put(ArgumentTypeInfos.fixClassType(TagKeyArgument.class), info)
-		);
-		argumentTypes.register();
-
+		FrozenLibArgumentTypes.init();
 		CapeUtil.init();
 		SpottingIcons.init();
 		SulfurCubeEvents.init();
@@ -114,6 +102,7 @@ public final class FrozenLibMain {
 		FrozenLibEnvironmentAttributes.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
+		FrozenLibMaterialConditionTypes.init();
 		FrozenLibDataComponents.init();
 		FrozenLibConsumeEffects.init();
 		FrozenLibFeatureTypes.init();
@@ -122,6 +111,7 @@ public final class FrozenLibMain {
 		ConfigPredicateTypes.init();
 		PitchProviderTypes.init();
 		FrozenLibSpawnConditions.init();
+		FrozenLibEntitySubPredicateTypes.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
@@ -135,11 +125,6 @@ public final class FrozenLibMain {
 		StructureSetApi.init();
 		TemplatePoolApi.init();
 		PistonPushUtil.init();
-
-		final DeferredRegister<MapCodec<? extends MaterialCondition>> materialConditionTypes = DeferredRegister.create(Registries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.MOD_ID);
-		materialConditionTypes.register("config_predicate", () -> ConfigCondition.CODEC);
-		materialConditionTypes.register();
-
 		ScreenShakes.init();
 		StructureStatusUpdater.init();
 
