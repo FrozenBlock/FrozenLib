@@ -45,6 +45,25 @@ public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.En
 		this.tag(FrozenLibEntityTypeTags.GHOST_LIKE)
 			.add(EntityTypeIds.VEX);
 
+		this.tag(FrozenLibEntityTypeTags.SPIDERS)
+			.add(EntityTypeIds.SPIDER, EntityTypeIds.CAVE_SPIDER);
+
+		this.tag(FrozenLibEntityTypeTags.HORSES)
+			.add(EntityTypeIds.HORSE, EntityTypeIds.ZOMBIE_HORSE, EntityTypeIds.SKELETON_HORSE);
+
+		this.tag(FrozenLibEntityTypeTags.EQUINES)
+			.add(EntityTypeIds.DONKEY, EntityTypeIds.MULE)
+			.addOptionalTag(FrozenLibEntityTypeTags.HORSES);
+
+		this.tag(FrozenLibEntityTypeTags.CAMELS)
+			.add(EntityTypeIds.CAMEL, EntityTypeIds.CAMEL_HUSK);
+
+		this.tag(FrozenLibEntityTypeTags.NAUTILI)
+			.add(EntityTypeIds.NAUTILUS, EntityTypeIds.ZOMBIE_NAUTILUS);
+
+		this.tag(FrozenLibEntityTypeTags.GOLEMS)
+			.add(EntityTypeIds.SNOW_GOLEM, EntityTypeIds.IRON_GOLEM, EntityTypeIds.COPPER_GOLEM);
+
 		this.tag(FrozenLibEntityTypeTags.ON_FIRE)
 			.add(EntityTypeIds.FIREBALL, EntityTypeIds.SMALL_FIREBALL)
 			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);

@@ -17,17 +17,17 @@
 
 package net.frozenblock.lib;
 
-import com.mojang.serialization.MapCodec;
 import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.advancement.impl.predicates.entity.FrozenLibEntitySubPredicateTypes;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateTypes;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
@@ -46,7 +46,7 @@ import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicate
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
-import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
+import net.frozenblock.lib.levelgen.material.impl.FrozenLibMaterialConditionTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
@@ -70,7 +70,6 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
@@ -113,6 +112,7 @@ public final class FrozenLibMain {
 		FrozenLibEnvironmentAttributes.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
+		FrozenLibMaterialConditionTypes.init();
 		FrozenLibDataComponents.init();
 		FrozenLibConsumeEffects.init();
 		FrozenLibFeatureTypes.init();
@@ -120,6 +120,7 @@ public final class FrozenLibMain {
 		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
 		FrozenLibSpawnConditions.init();
+		FrozenLibEntitySubPredicateTypes.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
@@ -133,11 +134,6 @@ public final class FrozenLibMain {
 		StructureSetApi.init();
 		TemplatePoolApi.init();
 		PistonPushUtil.init();
-
-		final DeferredRegister<MapCodec<? extends MaterialCondition>> materialConditionTypes = DeferredRegister.create(Registries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.MOD_ID);
-		materialConditionTypes.register("config_predicate", () -> ConfigCondition.CODEC);
-		materialConditionTypes.register();
-
 		ScreenShakes.init();
 		StructureStatusUpdater.init();
 
