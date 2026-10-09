@@ -1,0 +1,10 @@
+{
+  "values": [
+    "minecraft:donkey",
+    "minecraft:mule",
+    {
+      "id": "#frozenlib:horses",
+      "required": false
+    }
+  ]
+}

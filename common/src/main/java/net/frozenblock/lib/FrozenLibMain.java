@@ -18,14 +18,16 @@
 package net.frozenblock.lib;
 
 import lombok.experimental.UtilityClass;
+import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
+import net.frozenblock.lib.advancement.impl.predicates.entity.FrozenLibEntitySubPredicates;
 import net.frozenblock.lib.block.api.attachment.BlockAttachmentEvents;
 import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
@@ -51,7 +53,7 @@ import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibRuleBlockE
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
+import net.frozenblock.lib.levelgen.surface.impl.FrozenLibMaterialConditions;
 import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
 import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
@@ -70,7 +72,6 @@ import net.minecraft.core.registries.Registries;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
-import net.fabricmc.frozenblock.datafixer.impl.ServerFreezer;
 
 @ApiStatus.Internal
 @UtilityClass
@@ -111,11 +112,13 @@ public final class FrozenLibMain {
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
+		FrozenLibMaterialConditions.init();
 		FrozenLibDataComponents.init();
 		FrozenLibConsumeEffects.init();
 		FrozenLibFeatures.init();
 		ConfigPredicateType.init();
 		FrozenLibSpawnConditions.init();
+		FrozenLibEntitySubPredicates.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
@@ -129,10 +132,6 @@ public final class FrozenLibMain {
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
 		PistonPushUtil.init();
-
-		final var matCon = DeferredRegister.create(Registries.MATERIAL_CONDITION, FrozenLibConstants.MOD_ID);
-		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);
-		matCon.register();
 
 		ScreenShakes.init();
 		StructureStatusUpdater.init();
