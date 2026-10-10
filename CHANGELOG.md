@@ -80,6 +80,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - Displays a warning, explaining that an invalid file transfer/request was attempted.
     - FrozenLib only allows for certain file paths and extensions to be used.
       - As such, this warning can only be triggered if another player/mod is attempting an exploit or a mod is unaware of these limitations.
+- Added the `frozenlib:config_entry` and `frozenlib:config_entry_with_fallback` Context Float Providers and Context Integer Providers.
 - Added `FileTransferEvents`, with the following Events:
   - `FILE_RECEIVE`: Triggers when a file is received.
   - `ILLEGAL_TRANSFER_RECEIVE`: Triggers when a file transfer is attempted that contains an invalid destination or file extension.

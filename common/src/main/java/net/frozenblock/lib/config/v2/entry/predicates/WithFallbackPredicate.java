@@ -64,7 +64,10 @@ public class WithFallbackPredicate implements ConfigPredicate {
 
 	@Override
 	public Boolean get() {
-		return this.whenPresent.map(Holder::value).map(ConfigPredicate::get).orElseGet(this.fallback.value());
+		return this.whenPresent
+			.map(Holder::value)
+			.map(ConfigPredicate::get)
+			.orElseGet(this.fallback.value());
 	}
 
 	@Override

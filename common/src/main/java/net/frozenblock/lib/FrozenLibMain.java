@@ -40,6 +40,8 @@ import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.component.consume_effects.FrozenLibConsumeEffects;
 import net.frozenblock.lib.item.impl.cooldown.SerializableItemCooldowns;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
+import net.frozenblock.lib.item.impl.loot.providers.number.floats.FrozenLibContextFloatProviderTypes;
+import net.frozenblock.lib.item.impl.loot.providers.number.ints.FrozenLibContextIntProviderTypes;
 import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
 import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
@@ -110,6 +112,8 @@ public final class FrozenLibMain {
 		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
 		PitchProviderTypes.init();
+		FrozenLibContextFloatProviderTypes.init();
+		FrozenLibContextIntProviderTypes.init();
 		FrozenLibSpawnConditions.init();
 		FrozenLibEntitySubPredicateTypes.init();
 		WindManager.init();

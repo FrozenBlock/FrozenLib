@@ -18,39 +18,39 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
-public class ConfigPredicateTypes {
+@ApiStatus.Internal
+@UtilityClass
+public final class ConfigPredicateTypes {
 
-	@ApiStatus.Internal
 	public static void init() {
-		register("equal_to", EqualToPredicate.CODEC);
-		register("greater_than", GreaterThanPredicate.CODEC);
-		register("greater_than_or_equal_to", GreaterThanOrEqualToPredicate.CODEC);
-		register("less_than", LessThanPredicate.CODEC);
-		register("less_than_or_equal_to", LessThanOrEqualToPredicate.CODEC);
-		register("all_match", AllMatchPredicate.CODEC);
-		register("any_of", AnyOfPredicate.CODEC);
-		register("all_of", AllOfPredicate.CODEC);
-		register("not", NotPredicate.CODEC);
-		register("exists", ExistsPredicate.CODEC);
-		register("selector", SelectorPredicate.CODEC);
-		register("with_fallback", WithFallbackPredicate.CODEC);
-		register("fabric", FabricPredicate.CODEC);
-		register("neoforge", NeoForgePredicate.CODEC);
-		register("mod", ModPredicate.CODEC);
-		register("true", TruePredicate.CODEC);
-	}
+		final DeferredRegister<MapCodec<? extends ConfigPredicate>> register = DeferredRegister.create(
+			FrozenLibRegistries.CONFIG_PREDICATE_TYPE_REGISTRY,
+			FrozenLibConstants.MOD_ID
+		);
 
-	public static <P extends ConfigPredicate> void register(Identifier id, MapCodec<P> codec) {
-		Registry.register(FrozenLibRegistries.CONFIG_PREDICATE_TYPE, id, codec);
-	}
+		register.register("equal_to", () -> EqualToPredicate.CODEC);
+		register.register("greater_than", () -> GreaterThanPredicate.CODEC);
+		register.register("greater_than_or_equal_to", () -> GreaterThanOrEqualToPredicate.CODEC);
+		register.register("less_than", () -> LessThanPredicate.CODEC);
+		register.register("less_than_or_equal_to", () -> LessThanOrEqualToPredicate.CODEC);
+		register.register("all_match", () -> AllMatchPredicate.CODEC);
+		register.register("any_of", () -> AnyOfPredicate.CODEC);
+		register.register("all_of", () -> AllOfPredicate.CODEC);
+		register.register("not", () -> NotPredicate.CODEC);
+		register.register("exists", () -> ExistsPredicate.CODEC);
+		register.register("selector", () -> SelectorPredicate.CODEC);
+		register.register("with_fallback", () -> WithFallbackPredicate.CODEC);
+		register.register("fabric", () -> FabricPredicate.CODEC);
+		register.register("neoforge", () -> NeoForgePredicate.CODEC);
+		register.register("mod", () -> ModPredicate.CODEC);
+		register.register("true", () -> TruePredicate.CODEC);
 
-	private static <P extends ConfigPredicate> void register(String name, MapCodec<P> codec) {
-		register(FrozenLibConstants.id(name), codec);
+		register.register();
 	}
 }

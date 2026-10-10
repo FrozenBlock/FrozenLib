@@ -45,7 +45,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateP
  * Allows for the modification of {@link BlockTransformer}s as they're loaded from resources.
  */
 @UtilityClass
-public class BlockTransformerEvents {
+public final class BlockTransformerEvents {
 	/**
 	 * An event used to modify the Axe's {@link BlockTransformer}s.
 	 */
