@@ -40,6 +40,7 @@ public final class FrozenLibConstants {
 	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");
 	public static final boolean DEBUG_WIND_DISTURBANCES = SharedConstants.debugFlag("FROZENLIB_WIND_DISTURBANCES");
 	public static final boolean DEBUG_FILE_TRANSFER = SharedConstants.debugFlag("FROZENLIB_FILE_TRANSFER");
+	public static final boolean DEBUG_SERVER_TEXTURE = SharedConstants.debugFlag("FROZENLIB_SERVER_TEXTURE");
 
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, path);

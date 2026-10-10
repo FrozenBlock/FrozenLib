@@ -18,17 +18,21 @@
 package net.frozenblock.lib.resource.client.api.texture;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.ModLoader;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
+import org.slf4j.Logger;
 
 @ClientOnly
 public final class ServerTextureManager implements AutoCloseable {
+	private static final Logger LOGGER = LogUtils.getLogger();
 	private final Map<Identifier, ServerTextureStatus> textures = new Object2ObjectOpenHashMap<>();
 	private final TextureManager textureManager;
 	private final ServerTextureDownloader downloader;
@@ -50,30 +54,34 @@ public final class ServerTextureManager implements AutoCloseable {
 		String fileName,
 		Identifier fallback
 	) {
-		final ServerTextureStatus status = this.textures.get(location);
-		if (status instanceof ServerTextureStatus.Success success) {
-			success.updateReferenceTimestamp();
-			return location;
-		}
-		if (status != null) return fallback;
+		synchronized (this.textures) {
+			final ServerTextureStatus status = this.textures.get(location);
+			if (status instanceof ServerTextureStatus.Success success) {
+				success.updateReferenceTimestamp();
+				return location;
+			}
+			if (status != null) return fallback;
 
-		return this.downloader.fetchOrRequestDownloadIfNotPresent(location, destinationPath, fileName, fallback);
+			return this.downloader.fetchOrRequestDownloadIfNotPresent(location, destinationPath, fileName, fallback);
+		}
 	}
 
 	public void tick() {
-		final long currentTimeMillis = System.currentTimeMillis();
-		this.textures.values().removeIf(texture -> {
-			if (texture instanceof ServerTextureStatus.Timed timed && timed.expired(currentTimeMillis)) {
-				timed.onExpiry(this.textureManager);
-				return true;
-			}
-			return false;
-		});
+		synchronized (this.textures) {
+			final long currentTimeMillis = System.currentTimeMillis();
+			this.textures.values().removeIf(texture -> {
+				if (texture instanceof ServerTextureStatus.Timed timed && timed.expired(currentTimeMillis)) {
+					timed.onExpiry(this.textureManager);
+					return true;
+				}
+				return false;
+			});
 
 
-		this.textures.values().forEach(texture -> {
-			if (texture instanceof ServerTextureStatus.Timed timed) timed.tick(currentTimeMillis);
-		});
+			this.textures.values().forEach(texture -> {
+				if (texture instanceof ServerTextureStatus.Timed timed) timed.tick(currentTimeMillis);
+			});
+		}
 	}
 
 	public void resetData() {
@@ -83,38 +91,55 @@ public final class ServerTextureManager implements AutoCloseable {
 		this.textures.clear();
 	}
 
-	public void setPending(Identifier location, String destinationPath, String fileName) {
-		final ServerTextureStatus status = this.textures.put(location, new ServerTextureStatus.Pending(location, createPendingPathToFile(destinationPath, fileName)));
-		if (!(status instanceof ServerTextureStatus.Pending) && ModLoader.isDevelopmentEnvironment()) {
-			throw new IllegalStateException("Attempting to mark texture with non-pending status as pending!");
+	public synchronized void setPending(Identifier location, String destinationPath, String fileName) {
+		synchronized (this.textures) {
+			final ServerTextureStatus status = this.textures.put(location, new ServerTextureStatus.Pending(location, createPendingPathToFile(destinationPath, fileName)));
+			if (status != null &&  !(status instanceof ServerTextureStatus.Pending) && ModLoader.isDevelopmentEnvironment()) {
+				throw new IllegalStateException("Attempting to mark texture with non-pending status as pending!");
+			}
+			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} status pending", location);
+		}
+
+	}
+
+	public synchronized void setFailure(Identifier location) {
+		synchronized (this.textures) {
+			final ServerTextureStatus status = this.textures.put(location, new ServerTextureStatus.Failure());
+			if (status instanceof ServerTextureStatus.Success && ModLoader.isDevelopmentEnvironment()) {
+				throw new IllegalStateException("Attempting to mark texture with success status as failure!");
+			}
+			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} status failed", location);
 		}
 	}
 
-	public void setFailure(Identifier location) {
-		final ServerTextureStatus status = this.textures.put(location, new ServerTextureStatus.Failure());
-		if (status instanceof ServerTextureStatus.Success && ModLoader.isDevelopmentEnvironment()) {
-			throw new IllegalStateException("Attempting to mark texture with success status as failure!");
+	public synchronized void setSuccess(Identifier location, NativeImage contents) {
+		synchronized (this.textures) {
+			this.textureManager.register(location, TextureResources.from2dImage(() -> "Server Texture " + location, contents));
+			this.textures.put(location, new ServerTextureStatus.Success(location));
+			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} status succeeded", location);
 		}
 	}
 
-	public void setSuccess(Identifier location, NativeImage contents) {
-		this.textures.put(location, new ServerTextureStatus.Success(location, TextureResources.from2dImage(() -> "Server Texture " + location, contents)));
-	}
-
-	public void onFileDownloaded(String destinationPath, String fileName) {
-		final String pathToFile = ServerTextureManager.createPendingPathToFile(destinationPath, fileName);
-		for (ServerTextureStatus status : this.textures.values()) {
-			if (status instanceof ServerTextureStatus.Pending(Identifier location, String toFile) && toFile.equals(pathToFile)) {
-				this.downloader.onFileDownloaded(location, destinationPath, fileName);
+	public synchronized void onFileDownloaded(String destinationPath, String fileName) {
+		synchronized (this.textures) {
+			final String pathToFile = ServerTextureManager.createPendingPathToFile(destinationPath, fileName);
+			for (ServerTextureStatus status : this.textures.values()) {
+				if (status instanceof ServerTextureStatus.Pending(Identifier location, String toFile) && toFile.equals(pathToFile)) {
+					if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} has been downloaded", location);
+					this.downloader.onFileDownloaded(location, destinationPath, fileName);
+				}
 			}
 		}
 	}
 
-	public void onFileDownloadFailed(String destinationPath, String fileName) {
-		final String pathToFile = ServerTextureManager.createPendingPathToFile(destinationPath, fileName);
-		for (ServerTextureStatus status : this.textures.values()) {
-			if (status instanceof ServerTextureStatus.Pending(Identifier location, String toFile) && toFile.equals(pathToFile)) {
-				this.setFailure(location);
+	public synchronized void onFileDownloadFailed(String destinationPath, String fileName) {
+		synchronized (this.textures) {
+			final String pathToFile = ServerTextureManager.createPendingPathToFile(destinationPath, fileName);
+			for (ServerTextureStatus status : this.textures.values()) {
+				if (status instanceof ServerTextureStatus.Pending(Identifier location, String toFile) && toFile.equals(pathToFile)) {
+					if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} has failed to download", location);
+					this.setFailure(location);
+				}
 			}
 		}
 	}
@@ -147,24 +172,17 @@ public final class ServerTextureManager implements AutoCloseable {
 		final class Success implements ServerTextureStatus, Timed {
 			private static final long DEFAULT_LIFETIME = 5000L;
 			private final Identifier location;
-			private final TextureResources resources;
 			private final long lifetime;
 			private long lastReferenceTimestamp;
 
-			public Success(Identifier location, TextureResources resources, long lifetime) {
+			public Success(Identifier location, long lifetime) {
 				this.location = location;
-				this.resources = resources;
 				this.lifetime = lifetime;
 				this.updateReferenceTimestamp();
 			}
 
-			public Success(Identifier location, TextureResources resources) {
-				this(location, resources, DEFAULT_LIFETIME);
-			}
-
-			@Override
-			public void tick(long currentTimeMillis) {
-				this.lastReferenceTimestamp = currentTimeMillis;
+			public Success(Identifier location) {
+				this(location, DEFAULT_LIFETIME);
 			}
 
 			@Override
@@ -175,6 +193,7 @@ public final class ServerTextureManager implements AutoCloseable {
 			@Override
 			public void onExpiry(TextureManager textureManager) {
 				textureManager.release(this.location);
+				if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} has been released", this.location);
 			}
 
 			public void updateReferenceTimestamp() {
@@ -183,10 +202,6 @@ public final class ServerTextureManager implements AutoCloseable {
 
 			public Identifier location() {
 				return this.location;
-			}
-
-			public TextureResources resources() {
-				return this.resources;
 			}
 		}
 

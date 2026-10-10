@@ -71,6 +71,8 @@ public final class ServerTextureDownloader {
 	}
 
 	public Identifier fetchOrRequestDownloadIfNotPresent(Identifier textureId, String destinationPath, String fileName, Identifier fallback) {
+		this.onRequest.accept(textureId, destinationPath, fileName);
+
 		return CompletableFuture.supplyAsync(
 			() -> {
 				NativeImage image;
@@ -104,11 +106,10 @@ public final class ServerTextureDownloader {
 	}
 
 	@Nullable
-	private NativeImage loadLocalTextureOrRequestDownload(@Nullable Identifier textureId, String destinationPath, String fileName) throws IOException {
+	private synchronized NativeImage loadLocalTextureOrRequestDownload(Identifier textureId, String destinationPath, String fileName) throws IOException {
 		final Path directory = this.gameDirectory.resolve(destinationPath);
 		for (String fileExtension : VALID_FILE_EXTENSIONS) {
-			final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
-			final String fileNameWithExtension = fileName + "." + fixedExtension;
+			final String fileNameWithExtension = fileName + "." + fileExtension;
 			final Path destination = directory.resolve(fileNameWithExtension);
 			final Path localSource = directory.resolve(FileTransferPacket.LOCAL_SOURCE).resolve(fileNameWithExtension);
 			final Path sourcePath = Files.isRegularFile(destination) ? destination : localSource;
@@ -120,18 +121,26 @@ public final class ServerTextureDownloader {
 		if (FrozenLibConfig.FILE_TRANSFER_CLIENT.get() && textureId != null) {
 			ClientNetworkingHelper.sendToServer(FileTransferPacket.createRequest(destinationPath, fileName, VALID_FILE_EXTENSIONS));
 			FileTransferEvents.REQUEST_SEND.invoker().onRequestSent(destinationPath, fileName, VALID_FILE_EXTENSIONS, true);
-			this.onRequest.accept(textureId, destinationPath, fileName);
-			if (FrozenLibConstants.UNSTABLE_LOGGING) LOGGER.debug("Requesting server texture {} from {}", fileName, destinationPath);
+
+			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) {
+				LOGGER.info("Requesting server texture {}/{} from server", destinationPath, fileName);
+			} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
+				LOGGER.debug("Requesting server texture {}/{} from server", destinationPath, fileName);
+			}
 		}
 
 		return null;
 	}
 
 	@Nullable
-	private static NativeImage loadImageAsPNG(Path imagePath, String path, String fileExtension) throws IOException {
+	private static synchronized NativeImage loadImageAsPNG(Path imagePath, String path, String fileExtension) throws IOException {
 		if (!Files.isRegularFile(imagePath)) return null;
 
-		LOGGER.debug("Loading server texture from local cache ({})", path);
+		if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) {
+			LOGGER.info("Loading server texture from local cache ({})", path);
+		} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
+			LOGGER.debug("Loading server texture from local cache ({})", path);
+		}
 
 		final InputStream inputStream = Files.newInputStream(imagePath);
 		InputStream imageInput = inputStream;
@@ -171,7 +180,7 @@ public final class ServerTextureDownloader {
 		return image;
 	}
 
-	private CompletableFuture<Identifier> onImageLoaded(Identifier textureId, @Nullable NativeImage contents) {
+	private synchronized CompletableFuture<Identifier> onImageLoaded(Identifier textureId, @Nullable NativeImage contents) {
 		if (contents == null) return CompletableFuture.completedFuture(null);
 
 		return CompletableFuture.supplyAsync(() -> {
