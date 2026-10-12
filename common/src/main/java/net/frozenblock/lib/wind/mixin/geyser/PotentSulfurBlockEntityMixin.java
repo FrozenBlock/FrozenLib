@@ -77,7 +77,7 @@ public class PotentSulfurBlockEntityMixin implements PotentSulfurWindAccess {
 			level,
 			entity,
 			source -> WindDisturbanceTypesHolder.noneMatch(source, WindDisturbanceTypesHolder.type(WindDisturbanceTypes.GEYSER.get())),
-			() -> GeyserWindDisturbanceType.INSTANCE
+			GeyserWindDisturbanceType.INSTANCE
 		);
 
 		return original;

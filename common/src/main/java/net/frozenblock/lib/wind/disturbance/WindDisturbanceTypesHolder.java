@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.BlockEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.ChunkLifecycleEvents;
@@ -56,8 +55,8 @@ public record WindDisturbanceTypesHolder(List<WindDisturbanceType<?>> types) imp
 	public static void init() {
 		EntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> {
 			WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity);
-			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceTypes.BREEZE.get()), BreezeWindDisturbanceType::new);
-			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceTypes.WIND_CHARGE.get()), WindChargeWindDisturbanceType::new);
+			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceTypes.BREEZE.get()), BreezeWindDisturbanceType.INSTANCE);
+			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceTypes.WIND_CHARGE.get()), WindChargeWindDisturbanceType.INSTANCE);
 		});
 		EntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
@@ -102,9 +101,9 @@ public record WindDisturbanceTypesHolder(List<WindDisturbanceType<?>> types) imp
 		set(level, target, holder.add(windDisturbanceType));
 	}
 
-	public static void addIf(Level level, DataAttachmentTarget target, Predicate<DataAttachmentTarget> predicate, Supplier<WindDisturbanceType<?>> windDisturbance) {
+	public static void addIf(Level level, DataAttachmentTarget target, Predicate<DataAttachmentTarget> predicate, WindDisturbanceType<?> type) {
 		if (!predicate.test(target)) return;
-		add(level, target, windDisturbance.get());
+		add(level, target, type);
 	}
 
 	public static void removeAttachment(Level level, DataAttachmentTarget target, boolean notifyWindManager) {
