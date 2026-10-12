@@ -93,6 +93,34 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Revamped the implementation of the `ServerTexture`, now relying on `ServerTextureManager` and `ServerTextureDownloader` with much cleaner implementation.
   - This resolves scenarios where multiple file transfers/requests would be attempted in a row, as the status of each texture download is stored from start to finish.
   - `ServerTextureManager` can be accessed via the injected `frozenLib$serverTextureManager` method in `Minecraft`.
+- Removed the following Feature Types, previously used for modified behavior of Vegetation Patches:
+  - `frozenlib:vegetation_patch_with_edge_decoration`
+  - `frozenlib:underwater_vegetation_patch`
+  - `frozenlib:underwater_vegetation_patch_with_edge_decoration`
+  - `frozenlib:circular_waterlogged_vegetation_patch`
+  - `frozenlib:circular_waterlogged_vegetation_patch_less_borders`
+  - `frozenlib:circular_lava_vegetation_patch`
+  - `frozenlib:circular_lava_vegetation_patch_less_borders`
+- Added the following Feature Types, providing the same functionality as the previous modified Vegetation Patches in a cleaner manner:
+  - `frozenlib:flexible_lava_vegetation_patch`
+  - `frozenlib:flexible_vegetation_patch`
+  - `frozenlib:flexible_waterlogged_vegetation_patch`
+  - The format of these Feature Types is as follows:
+    - `replaceable`: A Block ID, a list of Block IDs, or a Block Tag defining which Blocks can be replaced.
+    - `ground_state`: A Block State Provider determining which Blocks to place.
+    - `vegetation_feature`: A Placed Feature's ID, or a Placed Feature to place.
+    - `surface`: Which surface the patch will generate on (`floor` or `ceiling`.)
+    - `depth`: An Integer Provider, determining the depth of the patch.
+    - `extra_bottom_block_chance`: A Float (in a 0-1 range,) determining to chance for an extra block to be placed at the bottom of the patch.
+    - `vertical_range`: An Integer (in a 1-256 range,) determining how many blocks the patch can search for its surface.
+    - `vegetation_chance`: A Float (in a 0-1 range,) determining to chance for `vegetation_feature` to generate per-Block.
+    - `xz_radius`: An Integer Provider, determining the possible radii/dimensions of the patch.
+    - `extra_edge_column_chance`: A Float (in a 0-1 range,) determining to chance for an extra block to be placed at the edge of the patch.
+    - `flexible_components`:
+      - `is_open` (Optional): A Block Predicate, determining what places are valid for placing the exposed floor of the patch, and `vegetation_feature`.
+      - `place_on_edges`: If `true`, allows `vegetation_feature` to be placed just past the edges of the patch.
+      - `circular`: If `true`, the patch will generate in a circular shape.
+      - `place_base_block`: If `false`, skips the placement of `ground_state`.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
 - Configs will no longer log errors per-entry if the config file itself is not present.
 - Removed the `/frozenlib scale` command, as this functionality is already present in the `/attribute` command.

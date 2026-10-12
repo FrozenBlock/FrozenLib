@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.levelgen.feature.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "patch.CircularMixin",
+    "patch.IsOpenMixin",
+    "patch.NoBaseBlockMixin",
+    "patch.PlaceOnEdgesMixin"
+  ],
+  "client": [
+  ]
+}

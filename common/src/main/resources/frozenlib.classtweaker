@@ -488,6 +488,7 @@ transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader$De
 transitive-accessible method net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider <init> (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature distributeVegetation (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Ljava/util/Set;)V
 transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature placeGround (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/function/Predicate;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos$MutableBlockPos;I)Z
+transitive-accessible method net/minecraft/world/level/levelgen/feature/WaterloggedVegetationPatchFeature isExposed (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/Set;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos$MutableBlockPos;)Z
 
 # Biomes
 transitive-accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
