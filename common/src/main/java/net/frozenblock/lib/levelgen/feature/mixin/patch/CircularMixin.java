@@ -32,12 +32,7 @@ public class CircularMixin {
 		mutableZRadius.set(xRadius);
 	}
 
-	@Unique
-	private boolean frozenLib$isCircular() {
-		return VegetationPatchFeature.class.cast(this) instanceof FlexibleVegetationPatchFeature flexible && flexible.flexibleComponents.circular();
-	}
-
-	@Definition(id = "isCorner", local = @Local(name = "isCorner"))
+	@Definition(id = "isCorner", local = @Local(name = "isCorner", type = boolean.class))
 	@Expression("isCorner == false")
 	@Inject(
 		method = "placeGroundPatch",
@@ -60,6 +55,8 @@ public class CircularMixin {
 		@Local(name = "isCorner") LocalBooleanRef isCorner, // Set true to skip placement
 		@Local(name = "isEdgeButNotCorner") LocalBooleanRef isEdgeButNotCorner // Set false to count as valid edge for extraEdgeColumnChance
 	) {
+		if (!this.frozenLib$isCircular()) return;
+
 		final BlockPos zero = BlockPos.ZERO;
 		final BlockPos offsetPos = zero.offset(dx, 0, dz);
 		final boolean outsideCircle = offsetPos.distManhattan(zero) > xRadius;
@@ -82,6 +79,10 @@ public class CircularMixin {
 			isEdge.set(false);
 			isEdgeButNotCorner.set(false);
 		}
+	}
 
+	@Unique
+	private boolean frozenLib$isCircular() {
+		return VegetationPatchFeature.class.cast(this) instanceof FlexibleVegetationPatchFeature flexible && flexible.flexibleComponents.circular();
 	}
 }
