@@ -17,49 +17,46 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
+import com.mojang.serialization.Codec;
+import java.util.List;
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbance;
-import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-public interface WindDisturbanceType<D extends WindDisturbance<?>> {
-	WindDisturbanceType<BreezeWindDisturbance> BREEZE = register("breeze", BreezeWindDisturbance.CODEC, BreezeWindDisturbance.STREAM_CODEC);
-	WindDisturbanceType<WindChargeWindDisturbance> WIND_CHARGE = register("wind_charge", WindChargeWindDisturbance.CODEC, WindChargeWindDisturbance.STREAM_CODEC);
-	WindDisturbanceType<GeyserWindDisturbance> GEYSER = register("geyser", GeyserWindDisturbance.CODEC, GeyserWindDisturbance.STREAM_CODEC);
+public interface WindDisturbanceType<T> {
+	Codec<WindDisturbanceType<?>> CODEC = FrozenLibRegistries.WIND_DISTURBANCE_TYPE.byNameCodec();
+	StreamCodec<RegistryFriendlyByteBuf, WindDisturbanceType<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY);
+	Codec<List<WindDisturbanceType<?>>> LIST_CODEC = CODEC.listOf();
+	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbanceType<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 
-	MapCodec<D> codec();
-
-	StreamCodec<RegistryFriendlyByteBuf, D> streamCodec();
-
-	static void init() {}
-
-	static <D extends WindDisturbance<?>> WindDisturbanceType<D> register(
-		Identifier id,
-		MapCodec<D> codec,
-		StreamCodec<RegistryFriendlyByteBuf, D> streamCodec
-	) {
-		return Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_TYPE, id, new WindDisturbanceType<>() {
-			@Override
-			public MapCodec<D> codec() {
-				return codec;
-			}
-
-			@Override
-			public StreamCodec<RegistryFriendlyByteBuf, D> streamCodec() {
-				return streamCodec;
-			}
-		});
+	default double scale(T source, Level level) {
+		return 1D;
 	}
 
-	private static <D extends WindDisturbance<?>> WindDisturbanceType<D> register(
-		String name,
-		MapCodec<D> codec,
-		StreamCodec<RegistryFriendlyByteBuf, D> streamCodec
-	) {
-		return register(FrozenLibConstants.id(name), codec, streamCodec);
+	Vec3 origin(T source, Level level);
+
+	AABB area(T source, Level level, Vec3 origin, double scale);
+
+	WindDisturbanceResult sample(T source, Level level, Vec3 origin, AABB area, Vec3 target, double scale);
+
+	boolean expired(T source, Level level);
+
+	default boolean invalidOrExpired(DataAttachmentTarget source, Level level) {
+		try {
+			return this.expired((T) source, level);
+		} catch (Exception e) {
+			FrozenLibLogUtils.logError("WindDisturbance invalid", e);
+			return true;
+		}
 	}
+	MapCodec<? extends WindDisturbanceType<T>> codec();
+
+	StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<T>> streamCodec();
 }

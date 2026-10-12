@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.debug.client.renderer;
 
-import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
@@ -30,7 +29,6 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
@@ -50,16 +48,12 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 	) {
 		final Level level = Minecraft.getInstance().level;
 		if (level == null) return;
-		ClientWindUtil.Debug.getWindDisturbances().forEach(
-			tracked -> {
-				final DataAttachmentTarget target = tracked.getFirst();
-				for (WindDisturbance disturbance : tracked.getSecond()) {
-					final Vec3 origin = disturbance.origin(target, level);
-					Gizmos.cuboid(disturbance.area(target, level, origin), WIND_DISTURBANCE_AREA_STYLE);
-					Gizmos.cuboid(AABB.ofSize(origin, 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
-				}
+		ClientWindUtil.Debug.getWindDisturbances().forEach(holder -> {
+			for (WindDisturbance<?, ?> disturbance : holder) {
+				Gizmos.cuboid(disturbance.area(), WIND_DISTURBANCE_AREA_STYLE);
+				Gizmos.cuboid(AABB.ofSize(disturbance.origin(), 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
 			}
-		);
+		});
 
 		WindDebugRenderer.emitWindNodesFromList(ClientWindUtil.Debug.getDebugDisturbanceNodes(), frustum);
 	}

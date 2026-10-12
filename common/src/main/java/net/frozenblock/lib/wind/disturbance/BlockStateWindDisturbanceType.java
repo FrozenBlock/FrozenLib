@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class BlockStateWindDisturbance implements WindDisturbance<ChunkAccess> {
+public abstract class BlockStateWindDisturbanceType implements WindDisturbanceType<ChunkAccess> {
 	protected static final StreamCodec<ByteBuf, BlockState> BLOCK_STATE_CODEC = new StreamCodec<>() {
 		@Override
 		public void encode(ByteBuf output, BlockState value) {
@@ -42,7 +42,7 @@ public abstract class BlockStateWindDisturbance implements WindDisturbance<Chunk
 	public final BlockState blockState;
 	public final BlockPos position;
 
-	protected BlockStateWindDisturbance(BlockState blockState, BlockPos position) {
+	protected BlockStateWindDisturbanceType(BlockState blockState, BlockPos position) {
 		this.blockState = blockState;
 		this.position = position;
 	}

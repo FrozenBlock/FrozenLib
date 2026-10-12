@@ -25,16 +25,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class WindChargeWindDisturbance extends EntityWindDisturbance<AbstractWindCharge> {
-	public static WindChargeWindDisturbance INSTANCE = new WindChargeWindDisturbance();
-	public static final MapCodec<WindChargeWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, WindChargeWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public class WindChargeWindDisturbanceType extends EntityWindDisturbanceType<AbstractWindCharge> {
+	public static WindChargeWindDisturbanceType INSTANCE = new WindChargeWindDisturbanceType();
+	public static final MapCodec<WindChargeWindDisturbanceType> CODEC = MapCodec.unit(() -> INSTANCE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, WindChargeWindDisturbanceType> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final double AREA_WIDTH = 10D;
 	private static final double AREA_HEIGHT = 10D;
 	private static final double WIND_RANGE = 5D;
 
 	@Override
-	public AABB area(AbstractWindCharge source, Level level, Vec3 origin, Vec3 target, double scale) {
+	public AABB area(AbstractWindCharge source, Level level, Vec3 origin, double scale) {
 		return AABB.ofSize(
 			origin,
 			AREA_WIDTH * scale,
@@ -44,7 +44,7 @@ public class WindChargeWindDisturbance extends EntityWindDisturbance<AbstractWin
 	}
 
 	@Override
-	public WindDisturbanceResult get(AbstractWindCharge source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
+	public WindDisturbanceResult sample(AbstractWindCharge source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
 		final double scaledRange = WIND_RANGE * scale;
 		final double distance = origin.distanceTo(target);
 		if (distance > scaledRange) return WindDisturbanceResult.PASS;
@@ -60,7 +60,12 @@ public class WindChargeWindDisturbance extends EntityWindDisturbance<AbstractWin
 	}
 
 	@Override
-	public WindDisturbanceType<?> type() {
-		return WindDisturbanceType.WIND_CHARGE;
+	public MapCodec<? extends WindDisturbanceType<AbstractWindCharge>> codec() {
+		return CODEC;
+	}
+
+	@Override
+	public StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<AbstractWindCharge>> streamCodec() {
+		return STREAM_CODEC;
 	}
 }

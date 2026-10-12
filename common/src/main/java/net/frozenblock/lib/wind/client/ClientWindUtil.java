@@ -28,10 +28,9 @@ import net.frozenblock.lib.event.api.events.client.ClientConnectionEvents;
 import net.frozenblock.lib.event.api.events.client.ClientEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
-import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
-import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.disturbance.WindDisturbancesHolder;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
@@ -66,7 +65,7 @@ public class ClientWindUtil {
 	@VisibleForDebug
 	public static class Debug {
 		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-		private static final List<Pair<DataAttachmentTarget, WindDisturbances>> WIND_DISTURBANCES = new ArrayList<>();
+		private static final List<WindDisturbancesHolder> WIND_DISTURBANCES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
 
@@ -77,7 +76,7 @@ public class ClientWindUtil {
 
 			if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
 			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
-				WIND_DISTURBANCES.addAll(WindManager.getOrCreate(level).getWindDisturbances());
+				WIND_DISTURBANCES.addAll(WindManager.getOrCreate(level).getWindDisturbancesHolders());
 				DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
 			}
 
@@ -110,7 +109,7 @@ public class ClientWindUtil {
 
 		@VisibleForDebug
 		@Unmodifiable
-		public static List<Pair<DataAttachmentTarget, WindDisturbances>> getWindDisturbances() {
+		public static List<WindDisturbancesHolder> getWindDisturbances() {
 			return ImmutableList.copyOf(WIND_DISTURBANCES);
 		}
 
@@ -121,31 +120,28 @@ public class ClientWindUtil {
 
 		private static List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-			WIND_DISTURBANCES.forEach(
-				tracked -> {
-					final DataAttachmentTarget target = tracked.getFirst();
-					for (WindDisturbance disturbance : tracked.getSecond()) {
-						final AABB area = disturbance.area(target, level, disturbance.origin(target, level));
-						BlockPos.betweenClosed(
-							BlockPos.containing(area.getMinPosition()),
-							BlockPos.containing(area.getMaxPosition())
-						).forEach(
-							blockPos -> {
-								final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-								windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
-							}
-						);
-					}
+			WIND_DISTURBANCES.forEach(tracked -> {
+				for (WindDisturbance<?, ?> disturbance : tracked) {
+					final AABB area = disturbance.area();
+					BlockPos.betweenClosed(
+						BlockPos.containing(area.getMinPosition()),
+						BlockPos.containing(area.getMaxPosition())
+					).forEach(
+						blockPos -> {
+							final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
+							windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
+						}
+					);
 				}
-			);
+			});
 			return windNodes;
 		}
 
 		private static List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
 			final List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
 			final WindManager windManager = WindManager.getOrCreate(level);
-			Vec3 wind = disturbanceOnly ?
-				windManager.getRawDisturbanceMovement(origin)
+			Vec3 wind = disturbanceOnly
+				? windManager.getRawDisturbanceMovement(origin)
 				: windManager.getWindMovement(origin);
 
 			final double windLength = wind.length();
@@ -170,8 +166,8 @@ public class ClientWindUtil {
 					)
 				);
 				lineStart = lineEnd;
-				wind = disturbanceOnly ?
-					windManager.getRawDisturbanceMovement(lineStart)
+				wind = disturbanceOnly
+					? windManager.getRawDisturbanceMovement(lineStart)
 					: windManager.getWindMovement(lineStart);
 			}
 

@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.mixin;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.wind.WindManager;
-import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypesHolder;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,14 +31,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AttachmentChangeMixin {
 
 	/**
-	 * Is called to set the attachment on the client when it is synced. We are using this to add {@link WindDisturbances} to the client's {@link WindManager}.
+	 * Is called to set the attachment on the client when it is synced. We are using this to add {@link WindDisturbanceTypesHolder} to the client's {@link WindManager}.
 	 */
 	@Inject(method = "tryApply", at = @At("TAIL"))
 	private void frozenLib$onAttachmentApplied(Level level, CallbackInfo info) {
 		if (!level.isClientSide()) return;
 
 		AttachmentChange attachmentChange = AttachmentChange.class.cast(this);
-		if (!attachmentChange.type().identifier().equals(WindDisturbances.ATTACHMENT_TYPE.identifier())) return;
+		if (!attachmentChange.type().identifier().equals(WindDisturbanceTypesHolder.ATTACHMENT_TYPE.identifier())) return;
 
 		final WindManager windManager = WindManager.getOrCreate(level);
 		windManager.trackDisturbanceHolder((DataAttachmentTarget) attachmentChange.targetInfo().getTarget(level));

@@ -17,57 +17,51 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
-import com.mojang.serialization.Codec;
-import java.util.List;
-import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public interface WindDisturbance<T> {
-	Codec<WindDisturbance<?>> CODEC = FrozenLibRegistries.WIND_DISTURBANCE_TYPE.byNameCodec().dispatch(WindDisturbance::type, WindDisturbanceType::codec);
-	StreamCodec<RegistryFriendlyByteBuf, WindDisturbance<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY)
-		.dispatch(WindDisturbance::type, WindDisturbanceType::streamCodec);
-	Codec<List<WindDisturbance<?>>> LIST_CODEC = CODEC.listOf();
-	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbance<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
+public final class WindDisturbance<S, T extends WindDisturbanceType<S>> {
+	private final S source;
+	private final T type;
+	private Vec3 origin;
+	private double scale;
+	private AABB area;
 
-	default double scale(T source, Level level, Vec3 target) {
-		return 1D;
+	public WindDisturbance(Level level, S source, T type) {
+		this.source = source;
+		this.type = type;
+		this.tick(level);
 	}
 
-	Vec3 origin(T source, Level level);
-
-	AABB area(T source, Level level, Vec3 origin, Vec3 target, double scale);
-
-	default AABB area(T source, Level level, Vec3 target) {
-		return this.area(source, level, this.origin(source, level), target, this.scale(source, level, target));
+	public void tick(Level level) {
+		this.origin = this.type.origin(this.source, level);
+		this.scale = this.type.scale(this.source, level);
+		this.area = this.type.area(this.source, level, this.origin, this.scale);
 	}
 
-	WindDisturbanceResult get(T source, Level level, Vec3 origin, AABB area, Vec3 target, double scale);
-
-	default WindDisturbanceResult get(T source, Level level, Vec3 target) {
-		final double scale = this.scale(source, level, target);
-		final Vec3 origin = this.origin(source, level);
-		final AABB area = this.area(source, level, origin, target, scale);
-		if (!area.contains(target)) return WindDisturbanceResult.PASS;
-		return get(source, level, origin, area, target, scale);
+	public AABB area() {
+		return this.area;
 	}
 
-	boolean expired(T source, Level level);
-
-	default boolean invalidOrExpired(DataAttachmentTarget source, Level level) {
-		try {
-			return this.expired((T) source, level);
-		} catch (Exception e) {
-			FrozenLibLogUtils.logError("WindDisturbance invalid", e);
-			return true;
-		}
+	public boolean withinArea(Vec3 pos) {
+		return this.area.contains(pos);
 	}
 
-	WindDisturbanceType<?> type();
+	public Vec3 origin() {
+		return this.origin;
+	}
+
+	public boolean expired(Level level) {
+		return this.type.expired(this.source, level);
+	}
+
+	public WindDisturbanceResult sample(Level level, Vec3 target) {
+		if (!this.area.contains(target)) return WindDisturbanceResult.PASS;
+		return this.type.sample(this.source, level, this.origin, this.area, target, this.scale);
+	}
+
+	public T type() {
+		return this.type;
+	}
 }

@@ -27,17 +27,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class BreezeWindDisturbance extends EntityWindDisturbance<Breeze> {
-	public static final BreezeWindDisturbance INSTANCE = new BreezeWindDisturbance();
-	public static final MapCodec<BreezeWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, BreezeWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public class BreezeWindDisturbanceType extends EntityWindDisturbanceType<Breeze> {
+	public static final BreezeWindDisturbanceType INSTANCE = new BreezeWindDisturbanceType();
+	public static final MapCodec<BreezeWindDisturbanceType> CODEC = MapCodec.unit(() -> INSTANCE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, BreezeWindDisturbanceType> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final double AREA_WIDTH = 12D;
 	private static final double AREA_HEIGHT = 10D;
 	private static final double AREA_Y_OFFSET = 1D;
 	private static final double WIND_RANGE = 6D;
 
 	@Override
-	public AABB area(Breeze source, Level level, Vec3 origin, Vec3 target, double scale) {
+	public AABB area(Breeze source, Level level, Vec3 origin, double scale) {
 		return AABB.ofSize(
 			origin,
 			AREA_WIDTH * scale,
@@ -51,7 +51,7 @@ public class BreezeWindDisturbance extends EntityWindDisturbance<Breeze> {
 	}
 
 	@Override
-	public WindDisturbanceResult get(Breeze source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
+	public WindDisturbanceResult sample(Breeze source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
 		final double scaledRange = WIND_RANGE * scale;
 		final double distance = origin.distanceTo(target);
 		if (distance > scaledRange) return WindDisturbanceResult.PASS;
@@ -76,7 +76,12 @@ public class BreezeWindDisturbance extends EntityWindDisturbance<Breeze> {
 	}
 
 	@Override
-	public WindDisturbanceType<?> type() {
-		return WindDisturbanceType.BREEZE;
+	public MapCodec<? extends WindDisturbanceType<Breeze>> codec() {
+		return CODEC;
+	}
+
+	@Override
+	public StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<Breeze>> streamCodec() {
+		return STREAM_CODEC;
 	}
 }

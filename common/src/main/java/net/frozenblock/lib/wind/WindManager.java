@@ -35,8 +35,10 @@ import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
-import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypesHolder;
+import net.frozenblock.lib.wind.disturbance.WindDisturbancesHolder;
 import net.frozenblock.lib.wind.extension.WindManagerExtension;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
@@ -242,20 +244,30 @@ public class WindManager {
 	}
 
 	/**
-	 * @return the currently tracked {@link WindDisturbances}, paired with their respective sources.
+	 * @return the currently tracked {@link WindDisturbanceTypesHolder}s, paired with their respective sources.
 	 */
-	public List<Pair<DataAttachmentTarget, WindDisturbances>> getWindDisturbances() {
+	public List<Pair<DataAttachmentTarget, WindDisturbanceTypesHolder>> getWindDisturbanceTypesHolders() {
 		return this.disturbanceHolders.stream()
-			.map(WindDisturbances::getAsPair)
+			.map(WindDisturbanceTypesHolder::getAsPair)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();
 	}
 
 	/**
+	 * @return the currently tracked {@link WindDisturbancesHolder}s.
+	 */
+	public List<WindDisturbancesHolder> getWindDisturbancesHolders() {
+		return this.disturbanceHolders.stream()
+			.map(WindDisturbancesHolder::get)
+			.filter(holder -> !holder.isEmpty())
+			.toList();
+	}
+
+	/**
 	 * Tracks a disturbance holder.
 	 * <p>
-	 * This is used to track {@link WindDisturbances}.
+	 * This is used to track {@link WindDisturbanceTypesHolder}.
 	 *
 	 * @param target The holder to be tracked.
 	 */
@@ -274,13 +286,13 @@ public class WindManager {
 	}
 
 	/**
-	 * Tracks or untracks a holder depending on whether it is present and has {@link WindDisturbances}.
+	 * Tracks or untracks a holder depending on whether it is present and has {@link WindDisturbanceTypesHolder}.
 	 *
 	 * @param target The holder to be tracked or untracked.
 	 */
 	public void trackOrUntrackDisturbanceHolder(@Nullable DataAttachmentTarget target) {
 		if (target == null) return;
-		if (WindDisturbances.has(target)) {
+		if (WindDisturbanceTypesHolder.has(target)) {
 			trackDisturbanceHolder(target);
 		} else {
 			untrackDisturbanceHolder(target);
@@ -311,9 +323,31 @@ public class WindManager {
 	public void tick(Level level) {
 		this.disturbanceHolders.removeIf(target -> {
 			if (target == null) return true;
-			WindDisturbances.removeIf(level, target, disturbance -> disturbance.invalidOrExpired(target, level));
-			return !WindDisturbances.has(target);
+
+			WindDisturbanceTypesHolder.removeIf(
+				level,
+				target,
+				type -> type.invalidOrExpired(target, level),
+				true
+			);
+
+			return !WindDisturbanceTypesHolder.has(target);
 		});
+
+		this.disturbanceHolders.forEach(target -> {
+			if (target == null) return;
+
+			WindDisturbanceTypesHolder.get(target).forEach(type -> {
+				WindDisturbancesHolder.addIf(
+					target,
+					t -> WindDisturbancesHolder.noneMatch(t, WindDisturbancesHolder.type(type)),
+					() -> new WindDisturbance(level, target, type)
+				);
+			});
+
+			WindDisturbancesHolder.get(target).forEach(disturbance -> disturbance.tick(level));
+		});
+
 		if (!level.tickRateManager().runsNormally()) return;
 
 		if (this.seed.isEmpty()) return;
@@ -472,6 +506,7 @@ public class WindManager {
 	// TODO: data-driven "wind queries"
 	public Vec3 getWindMovement(Vec3 target, double scale, double clamp, double windDisturbanceScale) {
 		if (!this.usable()) return Vec3.ZERO;
+
 		final double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(target));
 		final double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
 		final Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(target);
@@ -482,6 +517,7 @@ public class WindManager {
 		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
+			// TODO: merge into single packet sent at end of tick
 			NetworkingHelper.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
 		} else if (ModLoader.isClient()) {
 			ClientWindUtil.Debug.addAccessedPosition(target);
@@ -504,7 +540,7 @@ public class WindManager {
 	}
 
 	/**
-	 * Calculates the strength and movement of the current {@link WindDisturbances} entries at a given position.
+	 * Calculates the strength and movement of the current {@link WindDisturbanceTypesHolder} entries at a given position.
 	 * <p>
 	 * Expired or invalidated entries are pruned from the list (and their persisted attachment) as they're encountered,
 	 * instead of being swept in a separate per-tick pass.
@@ -515,12 +551,11 @@ public class WindManager {
 	private Pair<Double, Vec3> calculateWindDisturbance(Vec3 target) {
 		final ArrayList<WindDisturbanceResult.Success> successes = new ArrayList<>();
 		double maxStrength = 0D;
-		for (Pair<DataAttachmentTarget, WindDisturbances> tracked : this.getWindDisturbances()) {
-			final DataAttachmentTarget source = tracked.getFirst();
-			for (WindDisturbance disturbance : tracked.getSecond()) {
-				if (disturbance.expired(source, this.level)) continue;
+		for (WindDisturbancesHolder tracked : this.getWindDisturbancesHolders()) {
+			for (WindDisturbance<?, ?> disturbance : tracked) {
+				if (disturbance.expired(this.level)) continue;
 
-				final WindDisturbanceResult result = disturbance.get(source, this.level, target);
+				final WindDisturbanceResult result = disturbance.sample(this.level, target);
 				if (!(result instanceof WindDisturbanceResult.Success success)) continue;
 				if (success.strength() <= 0D || success.weight() <= 0D) continue;
 
@@ -557,7 +592,7 @@ public class WindManager {
 	 * Returns the wind disturbance contribution at a given position, ignoring the base wind.
 	 *
 	 * @param target The {@link Vec3} to check.
-	 * @return the movement contributed by {@link WindDisturbance}s at the given position.
+	 * @return the movement contributed by {@link WindDisturbanceType}s at the given position.
 	 */
 	public Vec3 getRawDisturbanceMovement(Vec3 target) {
 		if (!this.usable()) return Vec3.ZERO;

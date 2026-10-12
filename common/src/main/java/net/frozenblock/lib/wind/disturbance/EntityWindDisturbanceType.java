@@ -22,13 +22,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class EntityWindDisturbance<T extends Entity> implements WindDisturbance<T> {
+public abstract class EntityWindDisturbanceType<T extends Entity> implements WindDisturbanceType<T> {
 
 	@Override
-	public double scale(T source, Level level, Vec3 target) {
+	public double scale(T source, Level level) {
 		return source instanceof LivingEntity livingEntity
 			? livingEntity.getScale() * livingEntity.getAgeScale()
-			: WindDisturbance.super.scale(source, level, target);
+			: WindDisturbanceType.super.scale(source, level);
 	}
 
 	@Override

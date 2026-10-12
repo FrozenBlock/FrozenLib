@@ -18,7 +18,6 @@
 package net.frozenblock.lib.wind.disturbance.geyser;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,10 +27,10 @@ import net.minecraft.world.level.block.entity.PotentSulfurBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class GeyserWindDisturbance implements WindDisturbance<PotentSulfurBlockEntity> {
-	public static final GeyserWindDisturbance INSTANCE = new GeyserWindDisturbance();
-	public static final MapCodec<GeyserWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, GeyserWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public class GeyserWindDisturbanceType implements WindDisturbanceType<PotentSulfurBlockEntity> {
+	public static final GeyserWindDisturbanceType INSTANCE = new GeyserWindDisturbanceType();
+	public static final MapCodec<GeyserWindDisturbanceType> CODEC = MapCodec.unit(() -> INSTANCE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, GeyserWindDisturbanceType> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final WindDisturbanceResult ACTIVE_RESULT = WindDisturbanceResult.success(1D, 1D, new Vec3(0D, 0.2D, 0D).scale(40D));
 
 	@Override
@@ -40,18 +39,13 @@ public class GeyserWindDisturbance implements WindDisturbance<PotentSulfurBlockE
 	}
 
 	@Override
-	public AABB area(PotentSulfurBlockEntity source, Level level, Vec3 origin, Vec3 target, double scale) {
+	public AABB area(PotentSulfurBlockEntity source, Level level, Vec3 origin, double scale) {
 		return source.frozenLib$getWindArea();
 	}
 
 	@Override
-	public WindDisturbanceResult get(PotentSulfurBlockEntity source, Level level, Vec3 target) {
+	public WindDisturbanceResult sample(PotentSulfurBlockEntity source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
 		if (!source.frozenLib$isWindActive(level.getGameTime())) return WindDisturbanceResult.PASS;
-		return WindDisturbance.super.get(source, level, target);
-	}
-
-	@Override
-	public WindDisturbanceResult get(PotentSulfurBlockEntity source, Level level, Vec3 origin, AABB area, Vec3 target, double scale) {
 		return ACTIVE_RESULT;
 	}
 
@@ -61,7 +55,12 @@ public class GeyserWindDisturbance implements WindDisturbance<PotentSulfurBlockE
 	}
 
 	@Override
-	public WindDisturbanceType<?> type() {
-		return WindDisturbanceType.GEYSER;
+	public MapCodec<? extends WindDisturbanceType<PotentSulfurBlockEntity>> codec() {
+		return CODEC;
+	}
+
+	@Override
+	public StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<PotentSulfurBlockEntity>> streamCodec() {
+		return STREAM_CODEC;
 	}
 }

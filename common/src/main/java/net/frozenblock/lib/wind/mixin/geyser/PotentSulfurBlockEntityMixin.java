@@ -18,9 +18,9 @@
 package net.frozenblock.lib.wind.mixin.geyser;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
-import net.frozenblock.lib.wind.disturbance.WindDisturbances;
-import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbance;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypes;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypesHolder;
+import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.geyser.PotentSulfurWindAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -73,11 +73,11 @@ public class PotentSulfurBlockEntityMixin implements PotentSulfurWindAccess {
 		entity.frozenLib$pingWindActive(area, level.getGameTime());
 		if (level.isClientSide()) return original;
 
-		WindDisturbances.addIf(
+		WindDisturbanceTypesHolder.addIf(
 			level,
 			entity,
-			source -> WindDisturbances.noneMatch(source, WindDisturbances.type(WindDisturbanceType.GEYSER)),
-			() -> GeyserWindDisturbance.INSTANCE
+			source -> WindDisturbanceTypesHolder.noneMatch(source, WindDisturbanceTypesHolder.type(WindDisturbanceTypes.GEYSER.get())),
+			() -> GeyserWindDisturbanceType.INSTANCE
 		);
 
 		return original;
