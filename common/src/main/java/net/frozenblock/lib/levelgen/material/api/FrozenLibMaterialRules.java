@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.material.MaterialRules;
 import net.minecraft.world.level.levelgen.material.condition.BiomeCondition;
+import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import net.minecraft.world.level.levelgen.material.rule.MaterialRule;
 
 @UtilityClass
@@ -77,5 +78,17 @@ public final class FrozenLibMaterialRules {
 
 	public static BiomeCondition isBiomeTag(RegistryAccess registryAccess, TagKey<Biome> tagKey) {
 		return isBiomeTag(registryAccess.lookupOrThrow(Registries.BIOME), tagKey);
+	}
+
+	public static MaterialRule avoidBedrockFloor(HolderGetter<MaterialCondition> materialConditions, MaterialRule rule) {
+		return MaterialRules.ifTrue(MaterialRules.getCondition(materialConditions, FrozenLibMaterialConditions.AVOID_BEDROCK_FLOOR), rule);
+	}
+
+	public static MaterialRule avoidBedrockRoof(HolderGetter<MaterialCondition> materialConditions, MaterialRule rule) {
+		return MaterialRules.ifTrue(MaterialRules.getCondition(materialConditions, FrozenLibMaterialConditions.AVOID_BEDROCK_ROOF), rule);
+	}
+
+	public static MaterialRule avoidBedrockFloorAndRoof(HolderGetter<MaterialCondition> materialConditions, MaterialRule rule) {
+		return avoidBedrockFloor(materialConditions, avoidBedrockRoof(materialConditions, rule));
 	}
 }

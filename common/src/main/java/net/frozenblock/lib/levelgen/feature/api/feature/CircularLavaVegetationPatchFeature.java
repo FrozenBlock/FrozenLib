@@ -70,17 +70,17 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 		return !surface.isEmpty();
 	}
 
-	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int xRadius, int zRadius) {
+	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int radius) {
 		final MutableBlockPos airMutable = origin.mutable();
 		final MutableBlockPos groundMutable = airMutable.mutable();
 		final Direction surfaceDirection = this.surface.getDirection();
 		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
 
 		final Set<BlockPos> set = new HashSet<>();
-		for (int x = -xRadius; x <= xRadius; ++x) {
-			boolean onEdgeX = x == -xRadius || x == xRadius;
-			for (int z = -zRadius; z <= zRadius; ++z) {
-				boolean onEdgeZ = z == -zRadius || z == zRadius;
+		for (int x = -radius; x <= radius; ++x) {
+			boolean onEdgeX = x == -radius || x == radius;
+			for (int z = -radius; z <= radius; ++z) {
+				boolean onEdgeZ = z == -radius || z == radius;
 				boolean onAnyEdge = onEdgeX || onEdgeZ;
 				boolean onBothEdges = onEdgeX && onEdgeZ;
 				boolean onOneEdge = onAnyEdge && !onBothEdges;
@@ -88,7 +88,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 				if (onBothEdges || !(!onOneEdge || this.extraEdgeColumnChance != 0F && !(random.nextFloat() > this.extraEdgeColumnChance))) continue;
 
 				airMutable.setWithOffset(origin, x, 0, z);
-				if (Math.sqrt(airMutable.distSqr(origin)) > xRadius) continue;
+				if (Math.sqrt(airMutable.distSqr(origin)) > radius) continue;
 
 				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < this.verticalRange; ++i) {
 					airMutable.move(surfaceDirection);
@@ -114,7 +114,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
 	@Override
 	protected Set<BlockPos> placeGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int xRadius, int zRadius) {
-		final Set<BlockPos> surface = this.placeCircularGroundPatch(level, random, origin, replaceable, xRadius, zRadius);
+		final Set<BlockPos> surface = this.placeCircularGroundPatch(level, random, origin, replaceable, xRadius);
 		final Set<BlockPos> surroundedSurface = new HashSet<>();
 		final MutableBlockPos mutable = new MutableBlockPos();
 

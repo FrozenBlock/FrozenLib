@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:vertical_gradient",
+  "false_at_and_above": {
+    "below_top": 0
+  },
+  "random_name": "minecraft:bedrock_roof",
+  "true_at_and_below": {
+    "below_top": 5
+  }
+}

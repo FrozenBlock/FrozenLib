@@ -22,12 +22,14 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.config.v2.entry.predicates.FrozenLibConfigPredicates;
-import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibDimensionTypeTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
+import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
+import net.frozenblock.lib.levelgen.material.api.FrozenLibMaterialConditions;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
@@ -43,6 +45,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
+		builder.add(Registries.MATERIAL_CONDITION, FrozenLibMaterialConditions::bootstrap);
 		builder.add(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, FrozenLibConfigPredicates::bootstrap);
 		builder.add(FrozenLibRegistries.FIRE_TYPE, FireTypes::bootstrap);
 		/*
