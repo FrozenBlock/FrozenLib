@@ -494,9 +494,11 @@ public class WindManager {
 
 		final double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(target));
 		final double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		final Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(target);
+
+		final Pair<Double, Vec3> disturbance = windDisturbanceScale != 0D ? this.calculateWindDisturbance(target) : Pair.of(0D, Vec3.ZERO);
 		final double disturbanceAmount = disturbance.getFirst();
 		final Vec3 windDisturbance = disturbance.getSecond();
+
 		final double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
 		final double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;

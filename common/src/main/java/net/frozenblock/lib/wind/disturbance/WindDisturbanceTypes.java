@@ -17,17 +17,12 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
-import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbanceType;
-import net.minecraft.core.Registry;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 
 @UtilityClass
 public final class WindDisturbanceTypes {
@@ -36,9 +31,9 @@ public final class WindDisturbanceTypes {
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final DeferredHolder<WindDisturbanceType<?>, BreezeWindDisturbanceType> BREEZE = REGISTER.register("breeze", () -> new BreezeWindDisturbanceType());
-	public static final DeferredHolder<WindDisturbanceType<?>, WindChargeWindDisturbanceType> WIND_CHARGE = REGISTER.register("wind_charge", () -> new WindChargeWindDisturbanceType());
-	public static final DeferredHolder<WindDisturbanceType<?>, GeyserWindDisturbanceType> GEYSER = REGISTER.register("geyser", () -> new GeyserWindDisturbanceType());
+	public static final DeferredHolder<WindDisturbanceType<?>, BreezeWindDisturbanceType> BREEZE = REGISTER.register("breeze", () -> BreezeWindDisturbanceType.INSTANCE);
+	public static final DeferredHolder<WindDisturbanceType<?>, WindChargeWindDisturbanceType> WIND_CHARGE = REGISTER.register("wind_charge", () -> WindChargeWindDisturbanceType.INSTANCE);
+	public static final DeferredHolder<WindDisturbanceType<?>, GeyserWindDisturbanceType> GEYSER = REGISTER.register("geyser", () -> GeyserWindDisturbanceType.INSTANCE);
 
 	static {
 		REGISTER.register();
