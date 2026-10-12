@@ -55,7 +55,8 @@ public class CircularMixin {
 		method = "placeGroundPatch",
 		at = @At(
 			value = "MIXINEXTRAS:EXPRESSION",
-			ordinal = 1
+			ordinal = 1,
+			shift = At.Shift.BEFORE
 		)
 	)
 	public void frozenLib$modifyEdges(
@@ -76,11 +77,11 @@ public class CircularMixin {
 
 		final BlockPos zero = BlockPos.ZERO;
 		final BlockPos offsetPos = zero.offset(dx, 0, dz);
-		final boolean outsideCircle = offsetPos.distManhattan(zero) > xRadius;
+		final boolean outsideCircle = !offsetPos.closerThan(BlockPos.ZERO, xRadius);
 		if (outsideCircle) {
 			final BlockPos.MutableBlockPos mutableOffsetPos = new BlockPos.MutableBlockPos();
 			for (Direction horizontal : Direction.Plane.HORIZONTAL) {
-				if (mutableOffsetPos.setWithOffset(offsetPos, horizontal).distManhattan(zero) <= xRadius) {
+				if (mutableOffsetPos.setWithOffset(offsetPos, horizontal).closerThan(BlockPos.ZERO, xRadius)) {
 					isCorner.set(false);
 					isEdge.set(true);
 					isEdgeButNotCorner.set(true);
