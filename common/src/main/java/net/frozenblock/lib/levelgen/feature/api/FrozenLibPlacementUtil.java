@@ -17,9 +17,12 @@
 
 package net.frozenblock.lib.levelgen.feature.api;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -27,15 +30,51 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.CountPlacement;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public final class FrozenLibPlacedFeatureUtil {
+public final class FrozenLibPlacementUtil {
 
-	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
-		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
+	@Unmodifiable
+	public static List<PlacementModifier> postModifiers(List<PlacementModifier> originalModifiers, PlacementModifier... postModifiers) {
+		final List<PlacementModifier> finalModifiers = new ArrayList<>();
+		finalModifiers.addAll(originalModifiers);
+		finalModifiers.addAll(Arrays.stream(postModifiers).toList());
+		return List.copyOf(finalModifiers);
+	};
+
+	@Unmodifiable
+	public static List<PlacementModifier> modifiersWithFilter(@Nullable PlacementFilter generationPredicate, PlacementModifier countModifier, PlacementModifier... modifiers) {
+		final List<PlacementModifier> finalModifiers = new ArrayList<>();
+		if (generationPredicate != null) finalModifiers.add(generationPredicate);
+		finalModifiers.add(countModifier);
+		finalModifiers.add(InSquarePlacement.spread());
+		finalModifiers.addAll(Arrays.stream(modifiers).toList());
+		finalModifiers.add(BiomeFilter.biome());
+		return List.copyOf(finalModifiers);
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> modifiersWithFilter(Holder<ConfigPredicate> generationPredicate, PlacementModifier countModifier, PlacementModifier... modifiers) {
+		return modifiersWithFilter(ConfigPredicate.placementFilter(generationPredicate), countModifier, modifiers);
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier... modifiers) {
+		return modifiersWithFilter((PlacementFilter) null, countModifier, modifiers);
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> modifiersWithCount(int count, PlacementModifier... modifiers) {
+		return modifiers(CountPlacement.of(count), modifiers);
 	}
 
 	public static Holder<PlacedFeature> register(
@@ -75,6 +114,10 @@ public final class FrozenLibPlacedFeatureUtil {
 		PlacementModifier... placementModifiers
 	) {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
+	}
+
+	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
+		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
 	}
 
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
