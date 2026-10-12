@@ -323,29 +323,14 @@ public class WindManager {
 	public void tick(Level level) {
 		this.disturbanceHolders.removeIf(target -> {
 			if (target == null) return true;
-
-			WindDisturbanceTypesHolder.removeIf(
-				level,
-				target,
-				type -> type.invalidOrExpired(target, level),
-				true
-			);
-
-			return !WindDisturbanceTypesHolder.has(target);
-		});
-
-		this.disturbanceHolders.forEach(target -> {
-			if (target == null) return;
-
-			WindDisturbanceTypesHolder.get(target).forEach(type -> {
-				WindDisturbancesHolder.addIf(
-					target,
-					t -> WindDisturbancesHolder.noneMatch(t, WindDisturbancesHolder.type(type)),
-					() -> new WindDisturbance(level, target, type)
-				);
-			});
-
-			WindDisturbancesHolder.get(target).forEach(disturbance -> disturbance.tick(level));
+			WindDisturbanceTypesHolder.removeIf(level, target, type -> type.invalidOrExpired(target, level), false);
+			if (!WindDisturbanceTypesHolder.has(target)) {
+				return true;
+			} else {
+				WindDisturbanceTypesHolder.mirrorToDisturbancesHolder(level, target);
+				WindDisturbancesHolder.get(target).forEach(disturbance -> disturbance.tick(level));
+				return false;
+			}
 		});
 
 		if (!level.tickRateManager().runsNormally()) return;

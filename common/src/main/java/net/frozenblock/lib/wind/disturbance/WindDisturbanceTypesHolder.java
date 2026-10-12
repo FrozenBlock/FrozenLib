@@ -68,6 +68,18 @@ public record WindDisturbanceTypesHolder(List<WindDisturbanceType<?>> types) imp
 		ChunkLifecycleEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder(chunk));
 	}
 
+	public static void mirrorToDisturbancesHolder(Level level, DataAttachmentTarget target) {
+		get(target).forEach(type -> {
+			WindDisturbancesHolder.removeIf(target, WindDisturbancesHolder.type(type));
+
+			WindDisturbancesHolder.addIf(
+				target,
+				t -> WindDisturbancesHolder.noneMatch(t, WindDisturbancesHolder.type(type)),
+				() -> new WindDisturbance(level, target, type)
+			);
+		});
+	}
+
 	public static void set(Level level, DataAttachmentTarget target, WindDisturbanceTypesHolder windDisturbanceTypesHolder) {
 		ATTACHMENT_TYPE.set(target, windDisturbanceTypesHolder);
 		WindManager.getOrCreate(level).trackDisturbanceHolder(target);
@@ -95,17 +107,17 @@ public record WindDisturbanceTypesHolder(List<WindDisturbanceType<?>> types) imp
 		add(level, target, windDisturbance.get());
 	}
 
-	public static void removeAttachment(Level level, DataAttachmentTarget target) {
+	public static void removeAttachment(Level level, DataAttachmentTarget target, boolean notifyWindManager) {
 		ATTACHMENT_TYPE.remove(target);
-		WindManager.getOrCreate(level).untrackDisturbanceHolder(target);
+		if (notifyWindManager) WindManager.getOrCreate(level).untrackDisturbanceHolder(target);
 	}
 
-	public static void removeIf(Level level, DataAttachmentTarget target, Predicate<WindDisturbanceType<?>> removeIf, boolean mirrorToDisturbancesHolder) {
+	public static void removeIf(Level level, DataAttachmentTarget target, Predicate<WindDisturbanceType<?>> removeIf, boolean notifyWindManager) {
 		final WindDisturbanceTypesHolder holder = get(target);
 		if (holder.isEmpty()) return;
 
-		final WindDisturbanceTypesHolder newHolder = holder.removeIf(removeIf, target, mirrorToDisturbancesHolder);
-		if (newHolder.isEmpty()) removeAttachment(level, target);
+		final WindDisturbanceTypesHolder newHolder = holder.removeIf(removeIf);
+		if (newHolder.isEmpty()) removeAttachment(level, target, notifyWindManager);
 	}
 
 	public static Predicate<DataAttachmentTarget> isOfClassAndDoesntHaveDisturbance(Class<?> clazz, WindDisturbanceType<?> type) {
@@ -149,22 +161,9 @@ public record WindDisturbanceTypesHolder(List<WindDisturbanceType<?>> types) imp
 		return new WindDisturbanceTypesHolder(newDisturbances);
 	}
 
-	public WindDisturbanceTypesHolder removeIf(Predicate<WindDisturbanceType<?>> removeIf, DataAttachmentTarget target, boolean mirrorToDisturbancesHolder) {
+	public WindDisturbanceTypesHolder removeIf(Predicate<WindDisturbanceType<?>> removeIf) {
 		final List<WindDisturbanceType<?>> newDisturbances = new ArrayList<>(this.types);
-		final List<WindDisturbanceType<?>> removed = new ArrayList<>();
-
-		newDisturbances.removeIf(type -> {
-			if (removeIf.test(type)) {
-				removed.add(type);
-				return true;
-			}
-			return false;
-		});
-
-		if (mirrorToDisturbancesHolder) {
-			removed.forEach(removedType -> WindDisturbancesHolder.removeIf(target, WindDisturbancesHolder.type(removedType)));
-		}
-
+		newDisturbances.removeIf(removeIf);
 		return new WindDisturbanceTypesHolder(newDisturbances);
 	}
 

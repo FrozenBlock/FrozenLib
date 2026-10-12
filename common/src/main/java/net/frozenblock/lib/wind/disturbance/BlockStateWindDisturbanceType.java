@@ -17,47 +17,24 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.VarInt;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class BlockStateWindDisturbanceType implements WindDisturbanceType<ChunkAccess> {
-	protected static final StreamCodec<ByteBuf, BlockState> BLOCK_STATE_CODEC = new StreamCodec<>() {
-		@Override
-		public void encode(ByteBuf output, BlockState value) {
-			VarInt.write(output, Block.getId(value));
-		}
+public abstract class BlockStateWindDisturbanceType implements WindDisturbanceType<BlockPos> {
 
-		@Override
-		public BlockState decode(ByteBuf input) {
-			return Block.stateById(VarInt.read(input));
-		}
-	};
-	public final BlockState blockState;
-	public final BlockPos position;
+	public abstract boolean isValidBlockState(BlockState blockState);
 
-	protected BlockStateWindDisturbanceType(BlockState blockState, BlockPos position) {
-		this.blockState = blockState;
-		this.position = position;
-	}
-
-	public BlockState getBlockStateAtOrigin(ChunkAccess source) {
-		return source.getBlockState(this.position);
+	@Override
+	public Vec3 origin(BlockPos source, Level level) {
+		return Vec3.atCenterOf(source);
 	}
 
 	@Override
-	public Vec3 origin(ChunkAccess source, Level level) {
-		return Vec3.atCenterOf(this.position);
-	}
-
-	@Override
-	public boolean expired(ChunkAccess source, Level level) {
-		return !this.getBlockStateAtOrigin(source).equals(this.blockState);
+	public boolean expired(BlockPos source, Level level) {
+		return !level.hasChunk(SectionPos.blockToSectionCoord(source.getX()), SectionPos.blockToSectionCoord(source.getZ()))
+			|| !this.isValidBlockState(level.getBlockState(source));
 	}
 }
