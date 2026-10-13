@@ -64,7 +64,7 @@ import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
-import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicateTypes;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypes;
@@ -100,7 +100,7 @@ public final class FrozenLibMain {
 		SpottingIcons.init();
 		SulfurCubeEvents.init();
 		StructureStatus.init();
-		SoundPredicate.init();
+		SoundPredicateTypes.init();
 		MovingSoundTypes.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibEnvironmentAttributes.init();

@@ -17,9 +17,11 @@
 
 package net.frozenblock.lib.sound.impl.networking;
 
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.networking.api.PlayerLookup;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.FadingDistanceLoopingMovingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingLoopingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -27,7 +29,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -124,7 +125,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		boolean stopOnDeath
 	) {
 		if (!(level instanceof ServerLevel)) return;
@@ -138,7 +139,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath,
 					false
 				)
@@ -154,7 +155,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath,
 					false
 				)
@@ -169,7 +170,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		boolean stopOnDeath
 	) {
 		if (!(level instanceof ServerLevel)) return;
@@ -183,7 +184,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath,
 					true
 				)
@@ -199,7 +200,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath,
 					true
 				)
@@ -208,7 +209,7 @@ public final class FrozenLibSoundPackets {
 
 		MovingSoundTypes.LOOPING.get().addSound(
 			entity,
-			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicateType, stopOnDeath)
 		);
     }
 
@@ -219,7 +220,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier id,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		boolean stopOnDeath
 	) {
 		NetworkingHelper.sendToPlayer(
@@ -230,7 +231,7 @@ public final class FrozenLibSoundPackets {
 				category,
 				volume,
 				pitch,
-				id,
+				predicateType,
 				stopOnDeath,
 				true
 			)
@@ -245,8 +246,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
-		boolean stopOnDeath,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		float fadeDist,
 		float maxDist
 	) {
@@ -264,8 +264,7 @@ public final class FrozenLibSoundPackets {
 					pitch,
 					fadeDist,
 					maxDist,
-					predicate,
-					stopOnDeath,
+					predicateType,
 					true
 				)
 			);
@@ -283,8 +282,7 @@ public final class FrozenLibSoundPackets {
 					pitch,
 					fadeDist,
 					maxDist,
-					predicate,
-					stopOnDeath,
+					predicateType,
 					true
 				)
 			);
@@ -300,8 +298,7 @@ public final class FrozenLibSoundPackets {
 				pitch,
 				fadeDist,
 				maxDist,
-				predicate,
-				stopOnDeath
+				predicateType
 			)
 		);
     }
@@ -314,8 +311,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
-		boolean stopOnDeath,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		float fadeDist,
 		float maxDist
 	) {
@@ -330,8 +326,7 @@ public final class FrozenLibSoundPackets {
 				pitch,
 				fadeDist,
 				maxDist,
-				predicate,
-				stopOnDeath,
+				predicateType,
 				true
 			)
 		);
@@ -345,8 +340,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
-		boolean stopOnDeath,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		float fadeDist,
 		float maxDist
 	) {
@@ -361,8 +355,7 @@ public final class FrozenLibSoundPackets {
 				pitch,
 				fadeDist,
 				maxDist,
-				predicate,
-				stopOnDeath,
+				predicateType,
 				false
 			)
 		);
@@ -405,7 +398,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		boolean stopOnDeath
 	) {
 		if (!(level instanceof ServerLevel)) return;
@@ -420,7 +413,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath
 				)
 			);
@@ -436,7 +429,7 @@ public final class FrozenLibSoundPackets {
 					category,
 					volume,
 					pitch,
-					predicate,
+					predicateType,
 					stopOnDeath
 				)
 			);
@@ -444,7 +437,7 @@ public final class FrozenLibSoundPackets {
 
 		MovingSoundTypes.LOOPING.get().addSound(
 			entity,
-			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicateType, stopOnDeath)
 		);
     }
 
@@ -456,7 +449,7 @@ public final class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		Identifier predicate,
+		Holder<Supplier<SoundPredicate<?>>> predicateType,
 		boolean stopOnDeath
 	) {
 		NetworkingHelper.sendToPlayer(
@@ -468,7 +461,7 @@ public final class FrozenLibSoundPackets {
 				category,
 				volume,
 				pitch,
-				predicate,
+				predicateType,
 				stopOnDeath
 			)
 		);
@@ -477,5 +470,4 @@ public final class FrozenLibSoundPackets {
 	public static void createAndSendLocalPlayerSound(ServerPlayer player, Holder<SoundEvent> sound, float volume, float pitch) {
 		NetworkingHelper.sendToPlayer(player, new LocalPlayerSoundPacket(sound, volume, pitch));
 	}
-
 }

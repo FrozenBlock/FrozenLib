@@ -17,13 +17,15 @@
 
 package net.frozenblock.lib.sound.impl.networking;
 
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
@@ -34,7 +36,7 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	SoundSource source,
 	float volume,
 	float pitch,
-	Identifier predicateId,
+	Holder<Supplier<SoundPredicate<?>>> predicateType,
 	boolean stopOnDeath
 ) implements CustomPacketPayload {
 	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("starting_moving_restriction_looping_sound"));
@@ -45,7 +47,7 @@ public record StartingMovingRestrictionSoundLoopPacket(
 		FrozenLibSoundPackets.SOUND_SOURCE_STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::source,
 		ByteBufCodecs.FLOAT, StartingMovingRestrictionSoundLoopPacket::volume,
 		ByteBufCodecs.FLOAT, StartingMovingRestrictionSoundLoopPacket::pitch,
-		Identifier.STREAM_CODEC, StartingMovingRestrictionSoundLoopPacket::predicateId,
+		ByteBufCodecs.holderRegistry(FrozenLibRegistries.SOUND_PREDICATE_TYPE), StartingMovingRestrictionSoundLoopPacket::predicateType,
 		ByteBufCodecs.BOOL, StartingMovingRestrictionSoundLoopPacket::stopOnDeath,
 		StartingMovingRestrictionSoundLoopPacket::new
 	);

@@ -29,7 +29,13 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
 	private final boolean stopOnDeath;
 
     public RestrictedMovingSound(
-		T entity, SoundEvent sound, SoundSource source, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath
+		T entity,
+		SoundEvent sound,
+		SoundSource source,
+		float volume,
+		float pitch,
+		SoundPredicate<?> predicate,
+		boolean stopOnDeath
 	) {
         super(sound, source, SoundInstance.createUnseededRandom(), entity, predicate);
         this.looping = false;
@@ -40,7 +46,7 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
         this.z = entity.getZ();
 		this.stopOnDeath = stopOnDeath;
 
-		this.predicate.onStart(this.entity);
+		((SoundPredicate) this.predicate).onStart(this.entity);
     }
 
 	@Override

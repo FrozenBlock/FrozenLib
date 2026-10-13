@@ -17,77 +17,20 @@
 
 package net.frozenblock.lib.sound.api.predicate;
 
-import java.util.function.Supplier;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 // FIXME: use proper codecs & ml registry methods
-public final class SoundPredicate<T extends Entity> {
+public abstract class SoundPredicate<T extends Entity> {
 
+	public abstract boolean test(T entity);
 
-	public static final Identifier DEFAULT_ID = FrozenLibConstants.id("default");
-	public static final Identifier NOT_SILENT_AND_ALIVE_ID = FrozenLibConstants.id("not_silent_and_alive");
-
-	private final Supplier<LoopPredicate<T>> predicateSupplier;
-
-    public static <T extends Entity> void register(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenLibBuiltInRegistries.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
-    }
-
-	public static <T extends Entity> void registerUnsynced(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
+	@Nullable
+	public Boolean firstTickTest(T entity) {
+		return null;
 	}
 
-	public SoundPredicate(Supplier<LoopPredicate<T>> predicateSupplier) {
-		this.predicateSupplier = predicateSupplier;
-	}
+	public void onStart(@Nullable T entity) {}
 
-	@SuppressWarnings("unchecked")
-    public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable Identifier id) {
-        if (id == null) return defaultPredicate();
-
-		if (FrozenLibBuiltInRegistries.SOUND_PREDICATE.containsKey(id)) {
-			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibBuiltInRegistries.SOUND_PREDICATE.getValue(id);
-			if (predicate != null) return predicate.predicateSupplier.get();
-		} else if (FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
-			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED.getValue(id);
-			if (predicate != null) return predicate.predicateSupplier.get();
-		}
-
-		FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default instead.", id);
-        return defaultPredicate();
-    }
-
-	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
-		return entity -> !entity.isSilent();
-	}
-	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
-		return entity -> !entity.isSilent();
-	}
-
-	public static void init() {
-
-
-
-		register(DEFAULT_ID, SoundPredicate::defaultPredicate);
-		register(NOT_SILENT_AND_ALIVE_ID, SoundPredicate::notSilentAndAlive);
-	}
-
-    @FunctionalInterface
-    public interface LoopPredicate<T extends Entity> {
-        boolean test(T entity);
-
-		@Nullable
-		default Boolean firstTickTest(T entity) {
-			return null;
-		}
-
-		default void onStart(@Nullable T entity) {}
-
-		default void onStop(@Nullable T entity) {}
-    }
+	public void onStop(@Nullable T entity) {}
 }

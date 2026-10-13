@@ -39,7 +39,7 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
 		SoundSource source,
 		float volume,
 		float pitch,
-		SoundPredicate.LoopPredicate<T> predicate,
+		SoundPredicate<?> predicate,
 		boolean stopOnDeath,
 		AbstractSoundInstance nextSound
 	) {

@@ -19,6 +19,7 @@ package net.frozenblock.lib.registry;
 
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
@@ -48,8 +49,7 @@ import net.minecraft.resources.ResourceKey;
 @UtilityClass
 public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION = createRegistryKey("mod_integration");
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE = createRegistryKey("sound_predicate");
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED = createRegistryKey("sound_predicate_unsynced");
+	public static final ResourceKey<Registry<Supplier<SoundPredicate<?>>>> SOUND_PREDICATE_TYPE = createRegistryKey("sound_predicate_type");
 	public static final ResourceKey<Registry<WindManagerExtensionType<?>>> WIND_MANAGER_EXTENSION_TYPE = createRegistryKey("wind_manager_extension_type");
 	public static final ResourceKey<Registry<WindDisturbanceType<?>>> WIND_DISTURBANCE_TYPE = createRegistryKey("wind_disturbance_type");
 	public static final ResourceKey<Registry<MapCodec<? extends ConfigPredicate>>> CONFIG_PREDICATE_TYPE = createRegistryKey("config_predicate_type");

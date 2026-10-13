@@ -28,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 
 @ClientOnly
 public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> extends RestrictedSoundInstance<T> {
-	private final boolean stopOnDeath;
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
@@ -40,8 +39,7 @@ public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> exte
 		SoundSource source,
 		float volume,
 		float pitch,
-		SoundPredicate.LoopPredicate<T> predicate,
-		boolean stopOnDeath,
+		SoundPredicate<?> predicate,
 		double fadeDist,
 		double maxDist,
 		float maxVol,
@@ -56,7 +54,6 @@ public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> exte
         this.x = entity.getX();
         this.y = entity.getY();
         this.z = entity.getZ();
-		this.stopOnDeath = stopOnDeath;
         this.isFarSound = isFarSound;
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;
@@ -93,5 +90,4 @@ public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> exte
 			this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
 		}
     }
-
 }

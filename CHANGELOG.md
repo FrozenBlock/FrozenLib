@@ -129,4 +129,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Significantly improved the performance of Wind Disturbances on both the client and server.
 - FrozenLib's custom translucent Render Types now render as intended with the Improved Transparency option enabled.
 - Migrated `VibrationParticleVisibilityApi` to `VibrationSignalParticleEvents`.
+- Cleaned up the implementation of Sound Predicates to be more straightforward.
 - Entity Texture Overrides now check for an Entity's Type instead of an Entity Renderer class.

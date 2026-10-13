@@ -17,13 +17,15 @@
 
 package net.frozenblock.lib.sound.impl.networking;
 
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
@@ -36,8 +38,7 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	float pitch,
 	float fadeDist,
 	float maxDist,
-	Identifier predicateId,
-	boolean stopOnDeath,
+	Holder<Supplier<SoundPredicate<?>>> predicateType,
 	boolean looping
 ) implements CustomPacketPayload {
 	public static final Type<MovingFadingDistanceSwitchingRestrictionSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("moving_fading_restriction_sound"));
@@ -50,8 +51,7 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 		ByteBufCodecs.FLOAT, MovingFadingDistanceSwitchingRestrictionSoundPacket::pitch,
 		ByteBufCodecs.FLOAT, MovingFadingDistanceSwitchingRestrictionSoundPacket::fadeDist,
 		ByteBufCodecs.FLOAT, MovingFadingDistanceSwitchingRestrictionSoundPacket::maxDist,
-		Identifier.STREAM_CODEC, MovingFadingDistanceSwitchingRestrictionSoundPacket::predicateId,
-		ByteBufCodecs.BOOL, MovingFadingDistanceSwitchingRestrictionSoundPacket::stopOnDeath,
+		ByteBufCodecs.holderRegistry(FrozenLibRegistries.SOUND_PREDICATE_TYPE), MovingFadingDistanceSwitchingRestrictionSoundPacket::predicateType,
 		ByteBufCodecs.BOOL, MovingFadingDistanceSwitchingRestrictionSoundPacket::looping,
 		MovingFadingDistanceSwitchingRestrictionSoundPacket::new
 	);

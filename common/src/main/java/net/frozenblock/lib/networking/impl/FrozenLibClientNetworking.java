@@ -149,29 +149,27 @@ public final class FrozenLibClientNetworking {
 		});
 	}
 
-	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
+	private static void receiveStartingMovingRestrictionSoundLoopPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.entityId());
+			final Entity entity = level.getEntity(packet.entityId());
 			if (entity == null) return;
 
-			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-			minecraft.getSoundManager().play(new RestrictedStartingSound<>(
-				entity, packet.startingSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
-				new RestrictedMovingSoundLoop<>(
-					entity, packet.sound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
-				)
+			final SoundPredicate<?> predicate = packet.predicateType().value().get();
+			minecraft.getSoundManager().play(
+				new RestrictedStartingSound<>(entity, packet.startingSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
+				new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath())
 			));
 		});
 	}
 
-	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
+	private static void receiveMovingRestrictionSoundPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.entityId());
+			final Entity entity = level.getEntity(packet.entityId());
 			if (entity == null) return;
 
-			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			final SoundPredicate<?> predicate = packet.predicateType().value().get();
 			if (packet.looping()) {
 				minecraft.getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
 			} else {
@@ -187,20 +185,20 @@ public final class FrozenLibClientNetworking {
 		});
 	}
 
-	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
+	private static void receiveMovingFadingDistanceSwitchingSoundPacket() {
 		ClientNetworkingHelper.registerGlobalClientReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, minecraft, player) -> {
 			final SoundManager soundManager = minecraft.getSoundManager();
 			final ClientLevel level = minecraft.level;
-			final T entity = (T) level.getEntity(packet.entityId());
+			final Entity entity = level.getEntity(packet.entityId());
 			if (entity == null) return;
 
-			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			final SoundPredicate<?> predicate = packet.predicateType().value().get();
 			if (packet.looping()) {
-				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.closeSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.farSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.closeSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.fadeDist(), packet.maxDist(), packet.volume(), false));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.farSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.fadeDist(), packet.maxDist(), packet.volume(), true));
 			} else {
-				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.closeSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.farSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.closeSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.fadeDist(), packet.maxDist(), packet.volume(), false));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.farSound().value(), packet.source(), packet.volume(), packet.pitch(), predicate, packet.fadeDist(), packet.maxDist(), packet.volume(), true));
 			}
 		});
 	}

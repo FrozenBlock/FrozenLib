@@ -33,6 +33,8 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
+import java.util.function.Supplier;
 
 @UtilityClass
 public final class FrozenLibBuiltInRegistries {
@@ -52,17 +54,16 @@ public final class FrozenLibBuiltInRegistries {
 			)
 		)
 	);
-	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(
-		FrozenLibRegistries.SOUND_PREDICATE,
+	public static final MappedRegistry<Supplier<SoundPredicate<?>>> SOUND_PREDICATE_TYPE = createSimple(
+		FrozenLibRegistries.SOUND_PREDICATE_TYPE,
 		Lifecycle.stable(),
 		true,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
-	);
-	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(
-		FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED,
-		Lifecycle.stable(),
-		false,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
+		registry -> Registry.register(registry, FrozenLibConstants.id("always_true"), () -> new SoundPredicate<>() {
+			@Override
+			public boolean test(Entity entity) {
+				return true;
+			}
+		})
 	);
 	public static final MappedRegistry<WindManagerExtensionType<?>> WIND_MANAGER_EXTENSION_TYPE = createSimple(
 		FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE,

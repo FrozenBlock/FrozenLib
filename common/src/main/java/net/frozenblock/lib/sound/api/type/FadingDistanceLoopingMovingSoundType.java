@@ -22,9 +22,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Supplier;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -39,7 +42,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 
 	@Override
 	protected void onAdd(Entity entity, Data data) {
-		SoundPredicate.getPredicate(data.restrictionID()).onStart(entity);
+		((SoundPredicate) data.predicateType().value().get()).onStart(entity);
 	}
 
 	@Override
@@ -48,7 +51,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		final Iterator<Data> iterator = result.iterator();
 		while (iterator.hasNext()) {
 			final Data data = iterator.next();
-			final SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(data.restrictionID());
+			final SoundPredicate predicate = data.predicateType().value().get();
 			if (!predicate.test(entity)) {
 				iterator.remove();
 				predicate.onStop(entity);
@@ -68,8 +71,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 				SoundSource.valueOf(SoundSource.class, data.category()),
 				data.volume(),
 				data.pitch(),
-				data.restrictionID(),
-				data.stopOnDeath(),
+				data.predicateType(),
 				data.fadeDist(),
 				data.maxDist()
 			);
@@ -84,8 +86,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		float pitch,
 		float fadeDist,
 		float maxDist,
-		Identifier restrictionID,
-		boolean stopOnDeath
+		Holder<Supplier<SoundPredicate<?>>> predicateType
 	) {
 		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			SoundEvent.CODEC.fieldOf("closeSound").forGetter(Data::closeSound),
@@ -95,8 +96,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 			Codec.FLOAT.fieldOf("pitch").forGetter(Data::pitch),
 			Codec.FLOAT.fieldOf("fadeDist").forGetter(Data::fadeDist),
 			Codec.FLOAT.fieldOf("maxDist").forGetter(Data::maxDist),
-			Identifier.CODEC.fieldOf("restrictionID").forGetter(Data::restrictionID),
-			Codec.BOOL.fieldOf("stopOnDeath").forGetter(Data::stopOnDeath)
+			RegistryCodecs.holder(FrozenLibRegistries.SOUND_PREDICATE_TYPE).fieldOf("sound_predicate_type").forGetter(Data::predicateType)
 		).apply(instance, Data::new));
 
 		public Data(
@@ -107,10 +107,9 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 			float pitch,
 			float fadeDist,
 			float maxDist,
-			Identifier restrictionID,
-			boolean stopOnDeath
+			Holder<Supplier<SoundPredicate<?>>> predicateType
 		) {
-			this(closeSound, farSound, category.toString(), volume, pitch, fadeDist, maxDist, restrictionID, stopOnDeath);
+			this(closeSound, farSound, category.toString(), volume, pitch, fadeDist, maxDist, predicateType);
 		}
 	}
 }
