@@ -83,6 +83,8 @@ import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.WeatheringCopperCollection;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.sounds.BlockSoundCollection;
+import net.minecraft.world.level.block.sounds.BlockSoundSet;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -1110,6 +1112,16 @@ public interface DeferredRegister<T> {
 
 		default DeferredSoundEvent register(String name, float range) {
 			return new DeferredSoundEvent(this.register(name, () -> SoundEvent.createFixedRangeEvent(Identifier.fromNamespaceAndPath(this.namespace(), name), range)));
+		}
+
+		default BlockSoundCollection<DeferredSoundEvent> registerBlockSoundSet(ResourceKey<BlockSoundSet> blockSoundSet) {
+			return BlockSoundCollection.createIdsForBlockSoundSet(blockSoundSet)
+				.map(id -> ResourceKey.create(Registries.SOUND_EVENT, id))
+				.map(key -> new DeferredSoundEvent(this.register(key, () -> SoundEvent.createVariableRangeEvent(key.identifier()))));
+		}
+
+		default BlockSoundCollection<Optional<Holder<SoundEvent>>> registerBlockSoundSetForHolder(ResourceKey<BlockSoundSet> blockSoundSet) {
+			return this.registerBlockSoundSet(blockSoundSet).map(deferred -> Optional.of(deferred.asHolder()));
 		}
 	}
 
