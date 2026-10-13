@@ -31,6 +31,10 @@ import net.minecraft.resources.ResourceKey;
 public final class FrozenLibClientRegistries {
 	public static final ResourceKey<Registry<EntityTextureOverride<?, ? extends LivingEntityRenderState>>> ENTITY_TEXTURE_OVERRIDE = createRegistryKey("entity_texture_override");
 
+	static {
+		FrozenLibBuiltInClientRegistries.init();
+	}
+
 	private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
 		return ResourceKey.createRegistryKey(ClientRegistries.ROOT_REGISTRY_NAME, FrozenLibConstants.id(name));
 	}

@@ -71,6 +71,10 @@ public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<StructureProcessorListAddition>> STRUCTURE_PROCESSOR_LIST_ADDITION = createRegistryKey("structure_processor_list_addition");
 	public static final ResourceKey<Registry<VariantSpawnInjection>> VARIANT_SPAWN_INJECTION = createRegistryKey("variant_spawn_injection");
 
+	static {
+		FrozenLibBuiltInRegistries.init();
+	}
+
 	public static void init() {}
 
 	public static void setup() {
