@@ -22,14 +22,27 @@ import com.mojang.renderpearl.api.pipeline.BlendFunction;
 import com.mojang.renderpearl.api.pipeline.ColorTargetState;
 import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.oit.OitPipelineSet;
 
+@UtilityClass
 @ClientOnly
 public final class FrozenLibRenderPipelines {
-	// TODO: test if these work
+	// ENTITY NO SHADING
+	public static final RenderPipeline ENTITY_NO_SHADING = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_no_shading"))
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+			.withColorTargetState(ColorTargetState.DEFAULT)
+			.withCull(false)
+			.build()
+	);
+
 	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading"))
@@ -41,6 +54,39 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
+	public static final RenderPipeline ENTITY_TRANSLUCENT_NO_SHADING = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_no_shading"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withCull(false)
+			.build()
+	);
+
+	public static final OitPipelineSet OIT_ENTITY_NO_SHADING = RenderPipelines.register(
+		OitPipelineSet.builder(
+			FrozenLibConstants.safeString("entity_no_shading"),
+			RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET).withCull(false)
+		).withAccumulateModifier(accumulate -> accumulate
+			.withShaderDefine("NO_OVERLAY")
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+		).build()
+	);
+
+	// ENTITY NO SHADING CULL
+	public static final RenderPipeline ENTITY_NO_SHADING_CULL = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_no_shading_cull"))
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+			.withColorTargetState(ColorTargetState.DEFAULT)
+			.withCull(true)
+			.build()
+	);
+
 	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading_cull"))
@@ -48,7 +94,7 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
 			.withColorTargetState(ColorTargetState.DEFAULT)
-			.withCull(false)
+			.withCull(true)
 			.build()
 	);
 
@@ -63,6 +109,18 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
+	public static final OitPipelineSet OIT_ENTITY_NO_SHADING_CULL = RenderPipelines.register(
+		OitPipelineSet.builder(
+			FrozenLibConstants.safeString("entity_no_shading_cull"),
+			RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET).withCull(true)
+		).withAccumulateModifier(accumulate -> accumulate
+			.withShaderDefine("NO_OVERLAY")
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+		).build()
+	);
+
+	// ENTITY EMISSIVE
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_FIXED = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed"))
@@ -75,6 +133,7 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
+	// ENTITY EMISSIVE CULL
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_cull"))
@@ -99,6 +158,18 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
+	public static final OitPipelineSet OIT_ENTITY_EMISSIVE_CULL = RenderPipelines.register(
+		OitPipelineSet.builder(
+			FrozenLibConstants.safeString("entity_emissive_cull"),
+			RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET).withCull(true)
+		).withAccumulateModifier(accumulate -> accumulate
+				.withShaderDefine("PER_FACE_LIGHTING")
+				.withShaderDefine("EMISSIVE")
+				.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+		).build()
+	);
+
+	// APPARITION
 	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
@@ -112,5 +183,14 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	private FrozenLibRenderPipelines() {}
+	public static final OitPipelineSet OIT_APPARITION_OUTER = RenderPipelines.register(
+		OitPipelineSet.builder(
+			FrozenLibConstants.safeString("apparition_outer"),
+			RenderPipeline.builder(RenderPipelines.OIT_ENTITY_SNIPPET).withCull(true)
+		).withAccumulateModifier(accumulate -> accumulate
+				.withShaderDefine("NO_CARDINAL_LIGHTING")
+				.withShaderDefine("EMISSIVE")
+				.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
+		).build()
+	);
 }

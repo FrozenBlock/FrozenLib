@@ -205,7 +205,7 @@ public class WindManager {
 		if (this.loadedExtensions) return;
 
 		final List<WindManagerExtension> extensions = new ArrayList<>(this.extensions);
-		level.registryAccess().lookupOrThrow(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY).stream()
+		level.registryAccess().lookupOrThrow(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE).stream()
 			.filter(type -> extensions.stream().noneMatch(extension -> extension.type() == type))
 			.forEach(type -> extensions.add(type.supplier().get()));
 

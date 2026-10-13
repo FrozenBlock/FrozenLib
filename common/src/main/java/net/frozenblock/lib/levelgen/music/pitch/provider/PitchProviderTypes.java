@@ -28,7 +28,7 @@ public final class PitchProviderTypes {
 
 	public static void init() {
 		final DeferredRegister<MapCodec<? extends PitchProvider>> register = DeferredRegister.create(
-			FrozenLibRegistries.PITCH_PROVIDER_TYPE_REGISTRY,
+			FrozenLibRegistries.PITCH_PROVIDER_TYPE,
 			FrozenLibEarlyConstants.MOD_ID
 		);
 

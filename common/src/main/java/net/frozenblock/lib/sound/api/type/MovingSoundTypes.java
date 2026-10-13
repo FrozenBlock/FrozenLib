@@ -28,6 +28,7 @@ public final class MovingSoundTypes {
 	public static void init() {
 		EntityTrackingEvents.START_TRACKING.register(MovingSoundManager::syncWithPlayer);
 
+		// FIXME: ml registry method
 		MovingSoundType.register(FrozenLibConstants.id("looping"), LOOPING);
 		MovingSoundType.register(FrozenLibConstants.id("looping_fading_distance"), LOOPING_FADING_DISTANCE);
 	}

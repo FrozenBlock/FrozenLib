@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -39,7 +40,7 @@ import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.phys.Vec3;
 
 public interface PitchProvider extends Validatable {
-	Codec<PitchProvider> DIRECT_CODEC = FrozenLibRegistries.PITCH_PROVIDER_TYPE.byNameCodec().dispatch(PitchProvider::codec, Function.identity());
+	Codec<PitchProvider> DIRECT_CODEC = FrozenLibBuiltInRegistries.PITCH_PROVIDER_TYPE.byNameCodec().dispatch(PitchProvider::codec, Function.identity());
 	Codec<Holder<PitchProvider>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
 	Codec<HolderSet<PitchProvider>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
 

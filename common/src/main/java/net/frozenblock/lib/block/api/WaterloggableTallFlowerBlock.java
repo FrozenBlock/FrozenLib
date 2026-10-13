@@ -64,13 +64,13 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
 		final Level level = context.getLevel();
 		final FluidState fluidState = level.getFluidState(pos);
         return !level.isOutsideBuildHeight(pos.getY() + 1) && level.getBlockState(pos.above()).canBeReplaced(context)
-			? this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER)
+			? this.defaultBlockState().setValue(WATERLOGGED, fluidState.isSourceOfType(Fluids.WATER))
 			: null;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource() : super.getFluidState(state);
     }
 
 	@Override

@@ -22,6 +22,7 @@ import java.util.List;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,9 +31,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+// TODO: revamp completely i think
 public interface WindDisturbanceType<T> {
-	Codec<WindDisturbanceType<?>> CODEC = FrozenLibRegistries.WIND_DISTURBANCE_TYPE.byNameCodec();
-	StreamCodec<RegistryFriendlyByteBuf, WindDisturbanceType<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY);
+	Codec<WindDisturbanceType<?>> CODEC = FrozenLibBuiltInRegistries.WIND_DISTURBANCE_TYPE.byNameCodec();
+	StreamCodec<RegistryFriendlyByteBuf, WindDisturbanceType<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE);
 	Codec<List<WindDisturbanceType<?>>> LIST_CODEC = CODEC.listOf();
 	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbanceType<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 

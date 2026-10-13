@@ -24,8 +24,8 @@ import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.resources.Identifier;
 
-@ClientOnly
 @UtilityClass
+@ClientOnly
 public final class HudElementRegistry {
 
 	@PlatformImpl

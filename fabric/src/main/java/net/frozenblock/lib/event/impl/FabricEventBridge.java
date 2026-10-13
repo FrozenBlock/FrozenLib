@@ -26,6 +26,7 @@ import net.frozenblock.lib.event.api.events.LifecycleEvents;
 
 @UtilityClass
 public final class FabricEventBridge {
+
 	public static void initModStage() {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();

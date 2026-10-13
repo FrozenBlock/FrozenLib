@@ -213,7 +213,7 @@ public final class LiquidRenderUtils {
 	}
 
 	private static boolean isNeighborSameFluidAndBlock(FluidState firstState, FluidState secondState, BlockState firstBlock, BlockState secondBlock) {
-		return secondState.getType().isSame(firstState.getType()) && firstBlock.getBlock() == secondBlock.getBlock();
+		return secondState.is(firstState.getType()) && firstBlock.getBlock() == secondBlock.getBlock();
 	}
 
 	private static boolean isFaceOccludedByState(Direction face, float height, BlockState state, BlockState neighborState) {

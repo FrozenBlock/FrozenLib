@@ -75,7 +75,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		collector.submitModelPart(
 			this.base,
 			poseStack,
-			FrozenLibRenderTypes.NO_SHADING_CUTOUT_BLOCK_SHEET,
+			FrozenLibRenderTypes.BLOCK_SHEET_CUTOUT_NO_SHADING_CULL,
 			state.lightCoords,
 			OverlayTexture.NO_OVERLAY,
 			sprite,
@@ -85,7 +85,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 			collector.order(1).submitCrumblingOverlay(
 				this.base,
 				poseStack,
-				FrozenLibRenderTypes.NO_SHADING_CUTOUT_BLOCK_SHEET,
+				FrozenLibRenderTypes.BLOCK_SHEET_CUTOUT_NO_SHADING_CULL,
 				state.lightCoords,
 				OverlayTexture.NO_OVERLAY,
 				-1,

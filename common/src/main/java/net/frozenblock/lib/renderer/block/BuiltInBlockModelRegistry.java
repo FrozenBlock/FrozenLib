@@ -31,7 +31,7 @@ public final class BuiltInBlockModelRegistry {
 	/**
 	 * The event that is triggered when built-in block models are being created.
 	 */
-	public static final Event<Register> REGISTER = EventRegistry.createEnvironmentEvent(Register.class, (callbacks) -> (builder) -> {
+	public static final Event<Register> REGISTER = EventRegistry.createEnvironmentEvent(Register.class, callbacks -> builder -> {
 		for (var callback : callbacks) callback.addBuiltInBlockModels(builder);
 	});
 

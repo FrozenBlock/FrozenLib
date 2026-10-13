@@ -33,7 +33,7 @@ import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.file.transfer.client.FileTransferEventListenerClient;
 import net.frozenblock.lib.particle.client.impl.FrozenLibParticleResources;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
-import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.registry.client.FrozenLibBuiltInClientRegistries;
 import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
@@ -52,7 +52,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistry
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {
-		FrozenLibClientRegistries.init();
+		FrozenLibBuiltInClientRegistries.init();
 	}
 
 	public static void quiltSetup() {

@@ -19,23 +19,27 @@ package net.frozenblock.lib.sound.api.predicate;
 
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.FrozenLibRegistries;import net.minecraft.core.Registry;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
+// FIXME: use proper codecs & ml registry methods
 public final class SoundPredicate<T extends Entity> {
+
+
 	public static final Identifier DEFAULT_ID = FrozenLibConstants.id("default");
 	public static final Identifier NOT_SILENT_AND_ALIVE_ID = FrozenLibConstants.id("not_silent_and_alive");
 
 	private final Supplier<LoopPredicate<T>> predicateSupplier;
 
     public static <T extends Entity> void register(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenLibRegistries.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
+		Registry.register(FrozenLibBuiltInRegistries.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
     }
 
 	public static <T extends Entity> void registerUnsynced(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
+		Registry.register(FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
 	}
 
 	public SoundPredicate(Supplier<LoopPredicate<T>> predicateSupplier) {
@@ -46,11 +50,11 @@ public final class SoundPredicate<T extends Entity> {
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable Identifier id) {
         if (id == null) return defaultPredicate();
 
-		if (FrozenLibRegistries.SOUND_PREDICATE.containsKey(id)) {
-			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE.getValue(id);
+		if (FrozenLibBuiltInRegistries.SOUND_PREDICATE.containsKey(id)) {
+			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibBuiltInRegistries.SOUND_PREDICATE.getValue(id);
 			if (predicate != null) return predicate.predicateSupplier.get();
-		} else if (FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
-			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.getValue(id);
+		} else if (FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
+			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibBuiltInRegistries.SOUND_PREDICATE_UNSYNCED.getValue(id);
 			if (predicate != null) return predicate.predicateSupplier.get();
 		}
 
@@ -66,6 +70,9 @@ public final class SoundPredicate<T extends Entity> {
 	}
 
 	public static void init() {
+
+
+
 		register(DEFAULT_ID, SoundPredicate::defaultPredicate);
 		register(NOT_SILENT_AND_ALIVE_ID, SoundPredicate::notSilentAndAlive);
 	}

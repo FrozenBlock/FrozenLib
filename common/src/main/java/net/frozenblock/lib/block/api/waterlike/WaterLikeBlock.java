@@ -422,6 +422,6 @@ public interface WaterLikeBlock {
 	 * Should be implemented in extending Blocks' {@code getFluidState} methods.
 	 */
 	default FluidState getFluidStateForWaterLike() {
-		return Fluids.WATER.getSource(false);
+		return Fluids.WATER.getSource();
 	}
 }

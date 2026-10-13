@@ -30,7 +30,7 @@ public final class ConfigPredicateTypes {
 
 	public static void init() {
 		final DeferredRegister<MapCodec<? extends ConfigPredicate>> register = DeferredRegister.create(
-			FrozenLibRegistries.CONFIG_PREDICATE_TYPE_REGISTRY,
+			FrozenLibRegistries.CONFIG_PREDICATE_TYPE,
 			FrozenLibConstants.MOD_ID
 		);
 

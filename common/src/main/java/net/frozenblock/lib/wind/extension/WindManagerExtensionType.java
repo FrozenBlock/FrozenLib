@@ -19,12 +19,8 @@ package net.frozenblock.lib.wind.extension;
 
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 
 public interface WindManagerExtensionType<E extends WindManagerExtension> {
 
@@ -36,16 +32,13 @@ public interface WindManagerExtensionType<E extends WindManagerExtension> {
 
 	StreamCodec<RegistryFriendlyByteBuf, E> streamCodec();
 
-	static void init() {}
-
-	static <E extends WindManagerExtension> WindManagerExtensionType<E> register(
-		Identifier id,
+	static <E extends WindManagerExtension> WindManagerExtensionType<E> create(
 		int priority,
 		Supplier<E> supplier,
 		MapCodec<E> codec,
 		StreamCodec<RegistryFriendlyByteBuf, E> streamCodec
 	) {
-		return Registry.register(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE, id, new WindManagerExtensionType<>() {
+		return new WindManagerExtensionType<>() {
 			@Override
 			public int priority() {
 				return priority;
@@ -65,16 +58,6 @@ public interface WindManagerExtensionType<E extends WindManagerExtension> {
 			public StreamCodec<RegistryFriendlyByteBuf, E> streamCodec() {
 				return streamCodec;
 			}
-		});
-	}
-
-	private static <E extends WindManagerExtension> WindManagerExtensionType<E> register(
-		String name,
-		int priority,
-		Supplier<E> supplier,
-		MapCodec<E> codec,
-		StreamCodec<RegistryFriendlyByteBuf, E> streamCodec
-	) {
-		return register(FrozenLibConstants.id(name), priority, supplier, codec, streamCodec);
+		};
 	}
 }

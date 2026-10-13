@@ -51,7 +51,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Interact> ON_INTERACT = EventRegistry.createEnvironmentEvent(
 		Interact.class,
-		(callbacks) -> (sulfurCube, player, hand) -> {
+		callbacks -> (sulfurCube, player, hand) -> {
 			for (var callback : callbacks) {
 				final Optional<InteractionResult> interactionResult = callback.onInteract(sulfurCube, player, hand);
 				if (interactionResult.isPresent()) return interactionResult;
@@ -65,7 +65,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<ArchetypeDataRemove> ON_ARCHETYPE_DATA_REMOVE = EventRegistry.createEnvironmentEvent(
 		ArchetypeDataRemove.class,
-		(callbacks) -> (sulfurCube, archetypeDataStorage) -> {
+		callbacks -> (sulfurCube, archetypeDataStorage) -> {
 			for (var callback : callbacks) callback.onArchetypeDataRemove(sulfurCube, archetypeDataStorage);
 		}
 	);
@@ -75,7 +75,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<ArchetypeApply> ON_ARCHETYPE_APPLY = EventRegistry.createEnvironmentEvent(
 		ArchetypeApply.class,
-		(callbacks) -> (sulfurCube, archetype, archetypeDataStorage) -> {
+		callbacks -> (sulfurCube, archetype, archetypeDataStorage) -> {
 			for (var callback : callbacks) callback.onArchetypeApply(sulfurCube, archetype, archetypeDataStorage);
 		}
 	);
@@ -85,7 +85,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Power> ON_POWER_CHANGED = EventRegistry.createEnvironmentEvent(
 		Power.class,
-		(callbacks) -> (sulfurCube, powered) -> {
+		callbacks -> (sulfurCube, powered) -> {
 			for (var callback : callbacks) callback.onPowerChanged(sulfurCube, powered);
 		}
 	);
@@ -95,8 +95,8 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<PushSoundPlayed> ON_PUSH_SOUND_PLAYED = EventRegistry.createEnvironmentEvent(
 		PushSoundPlayed.class,
-		(callbacks) -> (sulfurCube, player, pushVelocity) -> {
-			for (var callback : callbacks) callback.onPushSoundPlayed(sulfurCube, player, pushVelocity);
+		callbacks -> (sulfurCube, pushVelocity) -> {
+			for (var callback : callbacks) callback.onPushSoundPlayed(sulfurCube, pushVelocity);
 		}
 	);
 
@@ -105,7 +105,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Push> ON_PUSH = EventRegistry.createEnvironmentEvent(
 		Push.class,
-		(callbacks) -> (sulfurCube, player, pushVelocity) -> {
+		callbacks -> (sulfurCube, player, pushVelocity) -> {
 			for (var callback : callbacks) callback.onPush(sulfurCube, player, pushVelocity);
 		}
 	);
@@ -115,7 +115,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Hit> ON_HIT = EventRegistry.createEnvironmentEvent(
 		Hit.class,
-		(callbacks) -> (sulfurCube, pushVelocity, source, damage, comesFromEffect) -> {
+		callbacks -> (sulfurCube, pushVelocity, source, damage, comesFromEffect) -> {
 			for (var callback : callbacks) callback.onHit(sulfurCube, pushVelocity, source, damage, comesFromEffect);
 		}
 	);
@@ -125,7 +125,7 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Squish> ON_SQUISH = EventRegistry.createEnvironmentEvent(
 		Squish.class,
-		(callbacks) -> (sulfurCube) -> {
+		callbacks -> (sulfurCube) -> {
 			for (var callback : callbacks) callback.onSquish(sulfurCube);
 		}
 	);
@@ -194,10 +194,9 @@ public final class SulfurCubeEvents {
 		/**
 		 * Runs when a {@link SulfurCube} plays its push sound.
 		 * @param sulfurCube the {@link SulfurCube} playing the push sound
-		 * @param player the pushing {@link Player}
 		 * @param pushVelocity the velocity of the push in {@link Vec3} form
 		 */
-		void onPushSoundPlayed(SulfurCube sulfurCube, Player player, Vec3 pushVelocity);
+		void onPushSoundPlayed(SulfurCube sulfurCube, Vec3 pushVelocity);
 	}
 
 	/**

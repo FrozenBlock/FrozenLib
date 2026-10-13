@@ -20,7 +20,7 @@ package net.frozenblock.lib.entity.mixin.client.rendering;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
-import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.registry.client.FrozenLibBuiltInClientRegistries;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -48,10 +48,11 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
 		)
 	)
     private Identifier frozenLib$getEasterEgg(LivingEntityRenderer<?, ?, ?> instance, S renderState, Operation<Identifier> original) {
-		for (EntityTextureOverride<?> override : FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE) {
+		for (EntityTextureOverride<?> override : FrozenLibBuiltInClientRegistries.ENTITY_TEXTURE_OVERRIDE) {
 			if (override.clazz() != LivingEntityRenderer.class.cast(this).getClass()) continue;
 			if (override.condition().test(renderState)) return override.texture();
 		}
+
 		return original.call(instance, renderState);
 	}
 }

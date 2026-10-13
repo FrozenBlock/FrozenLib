@@ -30,6 +30,7 @@ import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.treedecorators.ConfigPredicateDecorator;
 import net.frozenblock.lib.levelgen.material.impl.ConfigCondition;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -44,7 +45,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public interface ConfigPredicate extends Supplier<Boolean> {
-	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity());
+	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity());
 	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
 	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
 

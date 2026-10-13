@@ -85,17 +85,14 @@ public class SulfurCubeMixin {
 	}
 
 	@Inject(
-		method = "playerPush",
+		method = "lambda$playerPush$0",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/monster/cubemob/SulfurCube;playSound(Lnet/minecraft/sounds/SoundEvent;)V"
 		)
 	)
-	private void frozenLib$onPushSoundPlayed(
-		Player player, CallbackInfo info,
-		@Local(name = "pushVelocity") Vec3 pushVelocity
-	) {
-		SulfurCubeEvents.ON_PUSH_SOUND_PLAYED.invoker().onPushSoundPlayed(SulfurCube.class.cast(this), player, pushVelocity);
+	private void frozenLib$onPushSoundPlayed(Vec3 pushVelocity, Holder pushSound, CallbackInfo info) {
+		SulfurCubeEvents.ON_PUSH_SOUND_PLAYED.invoker().onPushSoundPlayed(SulfurCube.class.cast(this), pushVelocity);
 	}
 
 	@Inject(
@@ -116,7 +113,7 @@ public class SulfurCubeMixin {
 		method = "knockback",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/monster/cubemob/SulfurCube;playSound(Lnet/minecraft/sounds/SoundEvent;)V"
+			target = "Lnet/minecraft/world/entity/SulfurCubeArchetype$SoundSettings;hitSound()Ljava/util/Optional;"
 		)
 	)
 	private void frozenLib$onHit(

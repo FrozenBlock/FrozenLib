@@ -27,7 +27,7 @@ import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbanceType;
 @UtilityClass
 public final class WindDisturbanceTypes {
 	private static final DeferredRegister<WindDisturbanceType<?>> REGISTER = DeferredRegister.create(
-		FrozenLibRegistries.WIND_DISTURBANCE_TYPE_REGISTRY,
+		FrozenLibRegistries.WIND_DISTURBANCE_TYPE,
 		FrozenLibConstants.MOD_ID
 	);
 

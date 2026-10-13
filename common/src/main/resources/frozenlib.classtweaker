@@ -4,7 +4,6 @@ classTweaker v2 official
 ####################################################################################
 transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z
 transitive-accessible field net/minecraft/SharedConstants DEBUG_PRINT_PROPERTIES Z
-transitive-accessible method net/minecraft/client/gui/components/debug/DebugScreenEntries register (Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/gui/components/debug/DebugScreenEntry;)Lnet/minecraft/resources/Identifier;
 
 # Registry
 ####################################################################################
@@ -12,10 +11,9 @@ transitive-accessible method net/minecraft/data/registries/VanillaRegistries val
 transitive-accessible method net/minecraft/data/Main bindRegistries (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible method net/minecraft/core/MappedRegistry getOrCreateHolderOrThrow (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
 transitive-accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
-transitive-accessible method net/minecraft/core/registries/BuiltInRegistries freeze ()V
+transitive-accessible method net/minecraft/core/registries/BuiltinRegistryBuilder freeze ()V
 transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljava/lang/Object;)V
 accessible method net/minecraft/core/registries/PatchedRegistry$LazyHolder bindValue (Ljava/lang/Object;)V
-transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
 transitive-accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
 transitive-accessible class net/minecraft/core/RegistrySetBuilder$BuildState
 transitive-accessible method net/minecraft/core/RegistrySetBuilder$BuildState <init> (Lnet/minecraft/core/HolderLookup$Provider;Lnet/minecraft/core/HolderLookup$Provider;Ljava/util/Map;Ljava/util/List;)V
@@ -234,9 +232,6 @@ transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingB
 
 transitive-accessible field net/minecraft/world/level/ClipContext collisionContext Lnet/minecraft/world/phys/shapes/CollisionContext;
 
-# Rendering
-transitive-accessible method net/minecraft/client/renderer/blockentity/BlockEntityRenderers register (Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/client/renderer/blockentity/BlockEntityRendererProvider;)V
-
 # Fluid
 ####################################################################################
 
@@ -323,9 +318,10 @@ transitive-accessible field net/minecraft/client/renderer/entity/AgeableMobRende
 transitive-mutable field net/minecraft/client/renderer/entity/AgeableMobRenderer babyModel Lnet/minecraft/client/model/EntityModel;
 
 # Rendering
-transitive-accessible method net/minecraft/client/renderer/entity/EntityRenderers register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/client/renderer/entity/EntityRendererProvider;)V
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_NO_LIGHTMAP_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines OIT_ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
+transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 
 transitive-inject-interface	net/minecraft/client/renderer/block/BlockModelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface	net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState

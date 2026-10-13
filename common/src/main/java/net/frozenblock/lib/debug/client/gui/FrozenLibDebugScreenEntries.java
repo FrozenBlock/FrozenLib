@@ -17,21 +17,32 @@
 
 package net.frozenblock.lib.debug.client.gui;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.core.registries.ClientRegistries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
-import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 @ClientOnly
 public final class FrozenLibDebugScreenEntries {
-	public static final Identifier STRUCTURE_STATUSES = register("structure_status", new DebugEntryStructureStatuses());
+	private static final DeferredRegister<DebugScreenEntry> REGISTER = DeferredRegister.create(
+		ClientRegistries.DEBUG_SCREEN_ENTRY,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final DeferredHolder<DebugScreenEntry, DebugEntryStructureStatuses> STRUCTURE_STATUSES = REGISTER.register(
+		"structure_status",
+		() -> new DebugEntryStructureStatuses()
+	);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {}
-
-	private static Identifier register(String name, DebugScreenEntry entry) {
-		return DebugScreenEntries.register(FrozenLibConstants.id(name), entry);
-	}
 }

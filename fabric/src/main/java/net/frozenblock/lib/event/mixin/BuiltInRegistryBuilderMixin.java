@@ -18,14 +18,14 @@
 package net.frozenblock.lib.event.mixin;
 
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.BuiltinRegistryBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BuiltInRegistries.class)
-public class BuiltInRegistriesMixin {
+@Mixin(BuiltinRegistryBuilder.class)
+public class BuiltInRegistryBuilderMixin {
 
 	@Inject(method = "freeze", at = @At("HEAD"))
 	private static void frozenLib$freezeBuiltinsStart(CallbackInfo info) {

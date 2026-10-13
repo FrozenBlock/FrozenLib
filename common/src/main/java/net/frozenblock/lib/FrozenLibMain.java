@@ -62,6 +62,7 @@ import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.networking.impl.FrozenLibNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -69,7 +70,6 @@ import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypes;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypesHolder;
 import net.frozenblock.lib.wind.disturbance.WindDisturbancesHolder;
-import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
@@ -79,6 +79,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistry
 public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
+		FrozenLibBuiltInRegistries.init();
 		BlockAttachmentEvents.init();
 		FireData.init();
 		SerializableItemCooldowns.init();
@@ -118,7 +119,6 @@ public final class FrozenLibMain {
 		FrozenLibSpawnConditions.init();
 		FrozenLibEntitySubPredicateTypes.init();
 		WindManager.init();
-		WindManagerExtensionType.init();
 		WindDisturbanceTypesHolder.init();
 		WindDisturbanceTypes.init();
 		WindDisturbancesHolder.init();

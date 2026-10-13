@@ -18,60 +18,25 @@
 package net.frozenblock.lib.integration.api;
 
 import java.util.List;
-import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
+import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 
 @UtilityClass
 public class ModIntegrations {
 
-    /**
-     * Registers a mod integration class
-     *
-     * @param integration   The mod integration class to register
-     * @param srcModID      The id of the mod registering the mod integration
-	 * @param modID      The id of the mod being integrated
-     * @return A {@link ModIntegrationSupplier}.
-     */
-    public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
-        return Registry.register(
-			FrozenLibRegistries.MOD_INTEGRATION,
-			Identifier.fromNamespaceAndPath(srcModID, modID),
-			new ModIntegrationSupplier<>(integration, modID)
-		);
-    }
-
-	/**
-	 * Registers a mod integration class
-	 *
-	 * @param integration   The mod integration class to register
-	 * @param unloadedIntegration   The integration to use when the mod is unloaded
-	 * @param srcModID      The id of the mod registering the mod integration
-	 * @param modID      The id of the mod being integrated
-	 * @return A {@link ModIntegrationSupplier}.
-	 */
-	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
-		return Registry.register(
-			FrozenLibRegistries.MOD_INTEGRATION,
-			Identifier.fromNamespaceAndPath(srcModID, modID),
-			new ModIntegrationSupplier<>(integration, unloadedIntegration, modID)
-		);
-	}
-
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
-        return FrozenLibRegistries.MOD_INTEGRATION.stream().toList();
+        return FrozenLibBuiltInRegistries.MOD_INTEGRATION.stream().toList();
     }
 
 	/**
 	 * Runs prior to registries freezing in order to allow for the registering of things.
 	 */
 	public static void initializePreFreeze() {
-		for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
+		for (ModIntegrationSupplier<?> integration : FrozenLibBuiltInRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
 			if (ModLoader.isServer()) continue;
+
 			integration.getIntegration().clientInitPreFreeze();
 		}
 	}
@@ -80,11 +45,11 @@ public class ModIntegrations {
      * Initialize all mod integrations.
      */
     public static void initialize() {
-        for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
+        for (ModIntegrationSupplier<?> integration : FrozenLibBuiltInRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
 			if (ModLoader.isServer()) continue;
+
 			integration.getIntegration().clientInit();
         }
     }
-
 }

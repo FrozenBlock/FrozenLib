@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,25 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.blockentity.platform;
+package net.frozenblock.lib.registry.client;
 
-import java.util.function.Supplier;
+import com.mojang.serialization.Lifecycle;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.MappedRegistry;
 
 @UtilityClass
 @ClientOnly
-public final class BlockEntityRendererRegistryImpl {
+public final class FrozenLibBuiltInClientRegistries {
+	public static final MappedRegistry<EntityTextureOverride<?>> ENTITY_TEXTURE_OVERRIDE = FrozenLibRegistries.createSimple(
+		FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE,
+		Lifecycle.stable()
+	);
 
-	public static <T extends BlockEntity, S extends BlockEntityRenderState> void register(
-		Supplier<BlockEntityType<? extends T>> type,
-		BlockEntityRendererProvider<T, S> provider
-	) {
-		BlockEntityRenderers.register(type.get(), provider);
-	}
+	public static void init() {}
 }

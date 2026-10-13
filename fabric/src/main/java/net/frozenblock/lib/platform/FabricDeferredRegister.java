@@ -24,6 +24,7 @@ import net.frozenblock.lib.platform.api.registry.DeferredBlock;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredItem;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.minecraft.client.core.registries.BuiltInClientRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -84,8 +85,14 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 
 	@SuppressWarnings("unchecked")
 	private <I extends T> DeferredHolder<T, I> registerEntry(Identifier id, Supplier<? extends I> supplier, @Nullable Consumer<I> also) {
-		final Registry<T> registry = (Registry<T>) BuiltInRegistries.REGISTRY.getOptional(this.registryKey.identifier())
-			.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
+		final Registry<T> registry;
+		if (this.registryKey.registry().getPath().contains("client") && ModLoader.isClient()) {
+			registry = (Registry<T>) BuiltInClientRegistries.REGISTRY.getOptional(this.registryKey.identifier())
+				.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
+		} else {
+			registry = (Registry<T>) BuiltInRegistries.REGISTRY.getOptional(this.registryKey.identifier())
+				.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
+		}
 
 		final ResourceKey<T> key = ResourceKey.create(this.registryKey, id);
 		final I value = supplier.get();

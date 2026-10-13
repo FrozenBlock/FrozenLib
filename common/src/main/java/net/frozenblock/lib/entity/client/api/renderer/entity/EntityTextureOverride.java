@@ -19,7 +19,7 @@ package net.frozenblock.lib.entity.client.api.renderer.entity;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.registry.client.FrozenLibBuiltInClientRegistries;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -34,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
  * @param <T> The entity class the override is for.
  */
 @ClientOnly
+// FIXME: ml registry methods
 public record EntityTextureOverride<T extends LivingEntity>(Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition) {
 
 	/**
@@ -96,7 +97,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	public static <T extends LivingEntity> EntityTextureOverride<T> register(
 		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition
 	) {
-		return Registry.register(FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
+		return Registry.register(FrozenLibBuiltInClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
 	}
 
 	@ClientOnly

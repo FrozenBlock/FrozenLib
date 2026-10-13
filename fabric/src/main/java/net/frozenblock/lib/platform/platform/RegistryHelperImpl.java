@@ -87,11 +87,14 @@ public final class RegistryHelperImpl {
 		boolean synced,
 		@Nullable RegistryHelper.RegistryBootstrap<T> bootstrap
 	) {
-		final var registry = new MappedRegistry<>(key, lifecycle, false);
-		final var builder = FabricRegistryBuilder.from(registry);
+		final MappedRegistry<T> registry = new MappedRegistry<>(key, lifecycle, false);
+		final FabricRegistryBuilder<T, MappedRegistry<T>> builder = FabricRegistryBuilder.from(registry);
+
 		if (synced) builder.attribute(RegistryAttribute.SYNCED);
-		final var registered = builder.buildAndRegister();
+
+		final MappedRegistry<T> registered = builder.buildAndRegister();
 		if (bootstrap != null) bootstrap.run(registered);
+
 		return registered;
 	}
 
