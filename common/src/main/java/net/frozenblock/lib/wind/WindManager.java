@@ -495,13 +495,22 @@ public class WindManager {
 		final double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(target));
 		final double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
 
-		final Pair<Double, Vec3> disturbance = windDisturbanceScale != 0D ? this.calculateWindDisturbance(target) : Pair.of(0D, Vec3.ZERO);
-		final double disturbanceAmount = disturbance.getFirst();
-		final Vec3 windDisturbance = disturbance.getSecond();
+		final double windX;
+		final double windY;
+		final double windZ;
+		if (windDisturbanceScale != 0D) {
+			final Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(target);
+			final double disturbanceAmount = disturbance.getFirst();
+			final Vec3 windDisturbance = disturbance.getSecond();
 
-		final double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
-		final double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
-		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+			windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+			windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+			windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+		} else {
+			windX = (this.windX * windScale) * scale;
+			windY = (this.windY * windScale) * scale;
+			windZ = (this.windZ * windScale) * scale;
+		}
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
 			// TODO: merge into single packet sent at end of tick
@@ -520,6 +529,7 @@ public class WindManager {
 	private Vec3 sampleAt(double x, double y, double z) {
 		if (!this.usable()) return Vec3.ZERO;
 		if (this.windOverride.isPresent()) return this.windOverride.get();
+
 		final double windX = this.noise.get(x, 0D, 0D);
 		final double windY = this.noise.get(0D, y, 0D);
 		final double windZ = this.noise.get(0D, 0D, z);
@@ -581,8 +591,11 @@ public class WindManager {
 	 * @param target The {@link Vec3} to check.
 	 * @return the movement contributed by {@link WindDisturbanceType}s at the given position.
 	 */
-	public Vec3 getRawDisturbanceMovement(Vec3 target) {
+	public Vec3 getRawDisturbanceMovement(Vec3 target, boolean applyStrength) {
 		if (!this.usable()) return Vec3.ZERO;
-		return this.calculateWindDisturbance(target).getSecond();
+
+		final Pair<Double, Vec3> result = this.calculateWindDisturbance(target);
+		if (!applyStrength) return result.getSecond();
+		return result.getSecond().scale(result.getFirst());
 	}
 }

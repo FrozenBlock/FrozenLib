@@ -141,7 +141,7 @@ public class ClientWindUtil {
 			final List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
 			final WindManager windManager = WindManager.getOrCreate(level);
 			Vec3 wind = disturbanceOnly
-				? windManager.getRawDisturbanceMovement(origin)
+				? windManager.getRawDisturbanceMovement(origin, true)
 				: windManager.getWindMovement(origin);
 
 			final double windLength = wind.length();
@@ -167,7 +167,7 @@ public class ClientWindUtil {
 				);
 				lineStart = lineEnd;
 				wind = disturbanceOnly
-					? windManager.getRawDisturbanceMovement(lineStart)
+					? windManager.getRawDisturbanceMovement(lineStart, true)
 					: windManager.getWindMovement(lineStart);
 			}
 
