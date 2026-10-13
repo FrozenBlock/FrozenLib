@@ -15,24 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entrypoint.api;
+package net.frozenblock.lib.particle.api;
 
-import net.fabricmc.loader.api.FabricLoader;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
+import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 
-// TODO: Common
-@FunctionalInterface
-public interface FrozenMainEntrypoint {
-	Event<FrozenMainEntrypoint> EVENT = EventRegistry.createEnvironmentEvent(FrozenMainEntrypoint.class, callbacks -> () -> {
-		for (var callback : callbacks) {
-			callback.init();
-			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();
+@UtilityClass
+public final class VibrationSignalParticleEvents {
+	/**
+	 * The event that is triggered to evaluate whether a Vibration Signal Particle should be created.
+	 */
+	public static final Event<EvaluateVisibility> EVALUATE_VISIBILITY = EventRegistry.createEnvironmentEvent(EvaluateVisibility.class,
+		callbacks -> (data, user) -> {
+			for (EvaluateVisibility callback : callbacks) if (callback.isVisible(data, user)) return false;
+			return true;
 		}
-	});
+	);
 
-	void init();
-
-	default void initDevOnly() {}
-
+	@FunctionalInterface
+	public interface EvaluateVisibility {
+		boolean isVisible(VibrationSystem.Data data, VibrationSystem.User user);
+	}
 }

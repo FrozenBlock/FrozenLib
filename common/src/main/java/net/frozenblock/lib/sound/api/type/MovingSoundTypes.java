@@ -17,19 +17,35 @@
 
 package net.frozenblock.lib.sound.api.type;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.EntityTrackingEvents;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.sound.impl.MovingSoundManager;
 
+@UtilityClass
 public final class MovingSoundTypes {
-	public static final MovingLoopingSoundType LOOPING = new MovingLoopingSoundType(FrozenLibConstants.id("looping"));
-	public static final FadingDistanceLoopingMovingSoundType LOOPING_FADING_DISTANCE = new FadingDistanceLoopingMovingSoundType(FrozenLibConstants.id("looping_fading_distance"));
+	private static final DeferredRegister<MovingSoundType<?>> REGISTER = DeferredRegister.create(
+		FrozenLibRegistries.MOVING_SOUND_TYPE,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final DeferredHolder<MovingSoundType<?>, MovingLoopingSoundType> LOOPING = REGISTER.register(
+		"looping",
+		() -> new MovingLoopingSoundType(FrozenLibConstants.id("looping"))
+	);
+	public static final DeferredHolder<MovingSoundType<?>, FadingDistanceLoopingMovingSoundType> LOOPING_FADING_DISTANCE = REGISTER.register(
+		"looping_fading_distance",
+		() -> new FadingDistanceLoopingMovingSoundType(FrozenLibConstants.id("looping_fading_distance"))
+	);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {
 		EntityTrackingEvents.START_TRACKING.register(MovingSoundManager::syncWithPlayer);
-
-		// FIXME: ml registry method
-		MovingSoundType.register(FrozenLibConstants.id("looping"), LOOPING);
-		MovingSoundType.register(FrozenLibConstants.id("looping_fading_distance"), LOOPING_FADING_DISTANCE);
 	}
 }

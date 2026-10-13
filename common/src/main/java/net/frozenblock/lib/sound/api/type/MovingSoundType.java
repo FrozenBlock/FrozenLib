@@ -21,8 +21,6 @@ import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
-import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -65,10 +63,5 @@ public abstract class MovingSoundType<D> {
 		final List<D> sounds = this.attachmentType.get(entity);
 		if (sounds == null || sounds.isEmpty()) return;
 		this.syncWithPlayer(entity, player, sounds);
-	}
-
-	// FIXME: ml registry method
-	public static <D> MovingSoundType<D> register(Identifier id, MovingSoundType<D> type) {
-		return Registry.register(FrozenLibBuiltInRegistries.MOVING_SOUND_TYPE, id, type);
 	}
 }

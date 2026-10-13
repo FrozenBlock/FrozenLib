@@ -206,9 +206,9 @@ public final class FrozenLibSoundPackets {
 			);
 		}
 
-		MovingSoundTypes.LOOPING.addSound(
+		MovingSoundTypes.LOOPING.get().addSound(
 			entity,
-			new MovingLoopingSoundType.Data(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicate, stopOnDeath)
 		);
     }
 
@@ -240,8 +240,8 @@ public final class FrozenLibSoundPackets {
     public static void createAndSendMovingRestrictionLoopingFadingDistanceSound(
 		Level level,
 		Entity entity,
-		Holder<SoundEvent> sound,
-		Holder<SoundEvent> sound2,
+		Holder<SoundEvent> closeSound,
+		Holder<SoundEvent> farSound,
 		SoundSource category,
 		float volume,
 		float pitch,
@@ -257,8 +257,8 @@ public final class FrozenLibSoundPackets {
 				player,
 				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 					entity.getId(),
-					sound,
-					sound2,
+					closeSound,
+					farSound,
 					category,
 					volume,
 					pitch,
@@ -276,8 +276,8 @@ public final class FrozenLibSoundPackets {
 				player,
 				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 					entity.getId(),
-					sound,
-					sound2,
+					closeSound,
+					farSound,
 					category,
 					volume,
 					pitch,
@@ -290,11 +290,11 @@ public final class FrozenLibSoundPackets {
 			);
 		}
 
-		MovingSoundTypes.LOOPING_FADING_DISTANCE.addSound(
+		MovingSoundTypes.LOOPING_FADING_DISTANCE.get().addSound(
 			entity,
 			new FadingDistanceLoopingMovingSoundType.Data(
-				sound.unwrapKey().orElseThrow().identifier(),
-				sound2.unwrapKey().orElseThrow().identifier(),
+				closeSound,
+				farSound,
 				category,
 				volume,
 				pitch,
@@ -309,8 +309,8 @@ public final class FrozenLibSoundPackets {
     public static void createAndSendMovingRestrictionLoopingFadingDistanceSound(
 		ServerPlayer player,
 		Entity entity,
-		Holder<SoundEvent> sound,
-		Holder<SoundEvent> sound2,
+		Holder<SoundEvent> closeSound,
+		Holder<SoundEvent> farSound,
 		SoundSource category,
 		float volume,
 		float pitch,
@@ -323,8 +323,8 @@ public final class FrozenLibSoundPackets {
 			player,
 			new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 				entity.getId(),
-				sound,
-				sound2,
+				closeSound,
+				farSound,
 				category,
 				volume,
 				pitch,
@@ -442,9 +442,9 @@ public final class FrozenLibSoundPackets {
 			);
 		}
 
-		MovingSoundTypes.LOOPING.addSound(
+		MovingSoundTypes.LOOPING.get().addSound(
 			entity,
-			new MovingLoopingSoundType.Data(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound, category, volume, pitch, predicate, stopOnDeath)
 		);
     }
 

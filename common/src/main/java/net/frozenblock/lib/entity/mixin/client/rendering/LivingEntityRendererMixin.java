@@ -47,12 +47,12 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
 			target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getTextureLocation(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;)Lnet/minecraft/resources/Identifier;"
 		)
 	)
-    private Identifier frozenLib$getEasterEgg(LivingEntityRenderer<?, ?, ?> instance, S renderState, Operation<Identifier> original) {
-		for (EntityTextureOverride<?> override : FrozenLibBuiltInClientRegistries.ENTITY_TEXTURE_OVERRIDE) {
-			if (override.clazz() != LivingEntityRenderer.class.cast(this).getClass()) continue;
-			if (override.condition().test(renderState)) return override.texture();
+    private Identifier frozenLib$getEasterEgg(LivingEntityRenderer<?, ?, ?> instance, S state, Operation<Identifier> original) {
+		for (EntityTextureOverride override : FrozenLibBuiltInClientRegistries.ENTITY_TEXTURE_OVERRIDE) {
+			if (override.entityType() != state.entityType) continue;
+			if (override.condition().test(state)) return override.texture();
 		}
 
-		return original.call(instance, renderState);
+		return original.call(instance, state);
 	}
 }

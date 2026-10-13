@@ -22,13 +22,14 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.core.registries.ClientRegistries;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 @UtilityClass
 @ClientOnly
 public final class FrozenLibClientRegistries {
-	public static final ResourceKey<Registry<EntityTextureOverride<?>>> ENTITY_TEXTURE_OVERRIDE = createRegistryKey("entity_texture_override");
+	public static final ResourceKey<Registry<EntityTextureOverride<?, ? extends LivingEntityRenderState>>> ENTITY_TEXTURE_OVERRIDE = createRegistryKey("entity_texture_override");
 
 	private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {
 		return ResourceKey.createRegistryKey(ClientRegistries.ROOT_REGISTRY_NAME, FrozenLibConstants.id(name));

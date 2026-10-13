@@ -22,12 +22,13 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.MappedRegistry;
 
 @UtilityClass
 @ClientOnly
 public final class FrozenLibBuiltInClientRegistries {
-	public static final MappedRegistry<EntityTextureOverride<?>> ENTITY_TEXTURE_OVERRIDE = FrozenLibRegistries.createSimple(
+	public static final MappedRegistry<EntityTextureOverride<?, ? extends LivingEntityRenderState>> ENTITY_TEXTURE_OVERRIDE = FrozenLibRegistries.createSimple(
 		FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE,
 		Lifecycle.stable()
 	);

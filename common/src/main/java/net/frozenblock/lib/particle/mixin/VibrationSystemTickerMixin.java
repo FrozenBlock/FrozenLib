@@ -19,7 +19,7 @@ package net.frozenblock.lib.particle.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.particle.api.VibrationParticleVisibilityApi;
+import net.frozenblock.lib.particle.api.VibrationSignalParticleEvents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.gameevent.vibrations.VibrationInfo;
@@ -54,7 +54,7 @@ public interface VibrationSystemTickerMixin {
 		ServerLevel serverLevel,
 		VibrationInfo context
 	) {
-		if (!VibrationParticleVisibilityApi.isVisible(data, user)) return 0;
+		if (!VibrationSignalParticleEvents.EVALUATE_VISIBILITY.invoker().isVisible(data, user)) return 0;
 		return operation.call(usedLevel, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
 
@@ -81,7 +81,7 @@ public interface VibrationSystemTickerMixin {
 		VibrationSystem.Data data,
 		VibrationSystem.User user
 	) {
-		if (!VibrationParticleVisibilityApi.isVisible(data, user)) return 1;
+		if (!VibrationSignalParticleEvents.EVALUATE_VISIBILITY.invoker().isVisible(data, user)) return 1;
 		return operation.call(usedLevel, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
 }

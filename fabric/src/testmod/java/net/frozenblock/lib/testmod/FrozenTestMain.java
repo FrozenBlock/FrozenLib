@@ -17,10 +17,13 @@
 
 package net.frozenblock.lib.testmod;
 
+import com.mojang.datafixers.schemas.Schema;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
+import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.frozenblock.lib.block.api.tick.BlockTickEvents;
@@ -39,6 +42,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
@@ -49,13 +53,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class FrozenTestMain implements ModInitializer {
-
     public static final String MOD_ID = "frozenlib_testmod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     @Override
     public void onInitialize() {
-		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
+		applyDataFixes();
 
 		TestConfig2.init();
 		FrozenLibConfig.SAVE_ITEM_COOLDOWNS.modify(entry -> entry.value = true);
@@ -108,15 +111,15 @@ public final class FrozenTestMain implements ModInitializer {
 
 	private static final int DATA_VERSION = 1;
 
-	private static void applyDataFixes(ModContainer mod) {
+	private static void applyDataFixes() {
 		LOGGER.info("Applying DataFixes for FrozenLib Testmod");
-		// TODO: add back datafixers
-		//var builder = new FabricDataFixerBuilder(DATA_VERSION);
-		//builder.addSchema(0, FabricDataFixes.getBaseSchema());
-		//Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
-		//SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenSharedConstants.id("camera"), id("camera"), schemaV1);
 
-		//FabricDataFixes.buildAndRegisterFixer(mod, builder);
+		final FabricDataFixerBuilder builder = new FabricDataFixerBuilder(DATA_VERSION);
+		builder.addSchema(0, FabricDataFixes.BASE_SCHEMA);
+		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
+		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenLibConstants.id("camera"), id("camera"), schemaV1);
+
+		FabricDataFixes.buildAndRegisterFixer(FrozenLibConstants.MOD_ID, builder);
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
 	}
 

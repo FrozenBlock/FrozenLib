@@ -22,12 +22,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
@@ -63,8 +63,8 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingFadingDistanceSound(
 				player,
 				entity,
-				BuiltInRegistries.SOUND_EVENT.get(data.closeSound()).orElseThrow(),
-				BuiltInRegistries.SOUND_EVENT.get(data.farSound()).orElseThrow(),
+				data.closeSound(),
+				data.farSound(),
 				SoundSource.valueOf(SoundSource.class, data.category()),
 				data.volume(),
 				data.pitch(),
@@ -77,8 +77,8 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 	}
 
 	public record Data(
-		Identifier closeSound,
-		Identifier farSound,
+		Holder<SoundEvent> closeSound,
+		Holder<SoundEvent> farSound,
 		String category,
 		float volume,
 		float pitch,
@@ -88,8 +88,8 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		boolean stopOnDeath
 	) {
 		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Identifier.CODEC.fieldOf("closeSound").forGetter(Data::closeSound),
-			Identifier.CODEC.fieldOf("farSound").forGetter(Data::farSound),
+			SoundEvent.CODEC.fieldOf("closeSound").forGetter(Data::closeSound),
+			SoundEvent.CODEC.fieldOf("farSound").forGetter(Data::farSound),
 			Codec.STRING.fieldOf("categoryOrdinal").forGetter(Data::category),
 			Codec.FLOAT.fieldOf("volume").forGetter(Data::volume),
 			Codec.FLOAT.fieldOf("pitch").forGetter(Data::pitch),
@@ -100,8 +100,8 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		).apply(instance, Data::new));
 
 		public Data(
-			Identifier closeSound,
-			Identifier farSound,
+			Holder<SoundEvent> closeSound,
+			Holder<SoundEvent> farSound,
 			SoundSource category,
 			float volume,
 			float pitch,

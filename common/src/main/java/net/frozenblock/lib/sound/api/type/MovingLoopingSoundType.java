@@ -22,12 +22,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
@@ -63,7 +63,7 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingSound(
 				player,
 				entity,
-				BuiltInRegistries.SOUND_EVENT.get(data.sound()).orElseThrow(),
+				data.sound(),
 				SoundSource.valueOf(SoundSource.class, data.category()),
 				data.volume(),
 				data.pitch(),
@@ -74,7 +74,7 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 	}
 
 	public record Data(
-		Identifier sound,
+		Holder<SoundEvent> sound,
 		String category,
 		float volume,
 		float pitch,
@@ -82,7 +82,7 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 		boolean stopOnDeath
 	) {
 		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Identifier.CODEC.fieldOf("sound").forGetter(Data::sound),
+			SoundEvent.CODEC.fieldOf("sound").forGetter(Data::sound),
 			Codec.STRING.fieldOf("categoryOrdinal").forGetter(Data::category),
 			Codec.FLOAT.fieldOf("volume").forGetter(Data::volume),
 			Codec.FLOAT.fieldOf("pitch").forGetter(Data::pitch),
@@ -90,7 +90,7 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 			Codec.BOOL.fieldOf("stopOnDeath").forGetter(Data::stopOnDeath)
 		).apply(instance, Data::new));
 
-		public Data(Identifier sound, SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
+		public Data(Holder<SoundEvent> sound, SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
 			this(sound, category.toString(), volume, pitch, restrictionID, stopOnDeath);
 		}
 	}

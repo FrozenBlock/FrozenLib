@@ -128,3 +128,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - The `#minecraft:freeze_hurts_extra_types` Entity Type Tag now contains the `#frozenlib:blazes` Entity Type Tag.
 - Significantly improved the performance of Wind Disturbances on both the client and server.
 - FrozenLib's custom translucent Render Types now render as intended with the Improved Transparency option enabled.
+- Migrated `VibrationParticleVisibilityApi` to `VibrationSignalParticleEvents`.
+- Entity Texture Overrides now check for an Entity's Type instead of an Entity Renderer class.

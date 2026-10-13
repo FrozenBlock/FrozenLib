@@ -19,13 +19,12 @@ package net.frozenblock.lib.entity.client.api.renderer.entity;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.frozenblock.lib.registry.client.FrozenLibBuiltInClientRegistries;
+import java.util.function.Predicate;
 import net.frozenblock.lib.renderer.FrozenLibRenderStateDataKeys;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
@@ -34,40 +33,46 @@ import net.minecraft.world.entity.LivingEntity;
  * @param <T> The entity class the override is for.
  */
 @ClientOnly
-// FIXME: ml registry methods
-public record EntityTextureOverride<T extends LivingEntity>(Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition) {
+public record EntityTextureOverride<T extends LivingEntity, S extends LivingEntityRenderState>(
+	EntityType<T> entityType,
+	Identifier texture,
+	Predicate<S> condition
+) {
 
 	/**
-	 * Creates and registers an {@link EntityTextureOverride} based on an entity's name, not-case-sensitive.
+	 * Creates an {@link EntityTextureOverride} based on an entity's name, not-case-sensitive.
 	 *
-	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
-	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
+	 * @param entityType The {@link EntityType} to register the {@link EntityTextureOverride} for.
 	 * @param texture The texture to use while enabled.
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(
-		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, String... names
+	public static <T extends LivingEntity, S extends LivingEntityRenderState> EntityTextureOverride<T, S> create(
+		EntityType<T> entityType,
+		Identifier texture,
+		String... names
 	) {
-		return register(key, clazz, texture, false, names);
+		return create(entityType, texture, false, names);
 	}
 
 	/**
-	 * Creates and registers an {@link EntityTextureOverride} based on an entity's name.
+	 * Creates an {@link EntityTextureOverride} based on an entity's name.
 	 *
-	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
-	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
+	 * @param entityType The {@link EntityType} to register the {@link EntityTextureOverride} for.
 	 * @param texture The texture to use while enabled.
 	 * @param caseSensitive Whether the texture override checks for the same case in the entity's name.
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(
-		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, boolean caseSensitive, String... names
+	public static <T extends LivingEntity, S extends LivingEntityRenderState> EntityTextureOverride<T, S> create(
+		EntityType<T> entityType,
+		Identifier texture,
+		boolean caseSensitive,
+		String... names
 	) {
 		if (texture == null) throw new IllegalArgumentException("Texture cannot be null!");
 
-		return register(key, clazz, texture, renderState -> {
+		return create(entityType, texture, renderState -> {
 			final String entityName = renderState.frozenLib$getData(FrozenLibRenderStateDataKeys.ENTITY_NAME);
 			if (entityName == null) return false;
 
@@ -86,23 +91,18 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	}
 
 	/**
-	 * Creates and registers an {@link EntityTextureOverride}.
+	 * Creates an {@link EntityTextureOverride}.
 	 *
-	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
-	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
+	 * @param entityType The {@link EntityType} to register the {@link EntityTextureOverride} for.
 	 * @param texture The texture to use while enabled.
-	 * @param condition The conditions to be met in order to override the entity's texture.
+	 * @param condition The conditions that must be met in order to override the entity's texture.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(
-		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition
+	public static <T extends LivingEntity, S extends LivingEntityRenderState> EntityTextureOverride<T, S> create(
+		EntityType<T> entityType,
+		Identifier texture,
+		Predicate<S> condition
 	) {
-		return Registry.register(FrozenLibBuiltInClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
-	}
-
-	@ClientOnly
-	@FunctionalInterface
-	public interface Condition {
-		boolean test(LivingEntityRenderState renderState);
+		return new EntityTextureOverride<>(entityType, texture, condition);
 	}
 }
