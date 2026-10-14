@@ -98,6 +98,30 @@ public final class RegistryHelper {
 		throw new AssertionError();
 	}
 
+	public static <T> MappedRegistry<T> createSimple(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle
+	) {
+		return createSimple(key, lifecycle, false, null);
+	}
+
+	public static <T> MappedRegistry<T> createSimple(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle,
+		boolean synced
+	) {
+		return createSimple(key, lifecycle, synced, null);
+	}
+
+	public static <T> MappedRegistry<T> createSimple(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle,
+		boolean synced,
+		RegistryHelper.RegistryBootstrap<T> bootstrap
+	) {
+		return createSimpleRegistry(key, lifecycle, synced, bootstrap);
+	}
+
 	@PlatformImpl
 	public static <T> void registerDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
 		throw new AssertionError();

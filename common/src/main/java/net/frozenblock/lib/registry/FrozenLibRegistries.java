@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.registry;
 
-import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
@@ -41,7 +40,6 @@ import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.sound.impl.damage.PlayerDamageTypeSound;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
-import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -91,30 +89,6 @@ public final class FrozenLibRegistries {
 		RegistryHelper.registerSyncedDynamicRegistry(PLAYER_DAMAGE_TYPE_SOUND, PlayerDamageTypeSound.DIRECT_CODEC);
 		RegistryHelper.registerDynamicRegistry(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC.codec());
 		RegistryHelper.registerDynamicRegistry(VARIANT_SPAWN_INJECTION, VariantSpawnInjection.CODEC);
-	}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle
-	) {
-		return createSimple(key, lifecycle, false, null);
-	}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle,
-		boolean synced
-	) {
-		return createSimple(key, lifecycle, synced, null);
-	}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle,
-		boolean synced,
-		RegistryHelper.RegistryBootstrap<T> bootstrap
-	) {
-		return RegistryHelper.createSimpleRegistry(key, lifecycle, synced, bootstrap);
 	}
 
 	private static <T> ResourceKey<Registry<T>> createRegistryKey(String name) {

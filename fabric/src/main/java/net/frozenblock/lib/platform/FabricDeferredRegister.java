@@ -24,7 +24,6 @@ import net.frozenblock.lib.platform.api.registry.DeferredBlock;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredItem;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
-import net.minecraft.client.core.registries.BuiltInClientRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -46,12 +45,23 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.Nullable;
 
 public class FabricDeferredRegister<T> implements DeferredRegister<T> {
+	protected final Registry<? extends Registry<?>> root;
 	protected final ResourceKey<? extends Registry<T>> registryKey;
 	protected final String namespace;
 
-	public FabricDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+	public FabricDeferredRegister(
+		Registry<? extends Registry<?>> root,
+		ResourceKey<? extends Registry<T>> registryKey,
+		String namespace
+	) {
+		if (!root.key().equals(registryKey.registryKey())) throw new IllegalArgumentException("Root keys don't match!");
+		this.root = root;
 		this.registryKey = registryKey;
 		this.namespace = namespace;
+	}
+
+	public FabricDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+		this(BuiltInRegistries.REGISTRY, registryKey, namespace);
 	}
 
 	@Override
@@ -85,14 +95,8 @@ public class FabricDeferredRegister<T> implements DeferredRegister<T> {
 
 	@SuppressWarnings("unchecked")
 	private <I extends T> DeferredHolder<T, I> registerEntry(Identifier id, Supplier<? extends I> supplier, @Nullable Consumer<I> also) {
-		final Registry<T> registry;
-		if (this.registryKey.registry().getPath().contains("client") && ModLoader.isClient()) {
-			registry = (Registry<T>) BuiltInClientRegistries.REGISTRY.getOptional(this.registryKey.identifier())
-				.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
-		} else {
-			registry = (Registry<T>) BuiltInRegistries.REGISTRY.getOptional(this.registryKey.identifier())
-				.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier()));
-		}
+		final Registry<T> registry = (Registry<T>) this.root.getOptional(this.registryKey.identifier())
+			.orElseThrow(() -> new IllegalStateException("No registry found for key: " + this.registryKey.identifier() + " in root: " + this.root.key().identifier()));
 
 		final ResourceKey<T> key = ResourceKey.create(this.registryKey, id);
 		final I value = supplier.get();

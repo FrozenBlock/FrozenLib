@@ -20,7 +20,7 @@ package net.frozenblock.lib.registry.client;
 import com.mojang.serialization.Lifecycle;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.platform.client.ClientRegistryHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.MappedRegistry;
@@ -28,7 +28,7 @@ import net.minecraft.core.MappedRegistry;
 @UtilityClass
 @ClientOnly
 public final class FrozenLibBuiltInClientRegistries {
-	public static final MappedRegistry<EntityTextureOverride<?, ? extends LivingEntityRenderState>> ENTITY_TEXTURE_OVERRIDE = FrozenLibRegistries.createSimple(
+	public static final MappedRegistry<EntityTextureOverride<?, ? extends LivingEntityRenderState>> ENTITY_TEXTURE_OVERRIDE = ClientRegistryHelper.create(
 		FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE,
 		Lifecycle.stable()
 	);

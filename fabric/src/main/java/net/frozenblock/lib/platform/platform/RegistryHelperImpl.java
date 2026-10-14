@@ -27,6 +27,7 @@ import net.frozenblock.lib.platform.RegistryHelper;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 public final class RegistryHelperImpl {
 
 	public static <T> DeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new FabricDeferredRegister<>(registryKey, namespace);
+		return new FabricDeferredRegister<>(BuiltInRegistries.REGISTRY, registryKey, namespace);
 	}
 
 	public static DeferredRegister.Items createDeferredItemsRegister(String namespace) {

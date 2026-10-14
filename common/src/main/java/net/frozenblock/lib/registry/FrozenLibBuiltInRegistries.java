@@ -19,6 +19,7 @@ package net.frozenblock.lib.registry;
 
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.MapCodec;
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
@@ -32,13 +33,11 @@ import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
-import java.util.function.Supplier;
 
 @UtilityClass
 public final class FrozenLibBuiltInRegistries {
-	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(
+	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = RegistryHelper.createSimple(
 		FrozenLibRegistries.MOD_INTEGRATION,
 		Lifecycle.stable(),
 		false,
@@ -54,7 +53,7 @@ public final class FrozenLibBuiltInRegistries {
 			)
 		)
 	);
-	public static final MappedRegistry<Supplier<SoundPredicate<?>>> SOUND_PREDICATE_TYPE = createSimple(
+	public static final MappedRegistry<Supplier<SoundPredicate<?>>> SOUND_PREDICATE_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.SOUND_PREDICATE_TYPE,
 		Lifecycle.stable(),
 		true,
@@ -65,52 +64,28 @@ public final class FrozenLibBuiltInRegistries {
 			}
 		})
 	);
-	public static final MappedRegistry<WindManagerExtensionType<?>> WIND_MANAGER_EXTENSION_TYPE = createSimple(
+	public static final MappedRegistry<WindManagerExtensionType<?>> WIND_MANAGER_EXTENSION_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE,
 		Lifecycle.stable(),
 		true
 	);
-	public static final MappedRegistry<WindDisturbanceType<?>> WIND_DISTURBANCE_TYPE = createSimple(
+	public static final MappedRegistry<WindDisturbanceType<?>> WIND_DISTURBANCE_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.WIND_DISTURBANCE_TYPE,
 		Lifecycle.stable(),
 		true
 	);
-	public static final MappedRegistry<MapCodec<? extends ConfigPredicate>> CONFIG_PREDICATE_TYPE = createSimple(
+	public static final MappedRegistry<MapCodec<? extends ConfigPredicate>> CONFIG_PREDICATE_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.CONFIG_PREDICATE_TYPE,
 		Lifecycle.stable()
 	);
-	public static final MappedRegistry<MapCodec<? extends PitchProvider>> PITCH_PROVIDER_TYPE = createSimple(
+	public static final MappedRegistry<MapCodec<? extends PitchProvider>> PITCH_PROVIDER_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.PITCH_PROVIDER_TYPE,
 		Lifecycle.stable()
 	);
-	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = createSimple(
+	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.MOVING_SOUND_TYPE,
 		Lifecycle.stable()
 	);
 
 	public static void init() {}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle
-	) {
-		return createSimple(key, lifecycle, false, null);
-	}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle,
-		boolean synced
-	) {
-		return createSimple(key, lifecycle, synced, null);
-	}
-
-	public static <T> MappedRegistry<T> createSimple(
-		ResourceKey<? extends Registry<T>> key,
-		Lifecycle lifecycle,
-		boolean synced,
-		RegistryHelper.RegistryBootstrap<T> bootstrap
-	) {
-		return RegistryHelper.createSimpleRegistry(key, lifecycle, synced, bootstrap);
-	}
 }
