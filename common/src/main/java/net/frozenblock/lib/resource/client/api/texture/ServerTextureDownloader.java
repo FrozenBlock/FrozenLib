@@ -34,6 +34,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.file.transfer.FileTransferEvents;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
@@ -124,7 +125,7 @@ public final class ServerTextureDownloader {
 
 			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) {
 				LOGGER.info("Requesting server texture {}/{} from server", destinationPath, fileName);
-			} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
+			} else if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) {
 				LOGGER.debug("Requesting server texture {}/{} from server", destinationPath, fileName);
 			}
 		}
@@ -138,7 +139,7 @@ public final class ServerTextureDownloader {
 
 		if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) {
 			LOGGER.info("Loading server texture from local cache ({})", path);
-		} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
+		} else if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) {
 			LOGGER.debug("Loading server texture from local cache ({})", path);
 		}
 

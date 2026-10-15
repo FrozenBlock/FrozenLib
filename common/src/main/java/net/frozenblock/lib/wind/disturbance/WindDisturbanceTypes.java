@@ -22,7 +22,8 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbanceType;
+import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbance;
+import net.frozenblock.lib.wind.disturbance.holder.WindDisturbanceSourceType;
 
 @UtilityClass
 public final class WindDisturbanceTypes {
@@ -31,9 +32,18 @@ public final class WindDisturbanceTypes {
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final DeferredHolder<WindDisturbanceType<?>, BreezeWindDisturbanceType> BREEZE = REGISTER.register("breeze", () -> BreezeWindDisturbanceType.INSTANCE);
-	public static final DeferredHolder<WindDisturbanceType<?>, WindChargeWindDisturbanceType> WIND_CHARGE = REGISTER.register("wind_charge", () -> WindChargeWindDisturbanceType.INSTANCE);
-	public static final DeferredHolder<WindDisturbanceType<?>, GeyserWindDisturbanceType> GEYSER = REGISTER.register("geyser", () -> GeyserWindDisturbanceType.INSTANCE);
+	public static final DeferredHolder<WindDisturbanceType<?>, WindDisturbanceType<BreezeWindDisturbance>> BREEZE = REGISTER.register(
+		"breeze",
+		WindDisturbanceType.createSupplier(BreezeWindDisturbance.CODEC, BreezeWindDisturbance.STREAM_CODEC, WindDisturbanceSourceType.ENTITY)
+	);
+	public static final DeferredHolder<WindDisturbanceType<?>, WindDisturbanceType<WindChargeWindDisturbance>> WIND_CHARGE = REGISTER.register(
+		"wind_charge",
+		WindDisturbanceType.createSupplier(WindChargeWindDisturbance.CODEC, WindChargeWindDisturbance.STREAM_CODEC, WindDisturbanceSourceType.ENTITY)
+	);
+	public static final DeferredHolder<WindDisturbanceType<?>, WindDisturbanceType<GeyserWindDisturbance>> GEYSER = REGISTER.register(
+		"geyser",
+		WindDisturbanceType.createSupplier(GeyserWindDisturbance.CODEC, GeyserWindDisturbance.STREAM_CODEC, WindDisturbanceSourceType.BLOCK_ENTITY)
+	);
 
 	static {
 		REGISTER.register();

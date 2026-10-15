@@ -18,7 +18,7 @@
 package net.frozenblock.lib.item.api.creative;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -95,7 +95,9 @@ public final class CreativeModeTabSorter {
 		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
-		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
+
+		if (item.asItem() == Items.AIR) FrozenLibEarlyConstants.LOGGER.error("Found empty item while trying to insert into creative inventory: {}", path);
+
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			insertBefore(tab, comparedItem, item, tabVisibility);
 		}
@@ -141,7 +143,9 @@ public final class CreativeModeTabSorter {
 		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
-		FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, item.asItem() == Items.AIR, null);
+
+		if (item.asItem() == Items.AIR) FrozenLibEarlyConstants.LOGGER.error("Found empty item while trying to insert into creative inventory: {}", path);
+
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			insertAfter(tab, comparedItem, item, tabVisibility);
 		}

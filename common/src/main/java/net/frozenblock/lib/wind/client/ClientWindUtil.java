@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.wind.client;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.client.ClientBlockEntityLifecycleEvents;
 import net.frozenblock.lib.event.api.events.client.ClientChunkLifecycleEvents;
@@ -30,7 +30,7 @@ import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
-import net.frozenblock.lib.wind.disturbance.WindDisturbancesHolder;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
@@ -42,75 +42,108 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
-public class ClientWindUtil {
+@UtilityClass
+@ClientOnly
+public final class ClientWindUtil {
 
 	@ApiStatus.Internal
 	public static void init() {
 		ClientTickEvents.START_LEVEL_TICK.register(Debug::tick);
 
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, level) -> WindManager.INSTANCE.reset());
-
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> WindManager.INSTANCE.reset());
 
-		ClientEntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
-		ClientEntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
+		ClientEntityLifecycleEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceSource(entity));
+		ClientEntityLifecycleEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceSource(entity));
 
-		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
-		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceSource(blockEntity));
+		ClientBlockEntityLifecycleEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceSource(blockEntity));
 
-		ClientChunkLifecycleEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder(chunk));
-		ClientChunkLifecycleEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder(chunk));
+		ClientChunkLifecycleEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceSource(chunk));
+		ClientChunkLifecycleEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceSource(chunk));
 	}
 
 	@VisibleForDebug
 	public static class Debug {
 		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-		private static final List<WindDisturbancesHolder> WIND_DISTURBANCES = new ArrayList<>();
+		private static final List<WindDisturbance.Instance<?, ?>> WIND_DISTURBANCES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
 
 		public static void tick(ClientLevel level) {
-			WIND_DISTURBANCES.clear();
-			DEBUG_NODES.clear();
-			DEBUG_DISTURBANCE_NODES.clear();
-
-			if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
-			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
-				WIND_DISTURBANCES.addAll(WindManager.getOrCreate(level).getWindDisturbancesHolders());
-				DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
+			synchronized (WIND_DISTURBANCES) {
+				WIND_DISTURBANCES.clear();
+				if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
+					WindManager.getOrCreate(level)
+						.getWindDisturbanceSourcesAndHolders()
+						.stream()
+						.map(pair -> pair.getSecond().disturbances())
+						.forEach(disturbanceList -> disturbanceList.forEach(WIND_DISTURBANCES::add));
+				}
 			}
 
-			ACCESSED_POSITIONS.clear();
+			synchronized (DEBUG_NODES) {
+				DEBUG_NODES.clear();
+				if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
+			}
+
+			synchronized (DEBUG_DISTURBANCE_NODES) {
+				DEBUG_DISTURBANCE_NODES.clear();
+				if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
+			}
+
+			synchronized (ACCESSED_POSITIONS) {
+				ACCESSED_POSITIONS.clear();
+			}
 		}
 
 		@VisibleForDebug
 		public static void addAccessedPosition(Vec3 vec3) {
-			ACCESSED_POSITIONS.add(vec3);
+			synchronized (ACCESSED_POSITIONS) {
+				ACCESSED_POSITIONS.add(vec3);
+			}
 		}
 
 		@VisibleForDebug
 		public static void clear() {
-			ACCESSED_POSITIONS.clear();
-			WIND_DISTURBANCES.clear();
-			DEBUG_NODES.clear();
-			DEBUG_DISTURBANCE_NODES.clear();
+			synchronized (WIND_DISTURBANCES) {
+				WIND_DISTURBANCES.clear();
+			}
+
+			synchronized (DEBUG_NODES) {
+				DEBUG_NODES.clear();
+			}
+
+			synchronized (DEBUG_DISTURBANCE_NODES) {
+				DEBUG_DISTURBANCE_NODES.clear();
+			}
+
+			synchronized (ACCESSED_POSITIONS) {
+				ACCESSED_POSITIONS.clear();
+			}
 		}
 
 		@VisibleForDebug
 		public static List<List<Pair<Vec3, Integer>>> getDebugNodes() {
-			return DEBUG_NODES;
+			synchronized (DEBUG_NODES) {
+				return DEBUG_NODES;
+			}
 		}
 
 		private static List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
-			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-			ImmutableList.copyOf(ACCESSED_POSITIONS).forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
-			return windNodes;
+			synchronized (ACCESSED_POSITIONS) {
+				final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+				ACCESSED_POSITIONS.forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
+				return windNodes;
+			}
 		}
 
 		@VisibleForDebug
 		@Unmodifiable
-		public static List<WindDisturbancesHolder> getWindDisturbances() {
-			return ImmutableList.copyOf(WIND_DISTURBANCES);
+		public static List<WindDisturbance.Instance<?, ?>> getWindDisturbances() {
+			synchronized (WIND_DISTURBANCES) {
+				return WIND_DISTURBANCES;
+			}
 		}
 
 		@VisibleForDebug
@@ -120,19 +153,15 @@ public class ClientWindUtil {
 
 		private static List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-			WIND_DISTURBANCES.forEach(tracked -> {
-				for (WindDisturbance<?, ?> disturbance : tracked) {
-					final AABB area = disturbance.area();
-					BlockPos.betweenClosed(
-						BlockPos.containing(area.getMinPosition()),
-						BlockPos.containing(area.getMaxPosition())
-					).forEach(
-						blockPos -> {
-							final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-							windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
-						}
-					);
-				}
+			getWindDisturbances().forEach(disturbance -> {
+				final AABB area = disturbance.area();
+				BlockPos.betweenClosed(
+					BlockPos.containing(area.getMinPosition()),
+					BlockPos.containing(area.getMaxPosition())
+				).forEach(blockPos -> {
+					final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
+					windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
+				});
 			});
 			return windNodes;
 		}

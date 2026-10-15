@@ -27,7 +27,7 @@ import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.ModContainerImpl;
 import net.fabricmc.loader.impl.entrypoint.EntrypointStorage;
 import net.fabricmc.loader.impl.metadata.EntrypointMetadata;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.entrypoint.impl.FrozenLibEntrypoints;
 
 public final class FrozenLibEntrypointInjectorImpl {
@@ -48,7 +48,7 @@ public final class FrozenLibEntrypointInjectorImpl {
 			final Map<String, LanguageAdapter> castAdapterMap = (Map<String, LanguageAdapter>) adapterField.get(loader);
 			adapterMap = castAdapterMap;
 		} catch (ReflectiveOperationException | ClassCastException e) {
-			FrozenLibLogUtils.LOGGER.error(
+			FrozenLibEarlyConstants.LOGGER.error(
 				"Failed to hook into Fabric Loader's entrypoint storage - frozenlib.json entrypoints will "
 					+ "only be visible through EntrypointHelper, not FabricLoader#getEntrypoints",
 				e
@@ -74,7 +74,7 @@ public final class FrozenLibEntrypointInjectorImpl {
 						}
 					}, adapterMap);
 				} catch (Exception e) {
-					FrozenLibLogUtils.LOGGER.error(
+					FrozenLibEarlyConstants.LOGGER.error(
 						"Failed to inject frozenlib.json entrypoint '{}' (key '{}') into Fabric Loader", declared.className(), key, e
 					);
 				}

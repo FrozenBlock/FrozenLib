@@ -19,6 +19,8 @@ package net.frozenblock.lib.wind.disturbance.geyser;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypes;
+import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,10 +29,10 @@ import net.minecraft.world.level.block.entity.PotentSulfurBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class GeyserWindDisturbanceType implements WindDisturbanceType<PotentSulfurBlockEntity> {
-	public static final GeyserWindDisturbanceType INSTANCE = new GeyserWindDisturbanceType();
-	public static final MapCodec<GeyserWindDisturbanceType> CODEC = MapCodec.unit(() -> INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, GeyserWindDisturbanceType> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public class GeyserWindDisturbance extends WindDisturbance<PotentSulfurBlockEntity> {
+	public static final GeyserWindDisturbance INSTANCE = new GeyserWindDisturbance();
+	public static final MapCodec<GeyserWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, GeyserWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final WindDisturbanceResult ACTIVE_RESULT = WindDisturbanceResult.success(1D, 1D, new Vec3(0D, 0.2D, 0D).scale(40D));
 
 	@Override
@@ -55,12 +57,12 @@ public class GeyserWindDisturbanceType implements WindDisturbanceType<PotentSulf
 	}
 
 	@Override
-	public MapCodec<? extends WindDisturbanceType<PotentSulfurBlockEntity>> codec() {
-		return CODEC;
+	protected boolean isValidSource(Object source) {
+		return source instanceof PotentSulfurBlockEntity;
 	}
 
 	@Override
-	public StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<PotentSulfurBlockEntity>> streamCodec() {
-		return STREAM_CODEC;
+	public WindDisturbanceType<?> getType() {
+		return WindDisturbanceTypes.GEYSER.get();
 	}
 }

@@ -20,7 +20,7 @@ package net.frozenblock.lib.file.nbt;
 import java.io.File;
 import java.io.IOException;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -68,7 +68,7 @@ public final class NbtFileUtils {
 		try {
 			NbtIo.writeCompressed(tag, file.toPath());
 		} catch (IOException iOException) {
-			FrozenLibConstants.LOGGER.error("Could not save data {}", file, iOException);
+			FrozenLibEarlyConstants.LOGGER.error("Could not save data {}", file, iOException);
 		}
 	}
 
@@ -107,7 +107,7 @@ public final class NbtFileUtils {
 		try {
 			tag = NbtIo.read(file.toPath());
 		} catch (IOException iOException) {
-			FrozenLibConstants.LOGGER.error("Could not read data {}", file, iOException);
+			FrozenLibEarlyConstants.LOGGER.error("Could not read data {}", file, iOException);
 		}
 		return tag;
 	}

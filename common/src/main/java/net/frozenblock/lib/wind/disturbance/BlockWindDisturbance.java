@@ -18,23 +18,22 @@
 package net.frozenblock.lib.wind.disturbance;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
-public abstract class BlockStateWindDisturbanceType implements WindDisturbanceType<BlockPos> {
+public abstract class BlockWindDisturbance extends PositionedWindDisturbance {
+	protected final BlockState blockState;
+
+	public BlockWindDisturbance(BlockPos position, BlockState blockState) {
+		super(position);
+		this.blockState = blockState;
+	}
 
 	public abstract boolean isValidBlockState(BlockState blockState);
 
 	@Override
-	public Vec3 origin(BlockPos source, Level level) {
-		return Vec3.atCenterOf(source);
-	}
-
-	@Override
-	public boolean expired(BlockPos source, Level level) {
-		return !level.hasChunk(SectionPos.blockToSectionCoord(source.getX()), SectionPos.blockToSectionCoord(source.getZ()))
-			|| !this.isValidBlockState(level.getBlockState(source));
+	public final boolean expired(ChunkAccess source, Level level) {
+		return !this.isValidBlockState(source.getBlockState(this.position));
 	}
 }

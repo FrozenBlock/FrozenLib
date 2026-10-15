@@ -21,14 +21,15 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class WindChargeWindDisturbanceType extends EntityWindDisturbanceType<AbstractWindCharge> {
-	public static WindChargeWindDisturbanceType INSTANCE = new WindChargeWindDisturbanceType();
-	public static final MapCodec<WindChargeWindDisturbanceType> CODEC = MapCodec.unit(() -> INSTANCE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, WindChargeWindDisturbanceType> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public class WindChargeWindDisturbance extends EntityWindDisturbance<AbstractWindCharge> {
+	public static WindChargeWindDisturbance INSTANCE = new WindChargeWindDisturbance();
+	public static final MapCodec<WindChargeWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, WindChargeWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final double AREA_WIDTH = 10D;
 	private static final double AREA_HEIGHT = 10D;
 	private static final double WIND_RANGE = 5D;
@@ -60,12 +61,12 @@ public class WindChargeWindDisturbanceType extends EntityWindDisturbanceType<Abs
 	}
 
 	@Override
-	public MapCodec<? extends WindDisturbanceType<AbstractWindCharge>> codec() {
-		return CODEC;
+	protected boolean isValidSource(Object source) {
+		return source instanceof WindCharge;
 	}
 
 	@Override
-	public StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<AbstractWindCharge>> streamCodec() {
-		return STREAM_CODEC;
+	public WindDisturbanceType<?> getType() {
+		return WindDisturbanceTypes.WIND_CHARGE.get();
 	}
 }

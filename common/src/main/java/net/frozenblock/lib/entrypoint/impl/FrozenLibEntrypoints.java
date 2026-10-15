@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.platform.ModLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +64,7 @@ public final class FrozenLibEntrypoints {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			mergeFrom(modId, reader);
 		} catch (IOException | RuntimeException e) {
-			FrozenLibLogUtils.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
+			FrozenLibEarlyConstants.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
 		}
 	}
 
@@ -74,7 +74,7 @@ public final class FrozenLibEntrypoints {
 		try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
 			mergeFrom(modId, reader);
 		} catch (IOException | RuntimeException e) {
-			FrozenLibLogUtils.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
+			FrozenLibEarlyConstants.LOGGER.error("Failed to parse {} for mod {}", METADATA_FILE, modId, e);
 		}
 	}
 
@@ -123,12 +123,12 @@ public final class FrozenLibEntrypoints {
 			try {
 				final Class<?> clazz = Class.forName(className, true, FrozenLibEntrypoints.class.getClassLoader());
 				if (!type.isAssignableFrom(clazz)) {
-					FrozenLibLogUtils.LOGGER.error("Entrypoint '{}' declared for key '{}' does not implement {}", className, key, type.getName());
+					FrozenLibEarlyConstants.LOGGER.error("Entrypoint '{}' declared for key '{}' does not implement {}", className, key, type.getName());
 					continue;
 				}
 				consumer.accept(type.cast(clazz.getDeclaredConstructor().newInstance()));
 			} catch (ReflectiveOperationException e) {
-				FrozenLibLogUtils.LOGGER.error("Failed to load entrypoint '{}' declared for key '{}'", className, key, e);
+				FrozenLibEarlyConstants.LOGGER.error("Failed to load entrypoint '{}' declared for key '{}'", className, key, e);
 			}
 		}
 	}

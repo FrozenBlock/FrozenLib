@@ -18,7 +18,6 @@
 package net.frozenblock.lib.debug.client.renderer;
 
 import net.frozenblock.lib.wind.client.ClientWindUtil;
-import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -48,11 +47,10 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 	) {
 		final Level level = Minecraft.getInstance().level;
 		if (level == null) return;
-		ClientWindUtil.Debug.getWindDisturbances().forEach(holder -> {
-			for (WindDisturbance<?, ?> disturbance : holder) {
-				Gizmos.cuboid(disturbance.area(), WIND_DISTURBANCE_AREA_STYLE);
-				Gizmos.cuboid(AABB.ofSize(disturbance.origin(), 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
-			}
+
+		ClientWindUtil.Debug.getWindDisturbances().forEach(disturbance -> {
+			Gizmos.cuboid(disturbance.area(), WIND_DISTURBANCE_AREA_STYLE);
+			Gizmos.cuboid(AABB.ofSize(disturbance.origin(), 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
 		});
 
 		WindDebugRenderer.emitWindNodesFromList(ClientWindUtil.Debug.getDebugDisturbanceNodes(), frustum);

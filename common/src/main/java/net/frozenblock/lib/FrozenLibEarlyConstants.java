@@ -22,17 +22,18 @@ import java.util.Arrays;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @UtilityClass
 public final class FrozenLibEarlyConstants {
 	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;
+	public static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib");
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>
 	 * It's smart to use this for at least registries.
 	 */
-	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
+	public static boolean UNSTABLE_LOGGING = ModLoader.isDevelopmentEnvironment();
 	public static final Path FROZENLIB_GAME_DIRECTORY = ModLoader.getGameDir().resolve(MOD_ID);
 	/**
 	 * Whether the current instance is running in datagen mode.
@@ -46,7 +47,7 @@ public final class FrozenLibEarlyConstants {
 			.toList()
 			.stream()
 			.anyMatch(string -> string.contains("run/data"));
-		if (ModLoader.isDevelopmentEnvironment()) FrozenLibLogUtils.log("Datagen " + (isDatagen ? "enabled" : "disabled") + "!");
+		if (ModLoader.isDevelopmentEnvironment()) LOGGER.info("Datagen {}!", isDatagen ? "enabled" : "disabled");
 		return isDatagen;
 	}
 

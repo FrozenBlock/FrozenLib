@@ -126,7 +126,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Removed the `/frozenlib scale` command, as this functionality is already present in the `/attribute` command.
 - Fire Types now have an optional `color` field, providing a color to be used by mods that may want to dynamically-color something (such as a particle) based on a Fire Type.
 - The `#minecraft:freeze_hurts_extra_types` Entity Type Tag now contains the `#frozenlib:blazes` Entity Type Tag.
-- Significantly improved the performance of Wind Disturbances on both the client and server.
+- Completely revamped the implementation of Wind Disturbances.
+  - Wind Disturbances can now be added to targets in a much simpler manner.
+  - Wind Disturbances will now immediately throw errors if being added to an incorrect source, making debugging much quicker.
+  - Wind Disturbance Types must now specify the source type it is meant for (`ENTITY`, `BLOCK_ENTITY`, `CHUNK`, `LEVEL`.)
+  - The performance of Wind Disturbances on both clients and servers has been astronomically improved.
 - FrozenLib's custom translucent Render Types now render as intended with the Improved Transparency option enabled.
 - Migrated `VibrationParticleVisibilityApi` to `VibrationSignalParticleEvents`.
 - Cleaned up the implementation of Sound Predicates to be more straightforward.

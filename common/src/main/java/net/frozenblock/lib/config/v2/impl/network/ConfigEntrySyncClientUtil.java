@@ -18,7 +18,7 @@
 package net.frozenblock.lib.config.v2.impl.network;
 
 import java.util.List;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
@@ -45,17 +45,19 @@ public final class ConfigEntrySyncClientUtil {
 			ClientNetworkingHelper.sendToServer(packet);
 		}
 
-		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
+		logInIDE:{
+			if (!FrozenLibEarlyConstants.UNSTABLE_LOGGING) break logInIDE;
 
-		boolean hadEntryBefore = false;
-		final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT ON CLIENT ENV:");
-		for (ConfigEntry<?> entry : entries) {
-			if (!entry.isSyncable()) continue;
-			builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
-			hadEntryBefore = true;
+			boolean hadEntryBefore = false;
+			final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT ON CLIENT ENV:");
+			for (ConfigEntry<?> entry : entries) {
+				if (!entry.isSyncable()) continue;
+				builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
+				hadEntryBefore = true;
+			}
+
+			FrozenLibEarlyConstants.LOGGER.info(builder.toString());
 		}
-
-		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
 	public static void sendC2S() {

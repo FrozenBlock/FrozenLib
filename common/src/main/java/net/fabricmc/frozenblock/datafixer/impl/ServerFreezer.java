@@ -18,7 +18,7 @@
 
 package net.fabricmc.frozenblock.datafixer.impl;
 
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -27,9 +27,9 @@ public final class ServerFreezer {
 
     public static void onInitialize() {
         LifecycleEvents.SERVER_STARTING.register(server -> {
-            FrozenLibLogUtils.log("[Fabric DFU API] Serverside DataFixer Registry is about to freeze", true);
+			FrozenLibEarlyConstants.LOGGER.info("[Fabric DFU API] Serverside DataFixer Registry is about to freeze");
             FabricDataFixesInternals.get().freeze();
-            FrozenLibLogUtils.log("[Fabric DFU API] Serverside DataFixer Registry was frozen", true);
+			FrozenLibEarlyConstants.LOGGER.info("[Fabric DFU API] Serverside DataFixer Registry was frozen");
         });
     }
 }

@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -73,7 +73,7 @@ public class FrozenLibPlacedFeature {
 	public FrozenLibPlacedFeature makeAndSetHolder(Holder<Feature> configuredHolder, List<PlacementModifier> modifiers) {
 		this.setConfiguredHolder(configuredHolder);
 
-		FrozenLibLogUtils.log("Registering placed feature " + this.getKey().identifier(), true);
+		FrozenLibEarlyConstants.LOGGER.info("Registering placed feature {}", this.getKey().identifier());
 
 		assert FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT != null : "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().identifier();
 		assert configuredHolder != null : "Configured feature holder for FrozenPlacedFeature " + this.getKey().identifier() + " null";

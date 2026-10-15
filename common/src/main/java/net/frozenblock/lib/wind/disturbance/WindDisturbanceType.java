@@ -17,48 +17,61 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
-import com.mojang.serialization.Codec;
-import java.util.List;
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.platform.api.attachment.DataAttachmentTarget;
 import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.wind.disturbance.holder.WindDisturbanceSourceType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import java.util.function.Supplier;
 
-// TODO: revamp completely i think
-public interface WindDisturbanceType<T> {
-	Codec<WindDisturbanceType<?>> CODEC = FrozenLibBuiltInRegistries.WIND_DISTURBANCE_TYPE.byNameCodec();
-	StreamCodec<RegistryFriendlyByteBuf, WindDisturbanceType<?>> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_DISTURBANCE_TYPE);
-	Codec<List<WindDisturbanceType<?>>> LIST_CODEC = CODEC.listOf();
-	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbanceType<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
+public abstract class WindDisturbanceType<T extends WindDisturbance<?>> {
 
-	default double scale(T source, Level level) {
-		return 1D;
+	protected WindDisturbanceType() {}
+
+	public static <T extends WindDisturbance<?>> WindDisturbanceType<T> create(
+		MapCodec<T> codec,
+		StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec,
+		WindDisturbanceSourceType sourceType
+	) {
+		return new WindDisturbanceType<>() {
+
+			@Override
+			public WindDisturbanceSourceType sourceType() {
+				return sourceType;
+			}
+
+			@Override
+			public MapCodec<T> codec() {
+				return codec;
+			}
+
+			@Override
+			public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+				return streamCodec;
+			}
+		};
 	}
 
-	Vec3 origin(T source, Level level);
-
-	AABB area(T source, Level level, Vec3 origin, double scale);
-
-	WindDisturbanceResult sample(T source, Level level, Vec3 origin, AABB area, Vec3 target, double scale);
-
-	boolean expired(T source, Level level);
-
-	default boolean invalidOrExpired(DataAttachmentTarget source, Level level) {
-		try {
-			return this.expired((T) source, level);
-		} catch (Exception e) {
-			FrozenLibLogUtils.logError("WindDisturbance invalid", e);
-			return true;
-		}
+	public static <T extends WindDisturbance<?>> Supplier<WindDisturbanceType<T>> createSupplier(
+		MapCodec<T> codec,
+		StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec,
+		WindDisturbanceSourceType sourceType
+	) {
+		return () ->  create(codec, streamCodec, sourceType);
 	}
-	MapCodec<? extends WindDisturbanceType<T>> codec();
 
-	StreamCodec<RegistryFriendlyByteBuf, ? extends WindDisturbanceType<T>> streamCodec();
+	public abstract WindDisturbanceSourceType sourceType();
+
+	public abstract MapCodec<T> codec();
+
+	public abstract StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec();
+
+	@Override
+	public String toString() {
+		return "WindDisturbanceType["
+			+ FrozenLibBuiltInRegistries.WIND_DISTURBANCE_TYPE.getResourceKey(this)
+				.map(key -> key.identifier().toString())
+				.orElse("Unknown")
+			+ "]";
+	}
 }

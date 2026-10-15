@@ -22,7 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -85,12 +85,13 @@ public record ScreenShake(float intensity, Optional<Vec3> position, float minDis
 
 	public float calculateIntensityAt(Vec3 target, long gameTime, Optional<Vec3> optionalPosition) {
 		if (this.expired(gameTime) || !this.started(gameTime)) {
-			FrozenLibLogUtils.logError("Screen shake is expired or hasn't started yet!", FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Screen shake is expired or hasn't started yet!");
 			return 0F;
 		}
 
 		if (optionalPosition.isEmpty()) {
-			FrozenLibLogUtils.logError("Screen shake has no position!", FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Screen shake has no position!");
+
 			return 0F;
 		}
 

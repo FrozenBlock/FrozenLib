@@ -19,7 +19,7 @@ package net.frozenblock.lib.config.v2.config;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.util.Map;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
@@ -124,7 +124,9 @@ public class ConfigData<T> {
 		} else {
 			ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap)
 				.ifLeft(entry::setValueForLoad)
-				.ifRight(error -> FrozenLibLogUtils.logError("Failed to load entry " + entry.id() + ": " + error, FrozenLibLogUtils.UNSTABLE_LOGGING));
+				.ifRight(error -> {
+					if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Failed to load entry {}: {}", entry.id(), error);
+				});
 		}
 	}
 
@@ -142,7 +144,9 @@ public class ConfigData<T> {
 
 		ConfigSerializer.<T>loadConfigAsMap(this.id)
 			.ifLeft(this.unoptimizedConfigMap::putAll)
-			.ifRight(error -> FrozenLibLogUtils.logError("Failed to load config " + this.id + ": " + error, FrozenLibLogUtils.UNSTABLE_LOGGING));
+			.ifRight(error -> {
+				if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Failed to load config {}: {}", this.id, error);
+			});
 
 		this.loaded = true;
 		if (this.optimizedMap) this.optimizeConfigMap();

@@ -18,11 +18,11 @@
 
 package net.fabricmc.frozenblock.datafixer.impl.client;
 
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
-import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 
 @ClientOnly
 @ApiStatus.Internal
@@ -30,9 +30,9 @@ public final class ClientFreezer {
 
     public static void onSetupClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            FrozenLibLogUtils.log("[Fabric DFU API] Clientside DataFixer Registry is about to freeze", true);
+			FrozenLibEarlyConstants.LOGGER.info("[Fabric DFU API] Clientside DataFixer Registry is about to freeze");
             FabricDataFixesInternals.get().freeze();
-            FrozenLibLogUtils.log("[Fabric DFU API] Clientside DataFixer Registry was frozen", true);
+			FrozenLibEarlyConstants.LOGGER.info("[Fabric DFU API] Clientside DataFixer Registry was frozen");
         });
     }
 }

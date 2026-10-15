@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
@@ -159,7 +160,7 @@ public class CapeUtil {
 				registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
 			}
 		} catch (IOException ignored) {
-			FrozenLibConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
+			FrozenLibEarlyConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
 		}
 	}
 

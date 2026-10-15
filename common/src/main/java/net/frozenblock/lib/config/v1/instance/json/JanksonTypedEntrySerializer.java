@@ -28,7 +28,7 @@ import com.mojang.serialization.DataResult;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.v1.entry.TypedEntry;
 import net.frozenblock.lib.config.v1.entry.TypedEntryType;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
@@ -102,7 +102,9 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 		final Pair<T, JsonElement> pair = optional.get();
 		final T first = pair.getFirst();
 		final TypedEntry<T> entry = TypedEntry.create(entryType, first);
-		FrozenLibLogUtils.log("Built typed entry " + entry, FrozenLibLogUtils.UNSTABLE_LOGGING);
+
+		if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.info("Built typed entry {}", entry);
+
 		return entry;
 	}
 }

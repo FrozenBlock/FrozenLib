@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
@@ -47,7 +47,7 @@ public final class ConfigSerializer {
 		final ID configId = data.id();
 		final List<ConfigEntry<?>> entries = List.copyOf(data.entries().values());
 		if (entries.isEmpty()) {
-			FrozenLibLogUtils.logError("No config entries found for " + configId);
+			FrozenLibEarlyConstants.LOGGER.error("No config entries found for {}", configId);
 			return;
 		}
 
@@ -55,7 +55,7 @@ public final class ConfigSerializer {
 		try {
 			context.saveConfig();
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Error saving config " + configId, e);
+			FrozenLibEarlyConstants.LOGGER.error("Error saving config {}", configId, e);
 		}
 	}
 
@@ -66,7 +66,7 @@ public final class ConfigSerializer {
 			final ID configId = entry.getKey();
 			final ConfigData<?> data = ConfigV2Registry.getData(configId);
 			if (data == null) {
-				FrozenLibLogUtils.logError("No config data found for " + configId);
+				FrozenLibEarlyConstants.LOGGER.error("No config data found for {}", configId);
 				continue;
 			}
 
@@ -79,7 +79,7 @@ public final class ConfigSerializer {
 		try {
 			context.saveConfig();
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Error saving config " + data.id(), e);
+			FrozenLibEarlyConstants.LOGGER.error("Error saving config {}", data.id(), e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public final class ConfigSerializer {
 			final Map<String, ?> configMap = context.configMap();
 			return Either.left((Map<String, T>) configMap);
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Error loading config " + configId, e);
+			FrozenLibEarlyConstants.LOGGER.error("Error loading config {}", configId, e);
 			return Either.right("Error loading config: " + e.getMessage());
 		}
 	}
@@ -104,7 +104,7 @@ public final class ConfigSerializer {
 		final ID configId = data.id();
 		final List<ConfigEntry<?>> entries = collectConfigs().get(configId);
 		if (entries == null || entries.isEmpty()) {
-			FrozenLibLogUtils.logError("No config entries found for " + configId);
+			FrozenLibEarlyConstants.LOGGER.error("No config entries found for {}", configId);
 			return Map.of();
 		}
 
@@ -210,7 +210,8 @@ public final class ConfigSerializer {
 		if (mapFunction != null) return mapFunction.toMap(existing);
 
 		// Loading mode - map not found
-		FrozenLibLogUtils.logError("Could not find entry " + entryId, FrozenLibLogUtils.UNSTABLE_LOGGING);
+		if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Could not find entry {}", entryId);
+
 		return null;
 	}
 
@@ -287,16 +288,18 @@ public final class ConfigSerializer {
 		}
 
 		public void logNoPathError(String entryName) {
-			FrozenLibLogUtils.logError(
-				"Config entry %s has no field name to %s!\nSeparate config ids from fields using '/'"
-					.formatted(entryName, this.isForSaving() ? "save to" : "read from")
+			FrozenLibEarlyConstants.LOGGER.error(
+				"Config entry {} has no field name to {}!\nSeparate config ids from fields using '/'",
+				entryName,
+				this.isForSaving() ? "save to" : "read from"
 			);
 		}
 
 		public void logUnableToUseError(String entryName) {
-			FrozenLibLogUtils.logError(
-				"Unable to %s config entry %s"
-					.formatted(this.isForSaving() ? "save" : "read", entryName)
+			FrozenLibEarlyConstants.LOGGER.error(
+				"Unable to {} config entry {}",
+				this.isForSaving() ? "save" : "read",
+				entryName
 			);
 		}
 

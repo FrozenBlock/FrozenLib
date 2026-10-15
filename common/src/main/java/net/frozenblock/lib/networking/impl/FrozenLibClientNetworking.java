@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -263,7 +263,7 @@ public final class FrozenLibClientNetworking {
 
 				FileTransferEvents.TRANSFER_FAIL.invoker().onTransferFailed(requestPath, fileName, false, true);
 				ClientNetworkingHelper.sendToServer(FileTransferFailPacket.create(requestPath, fileName, true));
-				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {} on client!", fileName);
+				FrozenLibEarlyConstants.LOGGER.debug("Unable to create and send transfer packet for file {} on client!", fileName);
 			} else { // Receiving
 				final String destinationPath = packet.transferPath();
 				final String fileName = packet.fileName();
@@ -290,10 +290,10 @@ public final class FrozenLibClientNetworking {
 				}).whenComplete((ignored, throwable) -> {
 					if (throwable != null) {
 						FileTransferEvents.REQUEST_FAIL.invoker().onRequestFailed(destinationPath, fileNameWithoutExtension, false, true);
-						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
+						FrozenLibEarlyConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 					} else {
 						FileTransferEvents.FILE_RECEIVE.invoker().onFileReceived(destinationPath, fileNameWithoutExtension, filePath.toFile(), true);
-						FrozenLibConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
+						FrozenLibEarlyConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
 					}
 				});
 			}

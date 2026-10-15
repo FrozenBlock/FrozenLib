@@ -19,7 +19,7 @@ package net.frozenblock.lib.wind.disturbance;
 
 import net.minecraft.world.phys.Vec3;
 
-public sealed interface WindDisturbanceResult {
+public sealed interface WindDisturbanceResult permits WindDisturbanceResult.Success, WindDisturbanceResult.Pass {
 	Pass PASS = new Pass();
 
 	static Success success(double strength, double weight, Vec3 vector) {
@@ -28,7 +28,7 @@ public sealed interface WindDisturbanceResult {
 
 	record Success(double strength, double weight, Vec3 vector) implements WindDisturbanceResult {}
 
-	record Pass() implements WindDisturbanceResult {
-		public Pass() {}
+	final class Pass implements WindDisturbanceResult {
+		private Pass() {}
 	}
 }

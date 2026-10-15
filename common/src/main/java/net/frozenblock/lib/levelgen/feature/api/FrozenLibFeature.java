@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -73,7 +73,7 @@ public class FrozenLibFeature {
 
 	@SuppressWarnings("unchecked")
 	public FrozenLibFeature makeAndSetHolder(Feature feature) {
-		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().identifier(), FrozenLibLogUtils.UNSTABLE_LOGGING);
+		if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.info("Registering configured feature: {}", this.getKey().identifier());
 
 		assert FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().identifier();
 

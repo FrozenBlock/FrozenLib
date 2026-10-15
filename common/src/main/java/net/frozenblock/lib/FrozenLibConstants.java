@@ -27,7 +27,7 @@ import net.minecraft.SharedConstants;
 @UtilityClass
 public final class FrozenLibConstants {
 	public static final String MOD_ID = FrozenLibEarlyConstants.MOD_ID;
-	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;
+	public static final Logger LOGGER = FrozenLibEarlyConstants.LOGGER;
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>

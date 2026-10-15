@@ -23,6 +23,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -35,10 +36,9 @@ import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
-import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
-import net.frozenblock.lib.wind.disturbance.WindDisturbanceTypesHolder;
-import net.frozenblock.lib.wind.disturbance.WindDisturbancesHolder;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
+import net.frozenblock.lib.wind.disturbance.holder.WindDisturbanceHolder;
 import net.frozenblock.lib.wind.extension.WindManagerExtension;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
@@ -93,7 +93,7 @@ public class WindManager {
 
 	private Level level;
 	public final List<WindManagerExtension> extensions = new CopyOnWriteArrayList<>();
-	private final List<DataAttachmentTarget> disturbanceHolders = new ArrayList<>();
+	private final List<DataAttachmentTarget> windDisturbanceSources = new ArrayList<>();
 	private boolean loadedExtensions;
 	public Optional<Vec3> windOverride = Optional.empty();
 	public double windX;
@@ -244,59 +244,50 @@ public class WindManager {
 	}
 
 	/**
-	 * @return the currently tracked {@link WindDisturbanceTypesHolder}s, paired with their respective sources.
+	 * @return the currently tracked {@link WindDisturbanceHolder}s, paired with their respective sources.
 	 */
-	public List<Pair<DataAttachmentTarget, WindDisturbanceTypesHolder>> getWindDisturbanceTypesHolders() {
-		return this.disturbanceHolders.stream()
-			.map(WindDisturbanceTypesHolder::getAsPair)
+	public List<Pair<DataAttachmentTarget, WindDisturbanceHolder<?>>> getWindDisturbanceSourcesAndHolders() {
+		return this.windDisturbanceSources.stream()
+			.filter(Objects::nonNull)
+			.map(target ->
+				WindDisturbanceHolder.getOptional(target).map(holder -> Pair.<DataAttachmentTarget, WindDisturbanceHolder<?>>of(target, holder))
+			)
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();
 	}
 
 	/**
-	 * @return the currently tracked {@link WindDisturbancesHolder}s.
+	 * Tracks a {@link WindDisturbanceHolder}'s source.
+	 *
+	 * @param target The {@link WindDisturbanceHolder}'s source to be tracked.
 	 */
-	public List<WindDisturbancesHolder> getWindDisturbancesHolders() {
-		return this.disturbanceHolders.stream()
-			.map(WindDisturbancesHolder::get)
-			.filter(holder -> !holder.isEmpty())
-			.toList();
+	public void trackDisturbanceSource(DataAttachmentTarget target) {
+		if (this.windDisturbanceSources.contains(target)) return;
+		this.windDisturbanceSources.add(target);
 	}
 
 	/**
-	 * Tracks a disturbance holder.
-	 * <p>
-	 * This is used to track {@link WindDisturbanceTypesHolder}.
+	 * Untracks a {@link WindDisturbanceHolder}'s source.
 	 *
-	 * @param target The holder to be tracked.
+	 * @param target The {@link WindDisturbanceHolder}'s source to be untracked.
 	 */
-	public void trackDisturbanceHolder(@Nullable DataAttachmentTarget target) {
-		if (target == null || this.disturbanceHolders.contains(target)) return;
-		this.disturbanceHolders.add(target);
+	public void untrackDisturbanceSource(DataAttachmentTarget target) {
+		this.windDisturbanceSources.remove(target);
 	}
 
 	/**
-	 * Untracks a disturbance holder.
+	 * Tracks a {@link WindDisturbanceHolder}'s source if present with an attached {@link WindDisturbanceHolder}, otherwise untracks it.
 	 *
-	 * @param target The holder to be untracked.
+	 * @param target The {@link WindDisturbanceHolder}'s source to be tracked or untracked.
 	 */
-	public void untrackDisturbanceHolder(DataAttachmentTarget target) {
-		this.disturbanceHolders.remove(target);
-	}
-
-	/**
-	 * Tracks or untracks a holder depending on whether it is present and has {@link WindDisturbanceTypesHolder}.
-	 *
-	 * @param target The holder to be tracked or untracked.
-	 */
-	public void trackOrUntrackDisturbanceHolder(@Nullable DataAttachmentTarget target) {
+	public void trackOrUntrackDisturbanceSource(@Nullable DataAttachmentTarget target) {
 		if (target == null) return;
-		if (WindDisturbanceTypesHolder.has(target)) {
-			trackDisturbanceHolder(target);
-		} else {
-			untrackDisturbanceHolder(target);
-		}
+
+		WindDisturbanceHolder.getOptional(target).ifPresentOrElse(
+			holder -> this.trackDisturbanceSource(target),
+			() -> this.untrackDisturbanceSource(target)
+		);
 	}
 
 	/**
@@ -308,7 +299,7 @@ public class WindManager {
 		this.level = null;
 		this.extensions.clear();
 		this.loadedExtensions = false;
-		this.disturbanceHolders.clear();
+		this.windDisturbanceSources.clear();
 		this.windOverride = Optional.empty();
 		this.windX = 0D;
 		this.windY = 0D;
@@ -320,17 +311,19 @@ public class WindManager {
 		this.noise = null;
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public void tick(Level level) {
-		this.disturbanceHolders.removeIf(target -> {
+		this.windDisturbanceSources.removeIf(target -> {
 			if (target == null) return true;
-			WindDisturbanceTypesHolder.removeIf(level, target, type -> type.invalidOrExpired(target, level), false);
-			if (!WindDisturbanceTypesHolder.has(target)) {
-				return true;
-			} else {
-				WindDisturbanceTypesHolder.mirrorToDisturbancesHolder(level, target);
-				WindDisturbancesHolder.get(target).forEach(disturbance -> disturbance.tick(level));
-				return false;
-			}
+
+			final Optional<WindDisturbanceHolder> optionalHolder = WindDisturbanceHolder.getOptional(target);
+			if (optionalHolder.isEmpty()) return true;
+
+			final WindDisturbanceHolder holder = optionalHolder.get();
+			if (!holder.isValidSource(target)) return true;
+
+			holder.tick(target, level);
+			return false;
 		});
 
 		if (!level.tickRateManager().runsNormally()) return;
@@ -349,6 +342,7 @@ public class WindManager {
 		this.windX = vec3.x + (vec3.x * thunderLevel);
 		this.windY = vec3.y + (vec3.y * thunderLevel);
 		this.windZ = vec3.z + (vec3.z * thunderLevel);
+
 		// Tick lagged wind
 		final double calcLaggedTime = (time - 40) * 0.0005;
 		final double calcLaggedTimeY = (time - 60) * 0.00035;
@@ -537,22 +531,19 @@ public class WindManager {
 	}
 
 	/**
-	 * Calculates the strength and movement of the current {@link WindDisturbanceTypesHolder} entries at a given position.
-	 * <p>
-	 * Expired or invalidated entries are pruned from the list (and their persisted attachment) as they're encountered,
-	 * instead of being swept in a separate per-tick pass.
+	 * Calculates the strength and movement of the currently-tracked {@link WindDisturbanceHolder}s at a given position.
 	 *
-	 * @param target The {@link Vec3} to check.
-	 * @return the strength and movement of the current disturbances at the given position.
+	 * @param target The {@link Vec3 target position} to sample at.
+	 * @return The strength and {@link Vec3 vector} of the currently-tracked {@link WindDisturbanceHolder}s at a given position.
 	 */
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private Pair<Double, Vec3> calculateWindDisturbance(Vec3 target) {
 		final ArrayList<WindDisturbanceResult.Success> successes = new ArrayList<>();
 		double maxStrength = 0D;
-		for (WindDisturbancesHolder tracked : this.getWindDisturbancesHolders()) {
-			for (WindDisturbance<?, ?> disturbance : tracked) {
-				if (disturbance.expired(this.level)) continue;
-
-				final WindDisturbanceResult result = disturbance.sample(this.level, target);
+		for (Pair<DataAttachmentTarget, WindDisturbanceHolder<?>> trackedPair : this.getWindDisturbanceSourcesAndHolders()) {
+			final Object source = trackedPair.getFirst();
+			for (WindDisturbance.Instance instance : trackedPair.getSecond().disturbances()) {
+				final WindDisturbanceResult result = instance.sample(this.level, source, target);
 				if (!(result instanceof WindDisturbanceResult.Success success)) continue;
 				if (success.strength() <= 0D || success.weight() <= 0D) continue;
 

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
@@ -40,7 +40,9 @@ public final class BeaconEffectRegistry {
 	 */
 	public static void register(Holder<MobEffect> effect, int tier) {
 		if (tier <= 0 || tier >= 4) {
-			throw new IllegalArgumentException("Attempted to register Beacon effect " + effect.unwrapKey().get().identifier() + " at tier " + tier + ". Tier must be between 1 and 4.");
+			throw new IllegalArgumentException(
+				"Attempted to register Beacon effect " + effect.unwrapKey().get().identifier() + " at tier " + tier + ". Tier must be between 1 and 4."
+			);
 		}
 
 		if (BeaconBlockEntity.BEACON_EFFECTS.get(tier - 1) instanceof ArrayList<Holder<MobEffect>> arrayList) {
@@ -49,7 +51,11 @@ public final class BeaconEffectRegistry {
 				.flatMap(Collection::stream)
 				.collect(Collectors.toSet());
 		} else {
-			FrozenLibConstants.LOGGER.error("Attempted to register Beacon effect " + effect.unwrapKey().get().identifier() + " at tier " + tier + ". Tier list is not an instance of ArrayList!");
+			FrozenLibEarlyConstants.LOGGER.error(
+				"Attempted to register Beacon effect {} at tier {}. Tier list is not an instance of ArrayList!",
+				effect.unwrapKey().get().identifier(),
+				tier
+			);
 		}
 	}
 }

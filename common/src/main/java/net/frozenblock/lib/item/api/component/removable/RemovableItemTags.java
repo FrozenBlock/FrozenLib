@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.api.component.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,8 +39,7 @@ public class RemovableItemTags {
 		final RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
 		if (removableItemTag != null) return removableItemTag.shouldRemove(level, entity, slot);
 
-		FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-		FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+		FrozenLibEarlyConstants.LOGGER.error("Unable to find RemovableItemTag data for TagKey {}!", tagKey);
 		return false;
 	}
 
@@ -48,8 +47,8 @@ public class RemovableItemTags {
 		final RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
 		if (removableItemTag != null) return removableItemTag.shouldRemoveOnStackMerge();
 
-		FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-		FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+		FrozenLibEarlyConstants.LOGGER.error("Unable to find RemovableItemTag data for TagKey {}!", tagKey);
+
 		return true;
 	}
 

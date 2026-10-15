@@ -45,7 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
@@ -77,7 +77,7 @@ public final class ModResourcePackApi {
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
 	private static final List<String> MOD_RESOURCE_PACK_IDS = new ArrayList<>();
 	private static final List<ToastInfo> QUEUED_TOASTS = new ArrayList<>();
-	private static final boolean SHOW_DEBUG_TOASTS = FrozenLibConstants.UNSTABLE_LOGGING;
+	private static final boolean SHOW_DEBUG_TOASTS = FrozenLibEarlyConstants.UNSTABLE_LOGGING;
 
 	/**
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
@@ -102,7 +102,7 @@ public final class ModResourcePackApi {
 
 		final Optional<Path> resourcePack = mod.findPath(subPath);
 		if (resourcePack.isEmpty()) {
-			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+			FrozenLibEarlyConstants.LOGGER.warn("Could not find internal Resource Pack of name {}!", zipPackName);
 			return;
 		}
 
@@ -143,7 +143,7 @@ public final class ModResourcePackApi {
 				});
 
 				extractionFile.delete();
-				if (!extracted.get()) FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+				if (!extracted.get()) FrozenLibEarlyConstants.LOGGER.warn("Could not find internal Resource Pack of name {}!", zipPackName);
 			} else {
 				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
@@ -263,7 +263,7 @@ public final class ModResourcePackApi {
 
 			return Optional.of(destFile);
 		} catch (IOException ignored) {
-			FrozenLibConstants.LOGGER.error("Failed to download pack from URL: {}", urlString);
+			FrozenLibEarlyConstants.LOGGER.error("Failed to download pack from URL: {}", urlString);
 		} finally {
 			IOUtils.closeQuietly(input);
 		}

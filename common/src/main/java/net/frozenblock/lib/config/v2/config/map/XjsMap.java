@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import xjs.data.JsonObject;
@@ -85,21 +85,21 @@ public class XjsMap implements Map<String, JsonValue> {
 	// impl not needed
 	@Override
 	public @NonNull Set<String> keySet() {
-		FrozenLibLogUtils.logWarning("keySet() called on XjsMap");
+		FrozenLibEarlyConstants.LOGGER.warn("keySet() called on XjsMap");
 		return Set.of();
 	}
 
 	// impl not needed
 	@Override
 	public @NonNull Collection<JsonValue> values() {
-		FrozenLibLogUtils.logWarning("values() called on XjsMap");
+		FrozenLibEarlyConstants.LOGGER.warn("values() called on XjsMap");
 		return List.of();
 	}
 
 	// impl not needed
 	@Override
 	public @NonNull Set<Entry<String, JsonValue>> entrySet() {
-		FrozenLibLogUtils.logWarning("entrySet() called on XjsMap");
+		FrozenLibEarlyConstants.LOGGER.warn("entrySet() called on XjsMap");
 		return Set.of();
 	}
 }

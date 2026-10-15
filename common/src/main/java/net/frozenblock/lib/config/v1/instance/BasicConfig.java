@@ -18,7 +18,7 @@
 package net.frozenblock.lib.config.v1.instance;
 
 import java.nio.file.Path;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 
 public abstract class BasicConfig<T> {
 	private final String modId;
@@ -89,21 +89,21 @@ public abstract class BasicConfig<T> {
 
 	public final void save() {
 		final String formatted = this.formattedName();
-		FrozenLibLogUtils.LOGGER.info("Saving {}", formatted);
+		FrozenLibEarlyConstants.LOGGER.info("Saving {}", formatted);
 		try {
 			this.onSave();
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Error while saving " + formatted, e);
+			FrozenLibEarlyConstants.LOGGER.error("Error while saving {}", formatted, e);
 		}
 	}
 
 	public final boolean load() {
 		final String formatted = this.formattedName();
-		FrozenLibLogUtils.LOGGER.info("Loading {}", formatted);
+		FrozenLibEarlyConstants.LOGGER.info("Loading {}", formatted);
 		try {
 			return this.onLoad();
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Error while loading " + formatted, e);
+			FrozenLibEarlyConstants.LOGGER.error("Error while loading {}", formatted, e);
 			return false;
 		}
 	}

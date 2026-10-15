@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.v2.impl.network;
 import java.util.Collection;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
@@ -52,7 +52,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		final ID entryId = ID.parse(buf.readUtf());
 		final ConfigEntry entry = ConfigV2Registry.getEntry(entryId);
 		if (entry == null) {
-			FrozenLibLogUtils.logError("Unable to find config entry with id: " + entryId);
+			FrozenLibEarlyConstants.LOGGER.error("Unable to find config entry with id: {}", entryId);
 			return DUMMY_PACKET;
 		}
 
@@ -61,7 +61,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			final Object value = streamCodec.decode(buf);
 			return new ConfigEntrySyncPacket<>(entry, value);
 		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Failed to read config data from packet.", e);
+			FrozenLibEarlyConstants.LOGGER.error("Failed to read config data from packet.", e);
 			return DUMMY_PACKET;
 		}
 	}
@@ -83,14 +83,14 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 	public static void receive(ConfigEntrySyncPacket packet, @Nullable ServerPlayer sender, @Nullable MinecraftServer server) {
 		if (packet == DUMMY_PACKET) return;
 		if ((sender == null) == (server != null)) {
-			FrozenLibLogUtils.logError("Config sync received with invalid sender!", FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.error("Config sync received with invalid sender!");
 			return;
 		}
 
 		final ConfigEntry entry = packet.entry();
 		if (sender != null) {
 			// C2S logic
-			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON SERVER: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.info("ENTRY SYNC RECEIVED ON SERVER: {}", entry.id());
 			if (NetworkingHelper.isLocalPlayer(sender)) {
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(entry));
@@ -102,7 +102,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			if (!NetworkingHelper.connectedToIntegratedServer()) entry.configData().save();
 		} else {
 			// S2C logic
-			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON CLIENT: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenLibEarlyConstants.UNSTABLE_LOGGING) FrozenLibEarlyConstants.LOGGER.info("ENTRY SYNC RECEIVED ON CLIENT: {}", entry.id());
 			entry.setSyncedValue(packet.value());
 		}
 		//entry.onSync(packet.value());
@@ -122,17 +122,19 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			NetworkingHelper.sendToPlayer(player, packet);
 		}
 
-		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
+		logInIDE: {
+			if (!FrozenLibEarlyConstants.UNSTABLE_LOGGING) break logInIDE;
 
-		boolean hadEntryBefore = false;
-		final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT FROM SERVER:");
-		for (ConfigEntry<?> entry : entries) {
-			if (!entry.isSyncable()) continue;
-			builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
-			hadEntryBefore = true;
+			boolean hadEntryBefore = false;
+			final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT FROM SERVER:");
+			for (ConfigEntry<?> entry : entries) {
+				if (!entry.isSyncable()) continue;
+				builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
+				hadEntryBefore = true;
+			}
+
+			FrozenLibEarlyConstants.LOGGER.info(builder.toString());
 		}
-
-		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
 	public static void sendS2C(ServerPlayer player) {
