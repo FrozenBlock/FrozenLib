@@ -215,8 +215,6 @@ public abstract class WindDisturbance<T> {
 		 * @param level The current {@link Level}.
 		 */
 		public void tick(S source, Level level) {
-			this.initializeIfNot(source, level);
-
 			this.origin = this.wrapped.origin(source, level);
 			this.scale = this.wrapped.scale(source, level);
 			this.area = this.wrapped.area(source, level, this.origin, this.scale);
@@ -291,7 +289,7 @@ public abstract class WindDisturbance<T> {
 		 */
 		public boolean expired(S source, Level level) {
 			this.initializeIfNot(source, level);
-			
+
 			return this.wrapped.expired(source, level);
 		}
 
