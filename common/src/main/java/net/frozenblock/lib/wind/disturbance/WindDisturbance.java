@@ -173,6 +173,7 @@ public abstract class WindDisturbance<T> {
 		public static final StreamCodec<RegistryFriendlyByteBuf, List<Instance<?, ? extends WindDisturbance<?>>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 
 		private final T wrapped;
+		private boolean initialized;
 		private Vec3 origin;
 		private double scale;
 		private AABB area;
@@ -217,6 +218,20 @@ public abstract class WindDisturbance<T> {
 			this.origin = this.wrapped.origin(source, level);
 			this.scale = this.wrapped.scale(source, level);
 			this.area = this.wrapped.area(source, level, this.origin, this.scale);
+		}
+
+		/**
+		 * Invokes and sets up the {@link WindDisturbance.Instance#origin origin position}, {@link WindDisturbance.Instance#scale scale}, and
+		 * {@link WindDisturbance.Instance#area effective area} of the {@link WindDisturbance.Instance}.
+		 *
+		 * @param source The source of the inner {@link WindDisturbance}.
+		 * @param level The current {@link Level}.
+		 */
+		public void initializeIfNot(S source, Level level) {
+			if (this.initialized) return;
+
+			this.tick(source, level);
+			this.initialized = true;
 		}
 
 		/**

@@ -549,6 +549,7 @@ public class WindManager {
 			((WindDisturbanceHolder) holder).initializeIfNot(source, this.level);
 
 			for (WindDisturbance.Instance instance : holder.disturbances()) {
+				instance.initializeIfNot(source, this.level);
 				final WindDisturbanceResult result = instance.sample(this.level, source, target);
 				if (!(result instanceof WindDisturbanceResult.Success success)) continue;
 				if (success.strength() <= 0D || success.weight() <= 0D) continue;
