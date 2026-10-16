@@ -215,6 +215,8 @@ public abstract class WindDisturbance<T> {
 		 * @param level The current {@link Level}.
 		 */
 		public void tick(S source, Level level) {
+			this.initializeIfNot(source, level);
+
 			this.origin = this.wrapped.origin(source, level);
 			this.scale = this.wrapped.scale(source, level);
 			this.area = this.wrapped.area(source, level, this.origin, this.scale);
@@ -269,6 +271,8 @@ public abstract class WindDisturbance<T> {
 		 * @see WindDisturbance#sample(Object, Level, Vec3, AABB, Vec3, double)
 		 */
 		public WindDisturbanceResult sample(Level level, S source, Vec3 target) {
+			this.initializeIfNot(source, level);
+
 			if (!this.area.contains(target)) return WindDisturbanceResult.PASS;
 			return this.wrapped.sample(source, level, this.origin, this.area, target, this.scale);
 		}
@@ -286,6 +290,8 @@ public abstract class WindDisturbance<T> {
 		 * @see WindDisturbance#expired(Object, Level)
 		 */
 		public boolean expired(S source, Level level) {
+			this.initializeIfNot(source, level);
+			
 			return this.wrapped.expired(source, level);
 		}
 

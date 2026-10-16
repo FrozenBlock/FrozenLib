@@ -31,6 +31,7 @@ import net.frozenblock.lib.event.api.events.client.ClientLevelEvents;
 import net.frozenblock.lib.event.api.events.client.ClientTickEvents;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
+import net.frozenblock.lib.wind.disturbance.holder.WindDisturbanceHolder;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -77,7 +78,14 @@ public final class ClientWindUtil {
 				WindManager.getOrCreate(level)
 					.getWindDisturbanceSourcesAndHolders()
 					.stream()
-					.map(pair -> pair.getSecond().disturbances())
+					.map(trackedPair -> {
+						final Object source = trackedPair.getFirst();
+						final WindDisturbanceHolder<?> holder = trackedPair.getSecond();
+
+						((WindDisturbanceHolder) holder).initializeIfNot(source, level);
+
+						return holder.disturbances();
+					})
 					.forEach(WIND_DISTURBANCES::addAll);
 			}
 

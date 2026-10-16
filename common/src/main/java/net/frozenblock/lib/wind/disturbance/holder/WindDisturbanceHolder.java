@@ -60,8 +60,6 @@ public final class WindDisturbanceHolder<T> {
 	private final List<WindDisturbance.Instance<?, ? extends WindDisturbance<?>>> disturbances = new ArrayList<>();
 	@ApiStatus.Internal
 	private @Nullable WindDisturbanceSourceType type;
-	@ApiStatus.Internal
-	private boolean initialized;
 
 	private WindDisturbanceHolder() {}
 
@@ -215,10 +213,9 @@ public final class WindDisturbanceHolder<T> {
 	 * @see WindDisturbanceHolder#trySetSourceTypeIfNotPresent(Object)
 	 */
 	public void initializeIfNot(T source, Level level) {
-		if (this.initialized) return;
+		if (this.type != null) return;
 
 		this.trySetSourceTypeIfNotPresent(source);
-		this.initialized = true;
 	}
 
 	/**
