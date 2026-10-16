@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.client;
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.client.ClientBlockEntityLifecycleEvents;
@@ -65,85 +66,58 @@ public final class ClientWindUtil {
 
 	@VisibleForDebug
 	public static class Debug {
-		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-		private static final List<WindDisturbance.Instance<?, ?>> WIND_DISTURBANCES = new ArrayList<>();
-		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
-		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
+		private static final List<Vec3> ACCESSED_POSITIONS = new CopyOnWriteArrayList<>();
+		private static final List<WindDisturbance.Instance<?, ?>> WIND_DISTURBANCES = new CopyOnWriteArrayList<>();
+		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new CopyOnWriteArrayList<>();
+		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new CopyOnWriteArrayList<>();
 
 		public static void tick(ClientLevel level) {
-			synchronized (WIND_DISTURBANCES) {
-				WIND_DISTURBANCES.clear();
-				if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
-					WindManager.getOrCreate(level)
-						.getWindDisturbanceSourcesAndHolders()
-						.stream()
-						.map(pair -> pair.getSecond().disturbances())
-						.forEach(disturbanceList -> disturbanceList.forEach(WIND_DISTURBANCES::add));
-				}
+			WIND_DISTURBANCES.clear();
+			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
+				WindManager.getOrCreate(level)
+					.getWindDisturbanceSourcesAndHolders()
+					.stream()
+					.map(pair -> pair.getSecond().disturbances())
+					.forEach(WIND_DISTURBANCES::addAll);
 			}
 
-			synchronized (DEBUG_NODES) {
-				DEBUG_NODES.clear();
-				if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
-			}
+			DEBUG_NODES.clear();
+			if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
 
-			synchronized (DEBUG_DISTURBANCE_NODES) {
-				DEBUG_DISTURBANCE_NODES.clear();
-				if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
-			}
+			DEBUG_DISTURBANCE_NODES.clear();
+			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
 
-			synchronized (ACCESSED_POSITIONS) {
-				ACCESSED_POSITIONS.clear();
-			}
+			ACCESSED_POSITIONS.clear();
 		}
 
 		@VisibleForDebug
-		public static void addAccessedPosition(Vec3 vec3) {
-			synchronized (ACCESSED_POSITIONS) {
-				ACCESSED_POSITIONS.add(vec3);
-			}
+		public static synchronized void addAccessedPosition(Vec3 vec3) {
+			ACCESSED_POSITIONS.add(vec3);
 		}
 
 		@VisibleForDebug
 		public static void clear() {
-			synchronized (WIND_DISTURBANCES) {
-				WIND_DISTURBANCES.clear();
-			}
-
-			synchronized (DEBUG_NODES) {
-				DEBUG_NODES.clear();
-			}
-
-			synchronized (DEBUG_DISTURBANCE_NODES) {
-				DEBUG_DISTURBANCE_NODES.clear();
-			}
-
-			synchronized (ACCESSED_POSITIONS) {
-				ACCESSED_POSITIONS.clear();
-			}
+			WIND_DISTURBANCES.clear();
+			DEBUG_NODES.clear();
+			DEBUG_DISTURBANCE_NODES.clear();
+			ACCESSED_POSITIONS.clear();
 		}
 
 		@VisibleForDebug
 		public static List<List<Pair<Vec3, Integer>>> getDebugNodes() {
-			synchronized (DEBUG_NODES) {
-				return DEBUG_NODES;
-			}
+			return DEBUG_NODES;
 		}
 
 		private static List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
-			synchronized (ACCESSED_POSITIONS) {
-				final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-				ACCESSED_POSITIONS.forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
-				return windNodes;
-			}
+			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+			ACCESSED_POSITIONS.forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
+			return windNodes;
 		}
 
 		@VisibleForDebug
 		@Unmodifiable
 		public static List<WindDisturbance.Instance<?, ?>> getWindDisturbances() {
-			synchronized (WIND_DISTURBANCES) {
-				return WIND_DISTURBANCES;
-			}
+			return WIND_DISTURBANCES;
 		}
 
 		@VisibleForDebug

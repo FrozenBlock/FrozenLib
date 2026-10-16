@@ -69,7 +69,7 @@ public abstract class WindDisturbance<T> {
 	 *
 	 * @param source The source of the {@link WindDisturbance}.
 	 * @param level The current {@link Level}.
-	 * @param origin The {origin @link Vec3 position} of the {@link WindDisturbance}.
+	 * @param origin The {@link Vec3 origin position} of the {@link WindDisturbance}.
 	 * @param scale The scale of the {@link WindDisturbance}.
 	 * @return The {@link AABB area} the {@link WindDisturbance} is effective within.
 	 */
@@ -173,7 +173,6 @@ public abstract class WindDisturbance<T> {
 		public static final StreamCodec<RegistryFriendlyByteBuf, List<Instance<?, ? extends WindDisturbance<?>>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 
 		private final T wrapped;
-		private boolean initialized;
 		private Vec3 origin;
 		private double scale;
 		private AABB area;

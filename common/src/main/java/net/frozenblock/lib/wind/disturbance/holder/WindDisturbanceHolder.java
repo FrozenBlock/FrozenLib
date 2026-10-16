@@ -60,6 +60,8 @@ public final class WindDisturbanceHolder<T> {
 	private final List<WindDisturbance.Instance<?, ? extends WindDisturbance<?>>> disturbances = new ArrayList<>();
 	@ApiStatus.Internal
 	private @Nullable WindDisturbanceSourceType type;
+	@ApiStatus.Internal
+	private boolean initialized;
 
 	private WindDisturbanceHolder() {}
 
@@ -194,7 +196,7 @@ public final class WindDisturbanceHolder<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void tick(T source, Level level) {
-		this.trySetSourceTypeIfNotPresent(source);
+		this.initializeIfNot(source, level);
 		if (this.type == null) throw new IllegalStateException("Wind disturbance holder is not yet attached to a source!");
 
 		((List<WindDisturbance.Instance>) (Object) this.disturbances).removeIf(disturbance -> {
@@ -206,7 +208,21 @@ public final class WindDisturbanceHolder<T> {
 	}
 
 	/**
-	 * @return All held {@link WindDisturbance.Instance}s
+	 * Invokes the necessary methods required to set up a {@link WindDisturbanceHolder}.
+	 *
+	 * @param source The source this is attached to.
+	 * @param level The current {@link Level}.
+	 * @see WindDisturbanceHolder#trySetSourceTypeIfNotPresent(Object)
+	 */
+	public void initializeIfNot(T source, Level level) {
+		if (this.initialized) return;
+
+		this.trySetSourceTypeIfNotPresent(source);
+		this.initialized = true;
+	}
+
+	/**
+	 * @return All held {@link WindDisturbance.Instance}s.
 	 */
 	public List<WindDisturbance.Instance<?, ? extends WindDisturbance<?>>> disturbances() {
 		if (this.type == null) throw new IllegalStateException("Wind disturbance holder is not yet attached to a source!");

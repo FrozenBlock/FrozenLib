@@ -265,6 +265,8 @@ public class WindManager {
 	public void trackDisturbanceSource(DataAttachmentTarget target) {
 		if (this.windDisturbanceSources.contains(target)) return;
 		this.windDisturbanceSources.add(target);
+
+		WindDisturbanceHolder.getOptional(target).ifPresent(holder -> holder.initializeIfNot(target, this.level));
 	}
 
 	/**
@@ -542,7 +544,11 @@ public class WindManager {
 		double maxStrength = 0D;
 		for (Pair<DataAttachmentTarget, WindDisturbanceHolder<?>> trackedPair : this.getWindDisturbanceSourcesAndHolders()) {
 			final Object source = trackedPair.getFirst();
-			for (WindDisturbance.Instance instance : trackedPair.getSecond().disturbances()) {
+			final WindDisturbanceHolder<?> holder = trackedPair.getSecond();
+
+			((WindDisturbanceHolder) holder).initializeIfNot(source, this.level);
+
+			for (WindDisturbance.Instance instance : holder.disturbances()) {
 				final WindDisturbanceResult result = instance.sample(this.level, source, target);
 				if (!(result instanceof WindDisturbanceResult.Success success)) continue;
 				if (success.strength() <= 0D || success.weight() <= 0D) continue;

@@ -21,7 +21,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.modmenu.api.FrozenModMenuEntrypoint;
 import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
@@ -92,7 +92,7 @@ public class BadgeMixin {
 			currentOrdinal += 1;
 			final StringBuilder internalId = new StringBuilder(newBadge.key().toUpperCase());
 			if (internalIds.contains(internalId.toString())) {
-				FrozenLibLogUtils.logError("ModMenu Badge " + newBadge.key() + " already exists!");
+				FrozenLibEarlyConstants.LOGGER.error("ModMenu Badge {} already exists!", newBadge.key());
 				continue;
 			}
 			final var addedBadge = frozenLib$newBadge(internalId.toString(), currentOrdinal, newBadge.translationKey(), newBadge.outlineColor(), newBadge.fillColor(), newBadge.key());
