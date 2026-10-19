@@ -21,6 +21,7 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.platform.client.ClientRegistryHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.core.registries.ClientRegistries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.ApiStatus;
 @UtilityClass
 @ClientOnly
 public final class FrozenLibDebugScreenEntries {
-	private static final DeferredRegister<DebugScreenEntry> REGISTER = DeferredRegister.create(
+	private static final DeferredRegister<DebugScreenEntry> REGISTER = ClientRegistryHelper.createDeferredRegister(
 		ClientRegistries.DEBUG_SCREEN_ENTRY,
 		FrozenLibConstants.MOD_ID
 	);
