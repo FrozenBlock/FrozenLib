@@ -266,7 +266,7 @@ public class WindManager {
 		if (this.windDisturbanceSources.contains(target)) return;
 		this.windDisturbanceSources.add(target);
 
-		WindDisturbanceHolder.getOptional(target).ifPresent(holder -> holder.initializeIfNot(target, this.level));
+		WindDisturbanceHolder.getOptional(target).ifPresent(holder -> holder.initializeIfNot(target, this.level, true));
 	}
 
 	/**
@@ -546,7 +546,7 @@ public class WindManager {
 			final Object source = trackedPair.getFirst();
 			final WindDisturbanceHolder<?> holder = trackedPair.getSecond();
 
-			((WindDisturbanceHolder) holder).initializeIfNot(source, this.level);
+			((WindDisturbanceHolder) holder).initializeIfNot(source, this.level, true);
 
 			for (WindDisturbance.Instance instance : holder.disturbances()) {
 				instance.initializeIfNot(source, this.level);

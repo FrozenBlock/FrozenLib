@@ -81,14 +81,16 @@ public abstract class ParticleSpawner {
 		this(spawnProbability, spawnAttempts, horizontalDistance, minVerticalDistance, maxVerticalDistance, false);
 	}
 
-	public abstract boolean canSpawnAtPos(Level level, BlockPos pos);
+	public abstract boolean canSpawnAtPos(Level level, BlockPos pos, BlockState state);
 
 	public abstract ParticleOptions selectParticleOptions(Level level, BlockPos pos, RandomSource random);
 
 	public void tick(Level level, BlockPos pos, RandomSource random) {
 		final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+
 		for (int i = 0; i < this.spawnAttempts; ++i) {
 			if (random.nextFloat() >= this.spawnProbability.get()) continue;
+
 			mutable.setWithOffset(
 				pos,
 				Mth.nextInt(random, -this.horizontalDistance, this.horizontalDistance),
@@ -97,7 +99,7 @@ public abstract class ParticleSpawner {
 			);
 
 			final BlockState insideState = level.getBlockState(mutable);
-			if ((!this.canSpawnInBlocks && insideState.isCollisionShapeFullBlock(level, mutable)) || !this.canSpawnAtPos(level, mutable)) continue;
+			if ((!this.canSpawnInBlocks && insideState.isCollisionShapeFullBlock(level, mutable)) || !this.canSpawnAtPos(level, mutable, insideState)) continue;
 
 			level.addParticle(
 				this.selectParticleOptions(level, mutable, random),

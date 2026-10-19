@@ -194,7 +194,7 @@ public final class WindDisturbanceHolder<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public void tick(T source, Level level) {
-		this.initializeIfNot(source, level);
+		this.initializeIfNot(source, level, false);
 		if (this.type == null) throw new IllegalStateException("Wind disturbance holder is not yet attached to a source!");
 
 		((List<WindDisturbance.Instance>) (Object) this.disturbances).removeIf(disturbance -> {
@@ -210,12 +210,14 @@ public final class WindDisturbanceHolder<T> {
 	 *
 	 * @param source The source this is attached to.
 	 * @param level The current {@link Level}.
+	 * @param tick Whether to tick the {@link WindDisturbanceHolder}.
 	 * @see WindDisturbanceHolder#trySetSourceTypeIfNotPresent(Object)
 	 */
-	public void initializeIfNot(T source, Level level) {
+	public void initializeIfNot(T source, Level level, boolean tick) {
 		if (this.type != null) return;
 
 		this.trySetSourceTypeIfNotPresent(source);
+		if (tick) this.tick(source, level);
 	}
 
 	/**

@@ -82,7 +82,7 @@ public final class ClientWindUtil {
 						final Object source = trackedPair.getFirst();
 						final WindDisturbanceHolder<?> holder = trackedPair.getSecond();
 
-						((WindDisturbanceHolder) holder).initializeIfNot(source, level);
+						((WindDisturbanceHolder) holder).initializeIfNot(source, level, true);
 
 						return holder.disturbances();
 					})
