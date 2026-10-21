@@ -49,7 +49,20 @@ public final class FrozenLibPlacementUtil {
 		finalModifiers.addAll(originalModifiers);
 		finalModifiers.addAll(Arrays.stream(postModifiers).toList());
 		return List.copyOf(finalModifiers);
-	};
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> postModifiers(List<PlacementModifier> originalModifiers, List<PlacementModifier> postModifiers) {
+		return postModifiers(originalModifiers, postModifiers.toArray(new PlacementModifier[0]));
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> postModifiersWithPreFilter(PlacementFilter preFilter, List<PlacementModifier> originalModifiers, PlacementModifier... postModifiers) {
+		final List<PlacementModifier> originalModifiersWithPreFilter = new ArrayList<>();
+		originalModifiersWithPreFilter.addFirst(preFilter);
+		originalModifiersWithPreFilter.addAll(originalModifiers);
+		return postModifiers(originalModifiersWithPreFilter, postModifiers);
+	}
 
 	@Unmodifiable
 	public static List<PlacementModifier> modifiersWithFilter(@Nullable PlacementFilter generationPredicate, PlacementModifier countModifier, PlacementModifier... modifiers) {
@@ -70,6 +83,11 @@ public final class FrozenLibPlacementUtil {
 	@Unmodifiable
 	public static List<PlacementModifier> modifiers(PlacementModifier countModifier, PlacementModifier... modifiers) {
 		return modifiersWithFilter((PlacementFilter) null, countModifier, modifiers);
+	}
+
+	@Unmodifiable
+	public static List<PlacementModifier> modifiers(PlacementModifier countModifier, List<PlacementModifier> modifiers) {
+		return modifiers(countModifier, modifiers.toArray(new PlacementModifier[0]));
 	}
 
 	@Unmodifiable

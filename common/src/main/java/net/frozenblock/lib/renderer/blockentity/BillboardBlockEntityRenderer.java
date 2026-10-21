@@ -18,7 +18,7 @@
 package net.frozenblock.lib.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.renderer.FrozenLibRenderTypes;
+import net.frozenblock.lib.renderer.rendertype.FrozenLibRenderTypes;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;

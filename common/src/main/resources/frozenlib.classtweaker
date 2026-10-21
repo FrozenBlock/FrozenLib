@@ -159,7 +159,7 @@ transitive-accessible method net/minecraft/world/level/levelgen/feature/Speleoth
 transitive-accessible method net/minecraft/world/level/block/SpeleothemBlock isStalagmite (Lnet/minecraft/world/level/block/state/BlockState;)Z
 transitive-accessible method net/minecraft/world/level/block/SpeleothemBlock isTip (Lnet/minecraft/world/level/block/state/BlockState;Z)Z
 transitive-accessible class net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo
-transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;ZLnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible method net/minecraft/world/level/block/CauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible method net/minecraft/world/level/block/LayeredCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
@@ -318,11 +318,6 @@ transitive-accessible field net/minecraft/client/renderer/entity/AgeableMobRende
 transitive-mutable field net/minecraft/client/renderer/entity/AgeableMobRenderer babyModel Lnet/minecraft/client/model/EntityModel;
 
 # Rendering
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_NO_LIGHTMAP_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines OIT_ENTITY_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-transitive-accessible field net/minecraft/client/renderer/RenderPipelines ENTITY_EMISSIVE_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
-
 transitive-inject-interface	net/minecraft/client/renderer/block/BlockModelRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface	net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
 transitive-inject-interface	net/minecraft/client/renderer/blockentity/state/BlockEntityRenderState net/frozenblock/lib/renderer/FrozenLibRenderState
@@ -664,8 +659,7 @@ transitive-inject-interface net/minecraft/client/renderer/state/level/CameraRend
 # Lightmap
 transitive-accessible field net/minecraft/util/LightCoordsUtil MAX_SMOOTH_LIGHT_LEVEL I
 
-# Render Types & Shaders
+# Render Pipelines & Types
 transitive-accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
-transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
-transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lnet/minecraft/client/renderer/oit/OitPipelineSet;)Lnet/minecraft/client/renderer/oit/OitPipelineSet;
-transitive-accessible method net/minecraft/client/renderer/RenderPipelines registerOptional (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
+transitive-accessible field net/minecraft/client/renderer/pipeline/variant/EntityRenderPipelineVariant VALUES Lnet/minecraft/client/renderer/pipeline/variant/VariantValuesList;
+

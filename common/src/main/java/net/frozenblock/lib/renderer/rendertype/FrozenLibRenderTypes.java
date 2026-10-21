@@ -15,14 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer;
+package net.frozenblock.lib.renderer.rendertype;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.renderer.pipeline.variant.FrozenLibEntityRenderPipelineVariants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -33,23 +34,27 @@ import net.minecraft.util.Util;
 @ClientOnly
 public final class FrozenLibRenderTypes {
 	// ENTITY NO SHADING
-	public static final Function<Identifier, RenderType> ENTITY_NO_SHADING = Util.memoize(texture -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_NO_SHADING)
+	public static final Function<Identifier, RenderType> ENTITY_SOLID_NO_SHADING = Util.memoize(texture -> {
+		final RenderSetup state = RenderSetup.nonOitBuilder(
+			RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.SOLID_NO_SHADING, null))
+		)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
 			.affectsCrumbling()
 			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
 			.createRenderSetup();
-		return RenderType.create(FrozenLibConstants.safeString("entity_no_shading"), state);
+		return RenderType.create(FrozenLibConstants.safeString("entity_solid_no_shading"), state);
 	});
 
-	public static RenderType entityNoShading(Identifier texture) {
-		return ENTITY_NO_SHADING.apply(texture);
+	public static RenderType entitySolidNoShading(Identifier texture) {
+		return ENTITY_SOLID_NO_SHADING.apply(texture);
 	}
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING)
+		final RenderSetup state = RenderSetup.nonOitBuilder(
+				RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.CUTOUT_NO_SHADING, null))
+			)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
@@ -68,8 +73,9 @@ public final class FrozenLibRenderTypes {
 	}
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_NO_SHADING = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_NO_SHADING)
-			.setOitPipelines(FrozenLibRenderPipelines.OIT_ENTITY_NO_SHADING)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.TRANSLUCENT_NO_SHADING, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
@@ -89,23 +95,27 @@ public final class FrozenLibRenderTypes {
 	}
 
 	// ENTITY NO SHADING CULL
-	public static final Function<Identifier, RenderType> ENTITY_NO_SHADING_CULL = Util.memoize(texture -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_NO_SHADING_CULL)
+	public static final Function<Identifier, RenderType> ENTITY_SOLID_NO_SHADING_CULL = Util.memoize(texture -> {
+		final RenderSetup state = RenderSetup.nonOitBuilder(
+				RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.SOLID_NO_SHADING_CULL, null))
+			)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
 			.affectsCrumbling()
 			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
 			.createRenderSetup();
-		return RenderType.create(FrozenLibConstants.safeString("entity_no_shading_cull"), state);
+		return RenderType.create(FrozenLibConstants.safeString("entity_solid_no_shading_cull"), state);
 	});
 
-	public static RenderType entityNoShadingCull(Identifier texture) {
-		return ENTITY_NO_SHADING_CULL.apply(texture);
+	public static RenderType entitySolidNoShadingCull(Identifier texture) {
+		return ENTITY_SOLID_NO_SHADING_CULL.apply(texture);
 	}
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_CUTOUT_NO_SHADING_CULL = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING_CULL)
+		final RenderSetup state = RenderSetup.nonOitBuilder(
+				RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.CUTOUT_NO_SHADING_CULL, null))
+			)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
@@ -123,10 +133,10 @@ public final class FrozenLibRenderTypes {
 		return entityCutoutNoShadingCull(texture, true);
 	}
 
-
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_NO_SHADING_CULL = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_NO_SHADING_CULL)
-			.setOitPipelines(FrozenLibRenderPipelines.OIT_ENTITY_NO_SHADING_CULL)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.TRANSLUCENT_NO_SHADING_CULL, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useLightmap()
 			.useOverlay()
@@ -147,8 +157,9 @@ public final class FrozenLibRenderTypes {
 
 	// ENTITY EMISSIVE
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED)
-			.setOitPipelines(RenderPipelines.OIT_ENTITY_EMISSIVE)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.TRANSLUCENT_EMISSIVE_FIXED, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useOverlay()
 			.affectsCrumbling()
@@ -168,8 +179,9 @@ public final class FrozenLibRenderTypes {
 
 	// ENTITY EMISSIVE CULL
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL)
-			.setOitPipelines(FrozenLibRenderPipelines.OIT_ENTITY_EMISSIVE_CULL)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.TRANSLUCENT_EMISSIVE_CULL, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useOverlay()
 			.affectsCrumbling()
@@ -188,8 +200,9 @@ public final class FrozenLibRenderTypes {
 	}
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL)
-			.setOitPipelines(FrozenLibRenderPipelines.OIT_ENTITY_EMISSIVE_CULL)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.TRANSLUCENT_EMISSIVE_FIXED_CULL, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useOverlay()
 			.affectsCrumbling()
@@ -209,8 +222,9 @@ public final class FrozenLibRenderTypes {
 
 	// APPARITION
 	public static final BiFunction<Identifier, Boolean, RenderType> APPARITION_OUTER = Util.memoize((texture, affectsOutline) -> {
-		final RenderSetup state = RenderSetup.builder(FrozenLibRenderPipelines.APPARITION_OUTER)
-			.setOitPipelines(FrozenLibRenderPipelines.OIT_APPARITION_OUTER)
+		final RenderSetup state = RenderSetup.builder(
+				stage -> RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.APPARITION_OUTER, stage))
+			)
 			.withTexture("Sampler0", texture)
 			.useOverlay()
 			.sortOnUpload()
