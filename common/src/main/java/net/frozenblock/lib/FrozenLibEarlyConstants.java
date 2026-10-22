@@ -84,6 +84,9 @@ public final class FrozenLibEarlyConstants {
 	public static final String GLOWTONE_MOD_ID = "glowtone";
 	public static final boolean HAS_GLOWTONE = ModLoader.isModLoaded(GLOWTONE_MOD_ID);
 
+	public static final String PARTICLE_TWEAKS_MOD_ID = "particletweaks";
+	public static final boolean HAS_PARTICLE_TWEAKS = ModLoader.isModLoaded(PARTICLE_TWEAKS_MOD_ID);
+
 	// EXTERNAL MODS
 	public static final boolean HAS_MODMENU = ModLoader.isModLoaded("modmenu");
 	// Cloth has a separate id on Fabric vs. Neo
