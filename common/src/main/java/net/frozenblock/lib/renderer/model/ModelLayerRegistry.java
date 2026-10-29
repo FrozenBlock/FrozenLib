@@ -21,9 +21,14 @@ import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.LayerDefinitions;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.object.boat.BoatModel;
+import net.minecraft.client.renderer.entity.ArmorModelSet;
 
 @ClientOnly
 @UtilityClass
@@ -34,6 +39,28 @@ public final class ModelLayerRegistry {
 	@PlatformImpl
 	public static void register(ModelLayerLocation layer, Supplier<LayerDefinition> provider) {
 		throw new AssertionError();
+	}
+
+	public static void registerArmorSet(ArmorModelSet<ModelLayerLocation> armorModelSet, ArmorModelSet<LayerDefinition> armor) {
+		register(armorModelSet.head(), armor::head);
+		register(armorModelSet.chest(), armor::chest);
+		register(armorModelSet.legs(), armor::legs);
+		register(armorModelSet.feet(), armor::feet);
+	}
+
+	public static void registerHumanoidArmorSet(ArmorModelSet<ModelLayerLocation> armorModelSet) {
+		final ArmorModelSet<LayerDefinition> humanoidArmor = HumanoidModel.createArmorMeshSet(LayerDefinitions.INNER_ARMOR_DEFORMATION, LayerDefinitions.OUTER_ARMOR_DEFORMATION)
+			.map(mesh -> LayerDefinition.create(mesh, 64, 32));
+
+		registerArmorSet(armorModelSet, humanoidArmor);
+	}
+
+	public static void registerBabyHumanoidArmorSet(ArmorModelSet<ModelLayerLocation> armorModelSet) {
+		final ArmorModelSet<LayerDefinition> humanoidBabyArmor = HumanoidModel.createBabyArmorMeshSet(
+			LayerDefinitions.BABY_INNER_ARMOR_DEFORMATION, LayerDefinitions.BABY_OUTER_ARMOR_DEFORMATION, PartPose.ZERO
+		).map(mesh -> LayerDefinition.create(mesh, 64, 64));
+
+		registerArmorSet(armorModelSet, humanoidBabyArmor);
 	}
 
 	public static void registerBoats(ModelLayerLocation boat, ModelLayerLocation chestBoat) {
