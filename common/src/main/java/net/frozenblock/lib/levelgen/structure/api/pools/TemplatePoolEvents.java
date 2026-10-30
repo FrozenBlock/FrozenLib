@@ -37,7 +37,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
-public class TemplatePoolApi {
+public class TemplatePoolEvents {
 	/**
 	 * An event used to add new {@link StructurePoolElement}s to {@link StructureTemplatePool}s.
 	 */

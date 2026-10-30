@@ -17,13 +17,10 @@
 
 package net.frozenblock.lib.levelgen.structure.mixin.pools;
 
-import com.mojang.datafixers.util.Pair;
-import java.util.List;
-import net.frozenblock.lib.levelgen.structure.api.pools.RandomPoolAliasApi;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.Identifier;
+import net.frozenblock.lib.FrozenLibEarlyConstants;
+import net.frozenblock.lib.levelgen.structure.api.pools.RandomPoolAliasEvents;
+import net.frozenblock.lib.platform.ModLoader;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.alias.RandomPoolAlias;
@@ -43,22 +40,13 @@ public class RandomPoolAliasMixin {
 	@Mutable
 	private WeightedList<ResourceKey<StructureTemplatePool>> targets;
 
-	// TODO: Other classes?
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
-		final Identifier aliasID = alias.identifier();
-		final List<Pair<Identifier, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasID);
+    @Inject(method = "<init>", at = @At("RETURN"))
+    public void frozenLib$modifyRandomPoolAlias(ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
+		if (FrozenLibEarlyConstants.IS_DATAGEN && ModLoader.isDevelopmentEnvironment()) return;
 
-		final WeightedList.Builder<ResourceKey<StructureTemplatePool>> builder = WeightedList.builder();
-		for (Weighted<ResourceKey<StructureTemplatePool>> wrapper : this.targets.unwrap()) {
-			builder.add(wrapper.value(), wrapper.weight());
-		}
+		final RandomPoolAliasEvents.Context context = RandomPoolAliasEvents.Context.of(this.targets);
+		RandomPoolAliasEvents.MODIFY.invoker().modify(alias, context);
 
-		for (Pair<Identifier, Integer> additionalTargets : additions) {
-			builder.add(ResourceKey.create(Registries.TEMPLATE_POOL, additionalTargets.getFirst()), additionalTargets.getSecond());
-		}
-
-		this.targets = builder.build();
+		if (context.isModified()) this.targets = context.buildTargets();
 	}
-
 }

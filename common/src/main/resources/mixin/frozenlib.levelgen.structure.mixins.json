@@ -10,6 +10,7 @@
     "placement.ChunkGeneratorStructureStateMixin",
     "placement.StructurePlacementMixin",
     "placement.StructureSetMixin",
+    "pools.RandomGroupPoolAliasMixin",
     "pools.RandomPoolAliasMixin",
     "pools.StructureTemplatePoolMixin",
     "processor.ListPoolElementMixin",

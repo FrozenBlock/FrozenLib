@@ -135,3 +135,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Migrated `VibrationParticleVisibilityApi` to `VibrationSignalParticleEvents`.
 - Cleaned up the implementation of Sound Predicates to be more straightforward.
 - Entity Texture Overrides now check for an Entity's Type instead of an Entity Renderer class.
+- Migrated `RandomPoolAliasApi` to `RandomPoolAliasEvents` and added support for changing the weight of existing targets and removing them.
+- Added `RandomGroupPoolAliasEvents`, used to modify the contents of Random Group Pool Aliases.

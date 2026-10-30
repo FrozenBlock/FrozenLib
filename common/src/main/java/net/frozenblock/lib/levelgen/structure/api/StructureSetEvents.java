@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.structure.StructureSet;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
-public class StructureSetApi {
+public class StructureSetEvents {
 	/**
 	 * An event used to add or remove {@link Structure}s to/from {@link StructureSet}s.
 	 */

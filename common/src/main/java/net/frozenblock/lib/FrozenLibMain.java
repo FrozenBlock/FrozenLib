@@ -52,10 +52,10 @@ import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDec
 import net.frozenblock.lib.levelgen.material.impl.FrozenLibMaterialConditionTypes;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProviderTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
-import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
+import net.frozenblock.lib.levelgen.structure.api.StructureSetEvents;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.placement.StructurePlacementExclusionApi;
-import net.frozenblock.lib.levelgen.structure.api.pools.TemplatePoolApi;
+import net.frozenblock.lib.levelgen.structure.api.pools.TemplatePoolEvents;
 import net.frozenblock.lib.levelgen.structure.api.processor.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
@@ -126,8 +126,8 @@ public final class FrozenLibMain {
 		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
-		StructureSetApi.init();
-		TemplatePoolApi.init();
+		StructureSetEvents.init();
+		TemplatePoolEvents.init();
 		PistonPushUtil.init();
 		ScreenShakes.init();
 		StructureStatusUpdater.init();

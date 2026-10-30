@@ -20,7 +20,6 @@ package net.frozenblock.lib.testmod.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
@@ -62,6 +61,6 @@ public class TestConfig2 {
 	//public static final ConfigEntry<String> POOPCRAP_BREAKER = TEST_CONFIG.entry("poopcrap/poop", EntryType.STRING, "67");
 
 	public static void init() {
-		FrozenLibLogUtils.log("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.get());
+		FrozenLibConstants.LOGGER.info("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.get());
 	}
 }
