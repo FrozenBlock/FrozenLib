@@ -36,6 +36,7 @@ import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.frozenblock.lib.registry.client.FrozenLibBuiltInClientRegistries;
 import net.frozenblock.lib.renderer.hud.HudElementRegistry;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
+import net.frozenblock.lib.renderer.pipeline.variant.FrozenLibEntityRenderPipelineVariants;
 import net.frozenblock.lib.resource.client.api.pack.ModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
@@ -46,13 +47,14 @@ import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 
-@ClientOnly
 @ApiStatus.Internal
 @UtilityClass
+@ClientOnly
 public final class FrozenLibClient {
 
 	public static void preQuiltInit() {
 		FrozenLibBuiltInClientRegistries.init();
+		FrozenLibEntityRenderPipelineVariants.init();
 	}
 
 	public static void quiltSetup() {

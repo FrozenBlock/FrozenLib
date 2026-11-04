@@ -24,5 +24,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 @ClientOnly
 @FunctionalInterface
 public interface HudElementRenderer {
-	void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker);
+	// TODO: make sure this is implemented on NeoForge as well
+	default void update(DeltaTracker deltaTracker) {}
+
+	void extractRenderState(GuiGraphicsExtractor graphics);
 }

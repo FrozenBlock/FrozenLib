@@ -7,6 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "fabric.FireBlockAccessor",
+    "fabric.HoneycombItemMixin",
+    "fabric.WeatheringCopperMixin",
     "waterlike.LivingEntityMixin"
   ],
   "client": [

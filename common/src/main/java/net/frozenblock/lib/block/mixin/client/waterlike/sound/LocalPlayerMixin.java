@@ -56,7 +56,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> wasPlayerInWaterLikeStatuses
 	) {
-		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
+		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerEyesInsideWaterLikes());
 		UnderWaterAmbientSoundInstanceHandler.tick();
 	}
 
@@ -72,7 +72,7 @@ public class LocalPlayerMixin {
 		CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
-		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
+		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerEyesInsideWaterLikes());
 	}
 
 	@ModifyExpressionValue(

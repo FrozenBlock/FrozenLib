@@ -18,7 +18,6 @@
 package net.frozenblock.lib.block.mixin.dripstone;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import java.util.Optional;
 import net.frozenblock.lib.block.api.dripstone.DripstoneDripApi;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
@@ -53,9 +52,9 @@ public class PointedDripstoneBlockMixin {
 	) {
 		if (abovePos == null || aboveState == null) return;
 		if (DripstoneDripApi.containsWaterDrip(aboveState.getBlock()) && !level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, abovePos)) {
-			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.WATER, aboveState));
+			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.WATER, true, aboveState));
 		} else if (DripstoneDripApi.containsLavaDrip(aboveState.getBlock())) {
-			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.LAVA, aboveState));
+			info.setReturnValue(new PointedDripstoneBlock.FluidInfo(abovePos, Fluids.LAVA, true, aboveState));
 		}
 	}
 
@@ -69,18 +68,16 @@ public class PointedDripstoneBlockMixin {
 	)
 	private static void frozenLib$maybeTransferFluid(
 		BlockState state, ServerLevel level, BlockPos pos, float randomValue, CallbackInfo info,
-		@Local(name = "fluidInfo") Optional<PointedDripstoneBlock.FluidInfo> fluidInfo,
+		@Local(name = "fluidInfo") PointedDripstoneBlock.FluidInfo fluidInfo,
 		@Local(name = "fluid") Fluid fluid,
 		@Local(name = "stalactiteTipPos") BlockPos stalactiteTipPos
 	) {
-		if (fluidInfo.isEmpty()) return;
-
-		final Block fluidBlock = fluidInfo.get().sourceState().getBlock();
+		final Block fluidBlock = fluidInfo.sourceState().getBlock();
 		if (DripstoneDripApi.containsWaterDrip(fluidBlock) && fluid == Fluids.WATER) {
-			DripstoneDripApi.runWaterDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo.get());
+			DripstoneDripApi.runWaterDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo);
 			info.cancel();
 		} else if (DripstoneDripApi.containsLavaDrip(fluidBlock) && fluid == Fluids.LAVA) {
-			DripstoneDripApi.runLavaDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo.get());
+			DripstoneDripApi.runLavaDripsIfPresent(fluidBlock, level, stalactiteTipPos, fluidInfo);
 			info.cancel();
 		}
 	}

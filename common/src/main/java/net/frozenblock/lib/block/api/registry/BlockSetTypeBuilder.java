@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.block.api.registry;
 
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -141,13 +140,8 @@ public final class BlockSetTypeBuilder {
 			.buttonClickOnSound(type.buttonClickOn());
 	}
 
-	public BlockSetType register(Identifier id) {
-		return BlockSetType.register(this.build(id));
-	}
-
-	public BlockSetType build(Identifier id) {
+	public BlockSetType build() {
 		return new BlockSetType(
-			id.toString(),
 			this.openableByHand,
 			this.openableByWindCharge,
 			this.buttonActivatedByArrows,

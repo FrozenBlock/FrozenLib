@@ -22,18 +22,17 @@ import net.frozenblock.lib.entity.client.impl.suffocation.ClientSuffocationState
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType.ScreenEffectSettings;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
 
 @ClientOnly
 public final class SuffocationOverlayRenderer implements HudElementRenderer {
 
 	@Override
-	public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+	public void extractRenderState(GuiGraphicsExtractor graphics) {
 		final Minecraft minecraft = Minecraft.getInstance();
 		final LocalPlayer player = minecraft.player;
 		if (player == null || player.isSpectator()) return;
@@ -52,7 +51,7 @@ public final class SuffocationOverlayRenderer implements HudElementRenderer {
 			if (alpha <= 0F) continue;
 
 			graphics.blitSprite(
-				RenderPipelines.GUI_TEXTURED,
+				GuiPipeline.TEXTURED,
 				settings.overlayTexture().get(),
 				0, 0, width, height,
 				ARGB.colorFromFloat(Math.min(alpha, 1F), 1F, 1F, 1F)

@@ -15,21 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.special;
+package net.frozenblock.lib.block.mixin.fabric;
 
-import com.mojang.serialization.MapCodec;
-import lombok.experimental.UtilityClass;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.resources.Identifier;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FireBlock;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@ClientOnly
-@UtilityClass
-public final class SpecialModelRendererRegistry {
+@Mixin(FireBlock.class)
+public interface FireBlockAccessor {
 
-	@PlatformImpl
-	public static void register(Identifier id, MapCodec<? extends SpecialModelRenderer.Unbaked<?>> rendererCodec) {
-		throw new AssertionError();
-	}
+	@Accessor("igniteOdds")
+	Object2IntMap<Block> frozenLib$getIgniteOdds();
+
+	@Accessor("burnOdds")
+	Object2IntMap<Block> frozenLib$getBurnOdds();
 }

@@ -17,30 +17,47 @@
 
 package net.frozenblock.lib.renderer.hud.platform;
 
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.frozenblock.lib.platform.api.client.hud.HudElementRenderer;
 import net.frozenblock.lib.platform.api.client.hud.VanillaHudAnchor;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
 @ClientOnly
 public final class HudElementRegistryImpl {
 
 	public static void addFirst(Identifier id, HudElementRenderer renderer) {
-		HudElementRegistry.addFirst(id, renderer::extractRenderState);
+		HudElementRegistry.addFirst(id, wrapAsFabric(renderer));
 	}
 
 	public static void addLast(Identifier id, HudElementRenderer renderer) {
-		HudElementRegistry.addLast(id, renderer::extractRenderState);
+		HudElementRegistry.addLast(id, wrapAsFabric(renderer));
 	}
 
 	public static void attachElementBefore(VanillaHudAnchor vanillaElementId, Identifier id, HudElementRenderer renderer) {
-		HudElementRegistry.attachElementBefore(toFabric(vanillaElementId), id, renderer::extractRenderState);
+		HudElementRegistry.attachElementBefore(toFabric(vanillaElementId), id, wrapAsFabric(renderer));
 	}
 
 	public static void attachElementAfter(VanillaHudAnchor vanillaElementId, Identifier id, HudElementRenderer renderer) {
-		HudElementRegistry.attachElementAfter(toFabric(vanillaElementId), id, renderer::extractRenderState);
+		HudElementRegistry.attachElementAfter(toFabric(vanillaElementId), id, wrapAsFabric(renderer));
+	}
+
+	private static HudElement wrapAsFabric(HudElementRenderer renderer) {
+		return new HudElement() {
+			@Override
+			public void update(DeltaTracker deltaTracker) {
+				renderer.update(deltaTracker);
+			}
+
+			@Override
+			public void extractRenderState(GuiGraphicsExtractor graphics) {
+				renderer.extractRenderState(graphics);
+			}
+		};
 	}
 
 	private static Identifier toFabric(VanillaHudAnchor anchor) {

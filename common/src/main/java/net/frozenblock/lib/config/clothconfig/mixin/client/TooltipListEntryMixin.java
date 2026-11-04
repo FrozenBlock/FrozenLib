@@ -47,8 +47,10 @@ public class TooltipListEntryMixin {
 				: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
 
 			return optionalComponent.isPresent()
-				? Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
-				: Optional.of(ConfigEntrySyncUtil.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
+				// TODO: see if getSiblings is correct (was previously toFlatList)
+				? Optional.of(optionalComponent.orElseThrow().getSiblings().toArray(new Component[0]))
+				// TODO: see if getSiblings is correct (was previously toFlatList)
+				: Optional.of(ConfigEntrySyncUtil.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().getSiblings().toArray(new Component[0]));
 		} else if (
 			disableableWidgetInterface.frozenLib$hasValidData()
 			&& disableableWidgetInterface.frozenLib$isSyncable()
@@ -57,7 +59,7 @@ public class TooltipListEntryMixin {
 		) {
 			final Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
 			return list.isEmpty()
-				? Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))
+				? Optional.of(entrySyncNotice.getSiblings().toArray(new Component[0]))
 				: Optional.of(Stream.concat(Arrays.stream(list.get()), Stream.of(entrySyncNotice)).toArray(Component[]::new));
 		}
 		return list;

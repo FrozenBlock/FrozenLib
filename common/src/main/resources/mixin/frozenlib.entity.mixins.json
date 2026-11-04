@@ -15,6 +15,8 @@
     "category.MobCategoryMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin",
+    "fluid.EntityFluidInteractionMixin",
+    "fluid.EntityMixin",
     "pathfinding.EntityTypeMixin",
     "suffocation.LivingEntityMixin"
   ],

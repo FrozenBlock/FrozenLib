@@ -17,11 +17,16 @@
 
 package net.frozenblock.lib.block.api.fire.platform;
 
+import net.frozenblock.lib.block.mixin.fabric.FireBlockAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
+// TODO: wait for fabric to restore registry api
 public final class FlammableBlockRegistryImpl {
 
 	public static void register(Block block, int igniteOdds, int burnOdds) {
-		net.fabricmc.fabric.api.registry.FlammableBlockRegistry.getDefaultInstance().add(block, igniteOdds, burnOdds);
+		final FireBlockAccessor fireBlock = (FireBlockAccessor) Blocks.FIRE;
+		fireBlock.frozenLib$getIgniteOdds().put(block, igniteOdds);
+		fireBlock.frozenLib$getBurnOdds().put(block, burnOdds);
 	}
 }

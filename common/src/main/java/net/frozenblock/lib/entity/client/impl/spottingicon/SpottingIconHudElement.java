@@ -28,7 +28,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Util;
@@ -44,13 +44,18 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_HALF = ICON_SIZE / 2;
 	private static final int ICON_SPACING = ICON_HALF / 4;
+	private float partialTicks;
 
 	@Override
-	public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
+	public void update(DeltaTracker deltaTracker) {
+		this.partialTicks = deltaTracker.getGameTimeDeltaPartialTick(true);
+	}
+
+	@Override
+	public void extractRenderState(GuiGraphicsExtractor graphics) {
 		final Minecraft minecraft = Minecraft.getInstance();
 		if (minecraft.level == null) return;
 
-		final float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(true);
 		final Camera camera = minecraft.gameRenderer.mainCamera();
 		final Vec3 cameraPos = camera.position();
 		final Vector3fc forwardAs3fc = camera.forwardVector();
@@ -67,7 +72,7 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 			final BlockPos blockPos = entity.blockPosition();
 			if (!(minecraft.level.isOutsideBuildHeight(blockPos.getY()) || minecraft.levelRenderer.isSectionCompiledAndVisible(blockPos, chunkFadeDuration))) continue;
 
-			final Vec3 entityTopPosition = entity.getPosition(partialTicks).add(0D, entity.getBbHeight(), 0D);
+			final Vec3 entityTopPosition = entity.getPosition(this.partialTicks).add(0D, entity.getBbHeight(), 0D);
 			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityTopPosition));
 
 			float startPos = 0F;
@@ -99,7 +104,7 @@ public final class SpottingIconHudElement implements HudElementRenderer {
 				graphics.pose().scale(scale);
 				graphics.pose().translate(-ICON_HALF, -ICON_HALF);
 				graphics.blit(
-					RenderPipelines.GUI_TEXTURED,
+					GuiPipeline.TEXTURED,
 					icon.texture(),
 					0, 0,
 					0F, 0F,

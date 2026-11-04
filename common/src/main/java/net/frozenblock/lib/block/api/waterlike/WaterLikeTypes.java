@@ -48,7 +48,7 @@ public final class WaterLikeTypes {
 	 * @return all {@link WaterLikeType}s the {@link Entity}'s eye is inside.
 	 */
 	public static List<WaterLikeType> getAllInside(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasInWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasEyesInsideWaterLike).toList();
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class WaterLikeTypes {
 	 * This is implemented separately as to fix client-sided issues with local {@link Player}s.
 	 */
 	public static List<WaterLikeType> getPlayerAllInside(Player player) {
-		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerInWaterLike).toList();
+		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerEyesInsideWaterLike).toList();
 	}
 
 	/**
@@ -80,7 +80,7 @@ public final class WaterLikeTypes {
 	 * @return all {@link WaterLikeType}s the {@link Entity} is touching.
 	 */
 	public static List<WaterLikeType> getAllTouching(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasTouchingWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$wasInWaterLike).toList();
 	}
 
 	/**
@@ -95,7 +95,7 @@ public final class WaterLikeTypes {
 	 * or all {@link WaterLikeTypes} the {@link Entity} is touching if not {@link Entity#isUnderWater() underwater}.
 	 */
 	public static List<WaterLikeType> getAllTouchingOrUnderWaterAndWaterLike(Entity entity) {
-		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike).toList();
+		return getAll(entity.registryAccess()).stream().filter(entity::frozenLib$isInWaterLikeOrUnderWaterAndWaterLike).toList();
 	}
 
 	/**

@@ -20,15 +20,15 @@ package net.frozenblock.lib.block.impl.waterlike;
 import java.util.List;
 
 public interface PlayerInWaterLikeInterface {
-	default void frozenLib$addPlayerInWaterLike(WaterLikeType type) {
+	default void frozenLib$markPlayerEyesInsideWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
-	default boolean frozenLib$wasPlayerInWaterLike(WaterLikeType type) {
+	default boolean frozenLib$wasPlayerEyesInsideWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
-	default List<WaterLikeType> frozenLib$playerWaterLikesInside() {
+	default List<WaterLikeType> frozenLib$playerEyesInsideWaterLikes() {
 		throw new AssertionError();
 	}
 }
