@@ -359,6 +359,7 @@ transitive-inject-interface	net/minecraft/client/renderer/state/level/WorldBorde
 ####################################################################################
 transitive-accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;I)V
 transitive-accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;ILnet/minecraft/core/particles/ParticleOptions;)V
+transitive-extendable method net/minecraft/world/entity/LivingEntity canBeAffected (Lnet/minecraft/world/effect/MobEffectInstance;)Z
 
 transitive-inject-interface net/minecraft/world/item/ItemStack net/frozenblock/lib/item/impl/component/removable/RemovableComponentsItemStack
 
@@ -566,6 +567,11 @@ transitive-accessible method net/minecraft/client/particle/NoteParticle <init> (
 transitive-accessible method net/minecraft/client/particle/CampfireSmokeParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDZLnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V
 
 transitive-inject-interface net/minecraft/client/particle/LavaParticle net/frozenblock/lib/block/client/impl/fire/LavaParticleFireTypeInterface
+
+# Registry
+transitive-accessible class net/minecraft/client/particle/ParticleResources$SpriteParticleRegistration
+transitive-accessible method net/minecraft/client/particle/ParticleResources particleTypeKey (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceKey;
+transitive-accessible method net/minecraft/client/particle/ParticleResources particleTypeKey (Lnet/minecraft/core/particles/ParticleType;)Lnet/minecraft/resources/ResourceKey;
 
 # Context Number Providers
 ####################################################################################
