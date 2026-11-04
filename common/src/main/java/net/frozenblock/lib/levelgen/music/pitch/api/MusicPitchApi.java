@@ -79,7 +79,6 @@ public final class MusicPitchApi {
 			}
 		});
 
-
 		if (providerCount.get() <= 0) {
 			resetCurrentPitch();
 			return;

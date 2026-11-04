@@ -22,9 +22,10 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.BuiltinRegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: separate into common and client root registries
 @UtilityClass
 public class RegistryFreezeEvents {
 	/**
@@ -50,7 +51,7 @@ public class RegistryFreezeEvents {
 	@FunctionalInterface
 	public interface StartRegistryFreeze extends CommonEventEntrypoint {
 		/**
-		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link BuiltInRegistries#freeze()} or not.
+		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link BuiltinRegistryBuilder#freeze()} or not.
 		 */
 		void onStartRegistryFreeze(@Nullable Registry<?> registry, boolean allRegistries);
 	}
@@ -58,7 +59,7 @@ public class RegistryFreezeEvents {
 	@FunctionalInterface
 	public interface EndRegistryFreeze extends CommonEventEntrypoint {
 		/**
-		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link BuiltInRegistries#freeze()} or not.
+		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link BuiltinRegistryBuilder#freeze()} or not.
 		 */
 		void onEndRegistryFreeze(@Nullable Registry<?> registry, boolean allRegistries);
 	}

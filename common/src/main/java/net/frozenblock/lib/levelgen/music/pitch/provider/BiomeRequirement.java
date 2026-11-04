@@ -33,7 +33,6 @@ public record BiomeRequirement(HolderSet<Biome> requiredBiomes, Holder<PitchProv
 		HOLDER_CODEC.fieldOf("provider").forGetter(BiomeRequirement::provider)
 	).apply(instance, BiomeRequirement::new));
 
-
 	@Override
 	public MapCodec<BiomeRequirement> codec() {
 		return MAP_CODEC;

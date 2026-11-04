@@ -19,7 +19,6 @@ package net.frozenblock.lib.levelgen.feature.api.feature.patch;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;

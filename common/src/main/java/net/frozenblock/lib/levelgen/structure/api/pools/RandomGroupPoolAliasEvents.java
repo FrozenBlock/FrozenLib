@@ -44,7 +44,6 @@ public final class RandomGroupPoolAliasEvents {
 			for (var callback : callbacks) callback.modify(context);
 		});
 
-
 	@FunctionalInterface
 	public interface Modify extends CommonEventEntrypoint {
 		void modify(Context context);

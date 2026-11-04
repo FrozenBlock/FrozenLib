@@ -77,7 +77,6 @@ public final class ServerTextureManager implements AutoCloseable {
 				return false;
 			});
 
-
 			this.textures.values().forEach(texture -> {
 				if (texture instanceof ServerTextureStatus.Timed timed) timed.tick(currentTimeMillis);
 			});

@@ -42,7 +42,6 @@ public final class RandomPoolAliasEvents {
 			for (var callback : callbacks) callback.modify(alias, context);
 		});
 
-
 	@FunctionalInterface
 	public interface Modify extends CommonEventEntrypoint {
 		void modify(ResourceKey<StructureTemplatePool> alias, Context context);
