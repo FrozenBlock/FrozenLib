@@ -275,6 +275,7 @@ transitive-accessible method net/minecraft/world/entity/Entity updateFluidIntera
 transitive-accessible class net/minecraft/world/entity/EntityFluidInteraction$Tracker
 transitive-accessible field net/minecraft/world/entity/EntityFluidInteraction$Tracker fluidType Lnet/minecraft/core/Holder;
 transitive-accessible field net/minecraft/world/entity/EntityFluidInteraction$Tracker wasInFluid Z
+transitive-accessible class net/minecraft/world/entity/EntityFluidInteraction$CurrentAccumulator
 
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/entity/impl/fluid/EntityFluidInteractionInterface
 transitive-inject-interface net/minecraft/world/entity/EntityFluidInteraction net/frozenblock/lib/entity/impl/fluid/EntityFluidInteractionInterface
