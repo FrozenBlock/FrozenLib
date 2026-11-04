@@ -33,19 +33,22 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.CornerConstraint;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
 public abstract class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
+
 	public DataMarkerProcessableSinglePoolElement(
-		Either<Identifier, StructureTemplate> either,
-		Holder<StructureProcessorList> holder,
+		Either<Identifier, StructureTemplate> template,
+		Holder<StructureProcessorList> processors,
 		StructureTemplatePool.Projection projection,
-		Optional<LiquidSettings> optional
+		Optional<LiquidSettings> overrideLiquidSettings,
+		Optional<CornerConstraint> cornerConstraint
 	) {
-		super(either, holder, projection, optional);
+		super(template, processors, projection, overrideLiquidSettings, cornerConstraint);
 	}
 
 	static <T extends DataMarkerProcessableSinglePoolElement> MapCodec<T> codec(

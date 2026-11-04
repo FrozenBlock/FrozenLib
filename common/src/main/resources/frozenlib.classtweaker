@@ -110,8 +110,6 @@ transitive-accessible method net/minecraft/world/level/block/Blocks never (Lnet/
 # Registry & Blocks
 transitive-accessible class net/minecraft/data/BlockFamilies
 transitive-accessible method net/minecraft/data/BlockFamilies familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
-transitive-accessible method net/minecraft/world/level/block/state/properties/BlockSetType register (Lnet/minecraft/world/level/block/state/properties/BlockSetType;)Lnet/minecraft/world/level/block/state/properties/BlockSetType;
-transitive-accessible method net/minecraft/world/level/block/state/properties/WoodType register (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
 transitive-accessible method net/minecraft/world/level/block/Blocks register (Lnet/minecraft/references/BlockItemId;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;
 transitive-accessible method net/minecraft/world/level/block/Blocks register (Lnet/minecraft/references/BlockItemId;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;
 transitive-accessible method net/minecraft/world/level/block/Blocks registerLegacyStair (Lnet/minecraft/references/BlockItemId;Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/block/Block;
@@ -274,6 +272,12 @@ transitive-accessible method net/minecraft/world/entity/EntityTypes chestRaftFac
 # Fluid
 transitive-accessible method net/minecraft/world/entity/LivingEntity canBreatheUnderwater ()Z
 transitive-accessible method net/minecraft/world/entity/Entity updateFluidInteraction ()Z
+transitive-accessible class net/minecraft/world/entity/EntityFluidInteraction$Tracker
+transitive-accessible field net/minecraft/world/entity/EntityFluidInteraction$Tracker fluidType Lnet/minecraft/core/Holder;
+transitive-accessible field net/minecraft/world/entity/EntityFluidInteraction$Tracker wasInFluid Z
+
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/entity/impl/fluid/EntityFluidInteractionInterface
+transitive-inject-interface net/minecraft/world/entity/EntityFluidInteraction net/frozenblock/lib/entity/impl/fluid/EntityFluidInteractionInterface
 
 # Loot
 transitive-accessible method net/minecraft/data/loot/EntityLootSubProvider shouldSmeltLoot ()Lnet/minecraft/world/level/storage/loot/predicates/AnyOfCondition$Builder;
@@ -511,7 +515,7 @@ transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSet
 
 # Structures
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece getWorldPos (III)Lnet/minecraft/core/BlockPos$MutableBlockPos;
-transitive-accessible method net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;Ljava/util/Optional;)V
+transitive-accessible method net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement <init> (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;Ljava/util/Optional;Ljava/util/Optional;)V
 transitive-accessible method net/minecraft/world/level/levelgen/structure/ScatteredFeaturePiece updateAverageGroundHeight (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;I)Z
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece generateBox (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;IIIIIILnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Z)V
 transitive-accessible method net/minecraft/world/level/levelgen/structure/StructurePiece placeBlock (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V

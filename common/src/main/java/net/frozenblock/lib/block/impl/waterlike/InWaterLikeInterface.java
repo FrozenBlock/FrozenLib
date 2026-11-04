@@ -22,7 +22,23 @@ import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import org.jetbrains.annotations.Nullable;
 
 public interface InWaterLikeInterface {
-	default void frozenLib$addInWaterLike(WaterLikeType type) {
+	default void frozenLib$markEyesInsideWaterLike(WaterLikeType type) {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$clearEyesInsideWaterLikes() {
+		throw new AssertionError();
+	}
+
+	default boolean frozenLib$wasEyesInsideWaterLike(WaterLikeType type) {
+		throw new AssertionError();
+	}
+
+	default List<WaterLikeType> frozenLib$eyesInsideWaterLikes() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$markInWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
@@ -34,31 +50,15 @@ public interface InWaterLikeInterface {
 		throw new AssertionError();
 	}
 
-	default List<WaterLikeType> frozenLib$waterLikesInside() {
+	default List<WaterLikeType> frozenLib$inWaterLikes() {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$addTouchingWaterLike(WaterLikeType type) {
+	default boolean frozenLib$isInWaterLikeOrUnderWaterAndWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$clearTouchingWaterLikes() {
-		throw new AssertionError();
-	}
-
-	default boolean frozenLib$wasTouchingWaterLike(WaterLikeType type) {
-		throw new AssertionError();
-	}
-
-	default List<WaterLikeType> frozenLib$touchingWaterLikeStatuses() {
-		throw new AssertionError();
-	}
-
-	default boolean frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike(WaterLikeType type) {
-		throw new AssertionError();
-	}
-
-	default void frozenLib$setWaterReplacementParticlesFromBlock(@Nullable WaterLikeBlock waterLike) {
+	default void frozenLib$setWaterReplacementParticlesFromType(@Nullable WaterLikeBlock waterLike) {
 		throw new AssertionError();
 	}
 }

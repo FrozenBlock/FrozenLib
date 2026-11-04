@@ -35,30 +35,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerMixin implements PlayerInWaterLikeInterface {
 
 	@Unique
-	private final List<WaterLikeType> frozenLib$playerWaterLikesInside = new ArrayList<>();
+	private final List<WaterLikeType> frozenLib$playerEyesInsideWaterLikes = new ArrayList<>();
 
 	@Inject(method = "updateIsUnderwater", at = @At(value = "HEAD"))
 	public void frozenLib$updateIsInWaterLike(CallbackInfoReturnable<Boolean> info) {
-		this.frozenLib$playerWaterLikesInside.clear();
-		this.frozenLib$playerWaterLikesInside.addAll(Player.class.cast(this).frozenLib$waterLikesInside());
+		this.frozenLib$playerEyesInsideWaterLikes.clear();
+		this.frozenLib$playerEyesInsideWaterLikes.addAll(Player.class.cast(this).frozenLib$eyesInsideWaterLikes());
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$addPlayerInWaterLike(WaterLikeType type) {
-		this.frozenLib$playerWaterLikesInside.add(type);
+	public void frozenLib$markPlayerEyesInsideWaterLike(WaterLikeType type) {
+		this.frozenLib$playerEyesInsideWaterLikes.add(type);
 	}
 
 	@Unique
 	@Override
-	public boolean frozenLib$wasPlayerInWaterLike(WaterLikeType type) {
-		return this.frozenLib$playerWaterLikesInside.contains(type);
+	public boolean frozenLib$wasPlayerEyesInsideWaterLike(WaterLikeType type) {
+		return this.frozenLib$playerEyesInsideWaterLikes.contains(type);
 	}
 
 	@Unique
 	@Override
-	public List<WaterLikeType> frozenLib$playerWaterLikesInside() {
-		return this.frozenLib$playerWaterLikesInside;
+	public List<WaterLikeType> frozenLib$playerEyesInsideWaterLikes() {
+		return this.frozenLib$playerEyesInsideWaterLikes;
 	}
 
 	@Inject(method = "getSwimSound", at = @At("HEAD"), cancellable = true)

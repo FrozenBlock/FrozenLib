@@ -15,18 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.renderer.special.platform;
+package net.frozenblock.lib.block.mixin.fabric;
 
-import com.mojang.serialization.MapCodec;
-import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.resources.Identifier;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.minecraft.world.level.block.WeatheringCopper;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
-@ClientOnly
-public final class SpecialModelRendererRegistryImpl {
+@Mixin(value = WeatheringCopper.class, priority = 1020)
+public interface WeatheringCopperMixin {
 
-	public static void register(Identifier id, MapCodec<? extends SpecialModelRenderer.Unbaked<?>> rendererCodec) {
-		SpecialModelRenderers.ID_MAPPER.put(id, rendererCodec);
+	@ModifyReturnValue(method = "lambda$static$0", at = @At("RETURN"))
+	private static BiMap frozenLib$mutableOxidationMap(BiMap original) {
+		return HashBiMap.create(original);
 	}
 }

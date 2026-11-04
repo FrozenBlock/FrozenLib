@@ -28,9 +28,9 @@ import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -129,7 +129,7 @@ public class FileTransferToast implements Toast {
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long fullyVisibleForMs) {
-		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+		graphics.blitSprite(GuiPipeline.TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
 			graphics.text(font, this.title, this.titleXStart, 12, this.id.textColor(), false);
 			return;

@@ -54,8 +54,6 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 	@Shadow
 	public abstract Level level();
 	@Shadow
-	protected boolean wasTouchingWater;
-	@Shadow
 	public abstract boolean isUnderWater();
 	@Shadow
 	public abstract RandomSource getRandom();
@@ -65,9 +63,9 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 	@Unique
 	private ParticleOptions frozenLib$replacementSplashParticle;
 	@Unique
-	private final List<WaterLikeType> frozenLib$waterLikesInside = new ArrayList<>();
+	private final List<WaterLikeType> frozenLib$eyesInsideWaterLikes = new ArrayList<>();
 	@Unique
-	private final List<WaterLikeType> frozenLib$waterLikesTouching = new ArrayList<>();
+	private final List<WaterLikeType> frozenLib$inWaterLikes = new ArrayList<>();
 
 	@WrapOperation(
 		method = "getBlockSpeedFactor",
@@ -90,66 +88,66 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$addInWaterLike(WaterLikeType type) {
-		this.frozenLib$waterLikesInside.add(type);
+	public void frozenLib$markEyesInsideWaterLike(WaterLikeType type) {
+		this.frozenLib$eyesInsideWaterLikes.add(type);
+	}
+
+	@Unique
+	@Override
+	public void frozenLib$clearEyesInsideWaterLikes() {
+		this.frozenLib$eyesInsideWaterLikes.clear();
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$wasEyesInsideWaterLike(WaterLikeType type) {
+		return this.frozenLib$eyesInsideWaterLikes.contains(type);
+	}
+
+	@Unique
+	@Override
+	public List<WaterLikeType> frozenLib$eyesInsideWaterLikes() {
+		return this.frozenLib$eyesInsideWaterLikes;
+	}
+
+	@Inject(method = "updateFluidInteraction", at = @At("TAIL"))
+	public void frozenLib$clearTouchingWaterLikeStatuses(CallbackInfoReturnable<Boolean> info) {
+		if (!((Entity) (Object) this).frozenLib$wasInWater()) this.frozenLib$clearInWaterLikes();
+	}
+
+	@Unique
+	@Override
+	public void frozenLib$markInWaterLike(WaterLikeType type) {
+		this.frozenLib$inWaterLikes.add(type);
 	}
 
 	@Unique
 	@Override
 	public void frozenLib$clearInWaterLikes() {
-		this.frozenLib$waterLikesInside.clear();
+		this.frozenLib$inWaterLikes.clear();
 	}
 
 	@Unique
 	@Override
 	public boolean frozenLib$wasInWaterLike(WaterLikeType type) {
-		return this.frozenLib$waterLikesInside.contains(type);
+		return this.frozenLib$inWaterLikes.contains(type);
 	}
 
 	@Unique
 	@Override
-	public List<WaterLikeType> frozenLib$waterLikesInside() {
-		return this.frozenLib$waterLikesInside;
-	}
-
-	@Inject(method = "updateFluidInteraction", at = @At("TAIL"))
-	public void frozenLib$clearTouchingWaterLikeStatuses(CallbackInfoReturnable<Boolean> info) {
-		if (!this.wasTouchingWater) this.frozenLib$clearTouchingWaterLikes();
+	public List<WaterLikeType> frozenLib$inWaterLikes() {
+		return this.frozenLib$inWaterLikes;
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$addTouchingWaterLike(WaterLikeType type) {
-		this.frozenLib$waterLikesTouching.add(type);
+	public boolean frozenLib$isInWaterLikeOrUnderWaterAndWaterLike(WaterLikeType type) {
+		return this.isUnderWater() ? this.frozenLib$wasEyesInsideWaterLike(type) : this.frozenLib$wasInWaterLike(type);
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$clearTouchingWaterLikes() {
-		this.frozenLib$waterLikesTouching.clear();
-	}
-
-	@Unique
-	@Override
-	public boolean frozenLib$wasTouchingWaterLike(WaterLikeType type) {
-		return this.frozenLib$waterLikesTouching.contains(type);
-	}
-
-	@Unique
-	@Override
-	public List<WaterLikeType> frozenLib$touchingWaterLikeStatuses() {
-		return this.frozenLib$waterLikesTouching;
-	}
-
-	@Unique
-	@Override
-	public boolean frozenLib$isTouchingWaterLikeOrUnderWaterAndWaterLike(WaterLikeType type) {
-		return this.isUnderWater() ? this.frozenLib$wasInWaterLike(type) : this.frozenLib$wasTouchingWaterLike(type);
-	}
-
-	@Unique
-	@Override
-	public void frozenLib$setWaterReplacementParticlesFromBlock(@Nullable WaterLikeBlock waterLike) {
+	public void frozenLib$setWaterReplacementParticlesFromType(@Nullable WaterLikeBlock waterLike) {
 		if (waterLike == null) {
 			this.frozenLib$replacementBubbleParticle = null;
 			this.frozenLib$replacementSplashParticle = null;

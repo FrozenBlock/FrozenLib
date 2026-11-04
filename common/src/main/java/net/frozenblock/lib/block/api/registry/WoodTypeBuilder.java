@@ -70,10 +70,6 @@ public final class WoodTypeBuilder {
 			.fenceGateOpenSound(type.fenceGateOpen());
 	}
 
-	public WoodType register(Identifier id, BlockSetType blockSetType) {
-		return WoodType.register(this.build(id, blockSetType));
-	}
-
 	public WoodType build(Identifier id, BlockSetType blockSetType) {
 		return new WoodType(
 			id.toString(),
