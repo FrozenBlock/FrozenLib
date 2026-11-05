@@ -958,8 +958,16 @@ public interface DeferredRegister<T> {
 			return this.registerSimpleItem(key, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(song));
 		}
 
+		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type, UnaryOperator<Item.Properties> propertiesOp) {
+			return this.registerItem(key, SpawnEggItem::new, () -> propertiesOp.apply(new Item.Properties().spawnEgg(type.get())));
+		}
+
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type) {
-			return this.registerItem(key, SpawnEggItem::new, () -> new Item.Properties().spawnEgg(type.get()));
+			return this.registerSpawnEgg(key, type, properties -> properties);
+		}
+
+		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type, UnaryOperator<Item.Properties> propertiesOp) {
+			return this.registerSpawnEgg(key, type::get, propertiesOp);
 		}
 
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type) {
