@@ -23,7 +23,9 @@ import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public final class ResourceLoaderHelper {
@@ -38,13 +40,39 @@ public final class ResourceLoaderHelper {
 		throw new AssertionError();
 	}
 
-	@PlatformImpl
-	public static boolean registerBuiltinPack(Identifier id, String modId, PackActivationType activationType) {
-		throw new AssertionError();
+	public static boolean registerDefaultPack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return registerPack(packType, id, modId, null, PackSource.DEFAULT, activationType);
+	}
+
+	public static boolean registerDefaultPack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return registerPack(packType, id, modId, displayName, PackSource.DEFAULT, activationType);
+	}
+
+	public static boolean registerBuiltinPack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return registerPack(packType, id, modId, null, PackSource.BUILT_IN, activationType);
+	}
+
+	public static boolean registerBuiltinPack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return registerPack(packType, id, modId, displayName, PackSource.BUILT_IN, activationType);
+	}
+
+	public static boolean registerFeaturePack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return registerPack(packType, id, modId, null, PackSource.FEATURE, activationType);
+	}
+
+	public static boolean registerFeaturePack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return registerPack(packType, id, modId, displayName, PackSource.FEATURE, activationType);
 	}
 
 	@PlatformImpl
-	public static boolean registerBuiltinPack(Identifier id, String modId, Component displayName, PackActivationType activationType) {
+	public static boolean registerPack(
+		@Nullable PackType packType,
+		Identifier id,
+		String modId,
+		@Nullable Component displayName,
+		PackSource source,
+		PackActivationType activationType
+	) {
 		throw new AssertionError();
 	}
 }

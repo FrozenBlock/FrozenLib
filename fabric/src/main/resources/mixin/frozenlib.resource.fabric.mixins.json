@@ -7,8 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "fabric.pack.ResourceLoaderImplMixin"
   ],
   "client": [
-    "client.pack.MinecraftMixin"
+    "fabric.client.pack.MinecraftMixin"
   ]
 }

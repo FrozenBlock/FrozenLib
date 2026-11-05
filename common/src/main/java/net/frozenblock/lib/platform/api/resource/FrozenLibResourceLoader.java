@@ -21,7 +21,9 @@ import net.frozenblock.lib.resource.api.ResourceLoaderHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
+import org.jetbrains.annotations.Nullable;
 
 public interface FrozenLibResourceLoader {
 
@@ -33,11 +35,27 @@ public interface FrozenLibResourceLoader {
 
 	void addListenerOrdering(Identifier firstListener, Identifier secondListener);
 
-	static boolean registerBuiltinPack(Identifier id, String modId, PackActivationType activationType) {
-		return ResourceLoaderHelper.registerBuiltinPack(id, modId, activationType);
+	static boolean registerDefaultPack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, null, PackSource.DEFAULT, activationType);
 	}
 
-	static boolean registerBuiltinPack(Identifier id, String modId, Component displayName, PackActivationType activationType) {
-		return ResourceLoaderHelper.registerBuiltinPack(id, modId, displayName, activationType);
+	static boolean registerDefaultPack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, displayName, PackSource.DEFAULT, activationType);
+	}
+
+	static boolean registerBuiltinPack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, null, PackSource.BUILT_IN, activationType);
+	}
+
+	static boolean registerBuiltinPack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, displayName, PackSource.BUILT_IN, activationType);
+	}
+
+	static boolean registerFeaturePack(@Nullable PackType packType, Identifier id, String modId, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, null, PackSource.FEATURE, activationType);
+	}
+
+	static boolean registerFeaturePack(@Nullable PackType packType, Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
+		return ResourceLoaderHelper.registerPack(packType, id, modId, displayName, PackSource.FEATURE, activationType);
 	}
 }

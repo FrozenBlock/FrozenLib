@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource.mixin.client.pack;
+package net.frozenblock.lib.resource.mixin.fabric.client.pack;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.platform.ModLoader;

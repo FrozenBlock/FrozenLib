@@ -137,3 +137,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Entity Texture Overrides now check for an Entity's Type instead of an Entity Renderer class.
 - Migrated `RandomPoolAliasApi` to `RandomPoolAliasEvents` and added support for changing the weight of existing targets and removing them.
 - Added `RandomGroupPoolAliasEvents`, used to modify the contents of Random Group Pool Aliases.
+- Built-in Data Packs and Resource Packs can now be registered separately on both Fabric and NeoForge.
+  - This fixes an issue that caused built-in Data Packs to display in the Resource Packs screen on NeoForge.
+- Built-in Data Packs and Resource Packs can now be registered with a custom Pack Source.

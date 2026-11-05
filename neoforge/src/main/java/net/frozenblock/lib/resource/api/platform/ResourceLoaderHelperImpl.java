@@ -19,15 +19,11 @@ package net.frozenblock.lib.resource.api.platform;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.resource.PackActivationType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.PackLocationInfo;
-import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
@@ -35,8 +31,6 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-import net.neoforged.neoforge.resource.JarContentsPackResources;
-import net.neoforged.neoforgespi.language.IModInfo;
 import org.jetbrains.annotations.Nullable;
 
 public final class ResourceLoaderHelperImpl {
@@ -54,14 +48,18 @@ public final class ResourceLoaderHelperImpl {
 		orderingsFor(packType).add(new OrderingEntry(firstListener, secondListener));
 	}
 
-	public static boolean registerBuiltinPack(Identifier id, String modId, PackActivationType activationType) {
-		return registerBuiltinPack(id, modId, null, activationType);
-	}
-
-	public static boolean registerBuiltinPack(Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {
-		ModList modList = ModList.get();
+	public static boolean registerPack(
+		@Nullable PackType packType,
+		Identifier id,
+		String modId,
+		@Nullable Component displayName,
+		PackSource source,
+		PackActivationType activationType
+	) {
+		final ModList modList = ModList.get();
 		if (modList != null && modList.getModContainerById(modId).isEmpty()) return false;
-		BUILTIN_PACKS.add(new BuiltinPackEntry(id, modId, displayName, activationType));
+
+		BUILTIN_PACKS.add(new BuiltinPackEntry(id, modId, displayName, packType, source, activationType));
 		return true;
 	}
 
@@ -92,53 +90,34 @@ public final class ResourceLoaderHelperImpl {
 			final boolean alwaysActive = entry.activationType() == PackActivationType.ALWAYS_ENABLED;
 
 			try {
-				addPackFinder(event, packLocation, PackType.CLIENT_RESOURCES, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
-				addPackFinder(event, packLocation, PackType.SERVER_DATA, displayName, PackSource.DEFAULT, alwaysActive, Pack.Position.TOP);
+				for (PackType packType : PackType.values()) {
+					if (entry.packType() == null || entry.packType == packType) {
+						event.addPackFinders(
+							packLocation.withPath(path -> packType == PackType.CLIENT_RESOURCES ? "resourcepacks/" + path : "datapacks/" + path),
+							packType,
+							displayName,
+							entry.packSource,
+							alwaysActive,
+							Pack.Position.TOP
+						);
+					}
+				}
 			} catch (IllegalArgumentException e) {
 				FrozenLibConstants.LOGGER.warn("Failed to register builtin pack {} for mod {}", entry.id(), entry.modId(), e);
 			}
 		}
 	}
 
-	private static void addPackFinder(
-		AddPackFindersEvent event,
-		Identifier packLocation,
-		PackType packType,
-		Component packNameDisplay,
-		PackSource packSource,
-		boolean alwaysActive,
-		Pack.Position packPosition
-	) {
-		if (event.getPackType() != packType) return;
-
-		final IModInfo modInfo = ModList.get().getModContainerById(packLocation.getNamespace())
-			.orElseThrow(() -> new IllegalArgumentException("Mod not found: " + packLocation.getNamespace()))
-			.getModInfo();
-
-		final String version = modInfo.getVersion().toString();
-		final String prefix = "resourcepacks/" + packLocation.getPath();
-
-		final Pack pack = Pack.readMetaAndCreate(
-			new PackLocationInfo(
-				"mod/" + packLocation,
-				packNameDisplay,
-				packSource,
-				Optional.of(new KnownPack("neoforge", packLocation.toString(), version))
-			),
-			new JarContentsPackResources.JarContentsResourcesSupplier(modInfo.getOwningFile().getFile().getContents(), prefix),
-			packType,
-			new PackSelectionConfig(alwaysActive, packPosition, false)
-		);
-
-		if (pack == null) {
-			FrozenLibConstants.LOGGER.warn("Failed to read pack metadata for builtin pack {} (looked under {})", packLocation, prefix);
-			return;
-		}
-
-		event.addRepositorySource(packConsumer -> packConsumer.accept(pack));
-	}
-
 	private record ReloadListenerEntry(Identifier id, PreparableReloadListener listener) {}
+
 	private record OrderingEntry(Identifier firstListener, Identifier secondListener) {}
-	private record BuiltinPackEntry(Identifier id, String modId, @Nullable Component displayName, PackActivationType activationType) {}
+
+	private record BuiltinPackEntry(
+		Identifier id,
+		String modId,
+		@Nullable Component displayName,
+		@Nullable PackType packType,
+		PackSource packSource,
+		PackActivationType activationType
+	) {}
 }
