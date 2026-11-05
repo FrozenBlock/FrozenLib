@@ -94,9 +94,6 @@
     "cloth-config": "*",
     "modmenu": "*"
   },
-  "breaks": {
-    "fabric-language-kotlin": "<${fabric_kotlin_version}"
-  },
   "custom": {
     "modmenu": {
       "links": {
