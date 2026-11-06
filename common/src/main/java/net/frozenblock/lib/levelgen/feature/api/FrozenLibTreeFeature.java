@@ -38,7 +38,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 public class FrozenLibTreeFeature {
 	private final FrozenLibFeature feature;
 	private final FrozenLibFeature featureWithLitter;
-	private final List<TreeDecorator> litterDecorators;
+	private final Supplier<List<TreeDecorator>> litterDecorators;
 
 	public FrozenLibTreeFeature(
 		Identifier key,
@@ -50,11 +50,12 @@ public class FrozenLibTreeFeature {
 		this.featureWithLitter = new FrozenLibFeature(key.withSuffix("_leaf_litter"));
 
 		if (FrozenLibEarlyConstants.IS_DATAGEN) {
-			this.litterDecorators = new ArrayList<>();
-			this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock.get(), triesA, radiusA, heightA, 3));
-			this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock.get(), triesB, radiusB, heightB, 4));
+			this.litterDecorators = () -> List.of(
+				makeLeafLitterDecorator(leafLitterBlock.get(), triesA, radiusA, heightA, 3),
+				makeLeafLitterDecorator(leafLitterBlock.get(), triesB, radiusB, heightB, 4)
+			);
 		} else {
-			this.litterDecorators = null;
+			this.litterDecorators = List::of;
 		}
 	}
 
@@ -115,7 +116,7 @@ public class FrozenLibTreeFeature {
 		this.feature.makeAndSetHolder(feature);
 
 		final List<TreeDecorator> decorators = new ArrayList<>(feature.decorators());
-		decorators.addAll(this.litterDecorators);
+		decorators.addAll(this.litterDecorators.get());
 		final TreeFeature featureWithLitter = new TreeFeature(
 			feature.trunkProvider(),
 			feature.trunkPlacer(),
