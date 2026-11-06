@@ -53,6 +53,7 @@ import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidIds;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.redstone.Orientation;
@@ -288,7 +289,7 @@ public interface WaterLikeBlock {
 
 		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType(entity.registryAccess()).blocks())))) {
 			for (Direction direction : Direction.values()) {
-				if ((direction == Direction.UP && this.canWithinEntityTypesExitFromTop(state)) || level.getFluidState(pos.relative(direction)).is(FluidTags.WATER)) continue;
+				if ((direction == Direction.UP && this.canWithinEntityTypesExitFromTop(state)) || level.getFluidState(pos.relative(direction)).is(FluidIds.WATER)) continue;
 				shape = Shapes.or(shape, ShapeUtil.makePlaneFromDirection(direction, ENTITY_WITHIN_COLLISION_FROM_SIDE));
 			}
 		}
