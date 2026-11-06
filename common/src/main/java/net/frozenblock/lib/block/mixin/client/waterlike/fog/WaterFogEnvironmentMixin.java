@@ -23,24 +23,16 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.client.impl.waterlike.WaterLikeFogUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.fog.environment.WaterFogEnvironment;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.attribute.EnvironmentAttribute;
 import net.minecraft.world.attribute.EnvironmentAttributeProbe;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.material.FogType;
 import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @ClientOnly
 @Mixin(WaterFogEnvironment.class)
 public class WaterFogEnvironmentMixin {
-
-	@Unique
-	private static boolean frozenLib$previouslyApplicable = false;
 
 	@WrapOperation(
 		method = "setupFog",
@@ -52,23 +44,8 @@ public class WaterFogEnvironmentMixin {
 	public Object frozenLib$modifyFogDistance(EnvironmentAttributeProbe instance, EnvironmentAttribute<Object> attribute, float partialTicks, Operation<Object> original) {
 		final Object object = original.call(instance, attribute, partialTicks);
 		if (!(object instanceof Float flt)) return object;
-		return WaterLikeFogUtil.getModifiedFogDistance(partialTicks, flt);
-	}
 
-	@ModifyReturnValue(method = "isApplicable", at = @At("RETURN"))
-	public boolean frozenLib$clearWaterLikeFogIfNotApplicable(
-		boolean original,
-		@Local(argsOnly = true) FogType fogType,
-		@Local(argsOnly = true) Entity entity
-	) {
-		if (!original) {
-			WaterLikeFogUtil.reset(true);
-		} else if (!frozenLib$previouslyApplicable && entity != null) {
-			final BlockPos pos = Minecraft.getInstance().gameRenderer.mainCamera().blockPosition();
-			WaterLikeFogUtil.tick(entity.level(), pos, fogType, true);
-		}
-		frozenLib$previouslyApplicable = original;
-		return original;
+		return WaterLikeFogUtil.getModifiedFogDistance(partialTicks, flt);
 	}
 
 	@ModifyReturnValue(method = "getBaseColor", at = @At("RETURN"))

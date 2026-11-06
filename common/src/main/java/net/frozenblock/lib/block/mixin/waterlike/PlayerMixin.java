@@ -35,10 +35,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerMixin implements PlayerInWaterLikeInterface {
 
 	@Unique
+	private final List<WaterLikeType> frozenLib$wasPlayerEyesInsideWaterLikes = new ArrayList<>();
+	@Unique
 	private final List<WaterLikeType> frozenLib$playerEyesInsideWaterLikes = new ArrayList<>();
 
 	@Inject(method = "updateIsUnderwater", at = @At(value = "HEAD"))
 	public void frozenLib$updateIsInWaterLike(CallbackInfoReturnable<Boolean> info) {
+		this.frozenLib$wasPlayerEyesInsideWaterLikes.clear();
+		this.frozenLib$wasPlayerEyesInsideWaterLikes.addAll(this.frozenLib$playerEyesInsideWaterLikes());
+
 		this.frozenLib$playerEyesInsideWaterLikes.clear();
 		this.frozenLib$playerEyesInsideWaterLikes.addAll(Player.class.cast(this).frozenLib$eyesInsideWaterLikes());
 	}
@@ -52,6 +57,18 @@ public class PlayerMixin implements PlayerInWaterLikeInterface {
 	@Unique
 	@Override
 	public boolean frozenLib$wasPlayerEyesInsideWaterLike(WaterLikeType type) {
+		return this.frozenLib$wasPlayerEyesInsideWaterLikes.contains(type);
+	}
+
+	@Unique
+	@Override
+	public List<WaterLikeType> frozenLib$wasPlayerEyesInsideWaterLikes() {
+		return this.frozenLib$wasPlayerEyesInsideWaterLikes;
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$isPlayerEyesInsideWaterLike(WaterLikeType type) {
 		return this.frozenLib$playerEyesInsideWaterLikes.contains(type);
 	}
 

@@ -48,7 +48,7 @@ public final class UnderWaterAmbientSoundInstanceHandler {
 		final UnderLiquidAmbientSoundInstance waterLikeAmbientSound = new UnderLiquidAmbientSoundInstance(
 			type.ambientSound().value(),
 			player,
-			localPlayer -> localPlayer.isUnderWater() && localPlayer.frozenLib$wasPlayerEyesInsideWaterLike(type)
+			localPlayer -> localPlayer.isUnderWater() && localPlayer.frozenLib$isPlayerEyesInsideWaterLike(type)
 		);
 		WATER_LIKE_TYPE_SOUNDS.put(type, waterLikeAmbientSound);
 		return soundManager.play(waterLikeAmbientSound);

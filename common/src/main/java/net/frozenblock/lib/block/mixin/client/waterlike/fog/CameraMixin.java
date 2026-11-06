@@ -17,17 +17,24 @@
 
 package net.frozenblock.lib.block.mixin.client.waterlike.fog;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.block.client.impl.waterlike.WaterLikeFogUtil;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FogType;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @ClientOnly
 @Mixin(Camera.class)
@@ -42,6 +49,11 @@ public abstract class CameraMixin {
 	@Shadow
 	private FogType fogType;
 
+	@Unique
+	private @Nullable BlockState frozenLib$fluidFogBlockState;
+	@Unique
+	private FogType frozenLib$previousFogType;
+
 	@Inject(
 		method = "tick",
 		at = @At(
@@ -50,7 +62,49 @@ public abstract class CameraMixin {
 		)
 	)
 	private void frozenLib$tickWaterLikeFogHandler(CallbackInfo info) {
-		WaterLikeFogUtil.tick(this.level, this.blockPosition(), this.fogType, false);
+		WaterLikeFogUtil.tick(this.frozenLib$fluidFogBlockState, this.fogType, false);
+	}
+
+	@Inject(
+		method = "calculateFogType",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/material/Fluid;getFogType()Lnet/minecraft/world/level/material/FogType;"
+		)
+	)
+	private void frozenLib$clearFluidFogBlockState(CallbackInfoReturnable<FogType> info) {
+		this.frozenLib$fluidFogBlockState = null;
+	}
+
+	@Inject(
+		method = "calculateFogType",
+		at = @At(
+			value = "RETURN",
+			ordinal = 0
+		),
+		slice = @Slice(
+			from = @At(
+				value = "INVOKE",
+				target = "Lnet/minecraft/world/level/material/Fluid;getFogType()Lnet/minecraft/world/level/material/FogType;"
+			)
+		)
+	)
+	private void frozenLib$captureFluidFogBlockState(
+		CallbackInfoReturnable<FogType> info,
+		@Local(name = "checkPos") BlockPos checkPos
+	) {
+		this.frozenLib$fluidFogBlockState = this.level.getBlockState(checkPos);
+	}
+
+	@Inject(method = "update", at = @At("RETURN"))
+	public void frozenLib$resetOrInitializeWaterLikeFog(DeltaTracker deltaTracker, CallbackInfo info) {
+		if (this.fogType != FogType.WATER || this.frozenLib$fluidFogBlockState == null) {
+			WaterLikeFogUtil.reset(true);
+		} else if (this.frozenLib$previousFogType != FogType.WATER) {
+			WaterLikeFogUtil.tick(this.frozenLib$fluidFogBlockState, this.fogType, true);
+		}
+
+		this.frozenLib$previousFogType = this.fogType;
 	}
 
 	@Inject(method = "reset", at = @At("HEAD"))

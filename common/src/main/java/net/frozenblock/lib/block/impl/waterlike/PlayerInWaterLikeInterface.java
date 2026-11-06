@@ -28,6 +28,14 @@ public interface PlayerInWaterLikeInterface {
 		throw new AssertionError();
 	}
 
+	default List<WaterLikeType> frozenLib$wasPlayerEyesInsideWaterLikes() {
+		throw new AssertionError();
+	}
+
+	default boolean frozenLib$isPlayerEyesInsideWaterLike(WaterLikeType type) {
+		throw new AssertionError();
+	}
+
 	default List<WaterLikeType> frozenLib$playerEyesInsideWaterLikes() {
 		throw new AssertionError();
 	}

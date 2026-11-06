@@ -20,11 +20,11 @@ package net.frozenblock.lib.block.client.impl.waterlike;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FogType;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
@@ -62,14 +62,14 @@ public final class WaterLikeFogUtil {
 		);
 	}
 
-	public static void tick(Level level, BlockPos pos, FogType fogType, boolean newlyInWaterOverride) {
+	public static void tick(@Nullable BlockState blockState, FogType fogType, boolean newlyInWaterOverride) {
 		prevFogStrength = fogStrength;
 		prevFogColor = fogColor;
 		prevFogDistance = fogDistance;
 		prevFogType = WaterLikeFogUtil.fogType;
 		WaterLikeFogUtil.fogType = fogType;
 
-		if (level.getBlockState(pos).getBlock() instanceof WaterLikeBlock waterLikeBlock) {
+		if (blockState != null && blockState.getBlock() instanceof WaterLikeBlock waterLikeBlock) {
 			final Vector3f waterLikeColor = ARGB.vector3fFromRGB24(waterLikeBlock.waterLikeColor().rgba());
 			if (fogColor.equals(EMPTY_VEC)) {
 				prevFogColor = fogColor = waterLikeColor;

@@ -64,7 +64,7 @@ public final class WaterLikeTypes {
 	 * This is implemented separately as to fix client-sided issues with local {@link Player}s.
 	 */
 	public static List<WaterLikeType> getPlayerAllInside(Player player) {
-		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerEyesInsideWaterLike).toList();
+		return getAll(player.registryAccess()).stream().filter(player::frozenLib$isPlayerEyesInsideWaterLike).toList();
 	}
 
 	/**
