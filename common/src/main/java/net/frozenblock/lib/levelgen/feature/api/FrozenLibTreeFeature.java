@@ -19,6 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.levelgen.feature.api.stateproviders.LeafLitterStateProvider;
 import net.minecraft.core.Holder;
@@ -41,16 +42,20 @@ public class FrozenLibTreeFeature {
 
 	public FrozenLibTreeFeature(
 		Identifier key,
-		Block leafLitterBlock,
+		Supplier<Block> leafLitterBlock,
 		int triesA, int radiusA, int heightA,
 		int triesB, int radiusB, int heightB
 	) {
 		this.feature = new FrozenLibFeature(key);
 		this.featureWithLitter = new FrozenLibFeature(key.withSuffix("_leaf_litter"));
-		this.litterDecorators = FrozenLibEarlyConstants.IS_DATAGEN ? new ArrayList<>() : null;
-		if (this.litterDecorators == null) return;
-		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesA, radiusA, heightA, 3));
-		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesB, radiusB, heightB, 4));
+
+		if (FrozenLibEarlyConstants.IS_DATAGEN) {
+			this.litterDecorators = new ArrayList<>();
+			this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock.get(), triesA, radiusA, heightA, 3));
+			this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock.get(), triesB, radiusB, heightB, 4));
+		} else {
+			this.litterDecorators = null;
+		}
 	}
 
 	private static PlaceOnGroundDecorator makeLeafLitterDecorator(Block leafLitterBlock, int tries, int radius, int height, int maxSegments) {
