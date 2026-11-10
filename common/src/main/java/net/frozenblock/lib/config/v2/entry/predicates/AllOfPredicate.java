@@ -21,7 +21,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 
-public class AllOfPredicate extends CombiningPredicate {
+public class AllOfPredicate extends AggregatePredicate {
 	public static final MapCodec<AllOfPredicate> CODEC = createCodec(AllOfPredicate::new);
 
 	public AllOfPredicate(HolderSet<ConfigPredicate> predicates) {

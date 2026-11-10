@@ -42,9 +42,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.WorldOptions;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
@@ -140,4 +140,9 @@ public interface BiomeSelectionContext {
 	 * @return true if this biome is in the given {@link TagKey}.
 	 */
 	boolean hasTag(TagKey<Biome> tag);
+
+	/**
+	 * @return true if this biome is in the given {@link HolderSet}.
+	 */
+	boolean inHolderSet(HolderSet<Biome> biomes);
 }

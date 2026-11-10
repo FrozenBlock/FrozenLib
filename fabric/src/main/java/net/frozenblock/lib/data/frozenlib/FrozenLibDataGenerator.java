@@ -26,6 +26,7 @@ import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibDimensionTypeTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
 import net.frozenblock.lib.entity.api.suffocation.SuffocationTypes;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.FrozenLibBiomeSelectors;
 import net.frozenblock.lib.levelgen.material.api.FrozenLibMaterialConditions;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistrySetBuilder;
@@ -60,6 +61,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 		});
 		 */
 		builder.add(FrozenLibRegistries.SUFFOCATION_TYPE, SuffocationTypes::bootstrap);
+		builder.add(FrozenLibRegistries.BIOME_SELECTOR_PROVIDER, FrozenLibBiomeSelectors::bootstrap);
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public final class ConfigPredicateTypes {
 		register.register("neoforge", () -> NeoForgePredicate.CODEC);
 		register.register("mod", () -> ModPredicate.CODEC);
 		register.register("true", () -> TruePredicate.CODEC);
+		register.register("false", () -> FalsePredicate.CODEC);
 
 		register.register();
 	}

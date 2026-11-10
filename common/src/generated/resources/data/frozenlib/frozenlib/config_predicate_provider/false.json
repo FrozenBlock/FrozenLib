@@ -1,6 +1,0 @@
-{
-  "type": "frozenlib:not",
-  "predicate": {
-    "type": "frozenlib:true"
-  }
-}

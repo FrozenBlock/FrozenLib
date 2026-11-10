@@ -43,7 +43,8 @@ import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes
 import net.frozenblock.lib.item.impl.loot.providers.number.floats.FrozenLibContextFloatProviderTypes;
 import net.frozenblock.lib.item.impl.loot.providers.number.ints.FrozenLibContextIntProviderTypes;
 import net.frozenblock.lib.levelgen.attribute.api.FrozenLibEnvironmentAttributes;
-import net.frozenblock.lib.levelgen.biome.api.attribute.BiomeEnvironmentAttributeModification;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeEnvironmentAttributeModification;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelectorTypes;
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
@@ -123,6 +124,7 @@ public final class FrozenLibMain {
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifierTypes.init();
 		FrozenLibLootConditionTypes.init();
+		BiomeSelectorTypes.init();
 		BiomeModificationImpl.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();

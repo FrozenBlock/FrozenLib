@@ -22,9 +22,9 @@ import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.ApiStatus;
 
 public final class FrozenLibConfigPredicates {
-	public static final ResourceKey<ConfigPredicate> FALSE = create("false");
 	public static final ResourceKey<ConfigPredicate> HAS_WILDER_WILD = create("has_wilder_wild");
 	public static final ResourceKey<ConfigPredicate> HAS_TRAILIER_TALES = create("has_trailier_tales");
 	public static final ResourceKey<ConfigPredicate> HAS_THE_COPPERIER_AGE = create("has_the_copperier_age");
@@ -35,11 +35,8 @@ public final class FrozenLibConfigPredicates {
 	public static final ResourceKey<ConfigPredicate> HAS_FREEZE_FRAME = create("has_freeze_frame");
 	public static final ResourceKey<ConfigPredicate> HAS_GLOWTONE = create("has_glowtone");
 
+	@ApiStatus.Internal
 	public static void bootstrap(BootstrapContext<ConfigPredicate> context) {
-		context.register(
-			FALSE,
-			ConfigPredicate.not(ConfigPredicate.alwaysTrue())
-		);
 		context.register(
 			HAS_WILDER_WILD,
 			ConfigPredicate.modLoaded(FrozenLibEarlyConstants.WILDER_WILD_MOD_ID)

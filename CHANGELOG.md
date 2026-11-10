@@ -58,6 +58,27 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
       - `condition`: A Config Predicate, or the ID of a Config Predicate.
       - `on_true`: A Pitch Provider, or the ID of a Pitch Provider.
       - `on_false`: A Pitch Provider, or the ID of a Pitch Provider.
+- Added the `frozenlib:biome_selector` Dynamic Registry, used to select specific biomes to modify, with the following Biome Selector Types:
+  - `in_dimension`: Returns whether the current Biome can be found in the given Dimension.
+    - `dimension`: The ID of the Dimension.
+  - `in_biomes`: Returns whether the current Biome is contained within the given set of Biomes.
+    - `biomes`: A Biome's ID, a list of Biome IDs, or a Biome Tag.
+  - `contains_feature`: Returns whether the current Biome contains the given Feature.
+    - `feature`: The Feature's ID.
+  - `contains_placed_feature`: Returns whether the current Biome contains the given Placed Feature.
+    - `placed_feature`: The Placed Feature's ID.
+  - `all_of`: Returns whether every Biome Selector in the given set has succeeded.
+    - `selectors`: A Biome Selector, a list of Biome Selectors, a Biome Selector's ID, a list of Biome Selector IDs, or a Biome Selector Tag.
+  - `any_of`: Returns whether any Biome Selectors in the given set have succeeded.
+    - `selectors`: A Biome Selector, a list of Biome Selectors, a Biome Selector's ID, a list of Biome Selector IDs, or a Biome Selector Tag.
+  - `not`: Returns the inverse of the given Biome Selector's output.
+    - `selector`: A Biome Selector, or a Biome Selector's ID.
+  - `config_predicate`: Returns a Config Predicate's output.
+    - 'predicate': A Config Predicate, or the ID of a Config Predicate.
+  - `conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
+    - `condition`: A Biome Selector, or the ID of a Biome Selector.
+    - `on_true`: A Biome Selector, or the ID of a Biome Selector.
+    - `on_false`: A Biome Selector, or the ID of a Biome Selector.
 - Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
   - Renamed the `sound_type` field to `sound_set`.

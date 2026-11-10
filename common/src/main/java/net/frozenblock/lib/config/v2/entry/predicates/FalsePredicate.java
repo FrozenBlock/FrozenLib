@@ -18,20 +18,20 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.function.Function;
-import net.minecraft.core.HolderSet;
 
-public abstract class CombiningPredicate implements ConfigPredicate {
-	protected final HolderSet<ConfigPredicate> predicates;
+public class FalsePredicate implements ConfigPredicate {
+	public static final FalsePredicate INSTANCE = new FalsePredicate();
+	public static final MapCodec<FalsePredicate> CODEC = MapCodec.unit(() -> INSTANCE);
 
-	protected CombiningPredicate(HolderSet<ConfigPredicate> predicates) {
-		this.predicates = predicates;
+	private FalsePredicate() {}
+
+	@Override
+	public Boolean get() {
+		return false;
 	}
 
-	protected static <T extends CombiningPredicate> MapCodec<T> createCodec(Function<HolderSet<ConfigPredicate>, T> constructor) {
-		return RecordCodecBuilder.mapCodec(instance -> instance.group(
-			HOLDER_SET_CODEC.fieldOf("predicates").forGetter(predicate -> predicate.predicates)
-		).apply(instance, constructor));
+	@Override
+	public MapCodec<FalsePredicate> codec() {
+		return CODEC;
 	}
 }

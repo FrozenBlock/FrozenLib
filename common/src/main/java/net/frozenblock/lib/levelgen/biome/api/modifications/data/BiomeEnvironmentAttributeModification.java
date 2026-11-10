@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.biome.api.attribute;
+package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -43,6 +43,7 @@ import org.jetbrains.annotations.ApiStatus;
  * @param attributes The {@link EnvironmentAttributeMap} to merge with the {@link Biome}'s {@link EnvironmentAttributeMap}.
  * @param enabledWhen The {@link ConfigPredicate} to test. This instance will be ignored if it returns false.
  */
+// TODO: use new modification targets
 public record BiomeEnvironmentAttributeModification(HolderSet<Biome> biomes, EnvironmentAttributeMap attributes, Holder<ConfigPredicate> enabledWhen) {
 	public static final Codec<BiomeEnvironmentAttributeModification> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.holderSet(Registries.BIOME).fieldOf("biomes").forGetter(BiomeEnvironmentAttributeModification::biomes),

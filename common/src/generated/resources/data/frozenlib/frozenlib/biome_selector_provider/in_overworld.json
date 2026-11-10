@@ -1,0 +1,13 @@
+{
+  "type": "frozenlib:any_of",
+  "selectors": [
+    {
+      "type": "frozenlib:in_dimension",
+      "dimension": "minecraft:overworld"
+    },
+    {
+      "type": "frozenlib:in_biomes",
+      "biomes": "#minecraft:is_overworld"
+    }
+  ]
+}

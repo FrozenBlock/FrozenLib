@@ -183,6 +183,10 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return TruePredicate.INSTANCE;
 	}
 
+	static ConfigPredicate alwaysFalse() {
+		return FalsePredicate.INSTANCE;
+	}
+
 	static ConfigPredicate isFabric() {
 		return FabricPredicate.INSTANCE;
 	}

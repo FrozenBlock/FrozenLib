@@ -1,0 +1,13 @@
+{
+  "type": "frozenlib:any_of",
+  "selectors": [
+    {
+      "type": "frozenlib:in_dimension",
+      "dimension": "minecraft:the_end"
+    },
+    {
+      "type": "frozenlib:in_biomes",
+      "biomes": "#minecraft:is_end"
+    }
+  ]
+}

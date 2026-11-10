@@ -36,6 +36,7 @@ package net.frozenblock.lib.levelgen.biome.impl.modifications;
 import java.util.Optional;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -111,5 +112,11 @@ public class BiomeSelectionContextImpl implements BiomeSelectionContext {
 	public boolean hasTag(TagKey<Biome> tag) {
 		final Registry<Biome> biomeRegistry = this.dynamicRegistries.lookupOrThrow(Registries.BIOME);
 		return biomeRegistry.getOrThrow(getBiomeKey()).is(tag);
+	}
+
+	@Override
+	public boolean inHolderSet(HolderSet<Biome> biomes) {
+		final Registry<Biome> biomeRegistry = this.dynamicRegistries.lookupOrThrow(Registries.BIOME);
+		return biomes.contains(biomeRegistry.getOrThrow(getBiomeKey()));
 	}
 }
