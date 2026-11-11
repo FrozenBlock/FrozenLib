@@ -32,6 +32,7 @@ import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 import net.frozenblock.lib.platform.ModLoader;
 
 public class ConfigData<T> {
+	private static boolean hitRegistryFreeze = false;
 	private final ID id;
 	private final ConfigSettings<T> settings;
 	private final Map<String, ConfigEntry<?>> entries = new Object2ObjectLinkedOpenHashMap<>();
@@ -47,8 +48,9 @@ public class ConfigData<T> {
 
 	static {
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
-			if (!allRegistries) return;
+			if (!allRegistries || hitRegistryFreeze) return;
 			ConfigV2Registry.allConfigData().forEach(ConfigData::optimizeConfigMap);
+			hitRegistryFreeze = true;
 		});
 
 		if (ModLoader.isServer()) {
@@ -71,11 +73,11 @@ public class ConfigData<T> {
 	}
 
 	public <B> ConfigEntry<B> entry(String id, EntryType<B> type, B defaultValue) {
-		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, id1 -> new ConfigEntry<>(this, id1, type, defaultValue, true, true));
+		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, entryId -> new ConfigEntry<>(this, entryId, type, defaultValue, true, true));
 	}
 
 	public <B> ConfigEntry<B> unsyncableEntry(String id, EntryType<B> type, B defaultValue) {
-		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, id1 -> new ConfigEntry<>(this, id1, type, defaultValue, false, true));
+		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, entryId -> new ConfigEntry<>(this, entryId, type, defaultValue, false, true));
 	}
 
 	public <B> ConfigEntry<B> entry(String id, ConfigEntry<B> entry) {
@@ -140,6 +142,7 @@ public class ConfigData<T> {
 
 	public synchronized void load(boolean checkIfCurrentlyLoaded) {
 		if (checkIfCurrentlyLoaded && this.loaded) return;
+
 		this.unoptimizedConfigMap.clear();
 
 		ConfigSerializer.<T>loadConfigAsMap(this.id)
