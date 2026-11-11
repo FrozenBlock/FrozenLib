@@ -15,9 +15,7 @@
     "pools.StructureTemplatePoolMixin",
     "processor.ListPoolElementMixin",
     "processor.PoolElementStructurePieceMixin",
-    "processor.SerializableChunkDataMixin",
     "processor.SinglePoolElementMixin",
-    "processor.StructureMixin",
     "processor.StructureStartMixin",
     "processor.StructureTemplateMixin",
     "processor.TemplateStructurePieceMixin"

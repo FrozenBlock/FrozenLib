@@ -15,17 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.impl.processor;
+package net.frozenblock.lib.commands;
 
-import net.minecraft.resources.Identifier;
+import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
+import net.frozenblock.lib.tag.api.TagArgument;
+import net.minecraft.commands.arguments.SerializableArgument;
+import net.minecraft.core.registries.Registries;
 
-public interface StructureStartInterface {
+@UtilityClass
+public final class FrozenLibSerializableArgumentTypes {
 
-	default Identifier frozenLib$getId() {
-		throw new AssertionError();
-	}
+	public static void init() {
+		final DeferredRegister<SerializableArgument.Type<?>> register = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
 
-	default void frozenLib$setId(Identifier id) {
-		throw new AssertionError();
+		register.register("tag", () -> TagArgument.TYPE);
+
+		register.register();
 	}
 }

@@ -83,6 +83,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
   - Renamed the `sound_type` field to `sound_set`.
   - The `sound_set` field now accepts either a Block Sound Set, or the ID of a Block Sound Set.
+- Renamed the `frozenlib:selector` Config Predicate Type to `frozenlib:conditional`, with a new format:
+  - `condition`: A Config Predicate, or the ID of a Config Predicate.
+  - `on_true`: A Config Predicate, or the ID of a Config Predicate.
+  - `on_false`: A Config Predicate, or the ID of a Config Predicate.
 - Added Toasts related to File Transfers:
   - Transfer Receive
     - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
@@ -145,6 +149,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `ON_REMOVE` Event to `BlockAttachmentEvents`, helpful for clearing/resetting temporary changes made to a block based on attached data.
 - Configs will no longer log errors per-entry if the config file itself is not present.
 - Removed the `/frozenlib scale` command, as this functionality is already present in the `/attribute` command.
+- The `/frozenlib taglist` command now supports more registries.
 - Fire Types now have an optional `color` field, providing a color to be used by mods that may want to dynamically-color something (such as a particle) based on a Fire Type.
 - The `#minecraft:freeze_hurts_extra_types` Entity Type Tag now contains the `#frozenlib:blazes` Entity Type Tag.
 - Completely revamped the implementation of Wind Disturbances.

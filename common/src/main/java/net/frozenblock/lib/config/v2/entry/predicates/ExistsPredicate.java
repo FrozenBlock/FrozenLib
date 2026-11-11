@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class ExistsPredicate implements ConfigPredicate {
 	public static final MapCodec<ExistsPredicate> CODEC = ID.CODEC.fieldOf("entry").xmap(ExistsPredicate::new, predicate -> predicate.id);
@@ -40,4 +41,7 @@ public class ExistsPredicate implements ConfigPredicate {
 	public MapCodec<ExistsPredicate> codec() {
 		return CODEC;
 	}
+
+	@Override
+	public void validate(ValidationContext context) {}
 }

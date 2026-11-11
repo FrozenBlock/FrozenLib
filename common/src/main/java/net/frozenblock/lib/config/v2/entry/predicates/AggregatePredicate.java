@@ -21,12 +21,19 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.function.Function;
 import net.minecraft.core.HolderSet;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public abstract class AggregatePredicate implements ConfigPredicate {
 	protected final HolderSet<ConfigPredicate> predicates;
 
 	protected AggregatePredicate(HolderSet<ConfigPredicate> predicates) {
 		this.predicates = predicates;
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		Validatable.validateHolderSet(context, "predicates", this.predicates);
 	}
 
 	protected static <T extends AggregatePredicate> MapCodec<T> createCodec(Function<HolderSet<ConfigPredicate>, T> constructor) {

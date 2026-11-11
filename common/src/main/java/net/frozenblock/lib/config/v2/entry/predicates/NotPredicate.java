@@ -19,6 +19,8 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class NotPredicate implements ConfigPredicate {
 	public static final MapCodec<NotPredicate> CODEC = HOLDER_CODEC.fieldOf("predicate").xmap(NotPredicate::new, predicate -> predicate.predicate);
@@ -36,5 +38,10 @@ public class NotPredicate implements ConfigPredicate {
 	@Override
 	public MapCodec<NotPredicate> codec() {
 		return CODEC;
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		Validatable.validateHolder(context, "predicate", this.predicate);
 	}
 }

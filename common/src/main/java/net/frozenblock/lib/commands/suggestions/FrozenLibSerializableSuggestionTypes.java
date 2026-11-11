@@ -15,26 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.command;
+package net.frozenblock.lib.commands.suggestions;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
-import net.frozenblock.lib.tag.api.TagKeyArgument;
-import net.minecraft.commands.synchronization.ArgumentTypeInfo;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.commands.suggestions.SerializableCustomSuggestion;
 import net.minecraft.core.registries.Registries;
 
 @UtilityClass
-public final class FrozenLibArgumentTypes {
+public final class FrozenLibSerializableSuggestionTypes {
 
 	public static void init() {
-		final DeferredRegister<ArgumentTypeInfo<?, ?>> register = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, FrozenLibConstants.MOD_ID);
-		register.register(
-			"tag_key",
-			() -> new TagKeyArgument.Info<>(),
-			info -> ArgumentTypeInfos.BY_CLASS.put(ArgumentTypeInfos.fixClassType(TagKeyArgument.class), info)
-		);
+		final DeferredRegister<SerializableCustomSuggestion.Type<?>> register = DeferredRegister.create(Registries.COMMAND_SUGGESTION_TYPE, FrozenLibConstants.MOD_ID);
+
+		register.register("config_mod_ids", () -> SuggestConfigModIds.TYPE);
+
 		register.register();
 	}
 }

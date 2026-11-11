@@ -17,8 +17,6 @@
 
 package net.frozenblock.lib.levelgen.structure.impl;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.nio.file.Path;
@@ -28,6 +26,8 @@ import java.util.Set;
 import net.frozenblock.lib.file.nbt.NbtFileUtils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.BooleanArgument;
+import net.minecraft.commands.arguments.StringArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -40,21 +40,21 @@ public class StructureUpgradeCommand {
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		return Commands.literal("structure_upgrade")
 			.then(
-				Commands.argument("namespace", StringArgumentType.string())
+				Commands.argument("namespace", StringArgument.word())
 					.executes(
 						context -> upgradeAndExportPieces(
 							context.getSource(),
-							StringArgumentType.getString(context, "namespace"),
+							StringArgument.getString(context, "namespace"),
 							false
 						)
 					)
 					.then(
-						Commands.argument("log", BoolArgumentType.bool())
+						Commands.argument("log", BooleanArgument.bool())
 							.executes(
 								context -> upgradeAndExportPieces(
 									context.getSource(),
-									StringArgumentType.getString(context, "namespace"),
-									BoolArgumentType.getBool(context, "log")
+									StringArgument.getString(context, "namespace"),
+									BooleanArgument.getBool(context, "log")
 								)
 							)
 					)

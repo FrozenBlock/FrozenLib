@@ -18,7 +18,7 @@
 package net.frozenblock.lib;
 
 import java.util.function.Consumer;
-import net.frozenblock.lib.command.FrozenLibCommand;
+import net.frozenblock.lib.commands.FrozenLibCommand;
 import net.frozenblock.lib.entity.api.attribute.platform.DefaultAttributeRegistryImpl;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.impl.NeoEventBridge;

@@ -20,7 +20,7 @@ package net.frozenblock.lib;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
-import net.frozenblock.lib.command.client.FrozenLibClientCommand;
+import net.frozenblock.lib.commands.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
 import net.frozenblock.lib.networking.impl.FrozenLibClientNetworking;

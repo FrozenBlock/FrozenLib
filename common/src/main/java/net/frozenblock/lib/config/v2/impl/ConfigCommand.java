@@ -17,36 +17,30 @@
 
 package net.frozenblock.lib.config.v2.impl;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.Collection;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.commands.suggestions.SuggestConfigModIds;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.minecraft.commands.CommandPermissionLevels;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.StringArgument;
 import net.minecraft.network.chat.Component;
 
 @UtilityClass
 public final class ConfigCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
-		return Commands.literal("config")
-			.then(Commands.literal("reload")
-				.then(Commands.argument("modId", StringArgumentType.string())
-					.suggests((context, builder) ->
-								SharedSuggestionProvider.suggest(
-									ConfigV2Registry.allConfigData().stream()
-										.map(configData -> configData.id().namespace())
-										.toList(),
-									builder
-								)
-						)
-						.executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
-						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-				)
-			);
+		return Commands.literal("config").then(
+			Commands.literal("reload").then(
+				Commands.argument("modId", StringArgument.word())
+					.suggests(SuggestConfigModIds.suggestConfigModIds())
+					.executes(context -> reloadConfigs(context.getSource(), StringArgument.getString(context, "modId")))
+					.requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_GAMEMASTERS))
+			)
+		);
 	}
 
 	public static int reloadConfigsAndCount(String modId) {

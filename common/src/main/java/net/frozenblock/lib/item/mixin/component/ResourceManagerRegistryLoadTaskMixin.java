@@ -41,10 +41,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import net.frozenblock.lib.item.api.component.BlockTransformerEvents;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.resources.RegistryLoadTask;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceManagerRegistryLoadTask;
 import net.minecraft.server.packs.resources.Resource;
@@ -62,7 +62,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ResourceManagerRegistryLoadTask.class)
 public class ResourceManagerRegistryLoadTaskMixin {
 	@Unique
-	private volatile RegistryOps.RegistryInfoLookup frozenLib$fabric$registryInfoLookup;
+	private volatile HolderGetter.Provider frozenLib$fabric$holderGetterProvider;
 
 	@WrapOperation(
 		method = "lambda$load$2",
@@ -92,17 +92,17 @@ public class ResourceManagerRegistryLoadTaskMixin {
 					BlockTransformerEvents.ADD_AXE_STRIPPABLE.invoker().addAxeStrippables(
 						axeStrippablesContext,
 						(fromBlock, toBlock) -> axeStrippablesContext.addLast(BlockPredicate.matchesBlocks(fromBlock), new CopyPropertiesProvider(toBlock)),
-						this.frozenLib$fabric$registryInfoLookup
+						this.frozenLib$fabric$holderGetterProvider
 					);
 					if (axeStrippablesContext.modified()) context.addFirst(axeStrippablesContext.toBlockTransformData());
 
-					BlockTransformerEvents.MODIFY_AXE.invoker().modifyAxeBlockTransformer(context, this.frozenLib$fabric$registryInfoLookup);
+					BlockTransformerEvents.MODIFY_AXE.invoker().modifyAxeBlockTransformer(context, this.frozenLib$fabric$holderGetterProvider);
 				} else if (key.equals(BlockTransformers.HOE)) {
-					BlockTransformerEvents.MODIFY_HOE.invoker().modifyHoeBlockTransformer(context, this.frozenLib$fabric$registryInfoLookup);
+					BlockTransformerEvents.MODIFY_HOE.invoker().modifyHoeBlockTransformer(context, this.frozenLib$fabric$holderGetterProvider);
 				} else if (key.equals(BlockTransformers.SHOVEL)) {
-					BlockTransformerEvents.MODIFY_SHOVEL.invoker().modifyShovelBlockTransformer(context, this.frozenLib$fabric$registryInfoLookup);
+					BlockTransformerEvents.MODIFY_SHOVEL.invoker().modifyShovelBlockTransformer(context, this.frozenLib$fabric$holderGetterProvider);
 				}
-				BlockTransformerEvents.MODIFY.invoker().modifyBlockTransformer((ResourceKey<BlockTransformer>) key, context, this.frozenLib$fabric$registryInfoLookup);
+				BlockTransformerEvents.MODIFY.invoker().modifyBlockTransformer((ResourceKey<BlockTransformer>) key, context, this.frozenLib$fabric$holderGetterProvider);
 
 				if (context.modified()) modified = (T) context.toBlockTransformer();
 			}
@@ -118,7 +118,7 @@ public class ResourceManagerRegistryLoadTaskMixin {
 	}
 
 	@Inject(method = "load", at = @At("HEAD"))
-	private void frozenLib$fabric$captureRegistries(RegistryOps.RegistryInfoLookup context, Executor executor, CallbackInfoReturnable<CompletableFuture<?>> info) {
-		this.frozenLib$fabric$registryInfoLookup = context;
+	private void frozenLib$fabric$captureRegistries(HolderGetter.Provider context, Executor executor, CallbackInfoReturnable<CompletableFuture<?>> info) {
+		this.frozenLib$fabric$holderGetterProvider = context;
 	}
 }

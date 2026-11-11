@@ -17,13 +17,14 @@
 
 package net.frozenblock.lib.wind.command;
 
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.wind.WindManager;
+import net.minecraft.commands.CommandPermissionLevels;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DoubleArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
@@ -32,18 +33,18 @@ public class WindCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("wind")
-			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
+			.requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_GAMEMASTERS));
 
 		final ArgumentBuilder<CommandSourceStack, ?> overrideBuilder = Commands.literal("override");
 		overrideBuilder
-			.then(Commands.argument("x", DoubleArgumentType.doubleArg())
-				.then(Commands.argument("y", DoubleArgumentType.doubleArg())
-					.then(Commands.argument("z", DoubleArgumentType.doubleArg())
+			.then(Commands.argument("x", DoubleArgument.doubleArg())
+				.then(Commands.argument("y", DoubleArgument.doubleArg())
+					.then(Commands.argument("z", DoubleArgument.doubleArg())
 						.executes(context -> setAndEnableWindOverride(
 							context.getSource(),
-							DoubleArgumentType.getDouble(context, "x"),
-							DoubleArgumentType.getDouble(context, "y"),
-							DoubleArgumentType.getDouble(context, "z")
+							DoubleArgument.getDouble(context, "x"),
+							DoubleArgument.getDouble(context, "y"),
+							DoubleArgument.getDouble(context, "z")
 						))
 					)
 				)

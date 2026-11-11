@@ -34,18 +34,20 @@ import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.codec.RegistryCodecs;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
-public interface ConfigPredicate extends Supplier<Boolean> {
-	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity());
+public interface ConfigPredicate extends Supplier<Boolean>, Validatable {
+	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity())
+		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));;
 	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
 	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
 
@@ -148,7 +150,7 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 	}
 
 	static ConfigPredicate selector(Holder<ConfigPredicate> selector, Holder<ConfigPredicate> whenTrue, Holder<ConfigPredicate> whenFalse) {
-		return new SelectorPredicate(selector, whenTrue, whenFalse);
+		return new ConditionalPredicate(selector, whenTrue, whenFalse);
 	}
 
 	static ConfigPredicate selector(ConfigPredicate selector, ConfigPredicate whenTrue, ConfigPredicate whenFalse) {
@@ -255,12 +257,10 @@ public interface ConfigPredicate extends Supplier<Boolean> {
 		return spawnCondition(this.asHolder());
 	}
 
-	static boolean lookupAndTest(RegistryAccess registries, ResourceKey<ConfigPredicate> key) {
-		return registries.lookup(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER)
-			.map(registry -> registry.get(key)
-				.map(Holder.Reference::value)
-				.map(ConfigPredicate::test)
-				.orElse(false)
-			).orElse(false);
+	record ConfigEntryNotPresentProblem(ID entryId) implements ProblemReporter.Warning {
+		@Override
+		public String description() {
+			return "Config entry " + this.entryId.toString() + " is not present";
+		}
 	}
 }

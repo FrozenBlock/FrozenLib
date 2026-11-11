@@ -23,29 +23,31 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.impl.ConfigCommand;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 
 @ClientOnly
+@UtilityClass
 public final class ClientConfigCommand {
 
-	public static LiteralArgumentBuilder<SharedSuggestionProvider> buildSubCommand(
-		Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal,
-		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SharedSuggestionProvider, ?>> argument,
+	public static LiteralArgumentBuilder<SuggestionContext> buildSubCommand(
+		Function<String, LiteralArgumentBuilder<SuggestionContext>> literal,
+		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SuggestionContext, ?>> argument,
 		Consumer<Component> feedbackCallback
 	) {
 		return literal.apply("config").then(
 			literal.apply("reload").then(
 				argument.apply("modId", StringArgumentType.string()).suggests((context, builder) ->
-						SharedSuggestionProvider.suggest(
-							ConfigV2Registry.allConfigData().stream()
-								.map(configData -> configData.id().namespace())
-								.toList(),
-							builder
-						)
+					SuggestionContext.suggest(
+						ConfigV2Registry.allConfigData().stream()
+							.map(configData -> configData.id().namespace())
+							.toList(),
+						builder
+					)
 				).executes(context -> reloadConfigs(StringArgumentType.getString(context, "modId"), feedbackCallback))
 			)
 		);

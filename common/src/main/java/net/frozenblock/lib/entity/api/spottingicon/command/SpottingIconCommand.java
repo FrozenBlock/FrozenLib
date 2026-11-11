@@ -17,16 +17,19 @@
 
 package net.frozenblock.lib.entity.api.spottingicon.command;
 
-import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.Collection;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.FloatArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.suggestions.SuggestionContext;
+import net.minecraft.commands.suggestions.SuggestionProviders;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -34,8 +37,21 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class SpottingIconCommand {
+	public static final SuggestionProvider<CommandSourceStack> SUGGEST_ENTITY_SPOTTING_ICONS = SuggestionProviders.serverOnly(
+		(server, context, builder) -> {
+			final Collection<? extends Entity> entities = EntityArgument.getEntities((CommandContext<CommandSourceStack>) (Object) context, "targets");
+			return SuggestionContext.suggestResource(
+				entities.stream()
+					.flatMap(entity -> SpottingIcons.get(entity).icons().stream())
+					.map(icon -> fromTextureIdentifier(icon.texture()))
+					.distinct()
+					.toList(),
+				builder
+			);
+		}
+	);
 
-	public static LiteralArgumentBuilder<CommandSourceStack> buildSubcommand() {
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		return Commands.literal("spotting")
 			.then(Commands.literal("add")
 				.then(Commands.argument("targets", EntityArgument.entities())
@@ -47,43 +63,43 @@ public final class SpottingIconCommand {
 								.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
 								.build()
 						))
-						.then(Commands.argument("faderStartDist", FloatArgumentType.floatArg())
-							.then(Commands.argument("faderEndDist", FloatArgumentType.floatArg())
-								.then(Commands.argument("faderStartVal", FloatArgumentType.floatArg(0F, 1F))
-									.then(Commands.argument("faderEndVal", FloatArgumentType.floatArg(0F, 1F))
+						.then(Commands.argument("faderStartDist", FloatArgument.floatArg())
+							.then(Commands.argument("faderEndDist", FloatArgument.floatArg())
+								.then(Commands.argument("faderStartVal", FloatArgument.floatArg(0F, 1F))
+									.then(Commands.argument("faderEndVal", FloatArgument.floatArg(0F, 1F))
 										.executes(ctx -> addIconToEntities(
 											ctx.getSource(),
 											EntityArgument.getEntities(ctx, "targets"),
 											SpottingIcon.builder()
 												.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
 												.fader(
-													FloatArgumentType.getFloat(ctx, "faderStartDist"),
-													FloatArgumentType.getFloat(ctx, "faderEndDist"),
-													FloatArgumentType.getFloat(ctx, "faderStartVal"),
-													FloatArgumentType.getFloat(ctx, "faderEndVal")
+													FloatArgument.getFloat(ctx, "faderStartDist"),
+													FloatArgument.getFloat(ctx, "faderEndDist"),
+													FloatArgument.getFloat(ctx, "faderStartVal"),
+													FloatArgument.getFloat(ctx, "faderEndVal")
 												)
 												.build()
 										))
-										.then(Commands.argument("scalerStartDist", FloatArgumentType.floatArg())
-											.then(Commands.argument("scalerEndDist", FloatArgumentType.floatArg())
-												.then(Commands.argument("scalerStartVal", FloatArgumentType.floatArg())
-													.then(Commands.argument("scalerEndVal", FloatArgumentType.floatArg())
+										.then(Commands.argument("scalerStartDist", FloatArgument.floatArg())
+											.then(Commands.argument("scalerEndDist", FloatArgument.floatArg())
+												.then(Commands.argument("scalerStartVal", FloatArgument.floatArg())
+													.then(Commands.argument("scalerEndVal", FloatArgument.floatArg())
 														.executes(ctx -> addIconToEntities(
 															ctx.getSource(),
 															EntityArgument.getEntities(ctx, "targets"),
 															SpottingIcon.builder()
 																.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
 																.fader(
-																	FloatArgumentType.getFloat(ctx, "faderStartDist"),
-																	FloatArgumentType.getFloat(ctx, "faderEndDist"),
-																	FloatArgumentType.getFloat(ctx, "faderStartVal"),
-																	FloatArgumentType.getFloat(ctx, "faderEndVal")
+																	FloatArgument.getFloat(ctx, "faderStartDist"),
+																	FloatArgument.getFloat(ctx, "faderEndDist"),
+																	FloatArgument.getFloat(ctx, "faderStartVal"),
+																	FloatArgument.getFloat(ctx, "faderEndVal")
 																)
 																.scaler(
-																	FloatArgumentType.getFloat(ctx, "scalerStartDist"),
-																	FloatArgumentType.getFloat(ctx, "scalerEndDist"),
-																	FloatArgumentType.getFloat(ctx, "scalerStartVal"),
-																	FloatArgumentType.getFloat(ctx, "scalerEndVal")
+																	FloatArgument.getFloat(ctx, "scalerStartDist"),
+																	FloatArgument.getFloat(ctx, "scalerEndDist"),
+																	FloatArgument.getFloat(ctx, "scalerStartVal"),
+																	FloatArgument.getFloat(ctx, "scalerEndVal")
 																)
 																.build()
 														))
@@ -105,21 +121,7 @@ public final class SpottingIconCommand {
 						EntityArgument.getEntities(ctx, "targets")
 					))
 					.then(Commands.argument("texture", IdentifierArgument.id())
-						.suggests((ctx, builder) -> {
-							try {
-								Collection<? extends Entity> entities = EntityArgument.getEntities(ctx, "targets");
-								return SharedSuggestionProvider.suggestResource(
-									entities.stream()
-										.flatMap(e -> SpottingIcons.get(e).icons().stream())
-										.map(icon -> fromTextureIdentifier(icon.texture()))
-										.distinct()
-										.toList(),
-									builder
-								);
-							} catch (Exception ignored) {
-								return builder.buildFuture();
-							}
-						})
+						.suggests(SUGGEST_ENTITY_SPOTTING_ICONS)
 						.executes(ctx -> removeIcon(
 							ctx.getSource(),
 							EntityArgument.getEntities(ctx, "targets"),

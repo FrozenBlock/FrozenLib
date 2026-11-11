@@ -19,6 +19,7 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.ModLoader;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class FabricPredicate implements ConfigPredicate {
 	public static final FabricPredicate INSTANCE = new FabricPredicate();
@@ -35,4 +36,7 @@ public class FabricPredicate implements ConfigPredicate {
 	public MapCodec<FabricPredicate> codec() {
 		return CODEC;
 	}
+
+	@Override
+	public void validate(ValidationContext context) {}
 }

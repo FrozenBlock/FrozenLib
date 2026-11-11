@@ -17,8 +17,6 @@
 
 package net.frozenblock.lib.screenshake.api.command;
 
-import com.mojang.brigadier.arguments.FloatArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,33 +24,38 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
+import net.minecraft.commands.CommandPermissionLevels;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.FloatArgument;
+import net.minecraft.commands.arguments.IntegerArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class ScreenShakeCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("screenshake")
-			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
+			.requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_GAMEMASTERS));
 
 		builder.then(Commands.argument("position", Vec3Argument.vec3()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), ScreenShake.DEFAULT_INTENSITY, ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
-			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
-				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), 5, ScreenShake.DEFAULT_MAX_DISTANCE))
-					.then(Commands.argument("falloffStartDuration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
-						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
+			.then(Commands.argument("intensity", FloatArgument.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgument.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+				.then(Commands.argument("duration", IntegerArgument.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), 5, ScreenShake.DEFAULT_MAX_DISTANCE))
+					.then(Commands.argument("falloffStartDuration", IntegerArgument.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), IntegerArgument.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
+						.then(Commands.argument("maxDistance", FloatArgument.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), IntegerArgument.getInteger(context, "falloffStartDuration"), FloatArgument.getFloat(context, "maxDistance"))))))));
 
 		builder.then(Commands.argument("targets", EntityArgument.entities()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), ScreenShake.DEFAULT_INTENSITY, ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
-			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
-				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
-					.then(Commands.argument("falloffStartDuration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
-						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
+			.then(Commands.argument("intensity", FloatArgument.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgument.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+				.then(Commands.argument("duration", IntegerArgument.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+					.then(Commands.argument("falloffStartDuration", IntegerArgument.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), IntegerArgument.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
+						.then(Commands.argument("maxDistance", FloatArgument.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgument.getFloat(context, "intensity"), IntegerArgument.getInteger(context, "duration"), IntegerArgument.getInteger(context, "falloffStartDuration"), FloatArgument.getFloat(context, "maxDistance"))))))));
 
 		builder.then(Commands.literal("remove")
 			.then(Commands.literal("world").executes(context -> removeLevelScreenShakes(context.getSource())))

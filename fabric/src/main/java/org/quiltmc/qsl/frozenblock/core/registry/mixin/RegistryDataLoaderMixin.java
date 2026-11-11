@@ -45,7 +45,7 @@ public class RegistryDataLoaderMixin { // in common mixins.json
 		method = "lambda$load$0",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/resources/RegistryDataLoader;createContext(Ljava/util/List;Ljava/util/List;)Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;",
+			target = "Lnet/minecraft/resources/RegistryDataLoader;createContext(Ljava/util/List;Ljava/util/List;)Lnet/minecraft/core/HolderGetter$Provider;",
 			ordinal = 0,
 			shift = At.Shift.AFTER
 		)

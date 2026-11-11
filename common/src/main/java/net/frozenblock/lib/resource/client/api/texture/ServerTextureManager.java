@@ -25,6 +25,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.ModLoader;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.ExternalTextureProvider;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
@@ -113,7 +114,7 @@ public final class ServerTextureManager implements AutoCloseable {
 
 	public synchronized void setSuccess(Identifier location, NativeImage contents) {
 		synchronized (this.textures) {
-			this.textureManager.register(location, TextureResources.from2dImage(() -> "Server Texture " + location, contents));
+			this.textureManager.registerProvider(location, new ExternalTextureProvider(TextureResources.from2dImage(() -> "Server Texture " + location, contents)));
 			this.textures.put(location, new ServerTextureStatus.Success(location));
 			if (FrozenLibConstants.DEBUG_SERVER_TEXTURE) LOGGER.info("Server texture {} status succeeded", location);
 		}

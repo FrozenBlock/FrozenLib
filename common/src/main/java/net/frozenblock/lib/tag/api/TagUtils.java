@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
  * Contains methods related to {@link TagKey}s.
  */
 @UtilityClass
-public class TagUtils {
+public final class TagUtils {
 
 	public static <T> List<T> getAllEntries(TagKey<T> tag) {
 		final Optional<? extends Registry<?>> optionalRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
