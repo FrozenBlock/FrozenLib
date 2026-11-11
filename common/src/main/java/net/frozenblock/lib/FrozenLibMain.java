@@ -25,7 +25,8 @@ import net.frozenblock.lib.block.api.sound.BlockSoundSetOverrides;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.piston.PistonPushUtil;
 import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.command.FrozenLibArgumentTypes;
+import net.frozenblock.lib.commands.FrozenLibSerializableArgumentTypes;
+import net.frozenblock.lib.commands.suggestions.FrozenLibSerializableSuggestionTypes;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v1.instance.BasicConfig;
 import net.frozenblock.lib.config.v1.registry.BasicConfigRegistry;
@@ -94,7 +95,8 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		FrozenLibArgumentTypes.init();
+		FrozenLibSerializableArgumentTypes.init();
+		FrozenLibSerializableSuggestionTypes.init();
 		CapeUtil.init();
 		SpottingIcons.init();
 		SulfurCubeEvents.init();

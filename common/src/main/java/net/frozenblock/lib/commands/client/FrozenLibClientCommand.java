@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.command.client;
+package net.frozenblock.lib.commands.client;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -24,18 +24,20 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.impl.client.ClientConfigCommand;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 
 @ClientOnly
+@UtilityClass
 public final class FrozenLibClientCommand {
 
 	public static void register(
-		CommandDispatcher<SharedSuggestionProvider> dispatcher,
-		Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal,
-		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SharedSuggestionProvider, ?>> argument,
+		CommandDispatcher<SuggestionContext> dispatcher,
+		Function<String, LiteralArgumentBuilder<SuggestionContext>> literal,
+		BiFunction<String, StringArgumentType, RequiredArgumentBuilder<SuggestionContext, ?>> argument,
 		Consumer<Component> feedbackCallback
 	) {
 		dispatcher.register(

@@ -21,14 +21,18 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.registry.ID;
 
 public class EqualToPredicate<T> extends ValuePredicate<T> {
-	public static final MapCodec<EqualToPredicate<?>> CODEC = codec(EqualToPredicate::new);
+	public static final MapCodec<EqualToPredicate<?>> CODEC = codec(EqualToPredicate::new, EqualToPredicate::new);
 
 	public EqualToPredicate(ID id, T target) {
 		super(id, target);
 	}
 
+	private EqualToPredicate(ID id) {
+		super(id);
+	}
+
 	@Override
-	public Boolean get() {
+	public boolean testUnsafe() {
 		return this.entry.get() == this.target;
 	}
 

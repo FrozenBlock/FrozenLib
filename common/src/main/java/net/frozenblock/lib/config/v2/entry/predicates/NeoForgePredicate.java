@@ -19,6 +19,7 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.ModLoader;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class NeoForgePredicate implements ConfigPredicate {
 	public static final NeoForgePredicate INSTANCE = new NeoForgePredicate();
@@ -35,4 +36,7 @@ public class NeoForgePredicate implements ConfigPredicate {
 	public MapCodec<NeoForgePredicate> codec() {
 		return CODEC;
 	}
+
+	@Override
+	public void validate(ValidationContext context) {}
 }

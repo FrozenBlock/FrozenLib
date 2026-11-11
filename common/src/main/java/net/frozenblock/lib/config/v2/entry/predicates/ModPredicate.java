@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.v2.entry.predicates;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.platform.ModLoader;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class ModPredicate implements ConfigPredicate {
 	public static final MapCodec<ModPredicate> CODEC = Codec.STRING.fieldOf("id").xmap(ModPredicate::new, predicate -> predicate.modId);
@@ -38,4 +39,7 @@ public class ModPredicate implements ConfigPredicate {
 	public MapCodec<ModPredicate> codec() {
 		return CODEC;
 	}
+
+	@Override
+	public void validate(ValidationContext context) {}
 }

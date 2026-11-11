@@ -24,6 +24,8 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class WithFallbackPredicate implements ConfigPredicate {
 	public static final MapCodec<WithFallbackPredicate> CODEC = ID.CODEC.fieldOf("entry").dispatchMap(
@@ -73,5 +75,11 @@ public class WithFallbackPredicate implements ConfigPredicate {
 	@Override
 	public MapCodec<WithFallbackPredicate> codec() {
 		return CODEC;
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		this.whenPresent.ifPresent(predicateHolder -> Validatable.validateHolder(context, "predicate", predicateHolder));
+		Validatable.validateHolder(context, "fallback", this.fallback);
 	}
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.command.FrozenLibCommand;
+import net.frozenblock.lib.commands.FrozenLibCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.registry.FrozenLibRegistries;

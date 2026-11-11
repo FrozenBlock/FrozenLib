@@ -24,9 +24,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import net.frozenblock.lib.levelgen.structure.api.processor.StructureProcessorListAdditions;
 import net.frozenblock.lib.levelgen.structure.impl.processor.StructureProcessorInjectionInterface;
-import net.frozenblock.lib.levelgen.structure.impl.processor.StructureStartInterface;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -38,24 +36,18 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StructureStart.class)
-public class StructureStartMixin implements StructureStartInterface {
+public class StructureStartMixin {
 	@Shadow
 	@Final
 	private Structure structure;
-
-	@Unique
-	@Nullable
-	private Identifier frozenLib$id;
 
 	@Inject(
 		method = "placeInChunk",
@@ -104,17 +96,5 @@ public class StructureStartMixin implements StructureStartInterface {
 			processorInjectionInterface.frozenLib$addProcessors(additionalProcessors.get());
 		}
 		original.call(instance, level, structureManager, chunkGenerator, random, boundingBox, chunkPos, pos);
-	}
-
-	@Unique
-	@Override
-	public synchronized Identifier frozenLib$getId() {
-		return this.frozenLib$id;
-	}
-
-	@Unique
-	@Override
-	public synchronized void frozenLib$setId(Identifier id) {
-		this.frozenLib$id = id;
 	}
 }

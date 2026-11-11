@@ -21,14 +21,18 @@ import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.config.v2.registry.ID;
 
 public class GreaterThanPredicate<T> extends ValuePredicate<T> {
-	public static final MapCodec<GreaterThanPredicate<?>> CODEC = codec(GreaterThanPredicate::new);
+	public static final MapCodec<GreaterThanPredicate<?>> CODEC = codec(GreaterThanPredicate::new, GreaterThanPredicate::new);
 
 	public GreaterThanPredicate(ID id, T target) {
 		super(id, target);
 	}
 
+	private GreaterThanPredicate(ID id) {
+		super(id);
+	}
+
 	@Override
-	public Boolean get() {
+	public boolean testUnsafe() {
 		return ((Comparable) this.entry.get()).compareTo(this.target) > 0;
 	}
 

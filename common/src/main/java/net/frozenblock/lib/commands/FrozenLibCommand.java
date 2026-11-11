@@ -15,28 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.command;
+package net.frozenblock.lib.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.v2.impl.ConfigCommand;
 import net.frozenblock.lib.entity.api.spottingicon.command.SpottingIconCommand;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
-import net.frozenblock.lib.tag.api.TagListCommand;
+import net.frozenblock.lib.tag.impl.TagListCommand;
 import net.frozenblock.lib.wind.command.WindCommand;
+import net.minecraft.commands.CommandPermissionLevels;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("frozenlib")
-			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+			.requires(Commands.hasPermission(CommandPermissionLevels.LEVEL_GAMEMASTERS))
 			.then(ConfigCommand.buildSubCommand())
 			.then(ScreenShakeCommand.buildSubCommand())
-			.then(SpottingIconCommand.buildSubcommand())
+			.then(SpottingIconCommand.buildSubCommand())
 			.then(StructureUpgradeCommand.buildSubCommand())
 			.then(TagListCommand.buildSubCommand())
 			.then(WindCommand.buildSubCommand())

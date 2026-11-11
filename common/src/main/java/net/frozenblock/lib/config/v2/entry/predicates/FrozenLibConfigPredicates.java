@@ -17,12 +17,14 @@
 
 package net.frozenblock.lib.config.v2.entry.predicates;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 
+@UtilityClass
 public final class FrozenLibConfigPredicates {
 	public static final ResourceKey<ConfigPredicate> FALSE = create("false");
 	public static final ResourceKey<ConfigPredicate> HAS_WILDER_WILD = create("has_wilder_wild");
@@ -81,6 +83,4 @@ public final class FrozenLibConfigPredicates {
 	private static ResourceKey<ConfigPredicate> create(String name) {
 		return ResourceKey.create(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, FrozenLibConstants.id(name));
 	}
-
-	private FrozenLibConfigPredicates() {}
 }

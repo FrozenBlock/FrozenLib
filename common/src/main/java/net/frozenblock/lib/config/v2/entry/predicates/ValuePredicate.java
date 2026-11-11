@@ -21,9 +21,11 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public abstract class ValuePredicate<T> implements ConfigPredicate {
 	final ID id;
@@ -36,13 +38,42 @@ public abstract class ValuePredicate<T> implements ConfigPredicate {
 		this.target = target;
 	}
 
-	public static <T extends ValuePredicate<?>> MapCodec<T> codec(BiFunction<ID, Object, T> constructor) {
+	protected ValuePredicate(ID id) {
+		this.id = id;
+		this.entry = null;
+		this.target = null;
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		if (this.entry == null) context.reportProblem(new ConfigEntryNotPresentProblem(this.id));
+	}
+
+	@Override
+	public Boolean get() {
+		return this.entry != null && this.testUnsafe();
+	}
+
+	public abstract boolean testUnsafe();
+
+	public static <T extends ValuePredicate<?>> MapCodec<T> codec(
+		BiFunction<ID, Object, T> constructor,
+		Function<ID, T> fallbackConstructor
+	) {
 		return ID.CODEC.fieldOf("entry").dispatchMap(
 			predicate -> predicate.id,
-			id -> RecordCodecBuilder.mapCodec(instance -> instance.group(
-				instance.point(id),
-				((Codec<Object>) ConfigV2Registry.getEntry(id).codec()).fieldOf("target").forGetter(predicate -> predicate.target)
-			).apply(instance, constructor))
+			id -> {
+				final ConfigEntry<T> entry = (ConfigEntry<T>) ConfigV2Registry.getEntry(id);
+				if (entry == null) {
+					return RecordCodecBuilder.mapCodec(instance -> instance.group(instance.point(id))
+						.apply(instance, fallbackConstructor));
+				}
+
+				return RecordCodecBuilder.mapCodec(instance -> instance.group(
+					instance.point(id),
+					((Codec<Object>) ConfigV2Registry.getEntry(id).codec()).fieldOf("target").forGetter(predicate -> predicate.target)
+				).apply(instance, constructor));
+			}
 		);
 	}
 }

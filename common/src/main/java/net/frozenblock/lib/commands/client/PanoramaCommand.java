@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.command.client;
+package net.frozenblock.lib.commands.client;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.io.File;
@@ -23,15 +23,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 
 @ClientOnly
-public class PanoramaCommand {
+@UtilityClass
+public final class PanoramaCommand {
 	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-	public static LiteralArgumentBuilder<SharedSuggestionProvider> buildSubCommand(Function<String, LiteralArgumentBuilder<SharedSuggestionProvider>> literal) {
+	public static LiteralArgumentBuilder<SuggestionContext> buildSubCommand(Function<String, LiteralArgumentBuilder<SuggestionContext>> literal) {
 		return literal.apply("panorama").executes(context -> {
 			Minecraft client = Minecraft.getInstance();
 			File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));

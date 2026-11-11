@@ -27,8 +27,8 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.BlockTransformer;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
@@ -99,7 +99,7 @@ public final class BlockTransformerEvents {
 
 	@FunctionalInterface
 	public interface ModifyAxeBlockTransformer extends CommonEventEntrypoint {
-		void modifyAxeBlockTransformer(Context context, RegistryOps.RegistryInfoLookup registries);
+		void modifyAxeBlockTransformer(Context context, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface
@@ -107,23 +107,23 @@ public final class BlockTransformerEvents {
 		void addAxeStrippables(
 			AxeStrippablesContext context,
 			BiConsumer<Block, Block> addStrippable,
-			RegistryOps.RegistryInfoLookup registries
+			HolderGetter.Provider registries
 		);
 	}
 
 	@FunctionalInterface
 	public interface ModifyHoeBlockTransformer extends CommonEventEntrypoint {
-		void modifyHoeBlockTransformer(Context context, RegistryOps.RegistryInfoLookup registries);
+		void modifyHoeBlockTransformer(Context context, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface
 	public interface ModifyShovelBlockTransformer extends CommonEventEntrypoint {
-		void modifyShovelBlockTransformer(Context context, RegistryOps.RegistryInfoLookup registries);
+		void modifyShovelBlockTransformer(Context context, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface
 	public interface ModifyBlockTransformer extends CommonEventEntrypoint {
-		void modifyBlockTransformer(ResourceKey<BlockTransformer> key, Context context, RegistryOps.RegistryInfoLookup registries);
+		void modifyBlockTransformer(ResourceKey<BlockTransformer> key, Context context, HolderGetter.Provider registries);
 	}
 
 	@FunctionalInterface

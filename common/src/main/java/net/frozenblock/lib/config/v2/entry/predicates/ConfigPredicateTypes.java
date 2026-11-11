@@ -44,7 +44,7 @@ public final class ConfigPredicateTypes {
 		register.register("all_of", () -> AllOfPredicate.CODEC);
 		register.register("not", () -> NotPredicate.CODEC);
 		register.register("exists", () -> ExistsPredicate.CODEC);
-		register.register("selector", () -> SelectorPredicate.CODEC);
+		register.register("conditional", () -> ConditionalPredicate.CODEC);
 		register.register("with_fallback", () -> WithFallbackPredicate.CODEC);
 		register.register("fabric", () -> FabricPredicate.CODEC);
 		register.register("neoforge", () -> NeoForgePredicate.CODEC);

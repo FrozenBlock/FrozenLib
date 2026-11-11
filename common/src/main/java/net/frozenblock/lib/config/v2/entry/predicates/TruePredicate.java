@@ -18,6 +18,7 @@
 package net.frozenblock.lib.config.v2.entry.predicates;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class TruePredicate implements ConfigPredicate {
 	public static final TruePredicate INSTANCE = new TruePredicate();
@@ -34,4 +35,7 @@ public class TruePredicate implements ConfigPredicate {
 	public MapCodec<TruePredicate> codec() {
 		return CODEC;
 	}
+
+	@Override
+	public void validate(ValidationContext context) {}
 }

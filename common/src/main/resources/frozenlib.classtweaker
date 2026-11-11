@@ -529,7 +529,6 @@ transitive-accessible class net/minecraft/world/level/levelgen/structure/pools/a
 
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/placement/StructurePlacement net/frozenblock/lib/levelgen/structure/impl/placement/StructureSetAndPlacementInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureSet net/frozenblock/lib/levelgen/structure/impl/placement/StructureSetAndPlacementInterface
-transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureStart net/frozenblock/lib/levelgen/structure/impl/processor/StructureStartInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate net/frozenblock/lib/levelgen/structure/impl/processor/StructureProcessorInjectionInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool net/frozenblock/lib/levelgen/structure/impl/pools/StructureTemplatePoolInterface
 transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/ListPoolElement net/frozenblock/lib/levelgen/structure/impl/processor/StructureProcessorInjectionInterface
@@ -616,9 +615,8 @@ transitive-accessible method net/minecraft/data/recipes/RecipeProvider getBlasti
 
 # Command
 ####################################################################################
-transitive-accessible field net/minecraft/commands/synchronization/ArgumentTypeInfos BY_CLASS Ljava/util/Map;
-transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos register (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
-transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos fixClassType (Ljava/lang/Class;)Ljava/lang/Class;
+transitive-accessible field net/minecraft/commands/arguments/ResourceOrTagArgument ERROR_UNKNOWN_TAG Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
+transitive-accessible field net/minecraft/commands/arguments/ResourceOrTagArgument ERROR_INVALID_TAG_TYPE Lcom/mojang/brigadier/exceptions/Dynamic3CommandExceptionType;
 
 # Data Generation
 ####################################################################################

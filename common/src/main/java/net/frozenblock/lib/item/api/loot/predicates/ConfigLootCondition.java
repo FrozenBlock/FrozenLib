@@ -22,8 +22,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.Validatable;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.Nullable;
 
 public class ConfigLootCondition implements LootItemCondition {
 	public static final MapCodec<ConfigLootCondition> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -42,7 +45,17 @@ public class ConfigLootCondition implements LootItemCondition {
 	}
 
 	@Override
+	public @Nullable Boolean constantValue(ConstantConditionEvaluationContext context) {
+		return null;
+	}
+
+	@Override
 	public boolean test(LootContext lootContext) {
 		return this.configPredicate.value().test();
+	}
+
+	@Override
+	public void validate(ValidationContext context) {
+		Validatable.validateHolder(context, "config_predicate", this.configPredicate);
 	}
 }
