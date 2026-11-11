@@ -78,6 +78,6 @@ public final class FrozenLibConfigPredicates {
 	}
 
 	private static ResourceKey<ConfigPredicate> create(String name) {
-		return ResourceKey.create(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, FrozenLibConstants.id(name));
+		return ResourceKey.create(FrozenLibRegistries.CONFIG_PREDICATE, FrozenLibConstants.id(name));
 	}
 }

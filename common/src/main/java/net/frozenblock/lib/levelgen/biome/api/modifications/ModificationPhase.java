@@ -33,6 +33,9 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  * limitations under the License.
  */
 
+import com.mojang.serialization.Codec;
+import net.minecraft.util.StringRepresentable;
+
 /**
  * To achieve a predictable order for biome modifiers, and to aid with mod compatibility, modifiers need to declare
  * the phase in which they will be applied.
@@ -45,35 +48,43 @@ package net.frozenblock.lib.levelgen.biome.api.modifications;
  *     <li>Generic post-processing of biomes</li>
  * </ol>
  */
-public enum ModificationPhase {
+public enum ModificationPhase implements StringRepresentable {
 	/**
 	 * The appropriate phase for enriching biomes by adding to them without relying on
 	 * other information in the biome, or removing other features.
 	 *
 	 * <p><b>Examples:</b> New ores, new vegetation, new structures
 	 */
-	ADDITIONS,
-
+	ADDITIONS("additions"),
 	/**
 	 * The appropriate phase for modifiers that remove features or other aspects of biomes (i.e. removal of spawns,
 	 * removal of features, etc.).
 	 *
 	 * <p><b>Examples:</b> Remove iron ore from plains, remove ghasts
 	 */
-	REMOVALS,
-
+	REMOVALS("removals"),
 	/**
 	 * The appropriate phase for modifiers that replace existing features with modified features.
 	 *
 	 * <p><b>Examples:</b> Replace mineshafts with biome-specific mineshafts
 	 */
-	REPLACEMENTS,
-
+	REPLACEMENTS("replacements"),
 	/**
 	 * The appropriate phase for modifiers that perform wide-reaching biome postprocessing.
 	 *
 	 * <p><b>Examples:</b> Mods that allow modpack authors to customize world generation, changing biome
 	 * properties (i.e. category) that other mods rely on.
 	 */
-	POST_PROCESSING
+	POST_PROCESSING("post_processing");
+	public static final Codec<ModificationPhase> CODEC = StringRepresentable.fromEnum(ModificationPhase::values);
+	private final String name;
+
+	ModificationPhase(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getSerializedName() {
+		return this.name;
+	}
 }

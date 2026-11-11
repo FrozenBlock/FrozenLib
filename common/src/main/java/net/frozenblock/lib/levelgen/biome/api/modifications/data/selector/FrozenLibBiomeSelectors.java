@@ -79,6 +79,6 @@ public final class FrozenLibBiomeSelectors {
 	}
 
 	private static ResourceKey<BiomeSelector> createKey(String name) {
-		return ResourceKey.create(FrozenLibRegistries.BIOME_SELECTOR_PROVIDER, FrozenLibConstants.id(name));
+		return ResourceKey.create(FrozenLibRegistries.BIOME_SELECTOR, FrozenLibConstants.id(name));
 	}
 }

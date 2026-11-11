@@ -25,6 +25,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeModification;
 import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelector;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProvider;
 import net.frozenblock.lib.platform.RegistryHelper;
@@ -89,6 +90,10 @@ public final class FrozenLibBuiltInRegistries {
 	);
 	public static final MappedRegistry<MapCodec<? extends BiomeSelector>> BIOME_SELECTOR_TYPE = RegistryHelper.createSimple(
 		FrozenLibRegistries.BIOME_SELECTOR_TYPE,
+		Lifecycle.stable()
+	);
+	public static final MappedRegistry<MapCodec<? extends BiomeModification>> BIOME_MODIFICATION_TYPE = RegistryHelper.createSimple(
+		FrozenLibRegistries.BIOME_MODIFICATION_TYPE,
 		Lifecycle.stable()
 	);
 

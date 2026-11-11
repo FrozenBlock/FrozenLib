@@ -41,8 +41,8 @@ import net.minecraft.world.level.storage.loot.Validatable;
 
 public interface BiomeSelector extends Validatable {
 	Codec<BiomeSelector> DIRECT_CODEC = FrozenLibBuiltInRegistries.BIOME_SELECTOR_TYPE.byNameCodec().dispatch(BiomeSelector::codec, Function.identity());
-	Codec<Holder<BiomeSelector>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.BIOME_SELECTOR_PROVIDER, DIRECT_CODEC);
-	Codec<HolderSet<BiomeSelector>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.BIOME_SELECTOR_PROVIDER, DIRECT_CODEC);
+	Codec<Holder<BiomeSelector>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.BIOME_SELECTOR, DIRECT_CODEC);
+	Codec<HolderSet<BiomeSelector>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.BIOME_SELECTOR, DIRECT_CODEC);
 
 	boolean test(BiomeSelectionContext context);
 
@@ -93,7 +93,7 @@ public interface BiomeSelector extends Validatable {
 	}
 
 	static BiomeSelector not(Holder<BiomeSelector> selector) {
-		return new NotSelector(selector);
+		return new InverseSelector(selector);
 	}
 
 	static BiomeSelector not(BiomeSelector selector) {
@@ -125,7 +125,7 @@ public interface BiomeSelector extends Validatable {
 	}
 
 	static BiomeSelector configPredicate(BootstrapContext<?> context, ResourceKey<ConfigPredicate> predicate) {
-		return configPredicate(context.lookup(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER).getOrThrow(predicate));
+		return configPredicate(context.lookup(FrozenLibRegistries.CONFIG_PREDICATE).getOrThrow(predicate));
 	}
 
 	static BiomeSelector alwaysTrue() {

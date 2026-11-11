@@ -47,7 +47,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
 		builder.add(Registries.MATERIAL_CONDITION, FrozenLibMaterialConditions::bootstrap);
-		builder.add(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, FrozenLibConfigPredicates::bootstrap);
+		builder.add(FrozenLibRegistries.CONFIG_PREDICATE, FrozenLibConfigPredicates::bootstrap);
 		builder.add(FrozenLibRegistries.FIRE_TYPE, FireTypes::bootstrap);
 		/*
 		builder.add(FrozenLibRegistries.VARIANT_SPAWN_INJECTION, context -> {
@@ -61,7 +61,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 		});
 		 */
 		builder.add(FrozenLibRegistries.SUFFOCATION_TYPE, SuffocationTypes::bootstrap);
-		builder.add(FrozenLibRegistries.BIOME_SELECTOR_PROVIDER, FrozenLibBiomeSelectors::bootstrap);
+		builder.add(FrozenLibRegistries.BIOME_SELECTOR, FrozenLibBiomeSelectors::bootstrap);
 	}
 
 	@Override

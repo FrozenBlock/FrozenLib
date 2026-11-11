@@ -7,86 +7,110 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - The format of Requirement Providers is as follows:
       - `requirements`: The requirements to be met in order for the Pitch Provider to apply.
       - `provider`: The Pitch Provider to be applied when `requirements` are all met.
-    - `biome_requirement`
+    - `frozenlib:biome_requirement`
       - `requirements`: A Biome's ID, a list of Biome IDs, or a Biome Tag.
-    - `structure_requirement`
+    - `frozenlib:structure_requirement`
       - `requirements`: A list of Structure IDs and a Boolean, in the following format:
         - `id`: The structure's ID.
         - `inside_piece`: Whether the Player must be located inside a piece of the Structure for the Pitch Provider to apply.
-    - `dimension_requirement`:
+    - `frozenlib:dimension_requirement`:
       - `requirements`: A Dimension's ID or a list of Dimension IDs.
-    - `config_predicate_requirement`:
+    - `frozenlib:config_predicate_requirement`:
       - `requirements`: A Config Predicate, or the ID of a Config Predicate.
   - Unary Providers
     - The format of Unary Providers is as follows:
       - `input`: A Pitch Provider, or the ID of a Pitch Provider to sample from.
-    - `abs`: Returns the absolute value of its input.
-    - `ceil`: Returns the rounded-up value of its input.
-    - `floor`: Returns the rounded-down value of its input.
-    - `round`: Returns the rounded value of its input.
-    - `truncate`: Returns the rounded-down value of its input if it's above 0, or the rounded-up value of its input if it's below 0.
-    - `negate`: Returns the value of its input multiplied by -1.
-    - `sqrt`: Returns the square root of its input.
-    - `sin`: Returns the sine value of the current game time, using `input` as the wavelength.
-    - `cos`: Returns the cosine value of the current game time, using `input` as the wavelength.
+    - `frozenlib:abs`: Returns the absolute value of its input.
+    - `frozenlib:ceil`: Returns the rounded-up value of its input.
+    - `frozenlib:floor`: Returns the rounded-down value of its input.
+    - `frozenlib:round`: Returns the rounded value of its input.
+    - `frozenlib:truncate`: Returns the rounded-down value of its input if it's above 0, or the rounded-up value of its input if it's below 0.
+    - `frozenlib:negate`: Returns the value of its input multiplied by -1.
+    - `frozenlib:sqrt`: Returns the square root of its input.
+    - `frozenlib:sin`: Returns the sine value of the current game time, using `input` as the wavelength.
+    - `frozenlib:cos`: Returns the cosine value of the current game time, using `input` as the wavelength.
   - Binary Providers
     - The format of Binary providers is as follows:
       - `left`: A Pitch Provider, or the ID of a Pitch Provider to use as the first value.
       - `right`: A Pitch Provider, or the ID of a Pitch Provider to use as the second value.
-    - `sub`: Returns the difference of `left` minus `right`.
-    - `div`: Returns the quotient of `left` divided by `right`.
-    - `mod`: Returns the remainder of `left` divided by `right`.
+    - `frozenlib:sub`: Returns the difference of `left` minus `right`.
+    - `frozenlib:div`: Returns the quotient of `left` divided by `right`.
+    - `frozenlib:mod`: Returns the remainder of `left` divided by `right`.
   - Aggregate Providers
     - The format of Aggregate Providers is as follows:
       - `inputs`: A Pitch Provider, the ID of a Pitch Provider, a list of Pitch Providers, or a list of IDs of Pitch Providers to sample from.
-    - `avg`: Returns the average of all `inputs`.
-    - `length`: Returns the length of all `inputs` combined, as if each input were a distance.
-    - `min`: Returns the lowest value of all `inputs`.
-    - `max`: Returns the highest value of all `inputs`.
-    - `add`: Returns the sum of all `inputs`.
-    - `mul`: Returns the product of all `inputs`
+    - `frozenlib:avg`: Returns the average of all `inputs`.
+    - `frozenlib:length`: Returns the length of all `inputs` combined, as if each input were a distance.
+    - `frozenlib:min`: Returns the lowest value of all `inputs`.
+    - `frozenlib:max`: Returns the highest value of all `inputs`.
+    - `frozenlib:add`: Returns the sum of all `inputs`.
+    - `frozenlib:mul`: Returns the product of all `inputs`
   - Other Providers
     - These use their own formats.
-    - `constant`: Returns a constant value.
+    - `frozenlib:constant`: Returns a constant value.
       - `value`: The constant value to use.
-    - `pow`: Returns `base` raised to the power of `exponent`.
+    - `frozenlib:pow`: Returns `base` raised to the power of `exponent`.
       - `base`: A Pitch Provider, or the ID of a Pitch Provider to use as the base.
       - `exponent`: A Pitch Provider, or the ID of a Pitch Provider to use as the exponent.
-    - `environment_attribute`: Returns the value of an Environment Attribute at the Player's location, assuming it can be converted to a Float.
+    - `frozenlib:environment_attribute`: Returns the value of an Environment Attribute at the Player's location, assuming it can be converted to a Float.
       - `attribute`: The ID of the Environment Attribute to sample from.
-    - `conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
+    - `frozenlib:conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
       - `condition`: A Config Predicate, or the ID of a Config Predicate.
       - `on_true`: A Pitch Provider, or the ID of a Pitch Provider.
       - `on_false`: A Pitch Provider, or the ID of a Pitch Provider.
-- Added the `frozenlib:biome_selector` Dynamic Registry, used to select specific biomes to modify, with the following Biome Selector Types:
-  - `in_dimension`: Returns whether the current Biome can be found in the given Dimension.
+- Added the `frozenlib:biome_selector` Dynamic Registry, used to select specific Biomes to modify, with the following Biome Selector Types:
+  - `frozenlib:in_dimension`: Returns whether the current Biome can be found in the given Dimension.
     - `dimension`: The ID of the Dimension.
-  - `in_biomes`: Returns whether the current Biome is contained within the given set of Biomes.
+  - `frozenlib:in_biomes`: Returns whether the current Biome is contained within the given set of Biomes.
     - `biomes`: A Biome's ID, a list of Biome IDs, or a Biome Tag.
-  - `contains_feature`: Returns whether the current Biome contains the given Feature.
+  - `frozenlib:contains_feature`: Returns whether the current Biome contains the given Feature.
     - `feature`: The Feature's ID.
-  - `contains_placed_feature`: Returns whether the current Biome contains the given Placed Feature.
+  - `cfrozenlib:ontains_placed_feature`: Returns whether the current Biome contains the given Placed Feature.
     - `placed_feature`: The Placed Feature's ID.
-  - `all_of`: Returns whether every Biome Selector in the given set has succeeded.
+  - `frozenlib:contains_structure`: Returns whether the current Biome contains the given Structure.
+    - `structure`: The Structure's ID.
+  - `frozenlib:all_of`: Returns whether every Biome Selector in the given set has succeeded.
     - `selectors`: A Biome Selector, a list of Biome Selectors, a Biome Selector's ID, a list of Biome Selector IDs, or a Biome Selector Tag.
-  - `any_of`: Returns whether any Biome Selectors in the given set have succeeded.
+  - `frozenlib:any_of`: Returns whether any Biome Selectors in the given set have succeeded.
     - `selectors`: A Biome Selector, a list of Biome Selectors, a Biome Selector's ID, a list of Biome Selector IDs, or a Biome Selector Tag.
-  - `not`: Returns the inverse of the given Biome Selector's output.
+  - `frozenlib:not`: Returns the inverse of the given Biome Selector's output.
     - `selector`: A Biome Selector, or a Biome Selector's ID.
-  - `config_predicate`: Returns a Config Predicate's output.
+  - `frozenlib:config_predicate`: Returns a Config Predicate's output.
     - 'predicate': A Config Predicate, or the ID of a Config Predicate.
-  - `conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
+  - `frozenlib:conditional`: Returns the value of `on_true` if `condition` is true, or the value of `on_false` if `condition` is false.
     - `condition`: A Biome Selector, or the ID of a Biome Selector.
     - `on_true`: A Biome Selector, or the ID of a Biome Selector.
     - `on_false`: A Biome Selector, or the ID of a Biome Selector.
+- Added the `frozenlib:biome_modification` Dynamic Registry, used to modify the content of Biomes, with the following Biome Modification Types:
+  - The format of all Biome Modification Types starts with these two fields:
+    - `selector`: A Biome Selector, or a Biome Selector's ID.
+    - `phase`: The Modification Phase to apply the modifications at.
+      - `additions`
+      - `removals`
+      - `replacements`
+      - `post_processing`
+  - `frozenlib:environment_attribute`: Merges a map of Environment Attributes into selected Biomes.
+    - `attributes`: A map of Environment Attributes to merge into the selected Biomes.
+  - `frozenlib:feature`: Removes and adds Placed Features from/to selected Biomes.
+    - `removals` (Optional): A list, each element containing a `step` and `features` field.
+      - `features`: A list of IDs of Placed Features to remove from the selected Biomes.
+      - `step` (Optional): If present, only Placed Features at this Generation Step will be removed.
+    - `additions` (Optional): A list, each element containing a `step` and `features` field.
+      - `features`: A list of IDs of Placed Features to add to the selected Biomes.
+      - `step`: The Generation Step to add the given `features` to.
+  - `frozenlib:carver`: Removes and adds Carvers from/to selected biomes.
+    - `removals` (Optional): A list of IDs of Carvers to remove from the selected Biomes.
+    - `additions` (Optional): A list of IDs of Carvers to add to the selected Biomes.
+- Removed the `frozenlib:biome_environment_attribute_modification` Dynamic Registry as it has been superseded by the `frozenlib:biome_modification` Dynamic Registry.
 - Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
   - Renamed the `sound_type` field to `sound_set`.
   - The `sound_set` field now accepts either a Block Sound Set, or the ID of a Block Sound Set.
-- Renamed the `frozenlib:selector` Config Predicate Type to `frozenlib:conditional`, with a new format:
+- Renamed the `frozenlib:config_predicate_provider` Dynamic Registry to `frozenlib_config_predicate`.
+- Renamed the `frozenlib:selector` Config Predicate Type to `frozenlib:conditional`, and updated its format:
   - `condition`: A Config Predicate, or the ID of a Config Predicate.
-  - `on_true`: A Config Predicate, or the ID of a Config Predicate.
-  - `on_false`: A Config Predicate, or the ID of a Config Predicate.
+  - `on_true`: A Config Predicate, or the ID of a Config Predicate, to be used if the `condition` returns `true`.
+  - `on_false`: A Config Predicate, or the ID of a Config Predicate, to be used if the `condition` returns `false`.
 - Added Toasts related to File Transfers:
   - Transfer Receive
     - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.

@@ -29,7 +29,7 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
-import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeEnvironmentAttributeModification;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeModification;
 import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelector;
 import net.frozenblock.lib.levelgen.material.impl.MaterialRuleAddition;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProvider;
@@ -55,14 +55,15 @@ public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<MapCodec<? extends PitchProvider>>> PITCH_PROVIDER_TYPE = createRegistryKey("pitch_provider_type");
 	public static final ResourceKey<Registry<MovingSoundType<?>>> MOVING_SOUND_TYPE = createRegistryKey("moving_sound_type");
 	public static final ResourceKey<Registry<MapCodec<? extends BiomeSelector>>> BIOME_SELECTOR_TYPE = createRegistryKey("biome_selector_type");
+	public static final ResourceKey<Registry<MapCodec<? extends BiomeModification>>> BIOME_MODIFICATION_TYPE = createRegistryKey("biome_modification_type");
 
 	// DYNAMIC REGISTRIES
-	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE_PROVIDER = createRegistryKey("config_predicate_provider");
+	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE = createRegistryKey("config_predicate");
 	public static final ResourceKey<Registry<BlockSoundSetOverride>> BLOCK_SOUND_SET_OVERRIDE = createRegistryKey("block_sound_set_override");
 	public static final ResourceKey<Registry<PitchProvider>> MUSIC_PITCH_PROVIDER = createRegistryKey("music_pitch_provider");
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = createRegistryKey("structure_music");
-	public static final ResourceKey<Registry<BiomeSelector>> BIOME_SELECTOR_PROVIDER = createRegistryKey("biome_selector_provider");
-	public static final ResourceKey<Registry<BiomeEnvironmentAttributeModification>> BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION = createRegistryKey("biome_environment_attribute_modification");
+	public static final ResourceKey<Registry<BiomeSelector>> BIOME_SELECTOR = createRegistryKey("biome_selector");
+	public static final ResourceKey<Registry<BiomeModification>> BIOME_MODIFICATION = createRegistryKey("biome_modification");
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = createRegistryKey("fire_type");
 	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = createRegistryKey("clip_group");
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = createRegistryKey("water_like_type");
@@ -79,12 +80,12 @@ public final class FrozenLibRegistries {
 	public static void init() {}
 
 	public static void setup() {
-		RegistryHelper.registerSyncedDynamicRegistry(CONFIG_PREDICATE_PROVIDER, ConfigPredicate.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(CONFIG_PREDICATE, ConfigPredicate.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(BLOCK_SOUND_SET_OVERRIDE, BlockSoundSetOverride.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(MUSIC_PITCH_PROVIDER, PitchProvider.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
-		RegistryHelper.registerSyncedDynamicRegistry(BIOME_SELECTOR_PROVIDER, BiomeSelector.DIRECT_CODEC);
-		RegistryHelper.registerSyncedDynamicRegistry(BIOME_ENVIRONMENT_ATTRIBUTE_MODIFICATION, BiomeEnvironmentAttributeModification.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BIOME_SELECTOR, BiomeSelector.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BIOME_MODIFICATION, BiomeModification.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);

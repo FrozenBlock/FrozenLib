@@ -33,7 +33,7 @@ public record ConditionalSelector(Holder<BiomeSelector> condition, Holder<BiomeS
 
 	@Override
 	public boolean test(BiomeSelectionContext context) {
-		return this.condition.value().test(context) ? this.onTrue.value().test(context) : this.onFalse.value().test(context);
+		return (this.condition.value().test(context) ? this.onTrue.value() : this.onFalse.value()).test(context);
 	}
 
 	@Override

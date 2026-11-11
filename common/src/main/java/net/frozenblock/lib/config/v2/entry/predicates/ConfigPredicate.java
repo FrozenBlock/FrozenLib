@@ -47,9 +47,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public interface ConfigPredicate extends Supplier<Boolean>, Validatable {
 	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity())
-		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));;
-	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
-	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.CONFIG_PREDICATE_PROVIDER, DIRECT_CODEC);
+		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));
+	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.CONFIG_PREDICATE, DIRECT_CODEC);
+	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.CONFIG_PREDICATE, DIRECT_CODEC);
 
 	MapCodec<? extends ConfigPredicate> codec();
 

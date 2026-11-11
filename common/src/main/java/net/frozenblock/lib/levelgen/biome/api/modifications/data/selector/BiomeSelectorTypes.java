@@ -38,10 +38,11 @@ public final class BiomeSelectorTypes {
 		register.register("in_biomes", () -> InBiomes.CODEC);
 		register.register("contains_feature", () -> ContainsFeature.CODEC);
 		register.register("contains_placed_feature", () -> ContainsPlacedFeature.CODEC);
+		register.register("contains_structure", () -> ContainsStructure.CODEC);
 
 		register.register("any_of", () -> AnyOfSelector.CODEC);
 		register.register("all_of", () -> AllOfSelector.CODEC);
-		register.register("not", () -> NotSelector.CODEC);
+		register.register("not", () -> InverseSelector.CODEC);
 		register.register("conditional", () -> ConditionalSelector.CODEC);
 		register.register("config_predicate", () -> ConfigSelector.CODEC);
 
