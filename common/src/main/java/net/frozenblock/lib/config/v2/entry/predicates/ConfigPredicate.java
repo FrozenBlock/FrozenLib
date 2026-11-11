@@ -33,8 +33,10 @@ import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.codec.RegistryCodecs;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.variant.SpawnCondition;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
@@ -255,6 +257,15 @@ public interface ConfigPredicate extends Supplier<Boolean>, Validatable {
 
 	default SpawnCondition asSpawnCondition() {
 		return spawnCondition(this.asHolder());
+	}
+
+	static boolean lookupAndTest(HolderGetter.Provider registries, ResourceKey<ConfigPredicate> key) {
+		return registries.lookup(FrozenLibRegistries.CONFIG_PREDICATE)
+			.map(registry -> registry.get(key)
+				.map(Holder.Reference::value)
+				.map(ConfigPredicate::test)
+				.orElse(false)
+			).orElse(false);
 	}
 
 	record ConfigEntryNotPresentProblem(ID entryId) implements ProblemReporter.Warning {
