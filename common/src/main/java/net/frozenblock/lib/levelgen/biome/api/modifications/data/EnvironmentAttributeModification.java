@@ -35,7 +35,7 @@ public class EnvironmentAttributeModification extends BiomeModification {
 	).apply(instance, EnvironmentAttributeModification::new));
 	private final EnvironmentAttributeMap attributes;
 
-	protected EnvironmentAttributeModification(Holder<BiomeSelector> selector, ModificationPhase phase, EnvironmentAttributeMap attributes) {
+	public EnvironmentAttributeModification(Holder<BiomeSelector> selector, ModificationPhase phase, EnvironmentAttributeMap attributes) {
 		super(selector, phase);
 		this.attributes = attributes;
 	}

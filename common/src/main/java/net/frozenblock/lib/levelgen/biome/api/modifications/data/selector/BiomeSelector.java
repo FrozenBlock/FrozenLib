@@ -56,6 +56,10 @@ public interface BiomeSelector extends Validatable {
 		return new InBiomes(biomes);
 	}
 
+	static BiomeSelector inBiome(BootstrapContext<?> context, ResourceKey<Biome> biome) {
+		return new InBiomes(HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(biome)));
+	}
+
 	static BiomeSelector inBiomeTag(BootstrapContext<?> context, TagKey<Biome> biomes) {
 		return inBiomes(context.lookup(Registries.BIOME).getOrThrow(biomes));
 	}
@@ -121,7 +125,7 @@ public interface BiomeSelector extends Validatable {
 	}
 
 	static BiomeSelector configPredicate(ConfigPredicate predicate) {
-		return configPredicate(Holder.direct(predicate));
+		return configPredicate(predicate.asHolder());
 	}
 
 	static BiomeSelector configPredicate(BootstrapContext<?> context, ResourceKey<ConfigPredicate> predicate) {
