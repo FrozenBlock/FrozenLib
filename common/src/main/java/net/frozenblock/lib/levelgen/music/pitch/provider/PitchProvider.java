@@ -37,12 +37,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.storage.loot.Validatable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.phys.Vec3;
 
+// TODO: implement validation *after* deserialization
 public interface PitchProvider extends Validatable {
-	Codec<PitchProvider> DIRECT_CODEC = FrozenLibBuiltInRegistries.PITCH_PROVIDER_TYPE.byNameCodec().dispatch(PitchProvider::codec, Function.identity())
-		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));
+	Codec<PitchProvider> DIRECT_CODEC = FrozenLibBuiltInRegistries.PITCH_PROVIDER_TYPE.byNameCodec().dispatch(PitchProvider::codec, Function.identity());
 	Codec<Holder<PitchProvider>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
 	Codec<HolderSet<PitchProvider>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.MUSIC_PITCH_PROVIDER, DIRECT_CODEC);
 

@@ -30,12 +30,11 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
+// TODO: implement validation *after* deserialization
 public abstract class BiomeModification implements Validatable {
 	public static final Codec<BiomeModification> DIRECT_CODEC = FrozenLibBuiltInRegistries.BIOME_MODIFICATION_TYPE.byNameCodec()
-		.dispatch(BiomeModification::codec, Function.identity())
-		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));
+		.dispatch(BiomeModification::codec, Function.identity());
 	static final String SELECTOR_KEY = "selector";
 	static final String MODIFICATION_PHASE_KEY = "phase";
 	static final MapCodec<Holder<BiomeSelector>> SELECTOR_MAP_CODEC = BiomeSelector.HOLDER_CODEC.fieldOf(SELECTOR_KEY);

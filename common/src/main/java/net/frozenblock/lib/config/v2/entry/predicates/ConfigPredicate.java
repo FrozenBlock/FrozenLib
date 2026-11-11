@@ -44,12 +44,11 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.storage.loot.Validatable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
+// TODO: implement validation *after* deserialization
 public interface ConfigPredicate extends Supplier<Boolean>, Validatable {
-	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity())
-		.validate(Validatable.validatorForContext(LootContextParamSets.EMPTY));
+	Codec<ConfigPredicate> DIRECT_CODEC = FrozenLibBuiltInRegistries.CONFIG_PREDICATE_TYPE.byNameCodec().dispatch(ConfigPredicate::codec, Function.identity());
 	Codec<Holder<ConfigPredicate>> HOLDER_CODEC = RegistryCodecs.holder(FrozenLibRegistries.CONFIG_PREDICATE, DIRECT_CODEC);
 	Codec<HolderSet<ConfigPredicate>> HOLDER_SET_CODEC = RegistryCodecs.holderSet(FrozenLibRegistries.CONFIG_PREDICATE, DIRECT_CODEC);
 
