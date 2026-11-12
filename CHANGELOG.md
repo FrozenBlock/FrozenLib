@@ -93,10 +93,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `attributes`: A map of Environment Attributes to merge into the selected Biomes.
   - `frozenlib:feature`: Removes and adds Placed Features from/to selected Biomes.
     - `removals` (Optional): A list, each element containing a `step` and `features` field.
-      - `features`: A list of IDs of Placed Features to remove from the selected Biomes.
+      - `features`: A list of IDs of Placed Features, or a Placed Feature Tag, providing Placed Features to remove from the selected Biomes.
       - `step` (Optional): If present, only Placed Features at this Generation Step will be removed.
     - `additions` (Optional): A list, each element containing a `step` and `features` field.
-      - `features`: A list of IDs of Placed Features to add to the selected Biomes.
+      - `features`: A list of IDs of Placed Features, or a Placed Feature Tag, providing Placed Features to add to the selected Biomes.
       - `step`: The Generation Step to add the given `features` to.
   - `frozenlib:carver`: Removes and adds Carvers from/to selected biomes.
     - `removals` (Optional): A list of IDs of Carvers to remove from the selected Biomes.
