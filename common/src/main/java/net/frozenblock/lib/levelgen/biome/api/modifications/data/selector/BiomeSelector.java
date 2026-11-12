@@ -104,6 +104,10 @@ public interface BiomeSelector extends Validatable {
 		return not(Holder.direct(selector));
 	}
 
+	static BiomeSelector not(BootstrapContext<?> context, ResourceKey<BiomeSelector> selector) {
+		return not(context.lookup(FrozenLibRegistries.BIOME_SELECTOR).getOrThrow(selector));
+	}
+
 	static BiomeSelector conditional(Holder<BiomeSelector> condition, Holder<BiomeSelector> ifTrue, Holder<BiomeSelector> ifFalse) {
 		return new ConditionalSelector(condition, ifTrue, ifFalse);
 	}

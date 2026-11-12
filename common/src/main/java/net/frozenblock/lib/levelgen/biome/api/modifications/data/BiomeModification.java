@@ -26,8 +26,13 @@ import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModificationCon
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
 import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelector;
 import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.storage.loot.Validatable;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 
@@ -66,6 +71,14 @@ public abstract class BiomeModification implements Validatable {
 	@Override
 	public void validate(ValidationContext context) {
 		Validatable.validateHolder(context, SELECTOR_KEY, this.selector);
+	}
+
+	public static ResourceKey<BiomeModification> createKey(Identifier id) {
+		return ResourceKey.create(FrozenLibRegistries.BIOME_MODIFICATION, id);
+	}
+
+	public static ResourceKey<BiomeModification> createKey(TagKey<Biome> biomeTag) {
+		return createKey(biomeTag.location());
 	}
 
 	public static final class EmptyModificationProblem implements ProblemReporter.Warning {
