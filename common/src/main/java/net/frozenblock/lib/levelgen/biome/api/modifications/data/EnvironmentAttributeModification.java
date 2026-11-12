@@ -46,8 +46,8 @@ public class EnvironmentAttributeModification extends BiomeModification {
 	}
 
 	@Override
-	MapCodec<? extends BiomeModification> codec() {
-		return CODEC;
+	BiomeModificationType<? extends BiomeModification> type() {
+		return BiomeModificationTypes.ENVIRONMENT_ATTRIBUTE.get();
 	}
 
 	@Override

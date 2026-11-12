@@ -34,6 +34,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -115,8 +116,8 @@ public class FeatureModification extends BiomeModification {
 	}
 
 	@Override
-	MapCodec<? extends BiomeModification> codec() {
-		return CODEC;
+	BiomeModificationType<? extends BiomeModification> type() {
+		return BiomeModificationTypes.FEATURE.get();
 	}
 
 	@Override
@@ -149,7 +150,7 @@ public class FeatureModification extends BiomeModification {
 	public record Step(Optional<GenerationStep.Decoration> step, HolderSet<PlacedFeature> features) implements Validatable {
 		public static final Codec<Step> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			GenerationStep.Decoration.CODEC.optionalFieldOf("step").forGetter(Step::step),
-			PlacedFeature.LIST_CODEC.optionalFieldOf("features", HolderSet.empty()).forGetter(step -> step.features)
+			RegistryCodecs.holderSet(Registries.PLACED_FEATURE).optionalFieldOf("features", HolderSet.empty()).forGetter(step -> step.features)
 		).apply(instance, Step::new));
 
 		private Step(HolderSet<PlacedFeature> features) {

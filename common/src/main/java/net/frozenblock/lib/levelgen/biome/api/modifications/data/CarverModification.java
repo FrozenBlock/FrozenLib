@@ -86,8 +86,8 @@ public class CarverModification extends BiomeModification {
 	}
 
 	@Override
-	MapCodec<? extends BiomeModification> codec() {
-		return CODEC;
+	BiomeModificationType<? extends BiomeModification> type() {
+		return BiomeModificationTypes.CARVER.get();
 	}
 
 	@Override

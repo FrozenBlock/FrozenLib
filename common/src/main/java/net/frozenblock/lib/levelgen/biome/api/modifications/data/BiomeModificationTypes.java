@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 
-import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModifications;
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
+import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import org.jetbrains.annotations.ApiStatus;
@@ -30,19 +30,33 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 @UtilityClass
 public final class BiomeModificationTypes {
+	private static final DeferredRegister<BiomeModificationType<?>> REGISTER = DeferredRegister.create(
+		FrozenLibRegistries.BIOME_MODIFICATION_TYPE,
+		FrozenLibConstants.MOD_ID
+	);
+
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<NoOpModification>> NO_OP = REGISTER.register(
+		"no_op",
+		() -> new BiomeModificationType<>(NoOpModification.CODEC, true)
+	);
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<EnvironmentAttributeModification>> ENVIRONMENT_ATTRIBUTE = REGISTER.register(
+		"environment_attribute",
+		() -> new BiomeModificationType<>(EnvironmentAttributeModification.CODEC, true)
+	);
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<FeatureModification>> FEATURE = REGISTER.register(
+		"feature",
+		() -> new BiomeModificationType<>(FeatureModification.CODEC, false)
+	);
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<CarverModification>> CARVER = REGISTER.register(
+		"carver",
+		() -> new BiomeModificationType<>(CarverModification.CODEC, false)
+	);
+
+	static {
+		REGISTER.register();
+	}
 
 	public static void init() {
-		final DeferredRegister<MapCodec<? extends BiomeModification>> register = DeferredRegister.create(
-			FrozenLibRegistries.BIOME_MODIFICATION_TYPE,
-			FrozenLibConstants.MOD_ID
-		);
-
-		register.register("environment_attribute", () -> EnvironmentAttributeModification.CODEC);
-		register.register("feature", () -> FeatureModification.CODEC);
-		register.register("carver", () -> CarverModification.CODEC);
-
-		register.register();
-
 		// TODO: eventually fully data-drive modifications and tear down a ton of Fabric's impl
 		for (ModificationPhase phase : ModificationPhase.values()) {
 			BiomeModifications.create(FrozenLibConstants.id("dynamic_registry_modifications_at_" + phase.getSerializedName())).add(

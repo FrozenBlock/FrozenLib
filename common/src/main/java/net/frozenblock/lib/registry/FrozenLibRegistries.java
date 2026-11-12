@@ -30,6 +30,7 @@ import net.frozenblock.lib.entity.api.variant.VariantSpawnInjection;
 import net.frozenblock.lib.entity.impl.suffocation.SuffocationType;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeModification;
+import net.frozenblock.lib.levelgen.biome.api.modifications.data.BiomeModificationType;
 import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelector;
 import net.frozenblock.lib.levelgen.material.impl.MaterialRuleAddition;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProvider;
@@ -55,7 +56,7 @@ public final class FrozenLibRegistries {
 	public static final ResourceKey<Registry<MapCodec<? extends PitchProvider>>> PITCH_PROVIDER_TYPE = createRegistryKey("pitch_provider_type");
 	public static final ResourceKey<Registry<MovingSoundType<?>>> MOVING_SOUND_TYPE = createRegistryKey("moving_sound_type");
 	public static final ResourceKey<Registry<MapCodec<? extends BiomeSelector>>> BIOME_SELECTOR_TYPE = createRegistryKey("biome_selector_type");
-	public static final ResourceKey<Registry<MapCodec<? extends BiomeModification>>> BIOME_MODIFICATION_TYPE = createRegistryKey("biome_modification_type");
+	public static final ResourceKey<Registry<BiomeModificationType<?>>> BIOME_MODIFICATION_TYPE = createRegistryKey("biome_modification_type");
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<ConfigPredicate>> CONFIG_PREDICATE = createRegistryKey("config_predicate");
@@ -85,7 +86,7 @@ public final class FrozenLibRegistries {
 		RegistryHelper.registerSyncedDynamicRegistry(MUSIC_PITCH_PROVIDER, PitchProvider.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(BIOME_SELECTOR, BiomeSelector.DIRECT_CODEC);
-		RegistryHelper.registerSyncedDynamicRegistry(BIOME_MODIFICATION, BiomeModification.DIRECT_CODEC);
+		RegistryHelper.registerSyncedDynamicRegistry(BIOME_MODIFICATION, BiomeModification.DIRECT_CODEC, BiomeModification.NETWORK_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		RegistryHelper.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);

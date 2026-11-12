@@ -20,7 +20,6 @@ package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import java.util.List;
-import java.util.function.Function;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModificationContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
@@ -39,7 +38,12 @@ import net.minecraft.world.level.storage.loot.ValidationContext;
 // TODO: implement validation *after* deserialization
 public abstract class BiomeModification implements Validatable {
 	public static final Codec<BiomeModification> DIRECT_CODEC = FrozenLibBuiltInRegistries.BIOME_MODIFICATION_TYPE.byNameCodec()
-		.dispatch(BiomeModification::codec, Function.identity());
+		.dispatch(BiomeModification::type, BiomeModificationType::codec);
+	public static final Codec<BiomeModification> NETWORK_CODEC = FrozenLibBuiltInRegistries.BIOME_MODIFICATION_TYPE.byNameCodec()
+		.dispatch(
+			BiomeModification::type,
+			type -> type.syncToClient() ? type.codec() : NoOpModification.createDummyCodec()
+		);
 	static final String SELECTOR_KEY = "selector";
 	static final String MODIFICATION_PHASE_KEY = "phase";
 	static final MapCodec<Holder<BiomeSelector>> SELECTOR_MAP_CODEC = BiomeSelector.HOLDER_CODEC.fieldOf(SELECTOR_KEY);
@@ -66,7 +70,7 @@ public abstract class BiomeModification implements Validatable {
 		return this.phase;
 	}
 
-	abstract MapCodec<? extends BiomeModification> codec();
+	abstract BiomeModificationType<? extends BiomeModification> type();
 
 	@Override
 	public void validate(ValidationContext context) {
