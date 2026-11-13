@@ -43,7 +43,6 @@ public final class ClientScreenShaker {
 	private static float prevZRot;
 	private static float zRot;
 
-	@ApiStatus.Internal
 	public static void tick(Minecraft minecraft, ClientLevel level) {
 		prevYRot = yRot;
 		prevXRot = xRot;

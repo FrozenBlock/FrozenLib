@@ -37,19 +37,19 @@ public final class BiomeModificationTypes {
 
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<NoOpModification>> NO_OP = REGISTER.register(
 		"no_op",
-		() -> new BiomeModificationType<>(NoOpModification.CODEC, true)
+		() -> BiomeModificationType.createSyncable(NoOpModification.CODEC)
 	);
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<EnvironmentAttributeModification>> ENVIRONMENT_ATTRIBUTE = REGISTER.register(
 		"environment_attribute",
-		() -> new BiomeModificationType<>(EnvironmentAttributeModification.CODEC, true)
+		() -> BiomeModificationType.createSyncable(EnvironmentAttributeModification.CODEC)
 	);
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<FeatureModification>> FEATURE = REGISTER.register(
 		"feature",
-		() -> new BiomeModificationType<>(FeatureModification.CODEC, false)
+		() -> BiomeModificationType.createServerOnly(FeatureModification.CODEC)
 	);
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<CarverModification>> CARVER = REGISTER.register(
 		"carver",
-		() -> new BiomeModificationType<>(CarverModification.CODEC, false)
+		() -> BiomeModificationType.createServerOnly(CarverModification.CODEC)
 	);
 
 	static {
@@ -64,7 +64,7 @@ public final class BiomeModificationTypes {
 				BiomeSelectors.all(),
 				(registryAccess, selectionContext, modificationContext) -> {
 					registryAccess.lookupOrThrow(FrozenLibRegistries.BIOME_MODIFICATION).forEach(modification -> {
-						if (!modification.selectorMatches(selectionContext)) return;
+						if (!modification.phaseMatches(phase) || !modification.selectorMatches(selectionContext)) return;
 						modification.modify(modificationContext);
 					});
 				}

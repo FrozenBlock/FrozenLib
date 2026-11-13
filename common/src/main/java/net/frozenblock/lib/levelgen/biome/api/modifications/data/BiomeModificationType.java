@@ -19,4 +19,31 @@ package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 
 import com.mojang.serialization.MapCodec;
 
-public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> codec, boolean syncToClient) {}
+/**
+ * Provides a {@link MapCodec} to use for {@link BiomeModification}s on the server and client respectively.
+ * @param codec The {@link MapCodec} to use on the logical server.
+ * @param clientCodec The {@link MapCodec} to use on the logical client.
+ * @param <T> The {@link BiomeModification} class this type represents.
+ */
+public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> codec, MapCodec<? extends BiomeModification> clientCodec) {
+
+	/**
+	 * Creates a {@link BiomeModificationType} that can be deserialized on the logical client.
+	 * @param codec The {@link MapCodec} of the represented {@link BiomeModification}.
+	 * @return A {@link BiomeModificationType} that can be deserialized on the logical client.
+	 * @param <T> The {@link BiomeModification} class to represent.
+	 */
+	public static <T extends BiomeModification> BiomeModificationType<T> createSyncable(MapCodec<T> codec) {
+		return new BiomeModificationType<>(codec, codec);
+	}
+
+	/**
+	 * Creates a {@link BiomeModificationType} that cannot be deserialized on the logical client.
+	 * @param codec The {@link MapCodec} of the represented {@link BiomeModification}.
+	 * @return A {@link BiomeModificationType} that cannot be deserialized on the logical client.
+	 * @param <T> The {@link BiomeModification} class to represent.
+	 */
+	public static <T extends BiomeModification> BiomeModificationType<T> createServerOnly(MapCodec<T> codec) {
+		return new BiomeModificationType<>(codec, NoOpModification.createDummyCodec());
+	}
+}

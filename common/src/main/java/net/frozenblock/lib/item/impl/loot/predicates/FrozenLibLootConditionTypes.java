@@ -24,7 +24,9 @@ import net.frozenblock.lib.item.api.loot.predicates.ConfigLootCondition;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibLootConditionTypes {
 

@@ -26,6 +26,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.ApiStatus;
 
 public record SuffocationData(Map<Holder<SuffocationType>, Integer> units) {
 	public static final SuffocationData EMPTY = new SuffocationData(Map.of());
@@ -41,6 +42,7 @@ public record SuffocationData(Map<Holder<SuffocationType>, Integer> units) {
 		builder -> builder.syncWith(STREAM_CODEC, DataAttachmentSyncPredicate.all())
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	public int getUnits(Holder<SuffocationType> type, int fallback) {

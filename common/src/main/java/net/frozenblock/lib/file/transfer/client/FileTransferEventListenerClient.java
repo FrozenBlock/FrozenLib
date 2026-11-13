@@ -25,8 +25,8 @@ import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 
-@UtilityClass
 @ApiStatus.Internal
+@UtilityClass
 @ClientOnly
 public final class FileTransferEventListenerClient {
 

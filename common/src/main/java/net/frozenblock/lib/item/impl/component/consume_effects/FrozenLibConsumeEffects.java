@@ -27,6 +27,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.consume_effects.ConsumeEffect;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class FrozenLibConsumeEffects {
@@ -45,6 +46,7 @@ public final class FrozenLibConsumeEffects {
 		REGISTER.register();
 	}
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	private static <T extends ConsumeEffect> DeferredHolder<ConsumeEffect.Type<?>, ConsumeEffect.Type<T>> register(

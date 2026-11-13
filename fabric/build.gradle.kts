@@ -183,9 +183,6 @@ dependencies {
     // Fresult
     relocApi("com.personthecat:fresult:$fresult_version")
 
-    // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
-
     "testmodImplementation"(sourceSets.main.get().output)
     implementation(kotlin("stdlib-jdk8"))
 }

@@ -36,10 +36,12 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-@ClientOnly
+@ApiStatus.Internal
 @UtilityClass
+@ClientOnly
 public final class ClientSuffocationState {
 	private static final Map<ResourceKey<SuffocationType>, Integer> PREVIOUS_UNITS = new HashMap<>();
 	private static final Set<ResourceKey<SuffocationType>> RISING = new HashSet<>();

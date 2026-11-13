@@ -17,17 +17,23 @@
 
 package net.frozenblock.lib.levelgen.structure.impl.processor;
 
+import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.api.processor.BlockStateRespectingRuleProcessor;
 import net.frozenblock.lib.levelgen.structure.api.processor.MarkForPostProcessingProcessor;
 import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcessor;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
-		final var register = DeferredRegister.create(
+		final DeferredRegister<MapCodec<? extends StructureProcessor>> register = DeferredRegister.create(
 			Registries.STRUCTURE_PROCESSOR,
 			FrozenLibConstants.MOD_ID
 		);

@@ -43,9 +43,6 @@ dependencies {
 
     // Fresult
     compileOnlyApi("com.personthecat:fresult:$fresult_version")
-
-    // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 }
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"

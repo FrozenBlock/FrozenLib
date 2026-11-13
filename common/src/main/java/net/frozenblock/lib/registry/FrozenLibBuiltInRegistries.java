@@ -36,6 +36,7 @@ import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class FrozenLibBuiltInRegistries {
@@ -97,5 +98,6 @@ public final class FrozenLibBuiltInRegistries {
 		Lifecycle.stable()
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 }

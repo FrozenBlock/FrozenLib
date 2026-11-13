@@ -23,7 +23,9 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.material.condition.MaterialCondition;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibMaterialConditionTypes {
 

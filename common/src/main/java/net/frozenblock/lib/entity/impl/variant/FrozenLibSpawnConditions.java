@@ -18,6 +18,7 @@
 package net.frozenblock.lib.entity.impl.variant;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.api.variant.CompoundCheck;
 import net.frozenblock.lib.entity.api.variant.ConfigCheck;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.variant.SpawnCondition;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibSpawnConditions {
 	private static final DeferredRegister<MapCodec<? extends SpawnCondition>> REGISTER = DeferredRegister.create(
 		Registries.SPAWN_CONDITION_TYPE,

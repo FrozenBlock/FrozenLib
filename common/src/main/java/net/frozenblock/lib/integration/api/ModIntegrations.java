@@ -21,9 +21,11 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.ModLoader;
 import net.frozenblock.lib.registry.FrozenLibBuiltInRegistries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
-public class ModIntegrations {
+public final class ModIntegrations {
 
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
         return FrozenLibBuiltInRegistries.MOD_INTEGRATION.stream().toList();

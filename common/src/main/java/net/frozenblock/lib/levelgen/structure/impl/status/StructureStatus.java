@@ -28,6 +28,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 
 public record StructureStatus(Identifier structure, boolean insidePiece) {
 	public static final StreamCodec<FriendlyByteBuf, StructureStatus> STREAM_CODEC = StreamCodec.composite(
@@ -41,6 +42,7 @@ public record StructureStatus(Identifier structure, boolean insidePiece) {
 		builder -> builder.syncWith(STREAM_CODEC_LIST, DataAttachmentSyncPredicate.targetOnly())
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	public static Optional<StructureStatus> getProminentStructureStatus(Player player) {

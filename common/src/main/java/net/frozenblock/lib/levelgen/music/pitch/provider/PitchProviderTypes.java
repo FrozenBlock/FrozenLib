@@ -18,12 +18,14 @@
 package net.frozenblock.lib.levelgen.music.pitch.provider;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class PitchProviderTypes {
 
 	public static void init() {
@@ -62,6 +64,4 @@ public final class PitchProviderTypes {
 
 		register.register();
 	}
-
-	private PitchProviderTypes() {}
 }

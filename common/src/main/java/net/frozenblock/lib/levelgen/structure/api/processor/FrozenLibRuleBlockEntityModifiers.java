@@ -18,13 +18,17 @@
 package net.frozenblock.lib.levelgen.structure.api.processor;
 
 import com.mojang.serialization.MapCodec;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibRuleBlockEntityModifiers {
 	private static final DeferredRegister<RuleBlockEntityModifierType<?>> REGISTER = DeferredRegister.create(
 		Registries.RULE_BLOCK_ENTITY_MODIFIER,
@@ -32,7 +36,8 @@ public final class FrozenLibRuleBlockEntityModifiers {
 	);
 
 	public static final DeferredHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<AppendSherds>> APPEND_SHERDS = register(
-		"append_sherds", AppendSherds.CODEC
+		"append_sherds",
+		AppendSherds.CODEC
 	);
 
 	static {
@@ -42,7 +47,8 @@ public final class FrozenLibRuleBlockEntityModifiers {
 	public static void init() {}
 
 	private static <P extends RuleBlockEntityModifier> DeferredHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<P>> register(
-		String name, MapCodec<P> codec
+		String name,
+		MapCodec<P> codec
 	) {
 		return REGISTER.register(name, () -> () -> codec);
 	}

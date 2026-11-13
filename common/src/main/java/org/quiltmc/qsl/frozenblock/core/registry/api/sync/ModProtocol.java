@@ -31,6 +31,7 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.EventRegistry;
 import net.frozenblock.lib.platform.ModLoader;
+import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
 public class ModProtocol {
@@ -47,6 +48,7 @@ public class ModProtocol {
 	public static ModProtocolDef prioritizedEntry;
 
 	@SuppressWarnings("ConstantConditions")
+	@ApiStatus.Internal
 	public static void loadVersions() {
 		LOAD_MOD_PROTOCOL.invoker().load();
 

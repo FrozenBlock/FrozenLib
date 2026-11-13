@@ -18,14 +18,16 @@
 
 package net.fabricmc.frozenblock.datafixer.impl.client;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.frozenblock.datafixer.impl.FabricDataFixesInternals;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.event.api.events.client.ClientLifecycleEvents;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 
-@ClientOnly
 @ApiStatus.Internal
+@UtilityClass
+@ClientOnly
 public final class ClientFreezer {
 
     public static void onSetupClient() {

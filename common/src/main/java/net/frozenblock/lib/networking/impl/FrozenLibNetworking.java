@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -52,6 +53,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibNetworking {
 
 	public static void registerNetworking() {

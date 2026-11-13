@@ -22,6 +22,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.networking.api.NetworkingHelper;
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
@@ -39,6 +40,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ServerPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.mixin.ServerConfigurationPacketListenerAccessor;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class ServerRegistrySync {
 	private static final int MAX_SAFE_PACKET_SIZE = 734003;
 

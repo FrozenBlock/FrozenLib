@@ -19,6 +19,7 @@ package net.frozenblock.lib.levelgen.blockpredicates.impl;
 
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.blockpredicates.HasMatchingAxisPredicate;
 import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
@@ -30,7 +31,10 @@ import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
+@UtilityClass
 public final class FrozenLibBlockPredicateTypes {
 	private static final DeferredRegister<BlockPredicateType<?>> REGISTER = DeferredRegister.create(
 		Registries.BLOCK_PREDICATE_TYPE,

@@ -19,20 +19,23 @@ package net.frozenblock.lib.particle;
 
 import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.particle.api.ParticleTypeHelper;
 import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
-import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.platform.api.registry.DeferredHolder;
-import net.frozenblock.lib.particle.api.ParticleTypeHelper;
+import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.ApiStatus;
 
+@UtilityClass
 public final class FrozenLibParticleTypes {
 	private static final DeferredRegister<ParticleType<?>> REGISTER = DeferredRegister.create(
 		Registries.PARTICLE_TYPE,
@@ -79,6 +82,7 @@ public final class FrozenLibParticleTypes {
 		REGISTER.register();
 	}
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	private static DeferredHolder<ParticleType<?>, SimpleParticleType> register(String name, boolean alwaysShow) {

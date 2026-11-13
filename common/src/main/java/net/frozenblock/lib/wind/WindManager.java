@@ -126,6 +126,7 @@ public class WindManager {
 		}
 	}
 
+	@ApiStatus.Internal
 	public static void init() {
 		TickEvents.START_LEVEL_TICK.register(serverLevel -> getOrCreate(serverLevel).tick(serverLevel));
 	}

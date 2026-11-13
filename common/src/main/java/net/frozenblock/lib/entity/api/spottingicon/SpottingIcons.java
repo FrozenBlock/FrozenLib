@@ -29,6 +29,7 @@ import net.frozenblock.lib.platform.api.attachment.DataAttachmentSyncPredicate;
 import net.frozenblock.lib.platform.api.attachment.DataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.ApiStatus;
 
 public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<SpottingIcon> {
 	public static final SpottingIcons EMPTY = new SpottingIcons(List.of());
@@ -47,6 +48,7 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 		}
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	public static void set(Entity target, SpottingIcon... icons) {

@@ -24,7 +24,9 @@ import net.frozenblock.lib.platform.api.registry.DeferredHolder;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.sound.impl.MovingSoundManager;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class MovingSoundTypes {
 	private static final DeferredRegister<MovingSoundType<?>> REGISTER = DeferredRegister.create(

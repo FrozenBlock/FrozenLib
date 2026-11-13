@@ -19,10 +19,9 @@ package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.frozenblock.lib.levelgen.biome.api.BiomeSelectionContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.BiomeModificationContext;
 import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
-import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeSelector;
-import net.minecraft.core.Holder;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class NoOpModification extends BiomeModification {
@@ -30,7 +29,7 @@ public class NoOpModification extends BiomeModification {
 	public static final MapCodec<NoOpModification> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.point(INSTANCE));
 
 	private NoOpModification() {
-		super(Holder.direct(BiomeSelector.alwaysFalse()), ModificationPhase.POST_PROCESSING);
+		super(null, null);
 	}
 
 	protected static MapCodec<NoOpModification> createDummyCodec() {
@@ -39,6 +38,16 @@ public class NoOpModification extends BiomeModification {
 
 	@Override
 	public void modify(BiomeModificationContext context) {}
+
+	@Override
+	public boolean selectorMatches(BiomeSelectionContext context) {
+		return false;
+	}
+
+	@Override
+	public boolean phaseMatches(ModificationPhase phase) {
+		return false;
+	}
 
 	@Override
 	BiomeModificationType<? extends BiomeModification> type() {

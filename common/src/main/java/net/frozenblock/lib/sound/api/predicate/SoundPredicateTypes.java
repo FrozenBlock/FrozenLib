@@ -27,6 +27,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import java.util.function.Supplier;
 
 @UtilityClass
@@ -104,5 +105,6 @@ public final class SoundPredicateTypes {
 		REGISTER.register();
 	}
 
+	@ApiStatus.Internal
 	public static void init() {}
 }

@@ -47,6 +47,8 @@ val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
 val frozenlib_version: String by project
 
+val lombok_version: String by project
+
 mod {
     additional.add("mod_id", mod_id)
     additional.add("mod_version", mod_version)
@@ -150,6 +152,9 @@ subprojects {
 
     dependencies {
         compileOnly("net.frozenblock:candlelight:+")
+
+        // Lombok
+        compileOnly("org.projectlombok:lombok:$lombok_version")?.let { annotationProcessor(it) }
     }
 
     repositories {

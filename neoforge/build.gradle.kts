@@ -85,9 +85,6 @@ dependencies {
     // Fresult
     relocApi("com.personthecat:fresult:$fresult_version")
 
-    // Lombok
-    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
-
     // Kotlin for NeoForge
     //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 

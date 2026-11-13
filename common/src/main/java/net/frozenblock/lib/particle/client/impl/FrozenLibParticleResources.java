@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.particle.client.impl;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.particle.client.ColoredCampfireSmokeParticle;
 import net.frozenblock.lib.particle.client.ColoredLargeSmokeParticle;
 import net.frozenblock.lib.particle.client.ColoredSmokeParticle;
@@ -27,6 +28,7 @@ import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 @ClientOnly
 public final class FrozenLibParticleResources {
 

@@ -58,6 +58,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.FeatureSorter;
 import org.apache.commons.lang3.function.TriConsumer;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,7 @@ public class BiomeModificationImpl {
 
 	private BiomeModificationImpl() {}
 
+	@ApiStatus.Internal
 	public static void init() {
 		LifecycleEvents.SERVER_ABOUT_TO_START_OR_STARTING.register(server -> INSTANCE.finalizeWorldGen(server.registryAccess()));
 	}

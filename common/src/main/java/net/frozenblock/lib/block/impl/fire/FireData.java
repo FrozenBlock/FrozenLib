@@ -29,6 +29,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.ApiStatus;
 
 public record FireData(Holder<FireType> type) {
 	public static final Codec<FireData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -45,6 +46,7 @@ public record FireData(Holder<FireType> type) {
 			.syncWith(STREAM_CODEC)
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	public static boolean canFireDataBeReplaced(Entity entity, Holder<FireType> newType) {

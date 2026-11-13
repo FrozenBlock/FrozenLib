@@ -23,6 +23,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredDataComponentType;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.component.DataComponentType;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class FrozenLibDataComponents {
@@ -37,6 +38,7 @@ public final class FrozenLibDataComponents {
 		REGISTER.register();
 	}
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	private static <T> DeferredDataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {

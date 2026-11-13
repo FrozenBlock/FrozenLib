@@ -17,14 +17,18 @@
 
 package net.frozenblock.lib.renderer.model;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.model.geom.ModelLayerLocation;
+import org.jetbrains.annotations.ApiStatus;
 
+@UtilityClass
 @ClientOnly
 public final class FrozenLibModelLayers {
 	public static final ModelLayerLocation NO_MODEL = new ModelLayerLocation(FrozenLibConstants.id("no_model"), "main");
 
+	@ApiStatus.Internal
 	public static void init() {
 		ModelLayerRegistry.register(NO_MODEL, NoOpModel::layer);
 	}

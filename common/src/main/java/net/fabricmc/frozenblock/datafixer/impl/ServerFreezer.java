@@ -18,11 +18,13 @@
 
 package net.fabricmc.frozenblock.datafixer.impl;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
+@UtilityClass
 public final class ServerFreezer {
 
     public static void onInitialize() {

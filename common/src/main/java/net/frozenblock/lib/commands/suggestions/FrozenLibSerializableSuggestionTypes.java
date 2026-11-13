@@ -22,7 +22,9 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.commands.suggestions.SerializableCustomSuggestion;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibSerializableSuggestionTypes {
 

@@ -40,10 +40,7 @@ public abstract class BiomeModification implements Validatable {
 	public static final Codec<BiomeModification> DIRECT_CODEC = FrozenLibBuiltInRegistries.BIOME_MODIFICATION_TYPE.byNameCodec()
 		.dispatch(BiomeModification::type, BiomeModificationType::codec);
 	public static final Codec<BiomeModification> NETWORK_CODEC = FrozenLibBuiltInRegistries.BIOME_MODIFICATION_TYPE.byNameCodec()
-		.dispatch(
-			BiomeModification::type,
-			type -> type.syncToClient() ? type.codec() : NoOpModification.createDummyCodec()
-		);
+		.dispatch(BiomeModification::type, BiomeModificationType::clientCodec);
 	static final String SELECTOR_KEY = "selector";
 	static final String MODIFICATION_PHASE_KEY = "phase";
 	static final MapCodec<Holder<BiomeSelector>> SELECTOR_MAP_CODEC = BiomeSelector.HOLDER_CODEC.fieldOf(SELECTOR_KEY);
@@ -64,6 +61,10 @@ public abstract class BiomeModification implements Validatable {
 
 	protected Holder<BiomeSelector> selector() {
 		return this.selector;
+	}
+
+	public boolean phaseMatches(ModificationPhase phase) {
+		return this.phase == phase;
 	}
 
 	protected ModificationPhase phase() {

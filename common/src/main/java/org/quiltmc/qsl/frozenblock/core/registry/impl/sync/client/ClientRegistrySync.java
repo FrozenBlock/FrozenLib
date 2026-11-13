@@ -22,6 +22,7 @@ import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.networking.api.ClientNetworkingHelper;
 import net.frozenblock.lib.networking.impl.ConfigPacketSender;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
@@ -40,6 +41,7 @@ import org.slf4j.Logger;
 import net.minecraft.ChatFormatting;
 
 @ApiStatus.Internal
+@UtilityClass
 @ClientOnly
 public final class ClientRegistrySync {
 	private static final Logger LOGGER = LogUtils.getLogger();

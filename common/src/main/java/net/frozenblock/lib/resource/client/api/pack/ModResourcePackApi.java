@@ -44,6 +44,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibEarlyConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -62,6 +63,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.ApiStatus;
 
+@UtilityClass
 @ClientOnly
 public final class ModResourcePackApi {
 	@ApiStatus.Internal

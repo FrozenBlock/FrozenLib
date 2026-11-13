@@ -24,7 +24,9 @@ import net.frozenblock.lib.advancement.api.predicates.entity.MobPredicate;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.advancements.predicates.entity.EntitySubPredicate;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibEntitySubPredicateTypes {
 

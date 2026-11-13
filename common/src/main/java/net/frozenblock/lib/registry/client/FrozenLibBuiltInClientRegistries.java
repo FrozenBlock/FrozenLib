@@ -24,6 +24,7 @@ import net.frozenblock.lib.platform.client.ClientRegistryHelper;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.MappedRegistry;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 @ClientOnly
@@ -33,5 +34,6 @@ public final class FrozenLibBuiltInClientRegistries {
 		Lifecycle.stable()
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 }

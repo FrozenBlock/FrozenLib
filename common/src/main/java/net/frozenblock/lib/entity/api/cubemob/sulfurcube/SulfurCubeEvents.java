@@ -130,6 +130,7 @@ public final class SulfurCubeEvents {
 		}
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	/**

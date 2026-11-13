@@ -23,7 +23,9 @@ import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.tag.api.TagArgument;
 import net.minecraft.commands.arguments.SerializableArgument;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class FrozenLibSerializableArgumentTypes {
 

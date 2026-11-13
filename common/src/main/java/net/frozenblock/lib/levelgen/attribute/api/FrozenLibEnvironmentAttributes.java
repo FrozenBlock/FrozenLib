@@ -25,6 +25,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.attribute.AttributeRange;
 import net.minecraft.world.attribute.AttributeTypes;
 import net.minecraft.world.attribute.EnvironmentAttribute;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
 public final class FrozenLibEnvironmentAttributes {
@@ -42,6 +43,7 @@ public final class FrozenLibEnvironmentAttributes {
 		REGISTER.register();
 	}
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	private static <Value> DeferredHolder<EnvironmentAttribute<?>, EnvironmentAttribute<Value>> register(String name, EnvironmentAttribute.Builder<Value> attributeBuilder) {

@@ -51,6 +51,7 @@ public record SerializableItemCooldowns(List<ItemCooldown> cooldowns) {
 			.copyOnDeath()
 	);
 
+	@ApiStatus.Internal
 	public static void init() {}
 
 	public static SerializableItemCooldowns of(ItemCooldowns source) {

@@ -20,6 +20,7 @@ package net.frozenblock.lib.entity.client.impl.suffocation;
 import lombok.experimental.UtilityClass;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Disabled on this Minecraft version: {@code GameRenderer} no longer exposes a settable
@@ -28,8 +29,9 @@ import net.minecraft.client.Minecraft;
  * shader here without a dedicated mixin. The other suffocation visuals (overlay, bubbles,
  * curves) are unaffected.
  */
-@ClientOnly
+@ApiStatus.Internal
 @UtilityClass
+@ClientOnly
 public final class SuffocationPostEffectManager {
 	// FIXME: implement on 26.3
 

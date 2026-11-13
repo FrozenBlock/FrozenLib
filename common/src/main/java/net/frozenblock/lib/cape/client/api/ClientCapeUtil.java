@@ -44,16 +44,13 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
+@ApiStatus.Internal
 @UtilityClass
 @ClientOnly
 public final class ClientCapeUtil {
-	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
-	@ApiStatus.Internal
 	public static final RenderStateDataKey<Cape.CapeTexture> CAPE_TEXTURE_DATA_KEY = RenderStateDataKey.create(FrozenLibConstants.id("cape"));
-	@ApiStatus.Internal
 	private static final List<Identifier> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
-	@ApiStatus.Internal
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
 	public static void init() {

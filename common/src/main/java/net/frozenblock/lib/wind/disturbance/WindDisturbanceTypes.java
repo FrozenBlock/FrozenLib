@@ -24,7 +24,9 @@ import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbance;
 import net.frozenblock.lib.wind.disturbance.holder.WindDisturbanceSourceType;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 @UtilityClass
 public final class WindDisturbanceTypes {
 	private static final DeferredRegister<WindDisturbanceType<?>> REGISTER = DeferredRegister.create(
