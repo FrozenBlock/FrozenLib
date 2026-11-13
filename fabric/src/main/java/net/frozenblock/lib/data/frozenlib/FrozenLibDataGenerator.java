@@ -31,7 +31,9 @@ import net.frozenblock.lib.levelgen.material.api.FrozenLibMaterialConditions;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override

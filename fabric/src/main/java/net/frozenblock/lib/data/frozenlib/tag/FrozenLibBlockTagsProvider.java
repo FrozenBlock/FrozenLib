@@ -27,7 +27,9 @@ import net.minecraft.references.BlockIds;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public final class FrozenLibBlockTagsProvider extends FabricTagsProvider.BlockTagsProvider {
 
 	public FrozenLibBlockTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {

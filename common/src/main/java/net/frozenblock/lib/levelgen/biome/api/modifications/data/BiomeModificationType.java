@@ -21,11 +21,11 @@ import com.mojang.serialization.MapCodec;
 
 /**
  * Provides a {@link MapCodec} to use for {@link BiomeModification}s on the server and client respectively.
- * @param codec The {@link MapCodec} to use on the logical server.
- * @param clientCodec The {@link MapCodec} to use on the logical client.
+ * @param codec The {@link MapCodec} of the {@link BiomeModification}.
+ * @param serverOnly Whether the {@link BiomeModification} can be deserialized on the logical client.
  * @param <T> The {@link BiomeModification} class this type represents.
  */
-public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> codec, MapCodec<? extends BiomeModification> clientCodec) {
+public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> codec, boolean serverOnly) {
 
 	/**
 	 * Creates a {@link BiomeModificationType} that can be deserialized on the logical client.
@@ -33,8 +33,8 @@ public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> cod
 	 * @return A {@link BiomeModificationType} that can be deserialized on the logical client.
 	 * @param <T> The {@link BiomeModification} class to represent.
 	 */
-	public static <T extends BiomeModification> BiomeModificationType<T> createSyncable(MapCodec<T> codec) {
-		return new BiomeModificationType<>(codec, codec);
+	public static <T extends BiomeModification> BiomeModificationType<T> create(MapCodec<T> codec) {
+		return new BiomeModificationType<>(codec, false);
 	}
 
 	/**
@@ -44,6 +44,6 @@ public record BiomeModificationType<T extends BiomeModification>(MapCodec<T> cod
 	 * @param <T> The {@link BiomeModification} class to represent.
 	 */
 	public static <T extends BiomeModification> BiomeModificationType<T> createServerOnly(MapCodec<T> codec) {
-		return new BiomeModificationType<>(codec, NoOpModification.createDummyCodec());
+		return new BiomeModificationType<>(codec, true);
 	}
 }

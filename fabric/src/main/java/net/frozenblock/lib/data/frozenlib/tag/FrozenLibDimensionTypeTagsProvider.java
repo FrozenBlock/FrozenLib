@@ -25,7 +25,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public final class FrozenLibDimensionTypeTagsProvider extends FabricTagsProvider<DimensionType> {
 
 	public FrozenLibDimensionTypeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {

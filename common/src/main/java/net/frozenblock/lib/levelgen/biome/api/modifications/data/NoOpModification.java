@@ -25,14 +25,12 @@ import net.frozenblock.lib.levelgen.biome.api.modifications.ModificationPhase;
 import net.minecraft.world.level.storage.loot.ValidationContext;
 
 public class NoOpModification extends BiomeModification {
-	protected static final NoOpModification INSTANCE = new NoOpModification();
-	public static final MapCodec<NoOpModification> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.point(INSTANCE));
 
 	private NoOpModification() {
 		super(null, null);
 	}
 
-	protected static MapCodec<NoOpModification> createDummyCodec() {
+	protected static MapCodec<NoOpModification> codec() {
 		return RecordCodecBuilder.mapCodec(instance -> instance.point(new NoOpModification()));
 	}
 

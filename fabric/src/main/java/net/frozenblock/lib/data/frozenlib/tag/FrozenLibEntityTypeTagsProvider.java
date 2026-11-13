@@ -24,7 +24,9 @@ import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityTypeIds;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsProvider {
 
 	public FrozenLibEntityTypeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -70,6 +72,9 @@ public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.En
 			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
 
 		this.tag(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES)
+			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
+
+		this.tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
 			.addOptionalTag(FrozenLibEntityTypeTags.BLAZES);
 	}
 }

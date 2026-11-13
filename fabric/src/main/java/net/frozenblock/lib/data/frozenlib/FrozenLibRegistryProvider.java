@@ -24,7 +24,9 @@ import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 final class FrozenLibRegistryProvider extends FabricDynamicRegistryProvider {
 
 	FrozenLibRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {

@@ -94,4 +94,5 @@ public final class FrozenLibEarlyConstants {
 	public static final boolean HAS_SODIUM = ModLoader.isModLoaded("sodium");
 	public static final boolean HAS_IRIS = ModLoader.isModLoaded("iris");
 	public static final boolean HAS_TERRABLENDER = ModLoader.isModLoaded("terrablender");
+	public static final boolean HAS_BIOLITH = ModLoader.isModLoaded("biolith");
 }

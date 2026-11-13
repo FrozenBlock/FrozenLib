@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.levelgen.biome.api.modifications.data;
 
+import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.biome.api.BiomeSelectors;
@@ -35,21 +36,25 @@ public final class BiomeModificationTypes {
 		FrozenLibConstants.MOD_ID
 	);
 
-	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<NoOpModification>> NO_OP = REGISTER.register(
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<NoOpModification>> NO_OP = register(
 		"no_op",
-		() -> BiomeModificationType.createSyncable(NoOpModification.CODEC)
+		NoOpModification.codec(),
+		false
 	);
-	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<EnvironmentAttributeModification>> ENVIRONMENT_ATTRIBUTE = REGISTER.register(
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<EnvironmentAttributeModification>> ENVIRONMENT_ATTRIBUTE = register(
 		"environment_attribute",
-		() -> BiomeModificationType.createSyncable(EnvironmentAttributeModification.CODEC)
+		EnvironmentAttributeModification.CODEC,
+		false
 	);
-	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<FeatureModification>> FEATURE = REGISTER.register(
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<FeatureModification>> FEATURE = register(
 		"feature",
-		() -> BiomeModificationType.createServerOnly(FeatureModification.CODEC)
+		FeatureModification.CODEC,
+		true
 	);
-	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<CarverModification>> CARVER = REGISTER.register(
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<CarverModification>> CARVER = register(
 		"carver",
-		() -> BiomeModificationType.createServerOnly(CarverModification.CODEC)
+		CarverModification.CODEC,
+		true
 	);
 
 	static {
@@ -70,5 +75,14 @@ public final class BiomeModificationTypes {
 				}
 			);
 		}
+	}
+
+	private static <T extends BiomeModification> DeferredHolder<BiomeModificationType<?>, BiomeModificationType<T>> register(
+		String name,
+		MapCodec<T> codec,
+		boolean serverOnly
+	) {
+		final BiomeModificationType<T> type = new BiomeModificationType<>(codec, serverOnly);
+		return REGISTER.register(name, () -> type);
 	}
 }
