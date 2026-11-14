@@ -204,107 +204,107 @@ public class FeatureModification extends BiomeModification {
 	public static void registerLocalReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.LOCAL_MODIFICATIONS, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.LOCAL_MODIFICATIONS, additions);
 	}
 
 	public static void registerLocalReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.LOCAL_MODIFICATIONS, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.LOCAL_MODIFICATIONS, additions);
 	}
 
 	public static void registerOreReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_ORES, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_ORES, additions);
 	}
 
 	public static void registerOreReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_ORES, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_ORES, additions);
 	}
 
 	public static void registerUndergroundReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_DECORATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_DECORATION, additions);
 	}
 
 	public static void registerUndergroundReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_DECORATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.UNDERGROUND_DECORATION, additions);
 	}
 
 	public static void registerVegetalReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.VEGETAL_DECORATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.VEGETAL_DECORATION, additions);
 	}
 
 	public static void registerVegetalReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.VEGETAL_DECORATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.VEGETAL_DECORATION, additions);
 	}
 
 	public static void registerTopLayerReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, additions);
 	}
 
 	public static void registerTopLayerReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		List<FrozenLibPlacedFeature> additions
 	) {
-		registerReplacement(context, biomes, configBiomeSelector, removals, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, additions);
+		registerReplacement(context, biomes, primaryBiomeSelector, removals, GenerationStep.Decoration.TOP_LAYER_MODIFICATION, additions);
 	}
 
 	public static void registerReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		TagKey<PlacedFeature> removals,
 		GenerationStep.Decoration step,
 		List<FrozenLibPlacedFeature> additions
@@ -312,7 +312,7 @@ public class FeatureModification extends BiomeModification {
 		FeatureModification.registerReplacement(
 			context,
 			biomes,
-			configBiomeSelector,
+			primaryBiomeSelector,
 			removals,
 			step,
 			additions.toArray(new FrozenLibPlacedFeature[0])
@@ -322,7 +322,7 @@ public class FeatureModification extends BiomeModification {
 	public static void registerReplacement(
 		BootstrapContext<BiomeModification> context,
 		TagKey<Biome> biomes,
-		ResourceKey<BiomeSelector> configBiomeSelector,
+		ResourceKey<BiomeSelector> primaryBiomeSelector,
 		List<ResourceKey<PlacedFeature>> removals,
 		GenerationStep.Decoration step,
 		List<FrozenLibPlacedFeature> additions
@@ -330,7 +330,7 @@ public class FeatureModification extends BiomeModification {
 		FeatureModification.registerReplacement(
 			context,
 			biomes,
-			configBiomeSelector,
+			primaryBiomeSelector,
 			removals,
 			step,
 			additions.toArray(new FrozenLibPlacedFeature[0])

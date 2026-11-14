@@ -46,6 +46,11 @@ public final class BiomeModificationTypes {
 		EnvironmentAttributeModification.CODEC,
 		false
 	);
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<SpecialEffectsModification>> SPECIAL_EFFECTS = register(
+		"special_effects",
+		SpecialEffectsModification.CODEC,
+		false
+	);
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<FeatureModification>> FEATURE = register(
 		"feature",
 		FeatureModification.CODEC,
@@ -54,6 +59,11 @@ public final class BiomeModificationTypes {
 	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<CarverModification>> CARVER = register(
 		"carver",
 		CarverModification.CODEC,
+		true
+	);
+	public static final DeferredHolder<BiomeModificationType<?>, BiomeModificationType<MobSpawnModification>> MOB_SPAWN = register(
+		"mob_spawn",
+		MobSpawnModification.CODEC,
 		true
 	);
 

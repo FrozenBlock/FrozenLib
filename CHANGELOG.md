@@ -89,8 +89,15 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
       - `removals`
       - `replacements`
       - `post_processing`
-  - `frozenlib:environment_attribute`: Merges a map of Environment Attributes into selected Biomes.
-    - `attributes`: A map of Environment Attributes to merge into the selected Biomes.
+  - `frozenlib:environment_attribute`: Removes and adds Environment Attributes from/to selected Biomes.
+    - `removals` (Optional): A list of Environment Attribute IDs, providing Environment Attributes to remove from the selected Biomes.
+    - `additions` (Optional): A map of Environment Attributes to merge into the selected Biomes.
+  - `frozenlib:special_effects`: Overrides colors provided by the selected Biomes.
+    - `water_color` (Optional): Overrides the water color of the selected Biomes.
+    - `foliage_color` (Optional): Overrides the foliage color of the selected Biomes.
+    - `dry_foliage_color` (Optional): Overrides the dry foliage color of the selected Biomes.
+    - `grass_color` (Optional): Overrides the grass color of the selected Biomes.
+    - `grass_color_modifier` (Optional): Overrides the grass color modifier of the selected Biomes.
   - `frozenlib:feature`: Removes and adds Placed Features from/to selected Biomes.
     - `removals` (Optional): A list, each element containing a `step` and `features` field.
       - `features`: A list of IDs of Placed Features, or a Placed Feature Tag, providing Placed Features to remove from the selected Biomes.
@@ -99,8 +106,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
       - `features`: A list of IDs of Placed Features, or a Placed Feature Tag, providing Placed Features to add to the selected Biomes.
       - `step`: The Generation Step to add the given `features` to.
   - `frozenlib:carver`: Removes and adds Carvers from/to selected biomes.
-    - `removals` (Optional): A list of IDs of Carvers to remove from the selected Biomes.
-    - `additions` (Optional): A list of IDs of Carvers to add to the selected Biomes.
+    - `removals` (Optional): A list of Carver IDs, or a Carver Tag, providing Carvers to remove from the selected Biomes.
+    - `additions` (Optional): A list of Carver IDs, or a Carver Tag, providing Carvers to add to the selected Biomes.
+  - `frozenlib:mob_spawn`: Removes and adds Mob spawns from/to selected Biomes.
+    - `creature_world_gen_spawn_probability` (Optional): A Float (in a 0-09999999 range,) overriding the probability for creatures to spawn during world generation in the selected Biomes.
+    - `removals` (Optional): A list of Entity Type IDs, or an Entity Type Tag, providing Entity Types to remove spawning from in the selected Biomes.
+    - `additions` (Optional): A map of Mob Spawns to merge into the selected Biomes.
 - Removed the `frozenlib:biome_environment_attribute_modification` Dynamic Registry as it has been superseded by the `frozenlib:biome_modification` Dynamic Registry.
 - Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
