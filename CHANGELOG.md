@@ -113,6 +113,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `removals` (Optional): A list of Entity Type IDs, or an Entity Type Tag, providing Entity Types to remove spawning from in the selected Biomes.
     - `additions` (Optional): A map of Mob Spawns to merge into the selected Biomes.
 - Removed the `frozenlib:biome_environment_attribute_modification` Dynamic Registry as it has been superseded by the `frozenlib:biome_modification` Dynamic Registry.
+- Removed the `frozenlib:noise_filter` Placement Modifier Type, and added the `frozenlib:noise_threshold` Block Predicate Type with the following format:
+  - `noise`: The ID of the Noise to sample from.
+  - `min_threshold`: The minimum noise value able to succeed.
+  - `max_threshold`: The maximum noise value able to succeed.
+  - `is_3d`: Whether to incorporate the current y-level while sampling `noise`.
 - Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
   - Renamed the `sound_type` field to `sound_set`.

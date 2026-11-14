@@ -21,7 +21,6 @@ import com.mojang.serialization.MapCodec;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
-import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
 import net.frozenblock.lib.platform.api.registry.DeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
@@ -38,7 +37,6 @@ public final class FrozenLibPlacementModifierTypes {
 		);
 
 		register.register("config_predicate", () -> ConfigPlacementFilter.CODEC);
-		register.register("noise_filter", () -> NoisePlacementFilter.CODEC);
 
 		register.register();
 	}

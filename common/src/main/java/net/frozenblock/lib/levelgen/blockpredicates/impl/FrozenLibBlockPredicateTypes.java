@@ -23,6 +23,7 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.blockpredicates.HasMatchingAxisPredicate;
 import net.frozenblock.lib.levelgen.blockpredicates.ConfigBlockPredicate;
+import net.frozenblock.lib.levelgen.blockpredicates.NoiseThresholdBlockPredicate;
 import net.frozenblock.lib.levelgen.blockpredicates.SearchInAreaBlockPredicate;
 import net.frozenblock.lib.levelgen.blockpredicates.SearchInDirectionBlockPredicate;
 import net.frozenblock.lib.levelgen.blockpredicates.TouchingBlockPredicate;
@@ -46,6 +47,7 @@ public final class FrozenLibBlockPredicateTypes {
 	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<TouchingBlockPredicate>> TOUCHING = register("touching", () -> TouchingBlockPredicate.CODEC);
 	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<ConfigBlockPredicate>> CONFIG_PREDICATE = register("config_predicate", () -> ConfigBlockPredicate.CODEC);
 	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<HasMatchingAxisPredicate>> HAS_MATCHING_AXIS = register("has_matching_axis", () -> HasMatchingAxisPredicate.CODEC);
+	public static final DeferredHolder<BlockPredicateType<?>, BlockPredicateType<NoiseThresholdBlockPredicate>> NOISE_THRESHOLD = register("noise_threshold", () -> NoiseThresholdBlockPredicate.CODEC);
 
 	static {
 		REGISTER.register();
