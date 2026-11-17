@@ -47,69 +47,69 @@ public abstract class FrozenLibBiome {
 	}
 
 	/**
-	 * @return the namespace to use for this biome.
+	 * @return The namespace to use for this biome.
 	 */
 	public abstract String modID();
 
 	/**
-	 * @return this biome's name, not including the namespace.
+	 * @return This biome's name, not including the namespace.
 	 */
 	public abstract String biomeID();
 
 	/**
-	 * @return thetemperature of this biome.
+	 * @return The temperature of this biome.
 	 */
 	public abstract float temperature();
 
 	/**
-	 * @return the chance of downfall in this biome.
+	 * @return The chance of downfall in this biome.
 	 */
 	public abstract float downfall();
 
 	/**
-	 * @return whether this biome has precipitation.
+	 * @return Whether this biome has precipitation.
 	 */
 	public abstract boolean hasPrecipitation();
 
 	/**
-	 * @return the temperature modifier to use for this biome.
+	 * @return The temperature modifier to use for this biome.
 	 */
 	public Biome.TemperatureModifier temperatureModifier() {
 		return Biome.TemperatureModifier.NONE;
 	}
 
 	/**
-	 * @return the water color to use for this biome.
+	 * @return The water color to use for this biome.
 	 */
 	public abstract int waterColor();
 
 	/**
-	 * @return the foliage color override to use for this biome.
+	 * @return The foliage color override to use for this biome.
 	 */
 	@Nullable
 	public abstract Integer foliageColorOverride();
 
 	/**
-	 * @return the dry foliage color override to use for this biome.
+	 * @return The dry foliage color override to use for this biome.
 	 */
 	@Nullable
 	public abstract Integer dryFoliageColorOverride();
 
 	/**
-	 * @return the grass color override to use for the biome.
+	 * @return The grass color override to use for this biome.
 	 */
 	@Nullable
 	public abstract Integer grassColorOverride();
 
 	/**
-	 * @return the {@link net.minecraft.world.level.biome.BiomeSpecialEffects.GrassColorModifier} of the biome.
+	 * @return the {@link net.minecraft.world.level.biome.BiomeSpecialEffects.GrassColorModifier} to use for this biome.
 	 */
 	public BiomeSpecialEffects.GrassColorModifier grassColorModifier() {
 		return BiomeSpecialEffects.GrassColorModifier.NONE;
 	}
 
 	/**
-	 * Fills in the {@link EnvironmentAttributeMap} of the biome.
+	 * Fills in the {@link EnvironmentAttributeMap} of this biome.
 	 */
 	public abstract void fillEnvironmentAttributes(EnvironmentAttributeMap.Builder attributes);
 
@@ -120,8 +120,8 @@ public abstract class FrozenLibBiome {
 	 * @return the finalized {@link Biome}.
 	 */
 	public final Biome create(BootstrapContext<Biome> entries) {
-		final Biome.BiomeBuilder biomeBuilder = new Biome.BiomeBuilder();
-		biomeBuilder.temperature(this.temperature())
+		final Biome.BiomeBuilder builder = new Biome.BiomeBuilder()
+			.temperature(this.temperature())
 			.temperatureAdjustment(this.temperatureModifier())
 			.downfall(this.downfall())
 			.hasPrecipitation(this.hasPrecipitation());
@@ -130,11 +130,11 @@ public abstract class FrozenLibBiome {
 		final HolderGetter<WorldCarver> worldCarvers = entries.lookup(Registries.CARVER);
 		final BiomeGenerationSettings.Builder featureBuilder = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 		this.addFeatures(featureBuilder);
-		biomeBuilder.generationSettings(featureBuilder.build());
+		builder.generationSettings(featureBuilder.build());
 
 		final MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
 		this.addSpawns(spawnBuilder);
-		biomeBuilder.mobSpawnSettings(spawnBuilder.build());
+		builder.mobSpawnSettings(spawnBuilder.build());
 
 		final BiomeSpecialEffects.Builder specialEffectsBuilder = new BiomeSpecialEffects.Builder()
 			.waterColor(this.waterColor())
@@ -142,12 +142,12 @@ public abstract class FrozenLibBiome {
 		if (this.foliageColorOverride() != null) specialEffectsBuilder.foliageColorOverride(this.foliageColorOverride());
 		if (this.dryFoliageColorOverride() != null) specialEffectsBuilder.dryFoliageColorOverride(this.dryFoliageColorOverride());
 		if (this.grassColorOverride() != null) specialEffectsBuilder.grassColorOverride(this.grassColorOverride());
-		biomeBuilder.specialEffects(specialEffectsBuilder.build());
+		builder.specialEffects(specialEffectsBuilder.build());
 
 		final EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder();
 		this.fillEnvironmentAttributes(attributes);
 
-		return biomeBuilder.putAttributes(attributes).build();
+		return builder.putAttributes(attributes).build();
 	}
 
 	/**
@@ -200,9 +200,17 @@ public abstract class FrozenLibBiome {
 	 *
 	 * <p>This matches the depth of most other Vanilla surface biomes.
 	 */
-	public final void addSurfaceBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0F), weirdness, offset), this.getKey()));
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0F), weirdness, offset), this.getKey()));
+	public final void addSurfaceBiome(
+		Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters,
+		Climate.Parameter temperature,
+		Climate.Parameter humidity,
+		Climate.Parameter continentalness,
+		Climate.Parameter erosion,
+		Climate.Parameter weirdness,
+		float offset
+	) {
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0F), weirdness, offset), this.getKey()));
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1F), weirdness, offset), this.getKey()));
 	}
 
 	/**
@@ -210,8 +218,16 @@ public abstract class FrozenLibBiome {
 	 *
 	 * <p>This is between Vanilla's Lush Caves/Dripstone Caves and Deep Dark depth.
 	 */
-	public final void addSemiDeepBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
-		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.4F, 1.0F), weirdness, offset), this.getKey()));
+	public final void addSemiDeepBiome(
+		Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters,
+		Climate.Parameter temperature,
+		Climate.Parameter humidity,
+		Climate.Parameter continentalness,
+		Climate.Parameter erosion,
+		Climate.Parameter weirdness,
+		float offset
+	) {
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.4F, 1F), weirdness, offset), this.getKey()));
 	}
 
 	/**
@@ -219,8 +235,16 @@ public abstract class FrozenLibBiome {
 	 *
 	 * <p>This matches Vanilla's Lush Caves/Dripstone Caves depth.
 	 */
-	public final void addUndergroundBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), weirdness, offset), this.getKey()));
+	public final void addUndergroundBiome(
+		Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters,
+		Climate.Parameter temperature,
+		Climate.Parameter humidity,
+		Climate.Parameter continentalness,
+		Climate.Parameter erosion,
+		Climate.Parameter weirdness,
+		float offset
+	) {
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), weirdness, offset), this.getKey()));
 	}
 
 	/**
@@ -228,8 +252,16 @@ public abstract class FrozenLibBiome {
 	 *
 	 * <p>This matches Vanilla's Deep Dark depth.
 	 */
-	public final void addBottomBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temerature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
-		consumer.accept(Pair.of(Climate.parameters(temerature, humidity, continentalness, erosion, Climate.Parameter.point(1.1F), weirdness, offset), this.getKey()));
+	public final void addBottomBiome(
+		Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters,
+		Climate.Parameter temperature,
+		Climate.Parameter humidity,
+		Climate.Parameter continentalness,
+		Climate.Parameter erosion,
+		Climate.Parameter weirdness,
+		float offset
+	) {
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.1F), weirdness, offset), this.getKey()));
 	}
 
 	/**

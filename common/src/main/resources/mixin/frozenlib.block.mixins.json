@@ -13,7 +13,7 @@
     "brushable.BrushableBlockMixin",
     "clipgroup.BlockGetterMixin",
     "clipgroup.EntityMixin",
-    "dispenser.ShearsDispenseItemBehaviorMixin",
+    "dispenser.ShearDispenseBehaviorMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
     "fire.AbstractHurtingProjectileMixin",

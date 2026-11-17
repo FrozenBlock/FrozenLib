@@ -37,6 +37,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.dispenser.DispenseBehaviorIds;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -62,6 +63,7 @@ import net.minecraft.world.item.DoubleHighBlockItem;
 import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.MinecartItem;
 import net.minecraft.world.item.PlaceOnFluidBlockItem;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SpawnEggItem;
@@ -429,13 +431,13 @@ public interface DeferredRegister<T> {
 			BlockItemId id,
 			BlockSetType blockSetType,
 			Supplier<? extends Block> base,
-			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+			UnaryOperator<BlockBehaviour.Properties> extraProperties
 		) {
 			return this.registerLegacyCopy(
 				id.block(),
 				properties -> new DoorBlock(blockSetType, properties),
 				base,
-				properties -> propertiesOp.apply(properties.noOcclusion().pushReaction(PushReaction.POPPED))
+				properties -> extraProperties.apply(properties.noOcclusion().pushReaction(PushReaction.POPPED))
 			);
 		}
 
@@ -447,12 +449,12 @@ public interface DeferredRegister<T> {
 			BlockItemId id,
 			BlockSetType blockSetType,
 			Supplier<? extends Block> base,
-			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+			UnaryOperator<BlockBehaviour.Properties> extraProperties
 		) {
 			return this.registerBlock(
 				id.block(),
 				properties -> new DoorBlock(blockSetType, properties),
-				() -> propertiesOp.apply(
+				() -> extraProperties.apply(
 					BlockBehaviour.Properties.of()
 						.mapColor(base.get().defaultMapColor())
 						.strength(base.get().properties().destroyTime)
@@ -470,13 +472,13 @@ public interface DeferredRegister<T> {
 			BlockItemId id,
 			BlockSetType blockSetType,
 			Supplier<? extends Block> base,
-			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+			UnaryOperator<BlockBehaviour.Properties> extraProperties
 		) {
 			return this.registerLegacyCopy(
 				id.block(),
 				properties -> new TrapDoorBlock(blockSetType, properties),
 				base,
-				properties -> propertiesOp.apply(properties.noOcclusion().isValidSpawn(net.minecraft.world.level.block.Blocks::never))
+				properties -> extraProperties.apply(properties.noOcclusion().isValidSpawn(net.minecraft.world.level.block.Blocks::never))
 			);
 		}
 
@@ -488,12 +490,12 @@ public interface DeferredRegister<T> {
 			BlockItemId id,
 			BlockSetType blockSetType,
 			Supplier<? extends Block> base,
-			UnaryOperator<BlockBehaviour.Properties> propertiesOp
+			UnaryOperator<BlockBehaviour.Properties> extraProperties
 		) {
 			return this.registerBlock(
 				id.block(),
 				properties -> new TrapDoorBlock(blockSetType, properties),
-				() -> propertiesOp.apply(
+				() -> extraProperties.apply(
 					BlockBehaviour.Properties.of()
 						.mapColor(base.get().defaultMapColor())
 						.requiresCorrectToolForDrops()
@@ -821,136 +823,136 @@ public interface DeferredRegister<T> {
 		}
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
-		default DeferredItem<BlockItem> registerOverworldWoodItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldWood(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
 		// For use with Blocks such as Logs, Planks, Stripped Logs/Wood, etc.
-		default DeferredItem<BlockItem> registerOverworldWoodSlabItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldWoodSlab(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_SLABS));
 		}
 
-		default DeferredItem<BlockItem> registerOverworldSaplingItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldSapling(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS));
 		}
 
-		default DeferredItem<BlockItem> registerOverworldLeavesItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerOverworldLeaves(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW));
 		}
 
-		default DeferredItem<BlockItem> registerCookableButtonItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookableButton(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_EXTRA_SMALL));
 		}
 
-		default DeferredItem<BlockItem> registerCookablePressurePlateItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookablePressurePlate(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
-		default DeferredItem<BlockItem> registerCookableTrapdoorItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookableTrapdoor(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
-		default DeferredItem<BlockItem> registerCookableFenceItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookableFence(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
-		default DeferredItem<BlockItem> registerCookableFenceGateItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookableFenceGate(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
-		default DeferredItem<BlockItem> registerFlowerItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerFlower(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM));
 		}
 
-		default DeferredItem<BlockItem> registerFlowerBedItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerFlowerBed(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW));
 		}
 
-		default DeferredItem<BlockItem> registerLeafLitterItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerLeafLitter(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_LOW).cookingFuel(ContextIntProviders.COOKING_TIME_DRY_PLANTS));
 		}
 
-		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
-			return this.registerBlockItem(key, (properties, block) -> new PlaceOnFluidBlockItem(block, properties), base, propertiesOp);
+		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlock(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerBlockItem(key, (properties, block) -> new PlaceOnFluidBlockItem(block, properties), base, extraProperties);
 		}
 
-		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlockItem(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerPlaceOnFluidBlockItem(key, base, properties -> properties);
+		default DeferredItem<PlaceOnFluidBlockItem> registerPlaceOnFluidBlock(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerPlaceOnFluidBlock(key, base, properties -> properties);
 		}
 
-		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlockItem(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> propertiesOp) {
-			return this.registerBlockItem(key, (properties, block) -> new DoubleHighBlockItem(block, properties), base, propertiesOp);
+		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlock(BlockItemId key, Supplier<? extends Block> base, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerBlockItem(key, (properties, block) -> new DoubleHighBlockItem(block, properties), base, extraProperties);
 		}
 
-		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlockItem(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerDoubleHighBlockItem(key, base, properties -> properties);
+		default DeferredItem<DoubleHighBlockItem> registerDoubleHighBlock(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerDoubleHighBlock(key, base, properties -> properties);
 		}
 
-		default DeferredItem<DoubleHighBlockItem> registerCookableDoorItem(BlockItemId key, Supplier<? extends Block> base) {
-			return this.registerDoubleHighBlockItem(key, base, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
+		default DeferredItem<DoubleHighBlockItem> registerCookableDoor(BlockItemId key, Supplier<? extends Block> base) {
+			return this.registerDoubleHighBlock(key, base, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
 		}
 
-		default DeferredItem<DoubleHighBlockItem> registerDoubleTallFlowerItem(BlockItemId key, Supplier<? extends Block> block) {
-			return this.registerDoubleHighBlockItem(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM));
+		default DeferredItem<DoubleHighBlockItem> registerDoubleTallFlower(BlockItemId key, Supplier<? extends Block> block) {
+			return this.registerDoubleHighBlock(key, block, properties -> properties.compostable(ContextIntProviders.COMPOSTABLE_MEDIUM));
 		}
 
-		default DeferredItem<StandingAndWallBlockItem> registerSignItem(
+		default DeferredItem<StandingAndWallBlockItem> registerSign(
 			BlockItemId key,
 			Supplier<? extends Block> sign,
 			Supplier<? extends Block> wallSign,
-			UnaryOperator<Item.Properties> propertiesOp
+			UnaryOperator<Item.Properties> extraProperties
 		) {
 			return this.registerBlockItem(
 				key,
 				(properties, block) -> new StandingAndWallBlockItem(block, wallSign.get(), Direction.DOWN, properties),
 				sign,
-				() -> propertiesOp.apply(new Item.Properties().stacksTo(16).signText())
+				() -> extraProperties.apply(new Item.Properties().stacksTo(16).signText())
 			);
 		}
 
-		default DeferredItem<StandingAndWallBlockItem> registerSignItem(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
-			return this.registerSignItem(key, sign, wallSign, properties -> properties);
+		default DeferredItem<StandingAndWallBlockItem> registerSign(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
+			return this.registerSign(key, sign, wallSign, properties -> properties);
 		}
 
-		default DeferredItem<StandingAndWallBlockItem> registerCookableSignItem(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
-			return this.registerSignItem(key, sign, wallSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
+		default DeferredItem<StandingAndWallBlockItem> registerCookableSign(BlockItemId key, Supplier<? extends Block> sign, Supplier<? extends Block> wallSign) {
+			return this.registerSign(key, sign, wallSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_ITEMS_LARGE));
 		}
 
-		default DeferredItem<HangingSignItem> registerHangingSignItem(
+		default DeferredItem<HangingSignItem> registerHangingSign(
 			BlockItemId key,
 			Supplier<? extends Block> hangingSign,
 			Supplier<? extends Block> wallHangingSign,
-			UnaryOperator<Item.Properties> propertiesOp
+			UnaryOperator<Item.Properties> extraProperties
 		) {
 			return this.registerBlockItem(
 				key,
 				(properties, block) -> new HangingSignItem(block, wallHangingSign.get(), properties),
 				hangingSign,
-				() -> propertiesOp.apply(new Item.Properties().stacksTo(16).signText())
+				() -> extraProperties.apply(new Item.Properties().stacksTo(16).signText())
 			);
 		}
 
-		default DeferredItem<HangingSignItem> registerHangingSignItem(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
-			return this.registerHangingSignItem(key, hangingSign, wallHangingSign, properties -> properties);
+		default DeferredItem<HangingSignItem> registerHangingSign(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
+			return this.registerHangingSign(key, hangingSign, wallHangingSign, properties -> properties);
 		}
 
-		default DeferredItem<HangingSignItem> registerCookableHangingSignItem(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
-			return this.registerHangingSignItem(key, hangingSign, wallHangingSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_HANGING_SIGNS));
+		default DeferredItem<HangingSignItem> registerCookableHangingSign(BlockItemId key, Supplier<? extends Block> hangingSign, Supplier<? extends Block> wallHangingSign) {
+			return this.registerHangingSign(key, hangingSign, wallHangingSign, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_HANGING_SIGNS));
 		}
 
-		default DeferredItem<BlockItem> registerShelfItem(BlockItemId key, Supplier<? extends Block> block, UnaryOperator<Item.Properties> propertiesOp) {
+		default DeferredItem<BlockItem> registerShelf(BlockItemId key, Supplier<? extends Block> block, UnaryOperator<Item.Properties> extraProperties) {
 			return this.registerSimpleBlockItem(
 				key,
 				block,
-				properties -> propertiesOp.apply(properties.component(net.minecraft.core.component.DataComponents.CONTAINER, ItemContainerContents.EMPTY))
+				properties -> extraProperties.apply(properties.component(net.minecraft.core.component.DataComponents.CONTAINER, ItemContainerContents.EMPTY))
 			);
 		}
 
-		default DeferredItem<BlockItem> registerShelfItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerShelf(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block);
 		}
 
-		default DeferredItem<BlockItem> registerCookableShelfItem(BlockItemId key, Supplier<? extends Block> block) {
+		default DeferredItem<BlockItem> registerCookableShelf(BlockItemId key, Supplier<? extends Block> block) {
 			return this.registerSimpleBlockItem(key, block, properties -> properties.cookingFuel(ContextIntProviders.COOKING_TIME_WOOD_BLOCKS));
 		}
 
@@ -958,28 +960,44 @@ public interface DeferredRegister<T> {
 			return this.registerSimpleItem(key, () -> new Item.Properties().stacksTo(1).rarity(Rarity.RARE).jukeboxPlayable(song));
 		}
 
-		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type, UnaryOperator<Item.Properties> propertiesOp) {
-			return this.registerItem(key, SpawnEggItem::new, () -> propertiesOp.apply(new Item.Properties().spawnEgg(type.get())));
+		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerItem(key, SpawnEggItem::new, () -> extraProperties.apply(new Item.Properties().spawns(type.get()).dispensed(DispenseBehaviorIds.SPAWN_EGG)));
 		}
 
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, Supplier<EntityType<?>> type) {
 			return this.registerSpawnEgg(key, type, properties -> properties);
 		}
 
-		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type, UnaryOperator<Item.Properties> propertiesOp) {
-			return this.registerSpawnEgg(key, type::get, propertiesOp);
+		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerSpawnEgg(key, type::get, extraProperties);
 		}
 
 		default DeferredItem<SpawnEggItem> registerSpawnEgg(ResourceKey<Item> key, DeferredEntityType<?> type) {
 			return this.registerSpawnEgg(key, type::get);
 		}
 
-		default DeferredItem<BoatItem> registerBoatItem(ResourceKey<Item> id, Supplier<EntityType<? extends AbstractBoat>> boat) {
+		default DeferredItem<BoatItem> registerBoat(ResourceKey<Item> id, Supplier<EntityType<? extends AbstractBoat>> type) {
 			return this.registerItem(
 				id,
-				properties -> new BoatItem(boat.get(), properties),
-				() -> new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_BOATS).stacksTo(1)
+				properties -> new BoatItem(properties),
+				() -> new Item.Properties().cookingFuel(ContextIntProviders.COOKING_TIME_BOATS).stacksTo(1).spawns(type.get()).dispensed(DispenseBehaviorIds.BOAT)
 			);
+		}
+
+		default DeferredItem<MinecartItem> registerMinecart(ResourceKey<Item> key, Supplier<EntityType<?>> type, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerItem(key, MinecartItem::new, () -> extraProperties.apply(new Item.Properties().stacksTo(1).spawns(type.get()).dispensed(DispenseBehaviorIds.MINECART)));
+		}
+
+		default DeferredItem<MinecartItem> registerMinecart(ResourceKey<Item> key, Supplier<EntityType<?>> type) {
+			return this.registerMinecart(key, type, properties -> properties);
+		}
+
+		default DeferredItem<MinecartItem> registerMinecart(ResourceKey<Item> key, DeferredEntityType<?> type, UnaryOperator<Item.Properties> extraProperties) {
+			return this.registerMinecart(key, type::get, extraProperties);
+		}
+
+		default DeferredItem<MinecartItem> registerMinecart(ResourceKey<Item> key, DeferredEntityType<?> type) {
+			return this.registerMinecart(key, type::get);
 		}
 
 		// COPPER

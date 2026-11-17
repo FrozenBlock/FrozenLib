@@ -28,7 +28,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Lets you add custom behaviors to run upon a Dispenser using Shears.
  */
-public final class ShearsDispenseItemBehaviorApi {
+public final class ShearDispenseBehaviorApi {
 	private static final List<AdditionalBehavior> ADDITIONAL_BEHAVIORS = new ArrayList<>();
 
 	/**

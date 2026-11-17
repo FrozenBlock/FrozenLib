@@ -19,29 +19,29 @@ package net.frozenblock.lib.block.mixin.dispenser;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.block.api.dispenser.ShearsDispenseItemBehaviorApi;
+import net.frozenblock.lib.block.api.dispenser.ShearDispenseBehaviorApi;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
+import net.minecraft.core.dispenser.ShearDispenseBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ShearsDispenseItemBehavior.class)
-public class ShearsDispenseItemBehaviorMixin {
+@Mixin(ShearDispenseBehavior.class)
+public class ShearDispenseBehaviorMixin {
 
 	@WrapOperation(
 		method = "execute",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/core/dispenser/ShearsDispenseItemBehavior;tryShearBeehive(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/BlockPos;)Z"
+			target = "Lnet/minecraft/core/dispenser/ShearDispenseBehavior;tryShearBeehive(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/BlockPos;)Z"
 		)
 	)
 	private boolean frozenLib$attemptAdditionalBehaviors(ServerLevel level, ItemStack tool, BlockPos pos, Operation<Boolean> operation) {
 		if (operation.call(level, tool, pos)) return true;
 
 		final BlockState state = level.getBlockState(pos);
-		return ShearsDispenseItemBehaviorApi.tryShear(state, level, tool, pos);
+		return ShearDispenseBehaviorApi.tryShear(state, level, tool, pos);
 	}
 }

@@ -488,16 +488,17 @@ public final class ModResourcePackApi {
 
 	@ApiStatus.Internal
 	public enum PackDownloadSetting implements StringRepresentable {
-		ENABLED("pack_downloading.enabled"),
-		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
-		DISABLED("pack_downloading.disabled");
-
+		ENABLED(0, "pack_downloading.enabled"),
+		ENABLED_NO_TOASTS(1, "pack_downloading.enabled_no_toasts"),
+		DISABLED(2, "pack_downloading.disabled");
 		public static final Codec<PackDownloadSetting> CODEC = StringRepresentable.fromEnum(PackDownloadSetting::values);
-		public static final StreamCodec<ByteBuf, PackDownloadSetting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+		public static final StreamCodec<ByteBuf, PackDownloadSetting> STREAM_CODEC = ByteBufCodecs.enumCodec(PackDownloadSetting.class, PackDownloadSetting::getId);
 		public static final EntryType<PackDownloadSetting> ENTRY_TYPE = EntryType.create(CODEC, STREAM_CODEC);
+		private final int id;
 		private final String name;
 
-		PackDownloadSetting(String name) {
+		PackDownloadSetting(int id, String name) {
+			this.id = id;
 			this.name = name;
 		}
 
@@ -509,6 +510,10 @@ public final class ModResourcePackApi {
 		@Override
 		public String getSerializedName() {
 			return this.name;
+		}
+
+		public int getId() {
+			return this.id;
 		}
 	}
 

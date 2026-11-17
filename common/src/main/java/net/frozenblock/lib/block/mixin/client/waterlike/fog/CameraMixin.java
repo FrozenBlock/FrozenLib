@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FogType;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -44,11 +45,11 @@ public abstract class CameraMixin {
 	private Level level;
 
 	@Shadow
-	public abstract BlockPos blockPosition();
-
-	@Shadow
 	private FogType fogType;
 
+	@Shadow
+	@Final
+	private BlockPos.MutableBlockPos blockPosition;
 	@Unique
 	private @Nullable BlockState frozenLib$fluidFogBlockState;
 	@Unique
@@ -85,11 +86,30 @@ public abstract class CameraMixin {
 		slice = @Slice(
 			from = @At(
 				value = "INVOKE",
-				target = "Lnet/minecraft/world/level/material/Fluid;getFogType()Lnet/minecraft/world/level/material/FogType;"
+				target = "Lnet/minecraft/world/level/material/Fluid;getFogType()Lnet/minecraft/world/level/material/FogType;",
+				ordinal = 0
 			)
 		)
 	)
-	private void frozenLib$captureFluidFogBlockState(
+	private void frozenLib$captureFluidFogBlockStateAtCameraPosition(CallbackInfoReturnable<FogType> info) {
+		this.frozenLib$fluidFogBlockState = this.level.getBlockState(this.blockPosition);
+	}
+
+	@Inject(
+		method = "calculateFogType",
+		at = @At(
+			value = "RETURN",
+			ordinal = 0
+		),
+		slice = @Slice(
+			from = @At(
+				value = "INVOKE",
+				target = "Lnet/minecraft/world/level/material/Fluid;getFogType()Lnet/minecraft/world/level/material/FogType;",
+				ordinal = 1
+			)
+		)
+	)
+	private void frozenLib$captureFluidFogBlockStateAlongCameraPlane(
 		CallbackInfoReturnable<FogType> info,
 		@Local(name = "checkPos") BlockPos checkPos
 	) {
