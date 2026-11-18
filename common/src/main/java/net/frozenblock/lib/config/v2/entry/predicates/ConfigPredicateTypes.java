@@ -49,6 +49,7 @@ public final class ConfigPredicateTypes {
 		register.register("fabric", () -> FabricPredicate.CODEC);
 		register.register("neoforge", () -> NeoForgePredicate.CODEC);
 		register.register("mod", () -> ModPredicate.CODEC);
+		register.register("local_time", () -> LocalTimePredicate.CODEC);
 		register.register("true", () -> TruePredicate.CODEC);
 		register.register("false", () -> FalsePredicate.CODEC);
 

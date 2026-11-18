@@ -135,6 +135,11 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `condition`: A Config Predicate, or the ID of a Config Predicate.
   - `on_true`: A Config Predicate, or the ID of a Config Predicate, to be used if the `condition` returns `true`.
   - `on_false`: A Config Predicate, or the ID of a Config Predicate, to be used if the `condition` returns `false`.
+- Added the `frozenlib:local_time` Config Predicate Type (a reimplementation of the `minecraft:local_time` Item Model Property) with the following format:
+  - `pattern`: The format to parse the current date and time with.
+  - `locale` (Optional): The locale to use when fetching the current date and time.
+  - `time_zone` (Optional): The time zone to use when fetching the current date and time.
+  - `target_dates`: A list of dates (in the same format as specified by `pattern`) that will succeed.
 - Added Toasts related to File Transfers:
   - Transfer Receive
     - Only displays in IDEs or with the `MC_DEBUG_FROZENLIB_FILE_TRANSFER` launch argument enabled.
