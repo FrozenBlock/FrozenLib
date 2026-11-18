@@ -96,11 +96,6 @@ public class ConditionalFoliagePlacer extends FoliagePlacer {
 	}
 
 	@Override
-	private int offset(RandomSource random) {
-		return this.offset.sample(random);
-	}
-
-	@Override
 	protected boolean shouldSkipLocation(RandomSource random, int dx, int y, int dz, int currentRadius, boolean doubleTrunk) {
 		return false;
 	}
