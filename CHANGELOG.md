@@ -118,6 +118,14 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `min_threshold`: The minimum noise value able to succeed.
   - `max_threshold`: The maximum noise value able to succeed.
   - `is_3d`: Whether to incorporate the current y-level while sampling `noise`.
+- Added the `frozenlib:conditional_trunk_placer` Trunk Placer Type, with the following format:
+  - `condition`: A Config Predicate, or the ID of a Config Predicate.
+  - `on_true`: A Trunk Placer to be used if the `condition` returns `true`.
+  - `on_false`: A Trunk Placer to be used if the `condition` returns `false`.
+- Added the `frozenlib:conditional_foliage_placer` Foliage Placer Type, with the following format:
+  - `condition`: A Config Predicate, or the ID of a Config Predicate.
+  - `on_true`: A Foliage Placer to be used if the `condition` returns `true`.
+  - `on_false`: A Foliage Placer to be used if the `condition` returns `false`.
 - Revised the `frozenlib:sound_type_override` Dynamic Registry, as Vanilla now has the `minecraft:block_sound_set` Dynamic Registry.
   - Renamed the `frozenlib:sound_type_override` Dynamic Registry to `frozenlib:block_sound_set_override`.
   - Renamed the `sound_type` field to `sound_set`.

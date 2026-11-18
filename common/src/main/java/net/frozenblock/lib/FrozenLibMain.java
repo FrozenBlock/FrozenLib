@@ -49,8 +49,10 @@ import net.frozenblock.lib.levelgen.biome.api.modifications.data.selector.BiomeS
 import net.frozenblock.lib.levelgen.biome.impl.modifications.BiomeModificationImpl;
 import net.frozenblock.lib.levelgen.blockpredicates.impl.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.feature.impl.FrozenLibFeatureTypes;
+import net.frozenblock.lib.levelgen.feature.impl.foliageplacers.FrozenLibFoliagePlacerTypes;
 import net.frozenblock.lib.levelgen.feature.impl.stateproviders.FrozenLibBlockStateProviderTypes;
 import net.frozenblock.lib.levelgen.feature.impl.treedecorators.FrozenLibTreeDecoratorTypes;
+import net.frozenblock.lib.levelgen.feature.impl.trunkplacers.FrozenLibTrunkPlacerTypes;
 import net.frozenblock.lib.levelgen.material.impl.FrozenLibMaterialConditionTypes;
 import net.frozenblock.lib.levelgen.music.pitch.provider.PitchProviderTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifierTypes;
@@ -111,6 +113,8 @@ public final class FrozenLibMain {
 		FrozenLibDataComponents.init();
 		FrozenLibConsumeEffects.init();
 		FrozenLibFeatureTypes.init();
+		FrozenLibTrunkPlacerTypes.init();
+		FrozenLibFoliagePlacerTypes.init();
 		FrozenLibTreeDecoratorTypes.init();
 		FrozenLibBlockStateProviderTypes.init();
 		ConfigPredicateTypes.init();
