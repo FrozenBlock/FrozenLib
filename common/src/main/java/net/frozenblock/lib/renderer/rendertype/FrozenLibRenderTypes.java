@@ -23,9 +23,11 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.renderer.pipeline.variant.FrozenLibEntityRenderPipelineVariants;
 import net.mehvahdjukaar.candlelight.api.ClientOnly;
+import net.minecraft.client.renderer.feature.ItemFeatureRenderer;
 import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.TextureTransform;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
@@ -218,6 +220,26 @@ public final class FrozenLibRenderTypes {
 
 	public static RenderType entityTranslucentEmissiveFixedCull(Identifier texture) {
 		return entityTranslucentEmissiveFixedCull(texture, true);
+	}
+
+	// CUTOUT GLINT
+	public static final Function<Identifier, RenderType> ENTITY_CUTOUT_GLINT = Util.memoize(texture -> {
+		final RenderSetup state = RenderSetup.nonOitBuilder(
+				RenderPipelines.entity(new RenderPipelines.EntityParameters(FrozenLibEntityRenderPipelineVariants.CUTOUT_GLINT, null))
+			)
+			.withTexture("Sampler0", texture)
+			.withTexture("GlintSampler", ItemFeatureRenderer.ENCHANTED_GLINT_ITEM)
+			.setTextureTransform(TextureTransform.ENTITY_GLINT_TEXTURING)
+			.useLightmap()
+			.useOverlay()
+			.affectsCrumbling()
+			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_cutout_glint"), state);
+	});
+
+	public static RenderType entityCutoutGlint(Identifier texture) {
+		return ENTITY_CUTOUT_GLINT.apply(texture);
 	}
 
 	// APPARITION

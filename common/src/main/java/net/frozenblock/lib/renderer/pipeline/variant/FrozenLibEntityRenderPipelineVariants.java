@@ -197,6 +197,25 @@ public final class FrozenLibEntityRenderPipelineVariants {
 		)
 	);
 
+	// CUTOUT GLINT
+	public static final EntityRenderPipelineVariant CUTOUT_GLINT = EntityRenderPipelineVariant.VALUES.add(
+		new EntityRenderPipelineVariant(
+			FrozenLibConstants.safeString("cutout_glint"),
+			ColorTargetState.DEFAULT,
+			DepthStencilState.DEFAULT,
+			EntityRenderPipelineVariant.Lighting.PER_FACE,
+			false,
+			true,
+			true,
+			false,
+			true,
+			false,
+			false,
+			false,
+			false
+		)
+	);
+
 	// APPARITION
 	public static final EntityRenderPipelineVariant APPARITION_OUTER = EntityRenderPipelineVariant.VALUES.add(
 		new EntityRenderPipelineVariant(
