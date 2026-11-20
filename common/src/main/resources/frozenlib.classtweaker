@@ -369,7 +369,7 @@ transitive-inject-interface net/minecraft/world/item/ItemStack net/frozenblock/l
 transitive-accessible method net/minecraft/world/damagesource/DamageSources source (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/damagesource/DamageSource;
 transitive-accessible method net/minecraft/world/damagesource/DamageSources source (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;
 transitive-accessible method net/minecraft/world/damagesource/DamageSources source (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/world/damagesource/DamageSource;
-transitive-accessible field net/minecraft/world/damagesource/DamageSources damageTypes Lnet/minecraft/core/Registry;
+transitive-accessible field net/minecraft/world/damagesource/DamageSources damageTypes Lnet/minecraft/core/HolderGetter;
 
 # Item
 ####################################################################################
